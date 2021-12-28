@@ -3,9 +3,24 @@ import { createTheme } from '@mui/material/styles';
 export const themeConfig = createTheme({
     typography: {
       fontFamily: 'Montserrat Alternates, sans-serif, cursive',
-      fontSize: 12
+      fontSize: 13,
+    },
+    components: {
+      MuiCard: {
+        backgroundColor: '#1f2937'
+      },
+      MuiCardContent: {
+        backgroundColor: '#1f2937'
+      }
     },
     palette: {
-      mode: 'dark',
-    }
+      backgroundColor: '#bbb',
+      primary: {
+        main: '#24f39f'
+      },
+      secondary: {
+        main: '#ef4444'
+      },
+      mode: 'dark'
+    },
 });

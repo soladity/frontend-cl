@@ -6,17 +6,19 @@ import { ThemeProvider } from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { themeConfig } from './config';
 import { BrowserRouter } from 'react-router-dom';
-
-
+import { Web3ReactProvider } from '@web3-react/core';
+import { getLibrary } from './wallet';
 
 ReactDOM.render(
   <React.StrictMode>
-      <BrowserRouter>
-    <ThemeProvider theme={themeConfig}>
-      <CssBaseline />
-        <App />
-    </ThemeProvider>
-      </BrowserRouter>
+    <BrowserRouter>
+      <ThemeProvider theme={themeConfig}>
+        <CssBaseline />
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <App />
+        </Web3ReactProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

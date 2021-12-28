@@ -12,13 +12,40 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { navConfig } from '../../config';
+import { useWeb3React } from '@web3-react/core';
+
+import { injected } from '../../wallet';
+import { NavLink } from 'react-router-dom';
+
+declare const window: any;
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const AppBarComponent = () => {
+  const {
+    activate,
+    account,
+    active,
+    deactivate,
+    connector,
+    library
+  } = useWeb3React();
+
+  async function connect() {
+    try {
+      await activate(injected);
+    } catch(e) {
+      console.log(e)
+    }
+  }
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [isActive, setIsActive] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsActive(window.ethereum.selectedAddress);
+  }, []);
 
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
@@ -34,24 +61,35 @@ const AppBarComponent = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
+  const showProfile = () => {
+    console.log(account);
+  };
+
+  const logout = () => {
+      deactivate();
+  };
 
   return (
     <AppBar position="fixed"
         sx={{
-          
-          width: { sm: `calc(100% - ${navConfig.drawerWidth}px)` },
+          background: 'linear-gradient(0deg, hsl(0deg 0% 12%) 0%, hsl(0deg 0% 7%) 100%)',
+          maxWidth: `100%`,
           ml: { sm: `${navConfig.drawerWidth}px` },
           padding: 0
         }}>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ 
+                mr: 2, 
+                display: { xs: 'none', md: 'flex' }
+              }}
           >
-            CRYPTOMINES
+            CryptoLegions
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -65,7 +103,7 @@ const AppBarComponent = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
+            {/* <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -88,7 +126,7 @@ const AppBarComponent = () => {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
           </Box>
           <Typography
             variant="h6"
@@ -99,7 +137,7 @@ const AppBarComponent = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {/* {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -107,37 +145,43 @@ const AppBarComponent = () => {
               >
                 {page}
               </Button>
-            ))}
+            ))} */}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {
+              <React.Fragment>
+                <Tooltip title="Open settings" style={{opacity: active ? '1' : '0'}}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem component={NavLink} to={'/profile'}>
+                    <Typography textAlign="center">Account</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => logout()}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
+              </React.Fragment>
+            }
+
           </Box>
         </Toolbar>
       </Container>
