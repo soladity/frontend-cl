@@ -61,16 +61,18 @@ export const navConfig = {
                 subTitle: 'to CryptoLegions'
             },
             {
-                type: 'navlink',
-                title: 'Home',
-                icon: 'home',
-                path: '/'
+                type: 'divider'
+            },
+            {
+                type: 'head',
+                title: 'Main Game',
+                subTitle: 'Play to earn'
             },
             {
                 type: 'navlink',
-                title: 'Monsters',
-                icon: 'monsters',
-                path: '/monsters'
+                title: 'Beasts',
+                icon: 'beasts',
+                path: '/beasts'
             },
             {
                 type: 'navlink',
@@ -86,23 +88,9 @@ export const navConfig = {
             },
             {
                 type: 'navlink',
-                title: 'Beasts',
-                icon: 'beasts',
-                path: '/beasts'
-            },
-            {
-                type: 'divider'
-            },
-            {
-                type: 'head',
-                title: 'Main Game',
-                subTitle: 'Play to earn'
-            },
-            {
-                type: 'link',
-                title: 'Google',
-                icon: 'beasts',
-                path: 'https://www.google.com'
+                title: 'Quests',
+                icon: 'quests',
+                path: '/monsters'
             },
             {
                 type: 'divider'
@@ -114,23 +102,57 @@ export const navConfig = {
             },
             {
                 type: 'link',
-                title: 'Google',
+                title: 'Beasts',
                 icon: 'beasts',
-                path: 'https://www.google.com'
+                path: '/beasts'
+            },
+            {
+                type: 'link',
+                title: 'Warriors',
+                icon: 'warriors',
+                path: '/warrios'
+            },
+            {
+                type: 'link',
+                title: 'Legions',
+                icon: 'legions',
+                path: '/legions'
             },
             {
                 type: 'divider'
             },
             {
                 type: 'head',
-                title: 'Get Social',
-                subTitle: 'Talk with us and other miners'
+                title: 'Get $Bloodstone',
+                subTitle: 'With Another Cryptocurrencies'
             },
             {
                 type: 'link',
-                title: 'Facebook',
-                icon: 'beasts',
-                path: 'https://www.facebook.com'
+                title: 'Pancakeswap',
+                icon: 'pancakeswap',
+                path: 'https://pancakeswap.com'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                type: 'head',
+                title: 'How To Play',
+                subTitle: 'Learn About Game'
+            },
+            {
+                type: 'link',
+                title: 'WHITEPAPER',
+                icon: 'whitepaper',
+                path: 'https://pancakeswap.com'
+            },
+            {
+                type: 'divider'
+            },
+            {
+                type: 'head',
+                title: 'Social',
+                subTitle: 'Talk with us and other miners'
             },
             {
                 type: 'link',
@@ -140,21 +162,15 @@ export const navConfig = {
             },
             {
                 type: 'link',
-                title: 'Instagram',
+                title: 'Telegram',
                 icon: 'beasts',
-                path: 'https://www.instagram.com'
+                path: 'https://www.telegram.com'
             },
             {
                 type: 'link',
                 title: 'Discord',
                 icon: 'beasts',
                 path: 'https://www.discord.com'
-            },
-            {
-                type: 'link',
-                title: 'Google',
-                icon: 'beasts',
-                path: 'https://www.google.com'
             },
             {
                 type: 'divider'
@@ -169,12 +185,6 @@ export const navConfig = {
                 title: 'Policy',
                 icon: 'policy',
                 path: '/policy'
-            },
-            {
-                type: 'link',
-                title: 'Google',
-                icon: 'beasts',
-                path: 'https://www.google.com'
             },
         ],
         top: []

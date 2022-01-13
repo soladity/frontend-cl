@@ -17,9 +17,10 @@ import FormLabel from '@mui/material/FormLabel';
 import CardSm from '../../Cards/CardSm';
 
 const FilterCards = () => {
-    const [value1, setValue1] = React.useState<number[]>([20, 37]);
+    const [apValue, setApValue] = React.useState<number[]>([20, 37]);
+    const [bsValue, setBsValue] = React.useState<number[]>([20, 37]);
 
-    const handleChange1 = (
+    const handleChangeAp = (
         event: Event,
         newValue: number | number[],
         activeThumb: number,
@@ -29,9 +30,25 @@ const FilterCards = () => {
         }
 
         if (activeThumb === 0) {
-            setValue1([Math.min(newValue[0], value1[1] - 1), value1[1]]);
+            setApValue([Math.min(newValue[0], apValue[1] - 1), apValue[1]]);
         } else {
-            setValue1([value1[0], Math.max(newValue[1], value1[0] + 1)]);
+            setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
+        }
+    };
+
+    const handleChangeBs = (
+        event: Event,
+        newValue: number | number[],
+        activeThumb: number,
+    ) => {
+        if (!Array.isArray(newValue)) {
+            return;
+        }
+
+        if (activeThumb === 0) {
+            setBsValue([Math.min(newValue[0], bsValue[1] - 1), bsValue[1]]);
+        } else {
+            setBsValue([bsValue[0], Math.max(newValue[1], bsValue[0] + 1)]);
         }
     };
 
@@ -44,7 +61,7 @@ const FilterCards = () => {
                     justifyContent="stretch"
                     alignItems="stretch"
                 >
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={3}>
                         <FormControl component="fieldset">
                             <FormLabel component="legend" style={{marginBottom: 8}}>Filter by level:</FormLabel>
                             <ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
@@ -53,17 +70,18 @@ const FilterCards = () => {
                                 <Button variant="contained">3</Button>
                                 <Button>4</Button>
                                 <Button>5</Button>
+                                <Button>6</Button>
                             </ButtonGroup>
                         </FormControl>
                     </Grid>
 
                     <Grid item xs={12} md={3}>
                         <FormControl component="fieldset" sx={{width: '90%'}}>
-                            <FormLabel component="legend">Filter by MP:</FormLabel>
+                            <FormLabel component="legend">Filter by AP:</FormLabel>
                             <Slider
                                 getAriaLabel={() => "Custom marks"}
                                 // defaultValue={20}
-                                value={value1}
+                                value={apValue}
                                 min={5}
                                 max={80}
                                 marks={[
@@ -72,7 +90,7 @@ const FilterCards = () => {
                                 ]}
                                 step={1}
                                 valueLabelDisplay="auto"
-                                onChange={handleChange1}
+                                onChange={handleChangeAp}
                                 disableSwap
                             />
                         </FormControl>
@@ -80,11 +98,11 @@ const FilterCards = () => {
 
                     <Grid item xs={12} md={3}>
                         <FormControl component="fieldset" sx={{width: '90%'}}>
-                            <FormLabel component="legend">Filter by $ETERNAL:</FormLabel>
+                            <FormLabel component="legend">Filter by $Bloodstone:</FormLabel>
                             <Slider
                                 getAriaLabel={() => "Custom marks"}
                                 // defaultValue={20}
-                                value={value1}
+                                value={bsValue}
                                 min={5}
                                 max={80}
                                 marks={[
@@ -93,19 +111,19 @@ const FilterCards = () => {
                                 ]}
                                 step={1}
                                 valueLabelDisplay="auto"
-                                onChange={handleChange1}
+                                onChange={handleChangeBs}
                                 disableSwap
                             />
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
                         <Grid>
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Sort by:</FormLabel>
                                 <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-                                    <FormControlLabel value="MP" control={<Radio />} label="MP" />
-                                    <FormControlLabel value="$Eternal" control={<Radio />} label="$Eternal" />
+                                    <FormControlLabel value="AP" control={<Radio />} label="AP" />
+                                    <FormControlLabel value="$Bloodstone" control={<Radio />} label="$Bloodstone" />
                                     <FormControlLabel value="Level" control={<Radio />} label="Level" />
                                 </RadioGroup>
                             </FormControl>
