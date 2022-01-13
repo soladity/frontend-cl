@@ -4,7 +4,7 @@ import FilterCards from '../../component/UI/FilterCards/FilterCards'
 import { meta_constant } from '../../config/meta.config';
 import Helmet from 'react-helmet';
 
-const Ships = () => {
+const Beasts = () => {
     return <Box>
         <Helmet>
             <meta charSet="utf-8" />
@@ -19,4 +19,4 @@ const Ships = () => {
     </Box>
 }
 
-export default Ships
+export default Beasts

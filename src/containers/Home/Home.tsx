@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CardsComponent from '../../component/Cards/Cards';
