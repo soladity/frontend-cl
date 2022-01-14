@@ -56,17 +56,11 @@ export const navConfig = {
     navBar: {
         left: [
             {
-                type: 'head',
-                title: 'Welcome',
-                subTitle: 'to CryptoLegions'
-            },
-            {
                 type: 'divider'
             },
             {
                 type: 'head',
                 title: 'Main Game',
-                subTitle: 'Play to earn'
             },
             {
                 type: 'navlink',
@@ -88,8 +82,8 @@ export const navConfig = {
             },
             {
                 type: 'navlink',
-                title: 'Quests',
-                icon: 'quests',
+                title: 'Hunt',
+                icon: 'hunt',
                 path: '/monsters'
             },
             {
@@ -98,7 +92,6 @@ export const navConfig = {
             {
                 type: 'head',
                 title: 'Marketplace',
-                subTitle: 'Buy & Sell your NFTs'
             },
             {
                 type: 'link',
@@ -124,7 +117,6 @@ export const navConfig = {
             {
                 type: 'head',
                 title: 'Get $Bloodstone',
-                subTitle: 'With Another Cryptocurrencies'
             },
             {
                 type: 'link',
@@ -138,7 +130,6 @@ export const navConfig = {
             {
                 type: 'head',
                 title: 'How To Play',
-                subTitle: 'Learn About Game'
             },
             {
                 type: 'link',
@@ -152,7 +143,6 @@ export const navConfig = {
             {
                 type: 'head',
                 title: 'Social',
-                subTitle: 'Talk with us and other miners'
             },
             {
                 type: 'link',
@@ -177,8 +167,7 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'About',
-                subTitle: 'Privacy policy'
+                title: 'Privacy',
             },
             {
                 type: 'navlink',
