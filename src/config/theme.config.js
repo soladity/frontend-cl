@@ -21,6 +21,9 @@ export const themeConfig = createTheme({
       secondary: {
         main: '#ef4444'
       },
+      info: {
+        main: '#312881'
+      },
       mode: 'dark'
     },
 });

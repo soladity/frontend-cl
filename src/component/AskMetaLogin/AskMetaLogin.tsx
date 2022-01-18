@@ -62,7 +62,6 @@ const AskMetaLogin = () => {
 
     React.useEffect(() => {
         setLoading(false);
-        console.log(active, '123123')
         if(active) {
             setOpen(false);
         } 
