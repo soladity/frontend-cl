@@ -6,16 +6,20 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
+import AssistantDirectionIcon from '@mui/icons-material/AssistantDirection';
+import BadgeIcon from '@mui/icons-material/Badge';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { navConfig } from '../../config';
+import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
+import { getBloodstoneBalance } from '../../hooks/contractFunction';
+import { useBloodstone, useWeb3 } from '../../hooks/useContract';
+import { navConfig } from '../../config';
 import { injected } from '../../wallet';
-import { NavLink } from 'react-router-dom';
 
 declare const window: any;
 
@@ -25,16 +29,13 @@ const AppBarComponent = () => {
   const {
     activate,
     account,
-    active,
     deactivate,
-    connector,
-    library
   } = useWeb3React();
 
   async function connect() {
     try {
       await activate(injected);
-    } catch(e) {
+    } catch (e) {
       console.log(e)
     }
   }
@@ -42,10 +43,21 @@ const AppBarComponent = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isActive, setIsActive] = React.useState(false);
+  const [balance, setBalance] = React.useState('0');
+
+  const bloodstoneContract = useBloodstone();
+  const web3 = useWeb3();
 
   React.useEffect(() => {
     setIsActive(window.ethereum.selectedAddress);
+    if (account) {
+      getBalance();
+    }
   }, []);
+
+  const getBalance = async () => {
+    setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
+  }
 
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
@@ -61,36 +73,38 @@ const AppBarComponent = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
+
   const showProfile = () => {
     console.log(account);
   };
 
   const logout = () => {
-      deactivate();
+    deactivate();
   };
 
   return (
     <AppBar position="fixed"
-        sx={{
-          background: 'linear-gradient(0deg, hsl(0deg 0% 12%) 0%, hsl(0deg 0% 7%) 100%)',
-          maxWidth: `100%`,
-          ml: { sm: `${navConfig.drawerWidth}px` },
-          padding: 0
-        }}>
+      sx={{
+        background: 'linear-gradient(0deg, hsl(0deg 0% 12%) 0%, hsl(0deg 0% 7%) 100%)',
+        maxWidth: `100%`,
+        ml: { sm: `${navConfig.drawerWidth}px` },
+        py: 1
+      }}>
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ 
-                mr: 2, 
+          <NavLink to='/' className='non-style' style={{color: 'inherit', textDecoration: 'none'}}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                mr: 2,
                 display: { xs: 'none', md: 'flex' }
               }}
-          >
-            CryptoLegions
-          </Typography>
+            >
+              CryptoLegions
+            </Typography>
+          </NavLink>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -150,36 +164,61 @@ const AppBarComponent = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             {
-              <React.Fragment>
-                <Tooltip title="Open settings" style={{opacity: active ? '1' : '0'}}>
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button variant="contained" sx={{ fontWeight: 'bold', mr: 5 }}>
+                  <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
+                    <AssistantDirectionIcon />
                   </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <MenuItem component={NavLink} to={'/profile'}>
-                    <Typography textAlign="center">Account</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={() => logout()}>
-                    <Typography textAlign="center">Logout</Typography>
-                  </MenuItem>
-                </Menu>
-              </React.Fragment>
+                  Claim 0 $Bloodstone
+                </Button>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <img src='/assets/images/bloodstone.png' />
+                  <Box sx={{ ml: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant='h6'>{balance}</Typography>
+                      <Typography variant='h6'>$BLS</Typography>
+                    </Box>
+                    <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
+                      <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
+                        <BadgeIcon />
+                      </IconButton>
+                      <NavLink to='/profile' className='non-style' style={{color: 'inherit', textDecoration: 'none'}}>
+                        {account === undefined || account === null ? '...' : account.substr(0, 7) + '...' + account.substr(account.length - 5, 5)}
+                      </NavLink>
+                    </Button>
+                  </Box>
+                </Box>
+                {/* <React.Fragment>
+                  <Tooltip title="Open settings" style={{ opacity: active ? '1' : '0' }}>
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    <MenuItem component={NavLink} to={'/profile'}>
+                      <Typography textAlign="center">Account</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={() => logout()}>
+                      <Typography textAlign="center">Logout</Typography>
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment> */}
+              </Box>
             }
 
           </Box>
