@@ -177,7 +177,7 @@ const AppBarComponent = () => {
                   <Box sx={{ ml: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant='h6'>{balance}</Typography>
-                      <Typography variant='h6'>$BLS</Typography>
+                      <Typography variant='h6'>$BLST</Typography>
                     </Box>
                     <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>

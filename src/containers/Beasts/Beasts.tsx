@@ -6,27 +6,31 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 
 import { meta_constant } from '../../config/meta.config';
-import { mintBeast } from '../../hooks/contractFunction';
-import { useBeast, useWeb3 } from '../../hooks/useContract';
+import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 
 const useStyles = makeStyles({
 	root: {
 		display: 'flex',
 		flexDirection: 'column'
 	},
+	card: {
+		display: 'flex',
+		flexDirection: 'column',
+		minHeight: '180px'
+	}
 });
 
 const Beasts = () => {
 	const {
-    activate,
     account,
-    deactivate,
   } = useWeb3React();
 
 	const [showMint, setShowMint] = React.useState(false);
 
 	const classes = useStyles();
 	const beastContract = useBeast();
+	const bloodstoneContract = useBloodstone();
   const web3 = useWeb3();
 
 	const handleOpenMint = () => {
@@ -38,6 +42,10 @@ const Beasts = () => {
 	};
 
 	const handleMint = async (amount: Number) => {
+		const allowance = await getBloodstoneAllowance(web3, bloodstoneContract, account);
+		if (allowance === '0'){
+			await setBloodstoneApprove(web3, bloodstoneContract, account);
+		}
 		const response = await mintBeast(web3, beastContract, account, amount);
 		console.log(response)
 	}
@@ -52,9 +60,9 @@ const Beasts = () => {
 		<Grid container spacing={2} sx={{ my: 4 }}>
 			<Grid item xs={4}>
 				<Card>
-					<Box className={classes.root} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							Mint Beasts
+							Summon Beasts
 						</Typography>
 						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
 							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
@@ -89,7 +97,7 @@ const Beasts = () => {
 			</Grid>
 			<Grid item xs={4}>
 				<Card>
-					<Box sx={{ p: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
 							Current Beasts
 						</Typography>
@@ -98,9 +106,9 @@ const Beasts = () => {
 			</Grid>
 			<Grid item xs={4}>
 				<Card>
-					<Box sx={{ p: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							Max Warriors
+							Total Maximum Warriors Capacity
 						</Typography>
 					</Box>
 				</Card>
