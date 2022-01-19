@@ -30,6 +30,7 @@ const AppBarComponent = () => {
     activate,
     account,
     deactivate,
+    connector,
   } = useWeb3React();
 
   async function connect() {
@@ -92,7 +93,7 @@ const AppBarComponent = () => {
       }}>
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-          <NavLink to='/' className='non-style' style={{color: 'inherit', textDecoration: 'none'}}>
+          <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
             <Typography
               variant="h6"
               noWrap
@@ -176,14 +177,15 @@ const AppBarComponent = () => {
                   <Box sx={{ ml: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant='h6'>{balance}</Typography>
-                      <Typography variant='h6'>$BLS</Typography>
+                      <Typography variant='h6'>$BLST</Typography>
                     </Box>
                     <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
                         <BadgeIcon />
                       </IconButton>
-                      <NavLink to='/profile' className='non-style' style={{color: 'inherit', textDecoration: 'none'}}>
-                        {account === undefined || account === null ? '...' : account.substr(0, 7) + '...' + account.substr(account.length - 5, 5)}
+                      <NavLink to='/profile' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
+                        <Typography variant='subtitle1'>
+                          {account === undefined || account === null ? '...' : account.substr(0, 6) + '...' + account.substr(account.length - 4, 4)}</Typography>
                       </NavLink>
                     </Button>
                   </Box>

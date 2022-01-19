@@ -5,8 +5,7 @@ import { meta_constant } from '../../config/meta.config';
 import Helmet from 'react-helmet';
 
 const Warriors = () => {
-    return
-    <Box>
+    return <Box>
         <Helmet>
             <meta charSet="utf-8" />
             <title>{meta_constant.warriors.title}</title>
