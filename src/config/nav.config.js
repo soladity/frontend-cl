@@ -5,6 +5,7 @@ import Home from '../containers/Home/Home';
 import Beasts from '../containers/Beasts/Beasts';
 import Warriors from '../containers/Warriors/Warriors';
 import Legions from '../containers/Legions/Legions';
+import CreateLegions from '../containers/CreateLegions/CreateLegions';
 import Profile from '../containers/Profile/Profile';
 import Policy from '../containers/Policy/Policy';
 
@@ -36,6 +37,10 @@ export const navConfig = {
             path: '/legions',
             // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
             element: <Legions />
+        },
+        {
+            path: '/createlegions',
+            element: <CreateLegions />
         },
         {
             path: '/profile',
@@ -177,5 +182,5 @@ export const navConfig = {
             },
         ],
         top: []
-    } 
+    }
 };

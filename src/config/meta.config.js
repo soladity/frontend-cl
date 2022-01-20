@@ -19,6 +19,11 @@ export const meta_constant = {
         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
         keywords: ['word1', 'word2', 'word3']
     },
+    createlegions: {
+        title: 'CreateLegions',
+        description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
+        keywords: ['word1', 'word2', 'word3']
+    },
     beasts: {
         title: 'Beasts',
         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
@@ -33,5 +38,17 @@ export const meta_constant = {
         title: 'Warriors',
         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
         keywords: ['word1', 'word2', 'word3']
+    }
+}
+
+export const createlegions = {
+    warning: {
+        title: 'Creating Legions',
+        subtitle1: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
+        subtitle2: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
+    },
+    main: {
+        backBtnTitle: 'Back to my legions',
+        createBtnTitle: 'Minimum 100 AP needed!'
     }
 }

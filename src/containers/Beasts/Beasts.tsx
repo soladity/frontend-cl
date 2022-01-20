@@ -39,11 +39,13 @@ const Beasts = () => {
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 
+
 	React.useEffect(() => {
 		if (account) {
 			getBalance();
 		}
 	}, []);
+
 
 	const handleOpenMint = () => {
 		setShowMint(true);
