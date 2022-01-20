@@ -173,7 +173,7 @@ const AppBarComponent = () => {
                   Claim 0 $Bloodstone
                 </Button>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <img src='/assets/images/bloodstone.png' />
+                  <img src='/assets/images/bloodstone.png' style={{height: '55px'}} />
                   <Box sx={{ ml: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant='h6'>{balance}</Typography>

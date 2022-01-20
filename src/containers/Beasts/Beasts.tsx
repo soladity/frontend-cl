@@ -1,13 +1,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, Menu, MenuItem, Button, IconButton } from '@mui/material';
+import { Box, Typography, Grid, Card, ButtonGroup, Button, IconButton, FormLabel, FormControl } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 
 import { meta_constant } from '../../config/meta.config';
-import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast } from '../../hooks/contractFunction';
+import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
+import MintCard from '../../component/Cards/MintCard';
 
 const useStyles = makeStyles({
 	root: {
@@ -23,15 +24,25 @@ const useStyles = makeStyles({
 
 const Beasts = () => {
 	const {
-    account,
-  } = useWeb3React();
+		account,
+	} = useWeb3React();
 
 	const [showMint, setShowMint] = React.useState(false);
+	const [balance, setBalance] = React.useState('0');
+	const [maxWarrior, setMaxWarrior] = React.useState(0);
+	const [baseUrl, setBaseUrl] = React.useState('');
+	const [beasts, setBeasts] = React.useState(Array);
 
 	const classes = useStyles();
 	const beastContract = useBeast();
 	const bloodstoneContract = useBloodstone();
-  const web3 = useWeb3();
+	const web3 = useWeb3();
+
+	React.useEffect(() => {
+		if (account) {
+			getBalance();
+		}
+	}, []);
 
 	const handleOpenMint = () => {
 		setShowMint(true);
@@ -43,11 +54,26 @@ const Beasts = () => {
 
 	const handleMint = async (amount: Number) => {
 		const allowance = await getBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0'){
+		if (allowance === '0') {
 			await setBloodstoneApprove(web3, bloodstoneContract, account);
 		}
 		const response = await mintBeast(web3, beastContract, account, amount);
-		console.log(response)
+	}
+
+	const getBalance = async () => {
+		setBaseUrl(await getBeastUrl(web3, beastContract));
+		setBalance(await getBeastBalance(web3, beastContract, account));
+		const ids = await getBeastTokenIds(web3, beastContract, account);
+		let amount = 0;
+		let beast;
+		let tempBeasts = [];
+		for (let i = 0; i < ids.length; i++) {
+			beast = await getBeastToken(web3, beastContract, ids[i]);
+			tempBeasts.push(beast);
+			amount += parseInt(beast.capacity);
+		}
+		setMaxWarrior(amount);
+		setBeasts(tempBeasts);
 	}
 
 	return <Box>
@@ -101,6 +127,9 @@ const Beasts = () => {
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
 							Current Beasts
 						</Typography>
+						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
+							{balance}
+						</Typography>
 					</Box>
 				</Card>
 			</Grid>
@@ -110,9 +139,37 @@ const Beasts = () => {
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
 							Total Maximum Warriors Capacity
 						</Typography>
+						<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
+							{maxWarrior}
+						</Typography>
 					</Box>
 				</Card>
 			</Grid>
+		</Grid>
+		<Grid container spacing={2} sx={{ my: 3 }}>
+			<Grid item md={12}>
+				<FormControl component="fieldset">
+					<FormLabel component="legend" style={{ marginBottom: 12 }}>Filter by Beast Rarity:</FormLabel>
+					<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
+						<Button variant="contained">All</Button>
+						<Button>1</Button>
+						<Button>2</Button>
+						<Button>3</Button>
+						<Button>4</Button>
+						<Button>5</Button>
+						<Button>6</Button>
+					</ButtonGroup>
+				</FormControl>
+			</Grid>
+		</Grid>
+		<Grid container spacing={2} sx={{ mb: 4 }}>
+			{
+				beasts.map((item: any, index) => (
+					<Grid item xs={3} key={index}>
+						<MintCard image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} />
+					</Grid>
+				))
+			}
 		</Grid>
 	</Box>
 }
