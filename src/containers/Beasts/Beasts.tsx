@@ -23,15 +23,15 @@ const useStyles = makeStyles({
 
 const Beasts = () => {
 	const {
-    account,
-  } = useWeb3React();
+		account,
+	} = useWeb3React();
 
 	const [showMint, setShowMint] = React.useState(false);
 
 	const classes = useStyles();
 	const beastContract = useBeast();
 	const bloodstoneContract = useBloodstone();
-  const web3 = useWeb3();
+	const web3 = useWeb3();
 
 	const handleOpenMint = () => {
 		setShowMint(true);
