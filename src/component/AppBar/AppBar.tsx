@@ -4,15 +4,13 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AssistantDirectionIcon from '@mui/icons-material/AssistantDirection';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
 import BadgeIcon from '@mui/icons-material/Badge';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
@@ -93,18 +91,8 @@ const AppBarComponent = () => {
       }}>
       <Container maxWidth={false}>
         <Toolbar disableGutters>
-          <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' }
-              }}
-            >
-              CryptoLegions
-            </Typography>
+          <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
+            <img src='/assets/images/logo.png' style={{ height: '40px' }} alt='logo' />
           </NavLink>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -152,15 +140,11 @@ const AppBarComponent = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {/* {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))} */}
+            <Button variant="contained" sx={{ fontWeight: 'bold', mr: 5 }}>
+              <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
+                <PlayCircleIcon />
+              </IconButton>
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -173,7 +157,7 @@ const AppBarComponent = () => {
                   Claim 0 $Bloodstone
                 </Button>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <img src='/assets/images/bloodstone.png' style={{height: '55px'}} />
+                  <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
                   <Box sx={{ ml: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography variant='h6'>{balance}</Typography>

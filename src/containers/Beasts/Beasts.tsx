@@ -32,6 +32,7 @@ const Beasts = () => {
 	const [maxWarrior, setMaxWarrior] = React.useState(0);
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [beasts, setBeasts] = React.useState(Array);
+	const [filter, setFilter] = React.useState('all');
 
 	const classes = useStyles();
 	const beastContract = useBeast();
@@ -57,7 +58,8 @@ const Beasts = () => {
 		if (allowance === '0') {
 			await setBloodstoneApprove(web3, bloodstoneContract, account);
 		}
-		const response = await mintBeast(web3, beastContract, account, amount);
+		await mintBeast(web3, beastContract, account, amount);
+		getBalance();
 	}
 
 	const getBalance = async () => {
@@ -151,22 +153,22 @@ const Beasts = () => {
 				<FormControl component="fieldset">
 					<FormLabel component="legend" style={{ marginBottom: 12 }}>Filter by Beast Rarity:</FormLabel>
 					<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
-						<Button variant="contained">All</Button>
-						<Button>1</Button>
-						<Button>2</Button>
-						<Button>3</Button>
-						<Button>4</Button>
-						<Button>5</Button>
-						<Button>6</Button>
+						<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>All</Button>
+						<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
+						<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
+						<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
+						<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
+						<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
+						<Button variant={`${filter === '6' ? 'contained' : 'outlined'}`} onClick={() => setFilter('6')}>6</Button>
 					</ButtonGroup>
 				</FormControl>
 			</Grid>
 		</Grid>
 		<Grid container spacing={2} sx={{ mb: 4 }}>
 			{
-				beasts.map((item: any, index) => (
+				beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
 					<Grid item xs={3} key={index}>
-						<MintCard image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} />
+						<MintCard image={baseUrl + item['imageAlt']} type={item['type']} capacity={item['capacity']} />
 					</Grid>
 				))
 			}

@@ -27,11 +27,11 @@ export default function MintCard(props: CardProps) {
                 alt="Beast Image"
                 loading="lazy"
             />
-            <Typography variant='h5' sx={{ position: 'absolute', top: '15px', left: '20px' }}>
+            <Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
                 {type}
             </Typography>
             <CardActions>
-                <Typography variant='h5' sx={{textAlign: 'center', width: '100%', padding: 1}}>
+                <Typography variant='h5' sx={{textAlign: 'center', width: '100%', padding: 1, fontWeight: 'bold'}}>
                     {capacity} Warriors
                 </Typography>
             </CardActions>
