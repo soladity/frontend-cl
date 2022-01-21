@@ -33,6 +33,7 @@ const Beasts = () => {
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [beasts, setBeasts] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
+	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 
 	const classes = useStyles();
 	const beastContract = useBeast();
@@ -44,6 +45,7 @@ const Beasts = () => {
 		if (account) {
 			getBalance();
 		}
+		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
 
 
@@ -170,7 +172,7 @@ const Beasts = () => {
 			{
 				beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
 					<Grid item xs={3} key={index}>
-						<MintCard image={baseUrl + item['imageAlt']} type={item['type']} capacity={item['capacity']} />
+						<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} />
 					</Grid>
 				))
 			}

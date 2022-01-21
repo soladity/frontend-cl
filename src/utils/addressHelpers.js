@@ -3,5 +3,5 @@ export const getBloodstoneAddress = () => {
 }
 
 export const getBeastAddress = () => {
-    return '0x090F8f966a0f0E7C961Ddb29F499D6a7e4117753'
+    return '0x8ba4bf6a3ece585ee3d75924071a4a07dd679aa4'
 }
