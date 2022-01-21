@@ -40,12 +40,14 @@ const Beasts = () => {
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 
+
 	React.useEffect(() => {
 		if (account) {
 			getBalance();
 		}
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
+
 
 	const handleOpenMint = () => {
 		setShowMint(true);
