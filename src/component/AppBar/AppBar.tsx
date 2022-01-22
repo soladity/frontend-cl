@@ -43,15 +43,16 @@ const AppBarComponent = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isActive, setIsActive] = React.useState(false);
   const [balance, setBalance] = React.useState('0');
+  const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 
   const bloodstoneContract = useBloodstone();
   const web3 = useWeb3();
-
   React.useEffect(() => {
     setIsActive(window.ethereum.selectedAddress);
     if (account) {
       getBalance();
     }
+    setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
   }, []);
 
   const getBalance = async () => {
@@ -80,6 +81,16 @@ const AppBarComponent = () => {
   const logout = () => {
     deactivate();
   };
+
+  const handleShowAnimation = () => {
+    if (showAnimation === '0'){
+      setShowAnimation('1');
+      localStorage.setItem('showAnimation', '1');
+    }else{
+      setShowAnimation('0');
+      localStorage.setItem('showAnimation', '0');
+    }
+  }
 
   return (
     <AppBar position="fixed"
@@ -140,9 +151,15 @@ const AppBarComponent = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button variant="contained" sx={{ fontWeight: 'bold', mr: 5 }}>
-              <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
-                <PlayCircleIcon />
+            <Button variant="contained" color='info' sx={{ fontWeight: 'bold', mr: 5, minWidth: '0px', padding: 1 }} onClick={handleShowAnimation}>
+              <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'white', marginRight: 0 }}>
+                {
+                  showAnimation === '0' ? (
+                    <PlayCircleIcon />
+                  ) : (
+                    <StopCircleIcon />
+                  )
+                }
               </IconButton>
             </Button>
           </Box>
