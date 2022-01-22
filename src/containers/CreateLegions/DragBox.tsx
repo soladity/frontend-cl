@@ -12,7 +12,8 @@ const style: CSSProperties = {
 export interface DragBoxProps {
     item: any,
     baseUrl: string,
-    index: number,
+    baseIndex: number,
+    curIndex: number,
     dropped: (index: number) => void
 }
 
@@ -20,15 +21,15 @@ interface DropResult {
     done: boolean
 }
 
-export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, index, dropped }) {
+export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseIndex, curIndex, dropped }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: DragItemBox.Beasts,
-        item: { item, id: index },
+        item: { item, id: baseIndex },
 
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult<DropResult>()
             if (item && dropResult) {
-                dropped(index);
+                dropped(curIndex);
             }
         },
         collect: (monitor) => ({

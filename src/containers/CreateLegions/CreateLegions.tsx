@@ -31,17 +31,20 @@ const useStyles = makeStyles({
 	}
 });
 
-const CreateLegions = () => {
+const CreateLegions: React.FC = () => {
 	const { account } = useWeb3React();
 
 	const [warrior5beast, setWarrior5beat] = React.useState(false);
-	const [warriorDropped, setWarriorDropped] = React.useState(Array);
-	const [beastDropped, setBeastDropped] = React.useState(Array);
+	const [warriorDropBoxList, setWarriorDropBoxList] = React.useState(Array);
+	const [beastDropBoxList, setBeastDropBoxList] = React.useState(Array);
+	const [warriorDragBoxList, setWarriorDragBoxList] = React.useState(Array);
+	const [beastDragBoxList, setBeastDragBoxList] = React.useState(Array);
 	const [beasts, setBeasts] = React.useState(Array);
 	const [warriors, setWarriors] = React.useState(Array);
 	const [balance, setBalance] = React.useState('0');
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [filter, setFilter] = React.useState('all');
+	const [droppedID, setDroppedID] = React.useState(Number);
 	const classes = useStyles();
 	const beastContract = useBeast();
 	const web3 = useWeb3();
@@ -52,6 +55,25 @@ const CreateLegions = () => {
 		}
 	}, []);
 
+	React.useEffect(() => {
+		let tempIndexS = (warrior5beast ? warriorDragBoxList : beastDragBoxList);
+		let tmpArray = (warrior5beast ? warriorDropBoxList : beastDropBoxList);
+		console.log(droppedID, tempIndexS);
+		const droppedIDIndex = tempIndexS.indexOf(droppedID);
+		if (droppedIDIndex <= -1) {
+			return;
+		}
+		let droppedNum = tempIndexS.splice(droppedIDIndex, 1);
+		tmpArray = [...tmpArray, droppedNum[0]];
+		if (warrior5beast) {
+			setWarriorDropBoxList(tmpArray);
+			setWarriorDragBoxList(tempIndexS);
+		} else {
+			setBeastDropBoxList(tmpArray);
+			setWarriorDropBoxList(tempIndexS);
+		}
+	}, [droppedID]);
+
 	const getBalance = async () => {
 		setBaseUrl(await getBeastUrl(web3, beastContract));
 		setBalance(await getBeastBalance(web3, beastContract, account));
@@ -59,24 +81,19 @@ const CreateLegions = () => {
 		let amount = 0;
 		let beast;
 		let tempBeasts = [];
+		let tempIndexS = [];
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
 			tempBeasts.push(beast);
+			tempIndexS.push(i as number);
 			amount += parseInt(beast.capacity);
 		}
 		setBeasts(tempBeasts);
+		setBeastDragBoxList(tempIndexS);
 	}
 
 	const dropped = (index: number) => {
-		let tmpArray = (warrior5beast ? warriorDropped : beastDropped);
-		// tmpArray.push(index + tmpArray.filter((tmp) => ((tmp as number) < index)).length);
-		tmpArray.push(index);
-		if (warrior5beast) {
-			setWarriorDropped(tmpArray);
-		} else {
-			setBeastDropped([...tmpArray]);
-			setBeasts([...beasts]);
-		}
+		setDroppedID(index);
 	}
 
 	return <Box>
@@ -163,8 +180,8 @@ const CreateLegions = () => {
 							</Grid>
 							}
 							{!warrior5beast &&
-								(beasts.filter((item: any, findex) => !beastDropped.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
-									<DragBox item={item} baseUrl={baseUrl} index={index + beastDropped.filter((tmp) => ((tmp as number) < index)).length} dropped={dropped} key={index + beastDropped.filter((tmp) => ((tmp as number) < index)).length} />
+								(beasts.filter((item: any, findex) => beastDragBoxList.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
+									<DragBox item={item} baseUrl={baseUrl} baseIndex={beastDragBoxList[index] as number} dropped={dropped} curIndex={index} key={beastDragBoxList[index] as number} />
 								)))
 							}
 						</Grid>
