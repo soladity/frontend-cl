@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -78,12 +78,6 @@ const CreateLegions = () => {
 			setBeasts([...beasts]);
 		}
 	}
-
-	console.log(beasts.filter((item: any, findex) => !beastDropped.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)));
-
-	useEffect(() => {
-		setBeasts([...beasts]);
-	}, []);
 
 	return <Box>
 		<Helmet>

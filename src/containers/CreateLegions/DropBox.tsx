@@ -32,7 +32,6 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl }) {
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
         accept: DragItemBox.Beasts,
         drop: (item) => {
-            console.log(item);
             let tmpItems = items;
             tmpItems.push(item);
             setItems([...tmpItems]);
