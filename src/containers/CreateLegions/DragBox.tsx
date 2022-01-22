@@ -23,7 +23,7 @@ interface DropResult {
 export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, index, dropped }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: DragItemBox.Beasts,
-        item: { item },
+        item: { item, id: index },
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult<DropResult>()
             if (item && dropResult) {
@@ -35,7 +35,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, index
             handlerId: monitor.getHandlerId(),
         }),
     }))
-
+    console.log(item, index);
     const opacity = isDragging ? 0.4 : 1
     return (
         <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>

@@ -32,6 +32,7 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl }) {
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
         accept: DragItemBox.Beasts,
         drop: (item) => {
+            console.log(item);
             let tmpItems = items;
             tmpItems.push(item);
             setItems([...tmpItems]);
@@ -51,9 +52,6 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl }) {
     }
 
     return (
-        // <div ref={drop} role={'Dustbin'} style={{ ...style, backgroundColor }}>
-        //     {isActive ? 'Release to drop' : 'Drag a box here'}
-        // </div>
         <Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }} ref={drop} style={{ ...style, backgroundColor }}>
             {items.map((element: any, index) => <DropCard image={baseUrl + element.item['image']} type={element.item['type']} capacity={element.item['capacity']} key={index} />)}
             <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
