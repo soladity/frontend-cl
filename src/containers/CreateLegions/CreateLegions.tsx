@@ -10,7 +10,6 @@ import { useWeb3React } from '@web3-react/core';
 import { meta_constant, createlegions } from '../../config/meta.config';
 import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
-import MintCard from '../../component/Cards/MintCard';
 import { DragBox } from './DragBox';
 import { DropBox } from './DropBox'
 
@@ -69,15 +68,13 @@ const CreateLegions = () => {
 	}
 
 	const dropped = (index: number) => {
-		debugger;
 		let tmpArray = (warrior5beast ? warriorDropped : beastDropped);
-		console.log(tmpArray, tmpArray.length);
+		// tmpArray.push(index + tmpArray.filter((tmp) => ((tmp as number) < index)).length);
 		tmpArray.push(index);
-		console.log(tmpArray, tmpArray.length);
 		if (warrior5beast) {
 			setWarriorDropped(tmpArray);
 		} else {
-			setBeastDropped(tmpArray);
+			setBeastDropped([...tmpArray]);
 			setBeasts([...beasts]);
 		}
 	}
@@ -166,8 +163,8 @@ const CreateLegions = () => {
 							</Grid>
 							}
 							{!warrior5beast &&
-								(beasts.filter((item: any, findex) => !warriorDropped.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
-									<DragBox item={item} baseUrl={baseUrl} index={index} dropped={dropped} key={index} />
+								(beasts.filter((item: any, findex) => !beastDropped.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
+									<DragBox item={item} baseUrl={baseUrl} index={index + beastDropped.filter((tmp) => ((tmp as number) < index)).length} dropped={dropped} key={index + beastDropped.filter((tmp) => ((tmp as number) < index)).length} />
 								)))
 							}
 						</Grid>
