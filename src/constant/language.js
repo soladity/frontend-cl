@@ -1,0 +1,30 @@
+export const translations = {
+    en: {
+      'logo': 'Logo',
+      'claim': 'claim',
+      'bloodstone': 'bloodstone',
+      'summonBeast': 'Summon Beast',
+      'summonQuantity': 'Summon Quantity',
+      'currentBeasts': 'Current Beasts',
+      'warriorCapacity': 'Total Maximum Warriors Capacity',
+      'filterCapacity': 'Filter By Capacity',
+      'all': 'All',
+      'welcome': 'Nadodo is watching',
+      'mainGame': 'Main Game',
+      'marketplace': 'Marketplace',
+      'getBloodstone': 'Get $Bloodstone',
+      'howToPlay': 'How To Play',
+      'social': 'Social',
+      'privacy': 'Privacy',
+      'beasts': 'Beasts',
+      'warriors': 'Warriors',
+      'legions': 'Legions',
+      'hunt': 'Hunt',
+      'pancakeswap': 'Pancakeswap',
+      'whitepaper': 'Whitepaper',
+      'twitter': 'Twitter',
+      'telegram': 'Telegram',
+      'discord': 'Discord',
+      'policy': 'Policy'
+    }
+  }

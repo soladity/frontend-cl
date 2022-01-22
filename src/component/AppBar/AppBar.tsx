@@ -18,6 +18,7 @@ import { getBloodstoneBalance } from '../../hooks/contractFunction';
 import { useBloodstone, useWeb3 } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
+import { getTranslation } from '../../utils/translation';
 
 declare const window: any;
 
@@ -148,10 +149,10 @@ const AppBarComponent = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            {getTranslation('logo')}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button variant="contained" color='info' sx={{ fontWeight: 'bold', mr: 5, minWidth: '0px', padding: 1 }} onClick={handleShowAnimation}>
+            {/* <Button variant="contained" color='info' sx={{ fontWeight: 'bold', mr: 5, minWidth: '0px', padding: 1 }} onClick={handleShowAnimation}>
               <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'white', marginRight: 0 }}>
                 {
                   showAnimation === '0' ? (
@@ -161,7 +162,7 @@ const AppBarComponent = () => {
                   )
                 }
               </IconButton>
-            </Button>
+            </Button> */}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -171,7 +172,7 @@ const AppBarComponent = () => {
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
-                  Claim 0 $Bloodstone
+                  {getTranslation('claim')} 0 ${getTranslation('bloodstone')}
                 </Button>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />

@@ -9,11 +9,12 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
-
-import { navConfig } from '../../config';
 import { NavLink } from 'react-router-dom';
 import { CardContent, Tooltip, Typography } from '@mui/material';
 import { Card } from '@mui/material';
+
+import { navConfig } from '../../config';
+import { getTranslation } from '../../utils/translation';
 
 const useStyles = makeStyles({
 	root: {
@@ -44,7 +45,7 @@ const NavList = (props: any) => {
 						loading="lazy"
 					/>
 					<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.green}>
-						Nadodo is watching
+						{getTranslation('welcome')}
 					</Typography>
 				</Box>
 			</Card>
@@ -56,7 +57,7 @@ const NavList = (props: any) => {
 								<ListItemIcon>
 									<InboxIcon />
 								</ListItemIcon>
-								<ListItemText primary={navItem.title} />
+								<ListItemText primary={getTranslation(navItem.title)} />
 							</ListItemButton>
 						</Tooltip>
 					</a>
@@ -68,14 +69,14 @@ const NavList = (props: any) => {
 									<ListItemIcon>
 										<InboxIcon />
 									</ListItemIcon>
-									<ListItemText primary={navItem.title} />
+									<ListItemText primary={getTranslation(navItem.title)} />
 								</ListItemButton>
 							</Tooltip>
 						</NavLink>
 					}
 					{navItem.type === "divider" && <Divider />}
 					{navItem.type === "head" && <Card sx={{ m: 2, p: 2 }}>
-						<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{navItem.title}</Typography>
+						<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
 					</Card>}
 				</React.Fragment>
 			))}
