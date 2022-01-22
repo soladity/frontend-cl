@@ -9,6 +9,7 @@ import { meta_constant } from '../../config/meta.config';
 import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import MintCard from '../../component/Cards/MintCard';
+import { getTranslation } from '../../utils/translation';
 
 const useStyles = makeStyles({
 	root: {
@@ -94,14 +95,14 @@ const Beasts = () => {
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							Summon Beasts
+							{getTranslation('summonBeast')}
 						</Typography>
 						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
 							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
 								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
 									<HorizontalSplitIcon />
 								</IconButton>
-								MINT QUANTITY
+								{getTranslation('summonQuantity')}
 							</Button>
 							{
 								showMint &&
@@ -131,7 +132,7 @@ const Beasts = () => {
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							Current Beasts
+							{getTranslation('currentBeasts')}
 						</Typography>
 						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
 							{balance}
@@ -143,7 +144,7 @@ const Beasts = () => {
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							Total Maximum Warriors Capacity
+							{getTranslation('warriorCapacity')}
 						</Typography>
 						<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
 							{maxWarrior}
@@ -155,15 +156,15 @@ const Beasts = () => {
 		<Grid container spacing={2} sx={{ my: 3 }}>
 			<Grid item md={12}>
 				<FormControl component="fieldset">
-					<FormLabel component="legend" style={{ marginBottom: 12 }}>Filter by Beast Rarity:</FormLabel>
+					<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterCapacity')}:</FormLabel>
 					<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
-						<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>All</Button>
+						<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>{getTranslation('all')}</Button>
 						<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
 						<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
 						<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
 						<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
 						<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
-						<Button variant={`${filter === '6' ? 'contained' : 'outlined'}`} onClick={() => setFilter('6')}>6</Button>
+						<Button variant={`${filter === '20' ? 'contained' : 'outlined'}`} onClick={() => setFilter('20')}>20</Button>
 					</ButtonGroup>
 				</FormControl>
 			</Grid>
@@ -172,7 +173,7 @@ const Beasts = () => {
 			{
 				beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
 					<Grid item xs={3} key={index}>
-						<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} />
+						<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
 					</Grid>
 				))
 			}

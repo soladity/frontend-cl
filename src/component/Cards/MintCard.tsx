@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -11,14 +12,17 @@ type CardProps = {
     image: string;
     type: string;
     capacity: string;
+    strength: string;
 };
 
 export default function MintCard(props: CardProps) {
     const {
         image,
         type,
-        capacity
+        capacity,
+        strength
     } = props;
+    
     const [loaded, setLoaded] = React.useState(false);
 
     const handleImageLoaded = () => {
@@ -45,11 +49,13 @@ export default function MintCard(props: CardProps) {
             <Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
                 {type}
             </Typography>
-            <CardActions>
-                <Typography variant='h5' sx={{ textAlign: 'center', width: '100%', padding: 1, fontWeight: 'bold' }}>
-                    {capacity} Warriors
-                </Typography>
-            </CardActions>
+            <Box sx={{ display: 'flex', position: 'absolute', top: '15px', right: '20px', fontWeight: 'bold' }}>
+                <img src='/assets/images/sword.jpeg' style={{height: '25px', marginRight: '10px'}} alt='Sword' />
+                <Typography variant='h6' sx={{fontWeight: 'bold'}}>{capacity}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
+                <img src='/assets/images/shopping.png' style={{height: '25px'}} alt='Sword' />
+            </Box>
         </Card>
     );
 }

@@ -65,29 +65,29 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'Main Game',
+                title: 'mainGame',
             },
             {
                 type: 'navlink',
-                title: 'Beasts',
+                title: 'beasts',
                 icon: 'beasts',
                 path: '/beasts'
             },
             {
                 type: 'navlink',
-                title: 'Warriors',
+                title: 'warriors',
                 icon: 'warriors',
                 path: '/warriors'
             },
             {
                 type: 'navlink',
-                title: 'Legions',
+                title: 'legions',
                 icon: 'legions',
                 path: '/legions'
             },
             {
                 type: 'navlink',
-                title: 'Hunt',
+                title: 'hunt',
                 icon: 'hunt',
                 path: '/monsters'
             },
@@ -96,23 +96,23 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'Marketplace',
+                title: 'marketplace',
             },
             {
                 type: 'link',
-                title: 'Beasts',
+                title: 'beasts',
                 icon: 'beasts',
                 path: '/beasts'
             },
             {
                 type: 'link',
-                title: 'Warriors',
+                title: 'warriors',
                 icon: 'warriors',
                 path: '/warrios'
             },
             {
                 type: 'link',
-                title: 'Legions',
+                title: 'legions',
                 icon: 'legions',
                 path: '/legions'
             },
@@ -121,11 +121,11 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'Get $Bloodstone',
+                title: 'getBloodstone',
             },
             {
                 type: 'link',
-                title: 'Pancakeswap',
+                title: 'pancakeswap',
                 icon: 'pancakeswap',
                 path: 'https://pancakeswap.com'
             },
@@ -134,11 +134,11 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'How To Play',
+                title: 'howToPlay',
             },
             {
                 type: 'link',
-                title: 'WHITEPAPER',
+                title: 'whitepaper',
                 icon: 'whitepaper',
                 path: 'https://pancakeswap.com'
             },
@@ -147,23 +147,23 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'Social',
+                title: 'social',
             },
             {
                 type: 'link',
-                title: 'Twitter',
+                title: 'twitter',
                 icon: 'beasts',
                 path: 'https://www.twitter.com'
             },
             {
                 type: 'link',
-                title: 'Telegram',
+                title: 'telegram',
                 icon: 'beasts',
                 path: 'https://www.telegram.com'
             },
             {
                 type: 'link',
-                title: 'Discord',
+                title: 'discord',
                 icon: 'beasts',
                 path: 'https://www.discord.com'
             },
@@ -172,11 +172,11 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'Privacy',
+                title: 'privacy',
             },
             {
                 type: 'navlink',
-                title: 'Policy',
+                title: 'policy',
                 icon: 'policy',
                 path: '/policy'
             },
