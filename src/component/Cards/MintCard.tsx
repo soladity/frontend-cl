@@ -12,7 +12,7 @@ type CardProps = {
     image: string;
     type: string;
     capacity: string;
-    strength: string;
+    strength?: string;
 };
 
 export default function MintCard(props: CardProps) {
@@ -50,11 +50,11 @@ export default function MintCard(props: CardProps) {
                 {type}
             </Typography>
             <Box sx={{ display: 'flex', position: 'absolute', top: '15px', right: '20px', fontWeight: 'bold' }}>
-                <img src='/assets/images/sword.jpeg' style={{height: '25px', marginRight: '10px'}} alt='Sword' />
+                <img src='/assets/images/sword.png' style={{height: '21px', marginRight: '10px'}} alt='Sword' />
                 <Typography variant='h6' sx={{fontWeight: 'bold'}}>{capacity}</Typography>
             </Box>
             <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
-                <img src='/assets/images/shopping.png' style={{height: '25px'}} alt='Sword' />
+                <img src='/assets/images/shopping.png' style={{height: '21px'}} alt='Sword' />
             </Box>
         </Card>
     );
