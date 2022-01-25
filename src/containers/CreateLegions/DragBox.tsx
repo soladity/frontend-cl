@@ -14,6 +14,7 @@ export interface DragBoxProps {
     baseUrl: string,
     baseIndex: number,
     curIndex: number,
+    w5b: boolean,
     dropped: (index: number) => void
 }
 
@@ -21,10 +22,10 @@ interface DropResult {
     done: boolean
 }
 
-export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseIndex, curIndex, dropped }) {
+export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseIndex, curIndex, w5b, dropped }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: DragItemBox.Beasts,
-        item: { item, id: baseIndex },
+        item: { item, id: baseIndex, w5b: w5b },
 
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult<DropResult>()
