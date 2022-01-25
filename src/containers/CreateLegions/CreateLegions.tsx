@@ -45,6 +45,9 @@ const CreateLegions: React.FC = () => {
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [filter, setFilter] = React.useState('all');
 	const [droppedID, setDroppedID] = React.useState(Number);
+	const [w5bInDropList, setW5bInDropList] = React.useState(Boolean);
+	const [indexForLeft, setIndexForLeft] = React.useState(Number);
+	const [dropItemList, setDropItemList] = React.useState(Array);
 	const classes = useStyles();
 	const beastContract = useBeast();
 	const web3 = useWeb3();
@@ -73,6 +76,45 @@ const CreateLegions: React.FC = () => {
 		}
 	}, [droppedID]);
 
+	React.useEffect(() => {
+		let tempIndexS = (w5bInDropList ? warriorDragBoxList : beastDragBoxList);
+		let tmpArray = (w5bInDropList ? warriorDropBoxList : beastDropBoxList);
+		const droppedIDIndex = tmpArray.indexOf(indexForLeft);
+		if (droppedIDIndex <= -1) {
+			return;
+		}
+		let droppedNum = tmpArray.splice(droppedIDIndex, 1);
+		let tmpInsertPos = -1;
+		// debugger;
+		let tmpIndexValue = droppedNum[0] as number;
+		if (tmpIndexValue == 0) {
+			tmpInsertPos = 0;
+		} else {
+			for (; tmpIndexValue > 0; tmpIndexValue--) {
+				tmpInsertPos = tempIndexS.findIndex((tmpIndex) => (tmpIndex == tmpIndexValue));
+				if (tmpInsertPos != -1) {
+					break;
+				}
+			}
+		}
+		tmpInsertPos++;
+		tempIndexS.splice(tmpInsertPos, 0, droppedNum[0]);
+		console.log(tempIndexS);
+		tempIndexS = [...tempIndexS];
+
+		if (warrior5beast) {
+			setWarriorDropBoxList(tmpArray);
+			setWarriorDragBoxList(tempIndexS);
+		} else {
+			setBeastDropBoxList(tmpArray);
+		}
+		setBeastDragBoxList(tempIndexS);
+		let tmpDropItemList = dropItemList;
+		const indexOfRight = tmpDropItemList.findIndex((item: any) => (item.w5b == w5bInDropList && item.id == indexForLeft));
+		tmpDropItemList.splice(indexOfRight, 1);
+		setDropItemList(tmpDropItemList);
+	}, [indexForLeft, w5bInDropList]);
+
 	const getBalance = async () => {
 		setBaseUrl(await getBeastUrl(web3, beastContract));
 		setBalance(await getBeastBalance(web3, beastContract, account));
@@ -91,12 +133,19 @@ const CreateLegions: React.FC = () => {
 		setBeastDragBoxList(tempIndexS);
 	}
 
-	const dropped = (index: number) => {
+	const changeDroppedIndex = (index: number) => {
 		setDroppedID(index);
 	}
 
-	const moveToLeft = (index: number) => {
-		console.log(index);
+	const moveToRight = (item: any) => {
+		console.log(item);
+		setDropItemList((prevState) => [...prevState, item]);
+	}
+
+	const moveToLeft = (index: number, w5b: boolean) => {
+		console.log(index, w5b);
+		setIndexForLeft(index);
+		setW5bInDropList(w5b);
 	}
 
 	return <Box>
@@ -175,7 +224,7 @@ const CreateLegions: React.FC = () => {
 								}
 								{!warrior5beast &&
 									(beasts.filter((item: any, findex) => beastDragBoxList.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
-										<DragBox item={item} baseUrl={baseUrl} baseIndex={beastDragBoxList[index] as number} dropped={dropped} curIndex={index} key={beastDragBoxList[index] as number} />
+										<DragBox item={item} baseUrl={baseUrl} baseIndex={beastDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={beastDragBoxList[index] as number} />
 									)))
 								}
 							</Grid>
@@ -198,7 +247,7 @@ const CreateLegions: React.FC = () => {
 									{/* <Button color='error' variant='contained'>{createlegions.main.createBtnTitle}</Button> */}
 								</Box>
 							</Grid>
-							<DropBox baseUrl={baseUrl} toLeft={moveToLeft} />
+							<DropBox baseUrl={baseUrl} items={dropItemList} toLeft={moveToLeft} itemMove={moveToRight} />
 						</Card>
 					</Grid>
 				</DndProvider>
