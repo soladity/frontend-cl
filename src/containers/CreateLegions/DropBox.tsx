@@ -1,19 +1,9 @@
 import React, { CSSProperties, FC, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
-import { Box, Typography } from '@mui/material'
+import { Grid, Card, Box, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles';
 import { DragItemBox } from '../../constant/createlegions/createlegions'
-import DropCard from '../../component/Cards/DropCard'
-
-const useStyles = makeStyles({
-    card: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '180px',
-        height: '100%',
-        justifyContent: 'flex-start'
-    }
-});
+import { DropCard } from '../../component/Cards/DropCard'
 
 const style: CSSProperties = {
     color: 'white',
@@ -23,18 +13,21 @@ const style: CSSProperties = {
 }
 
 interface DropBoxProps {
-    baseUrl: string
+    baseUrl: string,
+    items: Array<any>,
+    itemMove: (item: any) => void,
+    toLeft: (index: number, w5b: boolean) => void
 }
 
-export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl }) {
-    const classes = useStyles();
-    const [items, setItems] = React.useState(Array);
+export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, itemMove, toLeft }) {
+    // const [items, setItems] = React.useState(Array);
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
         accept: DragItemBox.Beasts,
         drop: (item) => {
-            let tmpItems = items;
-            tmpItems.push(item);
-            setItems([...tmpItems]);
+            // let tmpItems = items;
+            // tmpItems.push(item);
+            // setItems([...tmpItems]);
+            itemMove(item);
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -43,7 +36,7 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl }) {
     }))
 
     const isActive = canDrop && isOver
-    let backgroundColor = '#222'
+    let backgroundColor = 'transparent'
     if (isActive) {
         backgroundColor = 'darkgreen'
     } else if (canDrop) {
@@ -51,11 +44,10 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl }) {
     }
 
     return (
-        <Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }} ref={drop} style={{ ...style, backgroundColor }}>
-            {items.map((element: any, index) => <DropCard image={baseUrl + element.item['image']} type={element.item['type']} capacity={element.item['capacity']} key={index} />)}
-            <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-                {isActive ? 'Release to drop' : 'Drag a box here'}
-            </Typography>
+        <Box sx={{ height: '100%' }} ref={drop} style={{ ...style, backgroundColor }}>
+            <Grid container spacing={2} sx={{ p: 4 }}>
+                {items.map((element: any, index) => <DropCard toLeft={toLeft} w5b={element.w5b} baseIndex={element.id} image={baseUrl + element.item['image']} type={element.item['type']} capacity={element.item['capacity']} key={index} />)}
+            </Grid>
         </Box>
     )
 }
