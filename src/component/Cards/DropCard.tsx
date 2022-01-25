@@ -13,10 +13,11 @@ interface DropCardProps {
     type: string,
     capacity: string,
     baseIndex: number,
-    toLeft: (index: number) => void
+    w5b: boolean,
+    toLeft: (index: number, w5b: boolean) => void
 };
 
-export const DropCard: React.FC<DropCardProps> = function DropCard({ image, type, capacity, baseIndex, toLeft }) {
+export const DropCard: React.FC<DropCardProps> = function DropCard({ image, type, capacity, baseIndex, w5b, toLeft }) {
     // const {
     //     image,
     //     type,
@@ -35,7 +36,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({ image, type
                 <Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
                     {type}
                 </Typography>
-                <Button onClick={() => toLeft(baseIndex)} sx={{ position: 'absolute', top: '15px', right: '5px', fontWeight: 'bold' }}>X</Button>
+                <Button onClick={() => toLeft(baseIndex, w5b)} sx={{ position: 'absolute', top: '15px', right: '5px', fontWeight: 'bold' }}>X</Button>
                 <CardActions>
                     <Typography variant='h5' sx={{ textAlign: 'center', width: '100%', padding: 1, fontWeight: 'bold' }}>
                         {capacity} Warriors

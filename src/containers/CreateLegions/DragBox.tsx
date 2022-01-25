@@ -40,7 +40,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseI
     const opacity = isDragging ? 0.4 : 1
     return (
         <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>
-            <MintCard image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} />
+            <MintCard image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
         </Grid>
     )
 }
