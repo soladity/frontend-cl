@@ -43,12 +43,12 @@ export const meta_constant = {
 
 export const createlegions = {
     warning: {
-        title: 'Creating Legions',
+        title: 'Create Legions',
         subtitle1: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
         subtitle2: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
     },
     main: {
-        backBtnTitle: 'Back to my legions',
-        createBtnTitle: 'Minimum 100 AP needed!'
+        backBtnTitle: 'Back to your legions',
+        createBtnTitle: 'Create legion with 20,000 AP'
     }
 }
