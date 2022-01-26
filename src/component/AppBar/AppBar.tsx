@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -20,6 +21,8 @@ import { useBloodstone, useWeb3 } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
 import { getTranslation } from '../../utils/translation';
+import { AnyAaaaRecord } from 'dns';
+import NavList from '../Nav/NavList';
 
 declare const window: any;
 
@@ -46,6 +49,7 @@ const AppBarComponent = () => {
   const [isActive, setIsActive] = React.useState(false);
   const [balance, setBalance] = React.useState('0');
   const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
+  const [showMenu, setShowMenu] = React.useState<boolean>(false);
 
   const bloodstoneContract = useBloodstone();
   const web3 = useWeb3();
@@ -84,11 +88,22 @@ const AppBarComponent = () => {
     deactivate();
   };
 
+  const toggleDrawer = (open: boolean) => (event: any) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
+    setShowMenu(open);
+  };
+
   const handleShowAnimation = () => {
-    if (showAnimation === '0'){
+    if (showAnimation === '0') {
       setShowAnimation('1');
       localStorage.setItem('showAnimation', '1');
-    }else{
+    } else {
       setShowAnimation('0');
       localStorage.setItem('showAnimation', '0');
     }
@@ -103,55 +118,38 @@ const AppBarComponent = () => {
         py: 1
       }}>
       <Container maxWidth={false}>
-        <Toolbar disableGutters>
-          <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
-            <img src='/assets/images/logo.png' style={{ height: '40px' }} alt='logo' />
-          </NavLink>
-
+        <Toolbar disableGutters sx={{flexFlow: 'wrap'}}>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={toggleDrawer(true)}
               color="inherit"
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
+            <SwipeableDrawer
+              anchor='left'
+              open={showMenu}
+              onClose={toggleDrawer(false)}
+              onOpen={toggleDrawer(true)}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              <Box
+                sx={{ width: 250 }}
+                role="presentation"
+                onClick={toggleDrawer(false)}
+                onKeyDown={toggleDrawer(false)}
+              >
+                <NavList />
+              </Box>
+            </SwipeableDrawer>
           </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            {getTranslation('logo')}
-          </Typography>
+          <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
+            <img src='/assets/images/logo.png' style={{ height: '40px' }} alt='logo' />
+          </NavLink>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {/* <Button variant="contained" color='info' sx={{ fontWeight: 'bold', mr: 5, minWidth: '0px', padding: 1 }} onClick={handleShowAnimation}>
               <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'white', marginRight: 0 }}>
@@ -168,26 +166,26 @@ const AppBarComponent = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             {
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Button variant="contained" sx={{ fontWeight: 'bold', mr: 5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', md:'inherit'} }}>
+                <Button variant="contained" sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5}, fontSize: {xs: '0.7rem', md:'1rem'} }}>
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
                   {getTranslation('claim')} 0 ${getTranslation('bloodstone')}
                 </Button>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0} }}>
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
-                  <Box sx={{ ml: 2 }}>
+                  <Box sx={{ ml: { xs: 1, md: 2} }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant='h6'>{balance}</Typography>
-                      <Typography variant='h6'>$BLST</Typography>
+                      <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>{balance}</Typography>
+                      <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>$BLST</Typography>
                     </Box>
                     <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
                         <BadgeIcon />
                       </IconButton>
                       <NavLink to='/profile' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
-                        <Typography variant='subtitle1'>
+                        <Typography variant='subtitle1' sx={{fontSize: {xs: '0.7rem', md:'1rem'}}}>
                           {account === undefined || account === null ? '...' : account.substr(0, 6) + '...' + account.substr(account.length - 4, 4)}</Typography>
                       </NavLink>
                     </Button>
