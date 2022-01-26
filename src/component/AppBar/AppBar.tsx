@@ -11,6 +11,7 @@ import StopCircleIcon from '@mui/icons-material/StopCircle';
 import BadgeIcon from '@mui/icons-material/Badge';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import { Menu, MenuItem } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
@@ -118,7 +119,7 @@ const AppBarComponent = () => {
             >
               <MenuIcon />
             </IconButton>
-            {/* <Menu
+            <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -141,7 +142,7 @@ const AppBarComponent = () => {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-            </Menu> */}
+            </Menu>
           </Box>
           <Typography
             variant="h6"

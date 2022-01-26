@@ -91,7 +91,7 @@ const Beasts = () => {
 			{meta_constant.beasts.keywords && <meta name="keywords" content={meta_constant.beasts.keywords.join(',')} />}
 		</Helmet>
 		<Grid container spacing={2} sx={{ my: 4 }}>
-			<Grid item xs={4}>
+			<Grid item xs={12} md={4}>
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
@@ -128,7 +128,7 @@ const Beasts = () => {
 					</Box>
 				</Card>
 			</Grid>
-			<Grid item xs={4}>
+			<Grid item xs={12} md={4}>
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
@@ -137,10 +137,13 @@ const Beasts = () => {
 						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
 							{balance}
 						</Typography>
+						<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+							{getTranslation('createLegion')}
+						</Button>
 					</Box>
 				</Card>
 			</Grid>
-			<Grid item xs={4}>
+			<Grid item xs={12} md={4}>
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
 						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
@@ -172,7 +175,7 @@ const Beasts = () => {
 		<Grid container spacing={2} sx={{ mb: 4 }}>
 			{
 				beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
-					<Grid item xs={3} key={index}>
+					<Grid item xs={12} sm={6} md={3} key={index}>
 						<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
 					</Grid>
 				))
