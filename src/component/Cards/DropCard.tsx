@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 interface DropCardProps {
     image: string,
@@ -18,12 +19,6 @@ interface DropCardProps {
 };
 
 export const DropCard: React.FC<DropCardProps> = function DropCard({ image, type, capacity, baseIndex, w5b, toLeft }) {
-    // const {
-    //     image,
-    //     type,
-    //     capacity
-    // } = props;
-
     return (
         <Grid item xs={3}>
             <Card sx={{ position: 'relative' }}>
@@ -36,12 +31,13 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({ image, type
                 <Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
                     {type}
                 </Typography>
-                <Button onClick={() => toLeft(baseIndex, w5b)} sx={{ position: 'absolute', top: '15px', right: '5px', fontWeight: 'bold' }}>X</Button>
-                <CardActions>
-                    <Typography variant='h5' sx={{ textAlign: 'center', width: '100%', padding: 1, fontWeight: 'bold' }}>
-                        {capacity} Warriors
-                    </Typography>
-                </CardActions>
+                <Box sx={{ display: 'flex', position: 'absolute', top: '15px', right: '20px', fontWeight: 'bold' }}>
+                    <img src='/assets/images/sword.jpeg' style={{ height: '25px', marginRight: '10px' }} alt='Sword' />
+                    <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{capacity}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
+                    <Button color="error" onClick={() => toLeft(baseIndex, w5b)}>X</Button>
+                </Box>
             </Card>
         </Grid>
     );
