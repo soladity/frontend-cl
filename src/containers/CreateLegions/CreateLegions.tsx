@@ -2,7 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Box, Typography, Grid, Card, CardMedia, Input, Menu, MenuItem, Button, IconButton, FormControl, FormLabel, ButtonGroup } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, Input, Slider, MenuItem, Button, IconButton, FormControl, FormLabel, ButtonGroup } from '@mui/material';
 import { ErrorOutline, ArrowBack } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -34,6 +34,7 @@ const useStyles = makeStyles({
 const CreateLegions: React.FC = () => {
 	const { account } = useWeb3React();
 
+	const [apValue, setApValue] = React.useState<number[]>([20, 37]);
 	const [warrior5beast, setWarrior5beat] = React.useState(false);
 	const [warriorDropBoxList, setWarriorDropBoxList] = React.useState(Array);
 	const [beastDropBoxList, setBeastDropBoxList] = React.useState(Array);
@@ -60,8 +61,7 @@ const CreateLegions: React.FC = () => {
 	}, []);
 
 	React.useEffect(() => {
-		console.log(droppedID, tempDroppedItem);
-		if (beastDropBoxList.length < 10) {
+		if (beastDropBoxList.length < 10 && droppedID > -1) {
 			let tempIndexS = (warrior5beast ? warriorDragBoxList : beastDragBoxList);
 			let tmpArray = (warrior5beast ? warriorDropBoxList : beastDropBoxList);
 			const droppedIDIndex = tempIndexS.indexOf(droppedID);
@@ -78,30 +78,45 @@ const CreateLegions: React.FC = () => {
 				setBeastDragBoxList(tempIndexS);
 			}
 			setDropItemList((prevState) => [...prevState, tempDroppedItem]);
+			console.log(droppedID, dropItemList);
 		}
+		setDroppedID(-1);
 	}, [droppedID]);
 
 	React.useEffect(() => {
+		if (indexForLeft === -1) {
+			return;
+		}
 		let tempIndexS = (w5bInDropList ? warriorDragBoxList : beastDragBoxList);
 		let tmpArray = (w5bInDropList ? warriorDropBoxList : beastDropBoxList);
-		const droppedIDIndex = tmpArray.indexOf(indexForLeft - 5);
+		const droppedIDIndex = tmpArray.indexOf(indexForLeft);
 		if (droppedIDIndex <= -1) {
 			return;
 		}
-		let droppedNum = tmpArray.splice(droppedIDIndex, 1);
 		let tmpInsertPos = -1;
+		let droppedNum = tmpArray.splice(droppedIDIndex, 1);
 		let tmpIndexValue = droppedNum[0] as number;
-		if (tmpIndexValue == 0) {
+		if (tmpIndexValue === 0) {
 			tmpInsertPos = 0;
 		} else {
 			for (; tmpIndexValue > 0; tmpIndexValue--) {
-				tmpInsertPos = tempIndexS.findIndex((tmpIndex) => (tmpIndex == tmpIndexValue));
+				tmpInsertPos = tempIndexS.findIndex((tmpIndex) => (tmpIndex === tmpIndexValue));
 				if (tmpInsertPos != -1) {
 					break;
 				}
 			}
+			if (tmpInsertPos === -1) {
+				tmpIndexValue = droppedNum[0] as number;
+				for (; tmpIndexValue < beasts.length; tmpIndexValue++) {
+					tmpInsertPos = tempIndexS.findIndex((tmpIndex) => (tmpIndex === tmpIndexValue));
+					if (tmpInsertPos != -1) {
+						break;
+					}
+				}
+			}
 		}
-		tmpInsertPos++;
+		console.log(droppedNum[0], tmpInsertPos);
+		tmpInsertPos = (tmpInsertPos === 0 ? 0 : tmpInsertPos + 1);
 		tempIndexS.splice(tmpInsertPos, 0, droppedNum[0]);
 		console.log(tempIndexS);
 		tempIndexS = [...tempIndexS];
@@ -114,9 +129,10 @@ const CreateLegions: React.FC = () => {
 			setBeastDragBoxList(tempIndexS);
 		}
 		let tmpDropItemList = dropItemList;
-		const indexOfRight = tmpDropItemList.findIndex((item: any) => (item.w5b == w5bInDropList && item.id == indexForLeft));
+		const indexOfRight = tmpDropItemList.findIndex((item: any) => (item.w5b === w5bInDropList && item.id === indexForLeft));
 		tmpDropItemList.splice(indexOfRight, 1);
 		setDropItemList(tmpDropItemList);
+		setIndexForLeft(-1);
 	}, [indexForLeft, w5bInDropList]);
 
 	const getBalance = async () => {
@@ -147,9 +163,25 @@ const CreateLegions: React.FC = () => {
 
 	const moveToLeft = (index: number, w5b: boolean) => {
 		console.log(index, w5b);
-		setIndexForLeft(index + 5);
+		setIndexForLeft(index);
 		setW5bInDropList(w5b);
 	}
+
+	const handleChangeAp = (
+		event: Event,
+		newValue: number | number[],
+		activeThumb: number,
+	) => {
+		if (!Array.isArray(newValue)) {
+			return;
+		}
+
+		if (activeThumb == 0) {
+			setApValue([Math.min(newValue[0], apValue[1] - 1), apValue[1]]);
+		} else {
+			setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
+		}
+	};
 
 	return <Box>
 		<Helmet>
@@ -186,15 +218,6 @@ const CreateLegions: React.FC = () => {
 						<Card>
 							<Grid container spacing={2} sx={{ p: 4 }}>
 								<Grid item xs={12}>
-									<FormControl component="fieldset">
-										<ButtonGroup variant='outlined' color='primary' aria-label="outlined button group">
-											<Button>Rank</Button>
-											<Button>Rank</Button>
-											<Button>Rank</Button>
-										</ButtonGroup>
-									</FormControl>
-								</Grid>
-								<Grid item xs={12}>
 									<Grid container sx={{ justifyContent: 'space-between' }}>
 										<Grid item>
 											<FormControl component="fieldset">
@@ -206,7 +229,26 @@ const CreateLegions: React.FC = () => {
 										</Grid>
 										{
 											warrior5beast &&
-											<Grid></Grid>
+											<Grid item>
+												<FormControl component="fieldset" sx={{ width: '100%', minWidth: '250px' }}>
+													<FormLabel component="legend">Filter by AP:</FormLabel>
+													<Slider
+														getAriaLabel={() => "Custom marks"}
+														// defaultValue={20}
+														value={apValue}
+														min={5}
+														max={80}
+														marks={[
+															{ value: 5, label: '5' },
+															{ value: 80, label: '80' },
+														]}
+														step={1}
+														valueLabelDisplay="auto"
+														onChange={handleChangeAp}
+														disableSwap
+													/>
+												</FormControl>
+											</Grid>
 										}
 										{
 											!warrior5beast &&
@@ -262,7 +304,7 @@ const CreateLegions: React.FC = () => {
 				</DndProvider>
 			}
 			{
-				beasts.length == 0 &&
+				beasts.length === 0 &&
 				<>
 					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
 						<Typography variant='h4' >{createlegions.main.loadingBeastsTitle}</Typography>
