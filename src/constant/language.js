@@ -25,6 +25,7 @@ export const translations = {
       'twitter': 'Twitter',
       'telegram': 'Telegram',
       'discord': 'Discord',
-      'policy': 'Policy'
+      'policy': 'Policy',
+      'createLegion': 'Create a Legion'
     }
   }

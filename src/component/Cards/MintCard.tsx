@@ -22,7 +22,7 @@ export default function MintCard(props: CardProps) {
         capacity,
         strength
     } = props;
-    
+
     const [loaded, setLoaded] = React.useState(false);
 
     const handleImageLoaded = () => {
@@ -49,13 +49,19 @@ export default function MintCard(props: CardProps) {
             <Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
                 {type}
             </Typography>
-            <Box sx={{ display: 'flex', position: 'absolute', top: '15px', right: '20px', fontWeight: 'bold' }}>
-                <img src='/assets/images/sword.png' style={{height: '21px', marginRight: '10px'}} alt='Sword' />
-                <Typography variant='h6' sx={{fontWeight: 'bold'}}>{capacity}</Typography>
+            <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '20px', fontWeight: 'bold' }}>
+                <img src='/assets/images/sword.png' style={{ height: '20px', marginRight: '10px' }} alt='Sword' />
+                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{capacity}</Typography>
             </Box>
             <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
-                <img src='/assets/images/shopping.png' style={{height: '21px'}} alt='Sword' />
+                <img src='/assets/images/shopping.png' style={{ height: '20px' }} alt='Shopping' />
             </Box>
+            <Box sx={{ display: 'flex', position: 'absolute', bottom: '55px', left: '20px', cursor: 'pointer' }}>
+                <img src='/assets/images/execute.png' style={{ height: '20px' }} alt='Execute' />
+            </Box>
+            <Button variant="contained" sx={{ fontWeight: 'bold', position: 'absolute', bottom: '15px', left: '20px' }}>
+                #{Math.floor((Math.random() * 99999) + 9999)}
+            </Button>
         </Card>
     );
 }
