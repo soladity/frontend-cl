@@ -44,10 +44,11 @@ const CreateLegions: React.FC = () => {
 	const [balance, setBalance] = React.useState('0');
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [filter, setFilter] = React.useState('all');
-	const [droppedID, setDroppedID] = React.useState(Number);
+	const [droppedID, setDroppedID] = React.useState(-1);
 	const [w5bInDropList, setW5bInDropList] = React.useState(Boolean);
 	const [indexForLeft, setIndexForLeft] = React.useState(Number);
 	const [dropItemList, setDropItemList] = React.useState(Array);
+	const [tempDroppedItem, setTempDroppedItem] = React.useState();
 	const classes = useStyles();
 	const beastContract = useBeast();
 	const web3 = useWeb3();
@@ -59,33 +60,36 @@ const CreateLegions: React.FC = () => {
 	}, []);
 
 	React.useEffect(() => {
-		let tempIndexS = (warrior5beast ? warriorDragBoxList : beastDragBoxList);
-		let tmpArray = (warrior5beast ? warriorDropBoxList : beastDropBoxList);
-		const droppedIDIndex = tempIndexS.indexOf(droppedID);
-		if (droppedIDIndex <= -1) {
-			return;
-		}
-		let droppedNum = tempIndexS.splice(droppedIDIndex, 1);
-		tmpArray = [...tmpArray, droppedNum[0]];
-		if (warrior5beast) {
-			setWarriorDropBoxList(tmpArray);
-			setWarriorDragBoxList(tempIndexS);
-		} else {
-			setBeastDropBoxList(tmpArray);
-			setBeastDragBoxList(tempIndexS);
+		console.log(droppedID, tempDroppedItem);
+		if (beastDropBoxList.length < 10) {
+			let tempIndexS = (warrior5beast ? warriorDragBoxList : beastDragBoxList);
+			let tmpArray = (warrior5beast ? warriorDropBoxList : beastDropBoxList);
+			const droppedIDIndex = tempIndexS.indexOf(droppedID);
+			if (droppedIDIndex <= -1) {
+				return;
+			}
+			let droppedNum = tempIndexS.splice(droppedIDIndex, 1);
+			tmpArray = [...tmpArray, droppedNum[0]];
+			if (warrior5beast) {
+				setWarriorDropBoxList(tmpArray);
+				setWarriorDragBoxList(tempIndexS);
+			} else {
+				setBeastDropBoxList(tmpArray);
+				setBeastDragBoxList(tempIndexS);
+			}
+			setDropItemList((prevState) => [...prevState, tempDroppedItem]);
 		}
 	}, [droppedID]);
 
 	React.useEffect(() => {
 		let tempIndexS = (w5bInDropList ? warriorDragBoxList : beastDragBoxList);
 		let tmpArray = (w5bInDropList ? warriorDropBoxList : beastDropBoxList);
-		const droppedIDIndex = tmpArray.indexOf(indexForLeft);
+		const droppedIDIndex = tmpArray.indexOf(indexForLeft - 5);
 		if (droppedIDIndex <= -1) {
 			return;
 		}
 		let droppedNum = tmpArray.splice(droppedIDIndex, 1);
 		let tmpInsertPos = -1;
-		// debugger;
 		let tmpIndexValue = droppedNum[0] as number;
 		if (tmpIndexValue == 0) {
 			tmpInsertPos = 0;
@@ -107,8 +111,8 @@ const CreateLegions: React.FC = () => {
 			setWarriorDragBoxList(tempIndexS);
 		} else {
 			setBeastDropBoxList(tmpArray);
+			setBeastDragBoxList(tempIndexS);
 		}
-		setBeastDragBoxList(tempIndexS);
 		let tmpDropItemList = dropItemList;
 		const indexOfRight = tmpDropItemList.findIndex((item: any) => (item.w5b == w5bInDropList && item.id == indexForLeft));
 		tmpDropItemList.splice(indexOfRight, 1);
@@ -138,13 +142,12 @@ const CreateLegions: React.FC = () => {
 	}
 
 	const moveToRight = (item: any) => {
-		console.log(item);
-		setDropItemList((prevState) => [...prevState, item]);
+		setTempDroppedItem(item);
 	}
 
 	const moveToLeft = (index: number, w5b: boolean) => {
 		console.log(index, w5b);
-		setIndexForLeft(index);
+		setIndexForLeft(index + 5);
 		setW5bInDropList(w5b);
 	}
 
@@ -155,7 +158,7 @@ const CreateLegions: React.FC = () => {
 			<meta name="description" content={meta_constant.createlegions.description} />
 			{meta_constant.createlegions.keywords && <meta name="keywords" content={meta_constant.createlegions.keywords.join(',')} />}
 		</Helmet>
-		<Grid container spacing={2} sx={{ my: 2 }}>
+		<Grid container spacing={2} justifyContent="center" sx={{ my: 2 }}>
 			<Grid item xs={12}>
 				<Card>
 					<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
@@ -201,19 +204,26 @@ const CreateLegions: React.FC = () => {
 												</ButtonGroup>
 											</FormControl>
 										</Grid>
-										<Grid item>
-											<FormControl component="fieldset">
-												<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
-													<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>All</Button>
-													<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
-													<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
-													<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
-													<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
-													<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
-													<Button variant={`${filter === '6' ? 'contained' : 'outlined'}`} onClick={() => setFilter('6')}>6</Button>
-												</ButtonGroup>
-											</FormControl>
-										</Grid>
+										{
+											warrior5beast &&
+											<Grid></Grid>
+										}
+										{
+											!warrior5beast &&
+											<Grid item>
+												<FormControl component="fieldset">
+													<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
+														<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>All</Button>
+														<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
+														<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
+														<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
+														<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
+														<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
+														<Button variant={`${filter === '6' ? 'contained' : 'outlined'}`} onClick={() => setFilter('6')}>6</Button>
+													</ButtonGroup>
+												</FormControl>
+											</Grid>
+										}
 									</Grid>
 								</Grid>
 							</Grid>
@@ -242,28 +252,32 @@ const CreateLegions: React.FC = () => {
 							</Grid>
 							<Grid item xs={12} sx={{ p: 4 }}>
 								<Box sx={{ display: 'flex', justifyContent: 'space-around', pb: 2, borderBottom: '2px dashed grey' }}>
-									<Typography>Beasts: {beastDropBoxList.length}/{beastDragBoxList.length}</Typography>
+									<Typography>Beasts: {beastDropBoxList.length}/{createlegions.main.maxAvailableDragCount}</Typography>
 									<Typography>Warriors: {warriorDropBoxList.length}/{warriorDragBoxList.length}</Typography>
-									{/* <Button color='error' variant='contained'>{createlegions.main.createBtnTitle}</Button> */}
 								</Box>
 							</Grid>
-							<DropBox baseUrl={baseUrl} items={dropItemList} toLeft={moveToLeft} itemMove={moveToRight} />
+							<DropBox baseUrl={baseUrl} items={dropItemList} count={beastDropBoxList.length} toLeft={moveToLeft} itemMove={moveToRight} />
 						</Card>
 					</Grid>
 				</DndProvider>
 			}
 			{
 				beasts.length == 0 &&
-				<Grid item xs={12}>
-					<Card>
-						<CardMedia
-							component="img"
-							image="/assets/images/loading.gif"
-							alt="Loading"
-							loading="lazy"
-						/>
-					</Card>
-				</Grid>
+				<>
+					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
+						<Typography variant='h4' >{createlegions.main.loadingBeastsTitle}</Typography>
+					</Grid>
+					<Grid item xs={1}>
+						<Card>
+							<CardMedia
+								component="img"
+								image="/assets/images/loading.gif"
+								alt="Loading"
+								loading="lazy"
+							/>
+						</Card>
+					</Grid>
+				</>
 			}
 		</Grid>
 	</Box>

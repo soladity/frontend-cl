@@ -49,6 +49,9 @@ export const createlegions = {
     },
     main: {
         backBtnTitle: 'Back to your legions',
-        createBtnTitle: 'Create legion with 20,000 AP'
+        loadingBeastsTitle: 'Loading Beasts ...',
+        loadingWarriorsTitle: 'Loading Warriors ...',
+        createBtnTitle: 'Create legion with ',
+        maxAvailableDragCount: 10
     }
 }
