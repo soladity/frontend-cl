@@ -49,6 +49,9 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, coun
             <Grid container spacing={2} sx={{ p: 4 }}>
                 {items.map((element: any, index) => <DropCard toLeft={toLeft} w5b={element.w5b} baseIndex={element.id} image={baseUrl + element.item['image']} type={element.item['type']} capacity={element.item['capacity']} key={index} />)}
             </Grid>
+            <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+                {isActive ? 'Release to drop' : 'Drag a box here'}
+            </Typography>
         </Box>
     )
 }
