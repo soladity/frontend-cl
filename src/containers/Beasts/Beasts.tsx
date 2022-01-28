@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 
 import { meta_constant } from '../../config/meta.config';
-import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import MintCard from '../../component/Cards/MintCard';
 import { getTranslation } from '../../utils/translation';
@@ -60,9 +60,9 @@ const Beasts = () => {
 	};
 
 	const handleMint = async (amount: Number) => {
-		const allowance = await getBloodstoneAllowance(web3, bloodstoneContract, account);
+		const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
 		if (allowance === '0') {
-			await setBloodstoneApprove(web3, bloodstoneContract, account);
+			await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
 		}
 		await mintBeast(web3, beastContract, account, amount);
 		getBalance();
@@ -78,7 +78,7 @@ const Beasts = () => {
 		let tempBeasts = [];
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
-			tempBeasts.push(beast);
+			tempBeasts.push({ ...beast, id: ids[i] });
 			amount += parseInt(beast.capacity);
 		}
 		setMaxWarrior(amount);
@@ -93,75 +93,75 @@ const Beasts = () => {
 			<meta name="description" content={meta_constant.beasts.description} />
 			{meta_constant.beasts.keywords && <meta name="keywords" content={meta_constant.beasts.keywords.join(',')} />}
 		</Helmet>
+		<Grid container spacing={2} sx={{ my: 4 }}>
+			<Grid item xs={12} md={4}>
+				<Card>
+					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+							{getTranslation('summonBeast')}
+						</Typography>
+						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
+							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
+									<HorizontalSplitIcon />
+								</IconButton>
+								{getTranslation('summonQuantity')}
+							</Button>
+							{
+								showMint &&
+								<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
+									<Button variant="contained" onClick={() => handleMint(1)}>
+										1
+									</Button>
+									<Button variant="contained" onClick={() => handleMint(5)}>
+										5
+									</Button>
+									<Button variant="contained" onClick={() => handleMint(10)}>
+										10
+									</Button>
+									<Button variant="contained" onClick={() => handleMint(20)}>
+										20
+									</Button>
+									<Button variant="contained" onClick={() => handleMint(100)}>
+										100
+									</Button>
+								</Box>
+							}
+						</Box>
+					</Box>
+				</Card>
+			</Grid>
+			<Grid item xs={12} md={4}>
+				<Card>
+					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+							{getTranslation('currentBeasts')}
+						</Typography>
+						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
+							{balance}
+						</Typography>
+						<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+							{getTranslation('createLegion')}
+						</Button>
+					</Box>
+				</Card>
+			</Grid>
+			<Grid item xs={12} md={4}>
+				<Card>
+					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+							{getTranslation('warriorCapacity')}
+						</Typography>
+						<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
+							{maxWarrior}
+						</Typography>
+					</Box>
+				</Card>
+			</Grid>
+		</Grid>
 		{
 			loading === false &&
 			<React.Fragment>
-				<Grid container spacing={2} sx={{ my: 4 }}>
-					<Grid item xs={12} md={4}>
-						<Card>
-							<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-									{getTranslation('summonBeast')}
-								</Typography>
-								<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
-									<Button variant="contained" sx={{ fontWeight: 'bold' }}>
-										<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
-											<HorizontalSplitIcon />
-										</IconButton>
-										{getTranslation('summonQuantity')}
-									</Button>
-									{
-										showMint &&
-										<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
-											<Button variant="contained" onClick={() => handleMint(1)}>
-												1
-											</Button>
-											<Button variant="contained" onClick={() => handleMint(5)}>
-												5
-											</Button>
-											<Button variant="contained" onClick={() => handleMint(10)}>
-												10
-											</Button>
-											<Button variant="contained" onClick={() => handleMint(20)}>
-												20
-											</Button>
-											<Button variant="contained" onClick={() => handleMint(100)}>
-												100
-											</Button>
-										</Box>
-									}
-								</Box>
-							</Box>
-						</Card>
-					</Grid>
-					<Grid item xs={12} md={4}>
-						<Card>
-							<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-									{getTranslation('currentBeasts')}
-								</Typography>
-								<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
-									{balance}
-								</Typography>
-								<Button variant="contained" sx={{ fontWeight: 'bold' }}>
-									{getTranslation('createLegion')}
-								</Button>
-							</Box>
-						</Card>
-					</Grid>
-					<Grid item xs={12} md={4}>
-						<Card>
-							<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-									{getTranslation('warriorCapacity')}
-								</Typography>
-								<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
-									{maxWarrior}
-								</Typography>
-							</Box>
-						</Card>
-					</Grid>
-				</Grid>
 				<Grid container spacing={2} sx={{ my: 3 }}>
 					<Grid item md={12}>
 						<FormControl component="fieldset">
@@ -180,9 +180,9 @@ const Beasts = () => {
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
-						beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
+						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
+								<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
 							</Grid>
 						))
 					}
@@ -196,16 +196,16 @@ const Beasts = () => {
 					<Typography variant='h4' >{getTranslation('loadingBeasts')}</Typography>
 				</Grid>
 				<Grid container sx={{ justifyContent: 'center' }}>
-				<Grid item xs={1}>
-					<Card>
-						<CardMedia
-							component="img"
-							image="/assets/images/loading.gif"
-							alt="Loading"
-							loading="lazy"
-						/>
-					</Card>
-				</Grid>
+					<Grid item xs={1}>
+						<Card>
+							<CardMedia
+								component="img"
+								image="/assets/images/loading.gif"
+								alt="Loading"
+								loading="lazy"
+							/>
+						</Card>
+					</Grid>
 				</Grid>
 			</>
 		}
