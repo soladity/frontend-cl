@@ -32,5 +32,7 @@ export const translations = {
     'createLegionsBtn': 'Create legion with ',
     'createLegions': 'CreateLegions',
     'btnBackToLegions': 'Back to your Legions'
+    'createLegion': 'Create a Legion',
+    'loadingBeasts': 'Loading Beasts ...'
   }
 }
