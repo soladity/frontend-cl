@@ -10,6 +10,7 @@ import { useWeb3React } from '@web3-react/core';
 import { meta_constant, createlegions } from '../../config/meta.config';
 import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
+import { getTranslation } from '../../utils/translation';
 import { DragBox } from './DragBox';
 import { DropBox } from './DropBox'
 
@@ -61,7 +62,7 @@ const CreateLegions: React.FC = () => {
 	}, []);
 
 	React.useEffect(() => {
-		if (beastDropBoxList.length < 10 && droppedID > -1) {
+		if (beastDropBoxList.length < createlegions.main.maxAvailableDragCount && droppedID > -1) {
 			let tempIndexS = (warrior5beast ? warriorDragBoxList : beastDragBoxList);
 			let tmpArray = (warrior5beast ? warriorDropBoxList : beastDropBoxList);
 			const droppedIDIndex = tempIndexS.indexOf(droppedID);
@@ -197,7 +198,7 @@ const CreateLegions: React.FC = () => {
 						<ErrorOutline color='error' fontSize='large' />
 						<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
 							<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-								{createlegions.warning.title}
+								{getTranslation('createLegions')}
 							</Typography>
 						</Box>
 					</Box>
@@ -208,106 +209,108 @@ const CreateLegions: React.FC = () => {
 					<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black', bgcolor: 'smooth' }}>
 						<ArrowBack />
 					</IconButton>
-					{createlegions.main.backBtnTitle}
+					{getTranslation('btnBackToLegions')}
 				</Button>
 			</Grid>
 			{
 				beasts.length > 0 &&
 				<DndProvider backend={HTML5Backend}>
-					<Grid item xs={6}>
-						<Card>
-							<Grid container spacing={2} sx={{ p: 4 }}>
-								<Grid item xs={12}>
-									<Grid container sx={{ justifyContent: 'space-between' }}>
-										<Grid item>
-											<FormControl component="fieldset">
-												<ButtonGroup variant="outlined" color="primary">
-													<Button variant={warrior5beast ? "contained" : "outlined"} onClick={() => { setWarrior5beat(!warrior5beast) }}>Warriors</Button>
-													<Button variant={!warrior5beast ? "contained" : "outlined"} onClick={() => { setWarrior5beat(!warrior5beast) }}>Beasts</Button>
-												</ButtonGroup>
-											</FormControl>
-										</Grid>
-										{
-											warrior5beast &&
-											<Grid item>
-												<FormControl component="fieldset" sx={{ width: '100%', minWidth: '250px' }}>
-													<FormLabel component="legend">Filter by AP:</FormLabel>
-													<Slider
-														getAriaLabel={() => "Custom marks"}
-														// defaultValue={20}
-														value={apValue}
-														min={5}
-														max={80}
-														marks={[
-															{ value: 5, label: '5' },
-															{ value: 80, label: '80' },
-														]}
-														step={1}
-														valueLabelDisplay="auto"
-														onChange={handleChangeAp}
-														disableSwap
-													/>
-												</FormControl>
-											</Grid>
-										}
-										{
-											!warrior5beast &&
+					<Grid container spacing={2} justifyContent="center" wrap='wrap-reverse' sx={{ my: 2 }}>
+						<Grid item xs={12} sm={12} md={6}>
+							<Card>
+								<Grid container spacing={2} sx={{ p: 4 }}>
+									<Grid item xs={12}>
+										<Grid container sx={{ justifyContent: 'space-between' }}>
 											<Grid item>
 												<FormControl component="fieldset">
-													<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
-														<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>All</Button>
-														<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
-														<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
-														<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
-														<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
-														<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
-														<Button variant={`${filter === '20' ? 'contained' : 'outlined'}`} onClick={() => setFilter('20')}>6</Button>
+													<ButtonGroup variant="outlined" color="primary">
+														<Button variant={warrior5beast ? "contained" : "outlined"} onClick={() => { setWarrior5beat(!warrior5beast) }}>{getTranslation('warriors')}</Button>
+														<Button variant={!warrior5beast ? "contained" : "outlined"} onClick={() => { setWarrior5beat(!warrior5beast) }}>{getTranslation('beasts')}</Button>
 													</ButtonGroup>
 												</FormControl>
 											</Grid>
-										}
+											{
+												warrior5beast &&
+												<Grid item>
+													<FormControl component="fieldset" sx={{ width: '100%', minWidth: '250px' }}>
+														<FormLabel component="legend">{getTranslation('filterAP')}:</FormLabel>
+														<Slider
+															getAriaLabel={() => "Custom marks"}
+															// defaultValue={20}
+															value={apValue}
+															min={5}
+															max={80}
+															marks={[
+																{ value: 5, label: '5' },
+																{ value: 80, label: '80' },
+															]}
+															step={1}
+															valueLabelDisplay="auto"
+															onChange={handleChangeAp}
+															disableSwap
+														/>
+													</FormControl>
+												</Grid>
+											}
+											{
+												!warrior5beast &&
+												<Grid item>
+													<FormControl component="fieldset">
+														<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
+															<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>{getTranslation('all')}</Button>
+															<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
+															<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
+															<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
+															<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
+															<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
+															<Button variant={`${filter === '20' ? 'contained' : 'outlined'}`} onClick={() => setFilter('20')}>20</Button>
+														</ButtonGroup>
+													</FormControl>
+												</Grid>
+											}
+										</Grid>
 									</Grid>
 								</Grid>
-							</Grid>
-							<Grid container spacing={2} sx={{ p: 4 }}>
-								{warrior5beast && <Grid item>
-									Warrior
+								<Grid container spacing={2} sx={{ p: 4 }}>
+									{warrior5beast && <Grid item>
+										Warrior
+									</Grid>
+									}
+									{!warrior5beast &&
+										(beasts.filter((item: any, findex) => beastDragBoxList.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
+											<DragBox item={item} baseUrl={baseUrl} baseIndex={beastDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={beastDragBoxList[index] as number} />
+										)))
+									}
 								</Grid>
-								}
-								{!warrior5beast &&
-									(beasts.filter((item: any, findex) => beastDragBoxList.includes(findex) && (filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter)).map((item: any, index) => (
-										<DragBox item={item} baseUrl={baseUrl} baseIndex={beastDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={beastDragBoxList[index] as number} />
-									)))
-								}
-							</Grid>
-						</Card>
-					</Grid>
+							</Card>
+						</Grid>
 
-					{/* Right Panel */}
-					<Grid item xs={6}>
-						<Card sx={{ height: '100%' }}>
-							<Grid item xs={12} sx={{ p: 4 }}>
-								<Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-									<Input placeholder="Name your legion" />
-									<Button color='error' variant='contained'>{createlegions.main.createBtnTitle}</Button>
-								</Box>
-							</Grid>
-							<Grid item xs={12} sx={{ p: 4 }}>
-								<Box sx={{ display: 'flex', justifyContent: 'space-around', pb: 2, borderBottom: '2px dashed grey' }}>
-									<Typography>Beasts: {beastDropBoxList.length}/{createlegions.main.maxAvailableDragCount}</Typography>
-									<Typography>Warriors: {warriorDropBoxList.length}/{warriorDragBoxList.length}</Typography>
-								</Box>
-							</Grid>
-							<DropBox baseUrl={baseUrl} items={dropItemList} count={beastDropBoxList.length} toLeft={moveToLeft} itemMove={moveToRight} />
-						</Card>
+						{/* Right Panel */}
+						<Grid item xs={12} sm={12} md={6}>
+							<Card sx={{ height: '100%' }}>
+								<Grid item xs={12} sx={{ p: 4 }}>
+									<Grid container sx={{ justifyContent: 'space-around' }}>
+										<Grid item><Input placeholder={getTranslation('nameLegion')} /></Grid>
+										<Grid item><Button color='error' variant='contained'>{getTranslation('createLegionsBtn')}</Button></Grid>
+									</Grid>
+								</Grid>
+								<Grid item xs={12} sx={{ p: 4 }}>
+									<Grid container sx={{ display: 'flex', justifyContent: 'space-around', pb: 2, borderBottom: '2px dashed grey' }}>
+										<Grid item><Typography>{getTranslation('beasts')}: {beastDropBoxList.length}/{createlegions.main.maxAvailableDragCount}</Typography></Grid>
+										<Grid item><Typography>{getTranslation('warriors')}: {warriorDropBoxList.length}/{warriorDragBoxList.length}</Typography></Grid>
+									</Grid>
+								</Grid>
+								<DropBox baseUrl={baseUrl} items={dropItemList} count={beastDropBoxList.length} toLeft={moveToLeft} itemMove={moveToRight} />
+							</Card>
+						</Grid>
 					</Grid>
 				</DndProvider>
 			}
 			{
-				beasts.length === 0 &&
+				beasts.length === 0 && !warrior5beast &&
 				<>
 					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
-						<Typography variant='h4' >{createlegions.main.loadingBeastsTitle}</Typography>
+						<Typography variant='h4' >{getTranslation('loadingTitle')}</Typography>
 					</Grid>
 					<Grid item xs={1}>
 						<Card>
@@ -322,7 +325,7 @@ const CreateLegions: React.FC = () => {
 				</>
 			}
 		</Grid>
-	</Box>
+	</Box >
 }
 
 export default CreateLegions
