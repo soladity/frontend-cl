@@ -42,16 +42,7 @@ export const meta_constant = {
 }
 
 export const createlegions = {
-    warning: {
-        title: 'Create Legions',
-        subtitle1: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
-        subtitle2: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.'
-    },
     main: {
-        backBtnTitle: 'Back to your legions',
-        loadingBeastsTitle: 'Loading Beasts ...',
-        loadingWarriorsTitle: 'Loading Warriors ...',
-        createBtnTitle: 'Create legion with ',
         maxAvailableDragCount: 10
     }
 }
