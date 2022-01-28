@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, ButtonGroup, Button, IconButton, FormLabel, FormControl } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -35,6 +35,7 @@ const Beasts = () => {
 	const [beasts, setBeasts] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
+	const [loading, setLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const beastContract = useBeast();
@@ -68,6 +69,7 @@ const Beasts = () => {
 	}
 
 	const getBalance = async () => {
+		setLoading(true);
 		setBaseUrl(await getBeastUrl(web3, beastContract));
 		setBalance(await getBeastBalance(web3, beastContract, account));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
@@ -81,6 +83,7 @@ const Beasts = () => {
 		}
 		setMaxWarrior(amount);
 		setBeasts(tempBeasts);
+		setLoading(false);
 	}
 
 	return <Box>
@@ -90,94 +93,122 @@ const Beasts = () => {
 			<meta name="description" content={meta_constant.beasts.description} />
 			{meta_constant.beasts.keywords && <meta name="keywords" content={meta_constant.beasts.keywords.join(',')} />}
 		</Helmet>
-		<Grid container spacing={2} sx={{ my: 4 }}>
-			<Grid item xs={4}>
-				<Card>
-					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							{getTranslation('summonBeast')}
-						</Typography>
-						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
-							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
-								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
-									<HorizontalSplitIcon />
-								</IconButton>
-								{getTranslation('summonQuantity')}
-							</Button>
-							{
-								showMint &&
-								<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
-									<Button variant="contained" onClick={() => handleMint(1)}>
-										1
+		{
+			loading === false &&
+			<React.Fragment>
+				<Grid container spacing={2} sx={{ my: 4 }}>
+					<Grid item xs={12} md={4}>
+						<Card>
+							<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+									{getTranslation('summonBeast')}
+								</Typography>
+								<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
+									<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+										<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
+											<HorizontalSplitIcon />
+										</IconButton>
+										{getTranslation('summonQuantity')}
 									</Button>
-									<Button variant="contained" onClick={() => handleMint(5)}>
-										5
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(10)}>
-										10
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(20)}>
-										20
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(100)}>
-										100
-									</Button>
+									{
+										showMint &&
+										<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
+											<Button variant="contained" onClick={() => handleMint(1)}>
+												1
+											</Button>
+											<Button variant="contained" onClick={() => handleMint(5)}>
+												5
+											</Button>
+											<Button variant="contained" onClick={() => handleMint(10)}>
+												10
+											</Button>
+											<Button variant="contained" onClick={() => handleMint(20)}>
+												20
+											</Button>
+											<Button variant="contained" onClick={() => handleMint(100)}>
+												100
+											</Button>
+										</Box>
+									}
 								</Box>
-							}
-						</Box>
-					</Box>
-				</Card>
-			</Grid>
-			<Grid item xs={4}>
-				<Card>
-					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							{getTranslation('currentBeasts')}
-						</Typography>
-						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
-							{balance}
-						</Typography>
-					</Box>
-				</Card>
-			</Grid>
-			<Grid item xs={4}>
-				<Card>
-					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							{getTranslation('warriorCapacity')}
-						</Typography>
-						<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
-							{maxWarrior}
-						</Typography>
-					</Box>
-				</Card>
-			</Grid>
-		</Grid>
-		<Grid container spacing={2} sx={{ my: 3 }}>
-			<Grid item md={12}>
-				<FormControl component="fieldset">
-					<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterCapacity')}:</FormLabel>
-					<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
-						<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>{getTranslation('all')}</Button>
-						<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
-						<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
-						<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
-						<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
-						<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
-						<Button variant={`${filter === '20' ? 'contained' : 'outlined'}`} onClick={() => setFilter('20')}>20</Button>
-					</ButtonGroup>
-				</FormControl>
-			</Grid>
-		</Grid>
-		<Grid container spacing={2} sx={{ mb: 4 }}>
-			{
-				beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
-					<Grid item xs={3} key={index}>
-						<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
+							</Box>
+						</Card>
 					</Grid>
-				))
-			}
-		</Grid>
+					<Grid item xs={12} md={4}>
+						<Card>
+							<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+									{getTranslation('currentBeasts')}
+								</Typography>
+								<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
+									{balance}
+								</Typography>
+								<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+									{getTranslation('createLegion')}
+								</Button>
+							</Box>
+						</Card>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Card>
+							<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+									{getTranslation('warriorCapacity')}
+								</Typography>
+								<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
+									{maxWarrior}
+								</Typography>
+							</Box>
+						</Card>
+					</Grid>
+				</Grid>
+				<Grid container spacing={2} sx={{ my: 3 }}>
+					<Grid item md={12}>
+						<FormControl component="fieldset">
+							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterCapacity')}:</FormLabel>
+							<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
+								<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>{getTranslation('all')}</Button>
+								<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
+								<Button variant={`${filter === '2' ? 'contained' : 'outlined'}`} onClick={() => setFilter('2')}>2</Button>
+								<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
+								<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
+								<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
+								<Button variant={`${filter === '20' ? 'contained' : 'outlined'}`} onClick={() => setFilter('20')}>20</Button>
+							</ButtonGroup>
+						</FormControl>
+					</Grid>
+				</Grid>
+				<Grid container spacing={2} sx={{ mb: 4 }}>
+					{
+						beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
+							<Grid item xs={12} sm={6} md={3} key={index}>
+								<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
+							</Grid>
+						))
+					}
+				</Grid>
+			</React.Fragment>
+		}
+		{
+			loading === true &&
+			<>
+				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
+					<Typography variant='h4' >{getTranslation('loadingBeasts')}</Typography>
+				</Grid>
+				<Grid container sx={{ justifyContent: 'center' }}>
+				<Grid item xs={1}>
+					<Card>
+						<CardMedia
+							component="img"
+							image="/assets/images/loading.gif"
+							alt="Loading"
+							loading="lazy"
+						/>
+					</Card>
+				</Grid>
+				</Grid>
+			</>
+		}
 	</Box>
 }
 
