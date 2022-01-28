@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
+import { formatNumber } from '../../utils/common';
+
 type CardProps = {
     id: string;
     image: string;
@@ -29,7 +31,7 @@ export default function WarriorCard(props: CardProps) {
 
     let itemList = [];
     for (let i=0;i<parseInt(strength !== undefined ? strength : '0');i++){
-        itemList.push(<img key={i} src='/assets/images/bloodstone.png' style={{height: '30px'}} alt='icon' />)
+        itemList.push(<img key={i} src='/assets/images/bloodstoneGrey.png' style={{height: '30px'}} alt='icon' />)
     }
 
     const handleImageLoaded = () => {
@@ -59,8 +61,8 @@ export default function WarriorCard(props: CardProps) {
             <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '10px', fontWeight: 'bold' }}>
                 {itemList}
             </Box>
-            <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', bottom: '25px', left: 'calc(50% - 20px)', fontWeight: 'bold' }}>
-                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{power}</Typography>
+            <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', bottom: '20px', left: 'calc(50% - 20px)', fontWeight: 'bold' }}>
+                <Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '1.4rem', textShadow: 'grey 1px 2px' }}>{formatNumber(power)}</Typography>
             </Box>
             <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
                 <img src='/assets/images/shopping.png' style={{ height: '20px' }} alt='Shopping' />

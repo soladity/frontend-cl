@@ -31,6 +31,7 @@ export const translations = {
       'summonWarrior': 'Summon Warrior',
       'currentWarriors': 'Current Warriors',
       'attackPower': 'Total Attack Power',
-      'loadingWarriors': 'Loading Warriors ...'
+      'loadingWarriors': 'Loading Warriors ...',
+      'filterLevel': 'Filter By Level'
     }
   }

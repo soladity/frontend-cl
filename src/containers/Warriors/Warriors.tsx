@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -10,6 +10,7 @@ import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import { getTranslation } from '../../utils/translation';
+import { formatNumber } from '../../utils/common';
 
 const useStyles = makeStyles({
 	root: {
@@ -36,6 +37,7 @@ const Warriors = () => {
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
+	const [apValue, setApValue] = React.useState<number[]>([500, 60000]);
 
 	const classes = useStyles();
 	const warriorContract = useWarrior();
@@ -85,6 +87,22 @@ const Warriors = () => {
 		setWarriors(tempWarriors);
 		setLoading(false);
 	}
+
+	const handleChangeAp = (
+		event: Event,
+		newValue: number | number[],
+		activeThumb: number,
+	) => {
+		if (!Array.isArray(newValue)) {
+			return;
+		}
+
+		if (activeThumb === 0) {
+			setApValue([Math.min(newValue[0], apValue[1] - 1), apValue[1]]);
+		} else {
+			setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
+		}
+	};
 
 	return <Box>
 		<Helmet>
@@ -153,7 +171,7 @@ const Warriors = () => {
 							{getTranslation('attackPower')}
 						</Typography>
 						<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
-							{maxPower}
+							{formatNumber(maxPower)}
 						</Typography>
 					</Box>
 				</Card>
@@ -163,9 +181,9 @@ const Warriors = () => {
 			loading === false &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
-					<Grid item md={12}>
+					<Grid item md={4} xs={12}>
 						<FormControl component="fieldset">
-							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterCapacity')}:</FormLabel>
+							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterLevel')}:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
 								<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>{getTranslation('all')}</Button>
 								<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
@@ -177,10 +195,30 @@ const Warriors = () => {
 							</ButtonGroup>
 						</FormControl>
 					</Grid>
+					<Grid item xs={12} md={4}>
+						<FormControl component="fieldset" sx={{ width: '90%' }}>
+							<FormLabel component="legend">Filter by AP:</FormLabel>
+							<Slider
+								getAriaLabel={() => "Custom marks"}
+								// defaultValue={20}
+								value={apValue}
+								min={500}
+								max={60000}
+								marks={[
+									{ value: 500, label: '500' },
+									{ value: 60000, label: formatNumber('60000') },
+								]}
+								step={1}
+								valueLabelDisplay="auto"
+								onChange={handleChangeAp}
+								disableSwap
+							/>
+						</FormControl>
+					</Grid>
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
-						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).map((item: any, index) => (
+						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && apValue[1] > parseInt(item.power)).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
 								<WarriorCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
 							</Grid>
