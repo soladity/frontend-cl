@@ -6,6 +6,7 @@ import Beasts from '../containers/Beasts/Beasts';
 import Warriors from '../containers/Warriors/Warriors';
 import Legions from '../containers/Legions/Legions';
 import CreateLegions from '../containers/CreateLegions/CreateLegions';
+import UpdateLegions from '../containers/UpdateLegions';
 import Profile from '../containers/Profile/Profile';
 import Policy from '../containers/Policy/Policy';
 
@@ -41,6 +42,10 @@ export const navConfig = {
         {
             path: '/createlegions',
             element: <CreateLegions />
+        },
+        {
+            path: '/updatelegions',
+            element: <UpdateLegions />
         },
         {
             path: '/profile',
