@@ -12,20 +12,25 @@ type CardProps = {
     id: string;
     image: string;
     type: string;
-    capacity: string;
+    power: string;
     strength?: string;
 };
 
-export default function MintCard(props: CardProps) {
+export default function WarriorCard(props: CardProps) {
     const {
         id,
         image,
         type,
-        capacity,
+        power,
         strength
     } = props;
 
     const [loaded, setLoaded] = React.useState(false);
+
+    let itemList = [];
+    for (let i=0;i<parseInt(strength !== undefined ? strength : '0');i++){
+        itemList.push(<img key={i} src='/assets/images/bloodstone.png' style={{height: '30px'}} alt='icon' />)
+    }
 
     const handleImageLoaded = () => {
         setLoaded(true);
@@ -36,7 +41,7 @@ export default function MintCard(props: CardProps) {
             <CardMedia
                 component="img"
                 image={image}
-                alt="Beast Image"
+                alt="Warrior Image"
                 loading="lazy"
                 onLoad={handleImageLoaded}
             />
@@ -51,9 +56,11 @@ export default function MintCard(props: CardProps) {
             <Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
                 {type}
             </Typography>
-            <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '20px', fontWeight: 'bold' }}>
-                <img src='/assets/images/sword.png' style={{ height: '20px', marginRight: '10px' }} alt='Sword' />
-                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{capacity}</Typography>
+            <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '10px', fontWeight: 'bold' }}>
+                {itemList}
+            </Box>
+            <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', bottom: '25px', left: 'calc(50% - 20px)', fontWeight: 'bold' }}>
+                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{power}</Typography>
             </Box>
             <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
                 <img src='/assets/images/shopping.png' style={{ height: '20px' }} alt='Shopping' />

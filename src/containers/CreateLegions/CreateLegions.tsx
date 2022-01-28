@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 
 import { meta_constant, createlegions } from '../../config/meta.config';
-import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import { DragBox } from './DragBox';
 import { DropBox } from './DropBox'
@@ -145,7 +145,7 @@ const CreateLegions: React.FC = () => {
 		let tempIndexS = [];
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
-			tempBeasts.push(beast);
+			tempBeasts.push([{...beast, id: ids[i]}]);
 			tempIndexS.push(i as number);
 			amount += parseInt(beast.capacity);
 		}

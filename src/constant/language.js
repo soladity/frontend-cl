@@ -26,7 +26,11 @@ export const translations = {
       'telegram': 'Telegram',
       'discord': 'Discord',
       'policy': 'Policy',
-      'createLegion': 'Create a Legion',
-      'loadingBeasts': 'Loading Beasts ...'
+      'createLegion': 'Create Legion',
+      'loadingBeasts': 'Loading Beasts ...',
+      'summonWarrior': 'Summon Warrior',
+      'currentWarriors': 'Current Warriors',
+      'attackPower': 'Total Attack Power',
+      'loadingWarriors': 'Loading Warriors ...'
     }
   }

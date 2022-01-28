@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 
-import { getBloodstoneAddress, getBeastAddress } from '../utils/addressHelpers';
+import { getBloodstoneAddress, getBeastAddress, getWarriorAddress } from '../utils/addressHelpers';
 import bloodstone from '../config/abis/bloodstone.json';
 import beast from '../config/abis/beast.json';
+import warrior from '../config/abis/warrior.json';
 import getRpcUrl from '../utils/getRpcUrl';
 
 const RPC_URL = getRpcUrl();
@@ -33,4 +34,9 @@ export const useBloodstone = () => {
 export const useBeast = () => {
     const abi = beast.abi;
     return useContract(abi, getBeastAddress());
+}
+
+export const useWarrior = () => {
+    const abi = warrior.abi;
+    return useContract(abi, getWarriorAddress());
 }
