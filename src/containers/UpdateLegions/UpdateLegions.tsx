@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 
 import { meta_constant, createlegions } from '../../config/meta.config';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
+import { getBloodstoneAllowance, setBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import { getTranslation } from '../../utils/translation';
 import { DragBox } from './DragBox';
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 	}
 });
 
-const CreateLegions: React.FC = () => {
+const UpdateLegions: React.FC = () => {
 	const { account } = useWeb3React();
 
 	const [apValue, setApValue] = React.useState<number[]>([20, 37]);
@@ -145,7 +145,7 @@ const CreateLegions: React.FC = () => {
 		let tempIndexS = [];
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
-			tempBeasts.push([{...beast, id: ids[i]}]);
+			tempBeasts.push(beast);
 			tempIndexS.push(i as number);
 			amount += parseInt(beast.capacity);
 		}
@@ -327,4 +327,4 @@ const CreateLegions: React.FC = () => {
 	</Box >
 }
 
-export default CreateLegions
+export default UpdateLegions
