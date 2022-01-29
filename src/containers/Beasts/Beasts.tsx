@@ -4,6 +4,7 @@ import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
+import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
 import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
@@ -141,7 +142,9 @@ const Beasts = () => {
 							{balance}
 						</Typography>
 						<Button variant="contained" sx={{ fontWeight: 'bold' }}>
-							{getTranslation('createLegion')}
+							<NavLink to='/createlegions' className='non-style'>
+								{getTranslation('createLegion')}
+							</NavLink>
 						</Button>
 					</Box>
 				</Card>
