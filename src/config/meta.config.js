@@ -43,6 +43,8 @@ export const meta_constant = {
 
 export const createlegions = {
     main: {
-        maxAvailableDragCount: 10
+        maxAvailableDragCount: 10,
+        maxAvailableAP: 20000,
+        minAvailableAP: 2000
     }
 }

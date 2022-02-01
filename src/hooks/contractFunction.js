@@ -43,8 +43,8 @@ export const getBeastToken = async (web3, contract, tokenId) => {
 }
 
 export const getBeastUrl = async (web3, contract) => {
-    const response = await contract.methods._baseURL().call();
-    return response;
+    // const response = await contract.methods._baseURL().call();
+    return "https://ipfs.infura.io:5001/api/v0/cat/";
 }
 
 export const getWarriorBloodstoneAllowance = async (web3, contract, account) => {
@@ -63,8 +63,8 @@ export const mintWarrior = async (web3, contract, account, amount) => {
 }
 
 export const getWarriorUrl = async (web3, contract) => {
-    const response = await contract.methods._baseURL().call();
-    return response;
+    // const response = await contract.methods._baseURL().call();
+    return "https://ipfs.infura.io:5001/api/v0/cat/";
 }
 
 export const getWarriorBalance = async (web3, contract, account) => {
@@ -87,4 +87,13 @@ export const getWarriorToken = async (web3, contract, tokenId) => {
         imageAlt: response[4]
     }
     return beast;
+}
+
+/**
+ * Create Legion Session
+ */
+
+export const mintLegion = async (web3, contract, account, legionName, beastIds, warriorIds) => {
+    const response = await contract.methods.mint(legionName, beastIds, warriorIds).send({ from: account });
+    return response;
 }

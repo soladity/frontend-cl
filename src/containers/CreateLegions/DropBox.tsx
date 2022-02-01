@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, useEffect } from 'react'
+import React, { CSSProperties, FC, useEffect, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { Grid, Card, Box, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles';
@@ -15,37 +15,41 @@ const style: CSSProperties = {
 interface DropBoxProps {
     baseUrl: string,
     items: Array<any>,
-    count: Number,
-    itemMove: (item: any) => void,
+    isWarriorDropable: boolean,
+    moveToRight: (item: any) => void,
     toLeft: (index: number, w5b: boolean) => void
 }
 
-export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, count, itemMove, toLeft }) {
-    // const [items, setItems] = React.useState(Array);
-    const [{ canDrop, isOver }, drop] = useDrop(() => ({
+export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, isWarriorDropable, moveToRight, toLeft }) {
+    const [dropItems, setDropItems] = React.useState(Array);
+    useEffect(() => {
+        console.log(isWarriorDropable)
+    }, [isWarriorDropable])
+    const [{ canDropFlag, isOverFlag }, drop] = useDrop(() => ({
         accept: DragItemBox.Beasts,
-        drop: (item) => {
-            // let tmpItems = items;
-            // tmpItems.push(item);
-            // setItems([...tmpItems]);
-            itemMove(item);
+        canDrop: (item: any) => {
+            if (!item.w5b) { return true }
+            return isWarriorDropable
+        },
+        drop: (item, monitor) => {
+            moveToRight(item)
+            return item
         },
         collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
+            isOverFlag: monitor.isOver(),
+            canDropFlag: monitor.canDrop(),
         }),
     }))
-
-    const isActive = canDrop && isOver
+    const isActive = canDropFlag && isOverFlag
     let backgroundColor = 'transparent'
     if (isActive) {
         backgroundColor = 'darkgreen'
-    } else if (canDrop) {
+    } else if (canDropFlag) {
         backgroundColor = 'darkkhaki'
     }
 
     return (
-        <Box sx={{ height: '100%' }} ref={drop} style={{ ...style, backgroundColor }}>
+        <Box sx={{ height: '100%', p: 4 }} ref={drop} style={{ ...style, backgroundColor }}>
             <Grid container spacing={2} sx={{ p: 4 }}>
                 {items.map((element: any, index) => <DropCard toLeft={toLeft} w5b={element.w5b} baseIndex={element.id} image={baseUrl + element.item['image']} type={element.item['type']} capacity={element.item['capacity']} key={index} />)}
             </Grid>
