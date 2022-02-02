@@ -38,5 +38,10 @@ export const translations = {
     'loadingTitle': 'Loading Beasts & Warriors...',
     'createLegionsBtn': 'Create legion with ',
     'btnBackToLegions': 'Back to your Legions',
+    'updateLegion': 'Update Legion',
+    'updateNamePlaceholder': 'Name of the legion that is being updated',
+    'yourOldLegionAP': 'Your existing legion has ',
+    'dragAndDropInst': 'Drag/Drop beasts/warriors',
+
   }
 }
