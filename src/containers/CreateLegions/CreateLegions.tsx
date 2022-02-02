@@ -152,18 +152,13 @@ const CreateLegions: React.FC = () => {
 		warriorDropBoxList.forEach((index: any) => {
 			sum += parseInt((warriors[index] as any)['power'])
 		})
-		console.log("beastsDrop", beastDropBoxList, beasts)
 		beastDropBoxList.forEach((index: any) => {
 			cp += parseInt((beasts[index] as any)['capacity'])
-			console.log((beasts[index] as any)['capacity'], cp)
 		})
 		setTotalCP(cp)
 		setTotalAp(sum)
-		setIsWDropable(cp > 0 && cp >= warriorDropBoxList.length)
+		setIsWDropable(cp > 0 && cp >= warriorDropBoxList.length && totalAP >= createlegions.main.minAvailableAP)
 	}
-
-	console.log("isWDropable", isWDropable, totalCP, warriorDropBoxList.length);
-
 
 	const getBalance = async () => {
 		setLoading(true)
@@ -198,12 +193,10 @@ const CreateLegions: React.FC = () => {
 	}
 
 	const changeDroppedIndex = (index: number) => {
-		console.log(index, droppedID);
 		setDroppedID(index)
 	}
 
 	const moveToRight = (item: any) => {
-		console.log(item, tempDroppedItem)
 		setTempDroppedItem(item)
 	}
 
@@ -229,9 +222,10 @@ const CreateLegions: React.FC = () => {
 	}
 
 	const handleMint = async () => {
-		console.log(beasts.filter((b, index) => beastDropBoxList.includes(index)), beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }));
-		console.log(warriors.filter((w, index) => warriorDropBoxList.includes(index)), warriors.filter((w, index) => warriorDropBoxList.includes(index)).map((warrior: any) => { return parseInt(warrior['id']) }));
-
+		console.log(isWDropable);
+		if (!isWDropable) {
+			alert("Check the minting rule")
+		}
 		await mintLegion(web3, legionContract, account, legionName,
 			beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }),
 			warriors.filter((w, index) => warriorDropBoxList.includes(index)).map((warrior: any) => { return parseInt(warrior['id']) }));
@@ -354,9 +348,18 @@ const CreateLegions: React.FC = () => {
 											<Input placeholder={getTranslation('nameLegion')} value={legionName} onChange={handleChangedName} />
 										</Grid>
 										<Grid item>
-											<Button color='error' variant='contained' onClick={() => handleMint()}>
-												{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
-											</Button>
+											{
+												isWDropable &&
+												<Button color='error' variant='contained' onClick={() => handleMint()} >
+													{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
+												</Button>
+											}
+											{
+												!isWDropable &&
+												<Button variant='contained' disabled>
+													{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
+												</Button>
+											}
 										</Grid>
 									</Grid>
 								</Grid>
@@ -366,7 +369,7 @@ const CreateLegions: React.FC = () => {
 										<Grid item><Typography>{getTranslation('warriors')}: {totalAP}/{formatNumber(createlegions.main.maxAvailableAP)}</Typography></Grid>
 									</Grid>
 								</Grid>
-								<DropBox baseUrl={baseUrl} items={dropItemList} isWarriorDropable={isWDropable} toLeft={moveToLeft} moveToRight={moveToRight} />
+								<DropBox baseUrl={baseUrl} items={dropItemList} toLeft={moveToLeft} moveToRight={moveToRight} />
 							</Card>
 						</Grid>
 					</Grid>

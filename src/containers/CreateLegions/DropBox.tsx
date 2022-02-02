@@ -15,22 +15,13 @@ const style: CSSProperties = {
 interface DropBoxProps {
     baseUrl: string,
     items: Array<any>,
-    isWarriorDropable: boolean,
     moveToRight: (item: any) => void,
     toLeft: (index: number, w5b: boolean) => void
 }
 
-export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, isWarriorDropable, moveToRight, toLeft }) {
-    const [dropItems, setDropItems] = React.useState(Array);
-    useEffect(() => {
-        console.log(isWarriorDropable)
-    }, [isWarriorDropable])
+export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, moveToRight, toLeft }) {
     const [{ canDropFlag, isOverFlag }, drop] = useDrop(() => ({
         accept: DragItemBox.Beasts,
-        canDrop: (item: any) => {
-            if (!item.w5b) { return true }
-            return isWarriorDropable
-        },
         drop: (item, monitor) => {
             moveToRight(item)
             return item

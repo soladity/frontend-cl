@@ -11,6 +11,7 @@ import { meta_constant, createlegions } from '../../config/meta.config';
 import { mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import { getTranslation } from '../../utils/translation';
+import { formatNumber } from '../../utils/common'
 import { DragBox } from './DragBox';
 import { DropBox } from './DropBox'
 
@@ -197,7 +198,7 @@ const UpdateLegions: React.FC = () => {
 						<ErrorOutline color='error' fontSize='large' />
 						<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
 							<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-								{getTranslation('createLegions')}
+								{getTranslation('updateLegion')}
 							</Typography>
 						</Box>
 					</Box>
@@ -289,12 +290,13 @@ const UpdateLegions: React.FC = () => {
 							<Card sx={{ height: '100%' }}>
 								<Grid item xs={12} sx={{ p: 4 }}>
 									<Grid container sx={{ justifyContent: 'space-around' }}>
-										<Grid item><Input placeholder={getTranslation('nameLegion')} /></Grid>
+										<Grid item><Input placeholder={getTranslation('updateNamePlaceholder')} /></Grid>
 										<Grid item><Button color='error' variant='contained'>{getTranslation('createLegionsBtn')}</Button></Grid>
 									</Grid>
 								</Grid>
 								<Grid item xs={12} sx={{ p: 4 }}>
 									<Grid container sx={{ display: 'flex', justifyContent: 'space-around', pb: 2, borderBottom: '2px dashed grey' }}>
+										<Grid item><Typography>{getTranslation('yourOldLegionAP')}: {formatNumber('000000')} AP</Typography></Grid>
 										<Grid item><Typography>{getTranslation('beasts')}: {beastDropBoxList.length}/{createlegions.main.maxAvailableDragCount}</Typography></Grid>
 										<Grid item><Typography>{getTranslation('warriors')}: {warriorDropBoxList.length}/{warriorDragBoxList.length}</Typography></Grid>
 									</Grid>
