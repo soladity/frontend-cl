@@ -4,6 +4,7 @@ import { Grid, Card, Box, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles';
 import { DragItemBox } from '../../constant/createlegions/createlegions'
 import { DropCard } from '../../component/Cards/DropCard'
+import { getTranslation } from '../../utils/translation';
 
 const style: CSSProperties = {
     color: 'white',
@@ -50,7 +51,7 @@ export const DropBox: FC<DropBoxProps> = function DropBox({ baseUrl, items, coun
                 {items.map((element: any, index) => <DropCard toLeft={toLeft} w5b={element.w5b} baseIndex={element.id} image={baseUrl + element.item['image']} type={element.item['type']} capacity={element.item['capacity']} key={index} />)}
             </Grid>
             <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-                {isActive ? 'Release to drop' : 'Drag a box here'}
+                {isActive ? 'Release to drop' : getTranslation('dragAndDropInst')}
             </Typography>
         </Box>
     )

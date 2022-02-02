@@ -3,9 +3,13 @@ export const getBloodstoneAddress = () => {
 }
 
 export const getBeastAddress = () => {
-    return '0x20d263e31ee9f4b159f9d655acd8e7762123ea4d'
+    return '0xb50e41a162a737866a14e07a2ab91ca5121266a6'
 }
 
 export const getWarriorAddress = () => {
-    return '0x7219bbec69b8264f20b83834c376f87422b85287'
+    return '0x08dEBb82406Cf32A4A72ec358C6eC7455B263E6c'
+}
+
+export const getLegionAddress = () => {
+    return '0xba874C2a011b492F220f4d5F71fd70b9d14F69ff'
 }

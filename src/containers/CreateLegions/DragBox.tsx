@@ -3,6 +3,7 @@ import { useDrag } from 'react-dnd'
 import { Grid } from '@mui/material';
 import { DragItemBox } from '../../constant/createlegions/createlegions';
 import MintCard from '../../component/Cards/MintCard';
+import WarriorCard from '../../component/Cards/WarriorCard';
 
 
 const style: CSSProperties = {
@@ -15,6 +16,7 @@ export interface DragBoxProps {
     baseIndex: number,
     curIndex: number,
     w5b: boolean,
+    showAnimation: string | null,
     dropped: (index: number) => void
 }
 
@@ -22,14 +24,17 @@ interface DropResult {
     done: boolean
 }
 
-export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseIndex, curIndex, w5b, dropped }) {
+export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseIndex, curIndex, w5b, showAnimation, dropped }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: DragItemBox.Beasts,
         item: { item, id: baseIndex, w5b: w5b },
 
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult<DropResult>()
-            if (item && dropResult) {
+            if (!dropResult) {
+                return;
+            }
+            if (dropResult && item.id === (dropResult as any).id) {
                 dropped(curIndex);
             }
         },
@@ -41,8 +46,14 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseI
     const opacity = isDragging ? 0.4 : 1
     return (
         <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>
-            <MintCard id={item['id']} image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
-
+            {
+                !w5b &&
+                <MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+            }
+            {
+                w5b &&
+                <WarriorCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
+            }
         </Grid>
     )
 }

@@ -32,7 +32,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({ image, type
                     {type}
                 </Typography>
                 <Box sx={{ display: 'flex', position: 'absolute', top: '15px', right: '20px', fontWeight: 'bold' }}>
-                    <img src='/assets/images/sword.jpeg' style={{ height: '25px', marginRight: '10px' }} alt='Sword' />
+                    <img src='/assets/images/sword.png' style={{ height: '25px', marginRight: '10px' }} alt='Sword' />
                     <Typography variant='h6' sx={{ fontWeight: 'bold' }}>{capacity}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>

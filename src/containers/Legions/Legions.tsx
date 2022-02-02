@@ -1,111 +1,71 @@
 
-import React from 'react'
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import { Box, Typography } from '@mui/material'
-import { meta_constant } from '../../config/meta.config';
+import React from 'react';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl } from '@mui/material';
 import Helmet from 'react-helmet';
+import { makeStyles } from '@mui/styles';
+import { useWeb3React } from '@web3-react/core';
+import { NavLink } from 'react-router-dom';
+
+import { meta_constant } from '../../config/meta.config';
+import { getTranslation } from '../../utils/translation';
+
+const useStyles = makeStyles({
+	root: {
+		display: 'flex',
+		flexDirection: 'column'
+	},
+	card: {
+		display: 'flex',
+		flexDirection: 'column',
+		minHeight: '180px'
+	}
+});
 
 const Legions = () => {
-    return (
-        <Box>
-            <Helmet>
-                <meta charSet="utf-8" />
-                <title>{meta_constant.legions.title}</title>
-                <meta name="description" content={meta_constant.legions.description} />
-                { meta_constant.legions.keywords && <meta name="keywords" content={meta_constant.legions.keywords.join(',')} /> }
-            </Helmet>
-            <Typography variant="h3">Warriors</Typography>
-            <Typography variant="body1">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum nihil fugit numquam expedita et veritatis quae temporibus nobis hic ea. Quasi aliquid ad quia repudiandae. Molestiae facere omnis sint nesciunt.</Typography>
-            <br />
-             <Timeline position="alternate">
-                <TimelineItem>
-                    <TimelineOppositeContent
-                        sx={{ m: 'auto 0' }}
-                        align="right"
-                        variant="body2"
-                        color="text.secondary"
-                    >
-                        9:30 am
-                    </TimelineOppositeContent>
-                    <TimelineSeparator>
-                        <TimelineConnector />
-                        <TimelineDot>
-                            <FastfoodIcon />
-                        </TimelineDot>
-                        <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                        <Typography variant="h6" component="span">
-                            Eat
-                        </Typography>
-                        <Typography>Because you need strength</Typography>
-                    </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                    <TimelineOppositeContent
-                        sx={{ m: 'auto 0' }}
-                        variant="body2"
-                        color="text.secondary"
-                    >
-                        10:00 am
-                    </TimelineOppositeContent>
-                    <TimelineSeparator>
-                        <TimelineConnector />
-                        <TimelineDot color="primary">
-                            <LaptopMacIcon />
-                        </TimelineDot>
-                        <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                        <Typography variant="h6" component="span">
-                            Code
-                        </Typography>
-                        <Typography>Because it&apos;s awesome!</Typography>
-                    </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                    <TimelineSeparator>
-                        <TimelineConnector />
-                        <TimelineDot color="primary" variant="outlined">
-                            <HotelIcon />
-                        </TimelineDot>
-                        <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                        <Typography variant="h6" component="span">
-                            Sleep
-                        </Typography>
-                        <Typography>Because you need rest</Typography>
-                    </TimelineContent>
-                </TimelineItem>
-                <TimelineItem>
-                    <TimelineSeparator>
-                        <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                        <TimelineDot color="secondary">
-                            <RepeatIcon />
-                        </TimelineDot>
-                        <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                        <Typography variant="h6" component="span">
-                            Repeat
-                        </Typography>
-                        <Typography>Because this is the life you love!</Typography>
-                    </TimelineContent>
-                </TimelineItem>
-            </Timeline>
-        </Box>
-    )
+
+	const classes = useStyles();
+
+	return (
+		<Box>
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title>{meta_constant.legions.title}</title>
+				<meta name="description" content={meta_constant.legions.description} />
+				{meta_constant.legions.keywords && <meta name="keywords" content={meta_constant.legions.keywords.join(',')} />}
+			</Helmet>
+			<Grid container spacing={2} sx={{ my: 4 }}>
+				<Grid item xs={12} md={4}>
+					<Card>
+						<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+							<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+								{getTranslation('currentBeasts')}
+							</Typography>
+							<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
+								11
+							</Typography>
+							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+								<NavLink to='/createlegions' className='non-style'>
+									{getTranslation('createLegion')}
+								</NavLink>
+							</Button>
+						</Box>
+					</Card>
+				</Grid>
+				<Grid item xs={12} md={4}>
+					<Card>
+						<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
+							<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+								{getTranslation('warriorCapacity')}
+							</Typography>
+							<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
+								11
+							</Typography>
+						</Box>
+					</Card>
+				</Grid>
+			</Grid>
+		</Box>
+	)
 }
 
 export default Legions

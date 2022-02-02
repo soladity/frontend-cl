@@ -140,7 +140,6 @@ const AppBarComponent = () => {
               <Box
                 sx={{ width: 250 }}
                 role="presentation"
-                onClick={toggleDrawer(false)}
                 onKeyDown={toggleDrawer(false)}
               >
                 <NavList />
