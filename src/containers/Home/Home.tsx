@@ -7,6 +7,8 @@ import { meta_constant } from '../../config/meta.config';
 import Helmet from 'react-helmet';
 import { makeStyles } from '@mui/styles';
 import { getTranslation } from '../../utils/translation';
+import ReactPlayer from 'react-player/youtube';
+import ToSocialBtn from '../../component/Buttons/ToSocialBtn'
 
 const useStyles = makeStyles({
     root: {
@@ -107,18 +109,18 @@ const Home = () => {
                                 TAKE ACTION
                             </Typography>
                             <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                     SUMMON BEAST
                                 </Button>
                             </div>
                             <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                     SUMMON WARROIR
                                 </Button>
                             </div>
                             <div style={{ textAlign: 'center', marginBottom: 8 }}>
 
-                                <Button aria-describedby={id} variant="contained" onClick={handleClickCreateLegion} sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                <Button aria-describedby={id} variant="contained" onClick={handleClickCreateLegion} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                     CREATE LEGION
                                 </Button>
                                 <Popover
@@ -138,22 +140,22 @@ const Home = () => {
                                 >
                                     <Box sx={{ p: 2 }}>
                                         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                            <Button variant="contained" color="primary" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                                 BUY BEASTS
                                             </Button>
                                         </div>
                                         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                                 BUY WARRIORS
                                             </Button>
                                         </div>
                                         <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                                 BUY LEGIONS
                                             </Button>
                                         </div>
                                         <div style={{ textAlign: 'center' }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                                 BUY $BLST
                                             </Button>
                                         </div>
@@ -161,7 +163,7 @@ const Home = () => {
                                 </Popover>
                             </div>
                             <div style={{ textAlign: 'center' }}>
-                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12 }}>
+                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                     HUNT
                                 </Button>
                             </div>
@@ -169,6 +171,29 @@ const Home = () => {
                     </Card>
                 </Grid>
             </Grid>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 32 }}>
+                <ToSocialBtn
+                    type="Discord"
+                    linkUrl="Discord"
+                />
+                <ToSocialBtn
+                    type="Twitter"
+                    linkUrl="Discord"
+                />
+                <ToSocialBtn
+                    type="Telegram"
+                    linkUrl="Discord"
+                />
+                <ToSocialBtn
+                    type="Youtube"
+                    linkUrl="Discord"
+                />
+            </div>
+            <div>
+                <ReactPlayer
+                    url="https://www.youtube.com/watch?v=zTitoHKsyJg"
+                />
+            </div>
         </Box >
     )
 }
