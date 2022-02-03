@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles'
 import { useWeb3React } from '@web3-react/core'
 
 import { meta_constant, createlegions } from '../../config/meta.config'
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorTokenIds, getWarriorToken } from '../../hooks/contractFunction'
+import { getLegionBloodstoneAllowance, setLegionBloodstoneApprove, getWarriorTokenIds, getWarriorToken } from '../../hooks/contractFunction'
 import { mintLegion, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction'
 import { useBloodstone, useBeast, useWarrior, useWeb3, useLegion } from '../../hooks/useContract'
 import { getTranslation } from '../../utils/translation'
@@ -223,8 +223,9 @@ const CreateLegions: React.FC = () => {
 
 	const handleMint = async () => {
 		console.log(isWDropable);
-		if (!isWDropable) {
-			alert("Check the minting rule")
+		const allowance = await getLegionBloodstoneAllowance(web3, legionContract, account);
+		if (allowance === '0') {
+			await setLegionBloodstoneApprove(web3, legionContract, account);
 		}
 		await mintLegion(web3, legionContract, account, legionName,
 			beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }),

@@ -1,4 +1,4 @@
-import { getBeastAddress, getWarriorAddress } from '../utils/addressHelpers';
+import { getBeastAddress, getLegionAddress, getWarriorAddress } from '../utils/addressHelpers';
 
 export const getBloodstoneBalance = async (web3, contract, account) => {
     const response = await contract.methods.balanceOf(account).call();
@@ -92,6 +92,16 @@ export const getWarriorToken = async (web3, contract, tokenId) => {
 /**
  * Create Legion Session
  */
+
+export const getLegionBloodstoneAllowance = async (web3, contract, account) => {
+    const response = await contract.methods.allowance(account, getLegionAddress()).call();
+    return web3.utils.fromWei(response, 'ether').toString();
+}
+
+export const setLegionBloodstoneApprove = async (web3, contract, account) => {
+    const response = await contract.methods.approve(getLegionAddress(), web3.utils.toWei('1000000000', 'ether').toString()).send({ from: account });
+    return response;
+}
 
 export const mintLegion = async (web3, contract, account, legionName, beastIds, warriorIds) => {
     const response = await contract.methods.mint(legionName, beastIds, warriorIds).send({ from: account });
