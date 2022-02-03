@@ -37,7 +37,7 @@ const blue = {
   500: '#007FFF',
   600: '#0072E5',
   800: '#004C99',
-  900: '#003A75',
+  900: '#221c5a',
 };
 
 const CustomButtonRoot = styled(ButtonRoot)(
