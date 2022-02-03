@@ -2,13 +2,14 @@ import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CardsComponent from '../../component/Cards/Cards';
-import { Grid, Card, Box, Button, Popover } from '@mui/material';
+import { Grid, Card, Box, Button, Popover, Checkbox } from '@mui/material';
 import { meta_constant } from '../../config/meta.config';
 import Helmet from 'react-helmet';
 import { makeStyles } from '@mui/styles';
 import { getTranslation } from '../../utils/translation';
 import ToSocialBtn from '../../component/Buttons/ToSocialBtn';
 import YouTube from 'react-youtube';
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles({
     root: {
@@ -21,23 +22,57 @@ const useStyles = makeStyles({
         minHeight: '180px',
         height: '100%'
     },
+    achievementBtn: {
+        background: 'red',
+        padding: 10,
+        borderRadius: 5,
+        cursor: 'pointer',
+        color: 'black',
+        animation: `$Flash linear 1s infinite`
+    },
+    "@keyframes Flash": {
+        "0%": {
+            background: '#19aa6f',
+            boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
+        },
+        "50%": {
+            background: '#24f39f',
+            boxShadow: '0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
+        },
+        "100%": {
+            background: '#19aa6f',
+            boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
+        }
+    }
 });
 
 const Home = () => {
 
     const classes = useStyles();
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorElCreateLegion, setAnchorElCreateLegion] = React.useState<HTMLButtonElement | null>(null);
 
     const handleClickCreateLegion = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorElCreateLegion(event.currentTarget);
     };
 
     const handleCloseCreateLegion = () => {
-        setAnchorEl(null);
+        setAnchorElCreateLegion(null);
     };
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'create-legion-popover' : undefined;
+    const openCreateLegion = Boolean(anchorElCreateLegion);
+    const idCreateLegion = openCreateLegion ? 'create-legion-popover' : undefined;
+
+    const [anchorElYourAchievement, setAnchorElYourAchievement] = React.useState<HTMLElement | null>(null);
+
+    const handlePopoverOpenYourAchievement = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElYourAchievement(event.currentTarget);
+    };
+
+    const handlePopoverCloseYourAchievement = () => {
+        setAnchorElYourAchievement(null);
+    };
+
+    const openYourAchievement = Boolean(anchorElYourAchievement);
 
     return (
         <Box>
@@ -120,13 +155,13 @@ const Home = () => {
                             </Box>
                             <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
 
-                                <Button aria-describedby={id} variant="contained" onClick={handleClickCreateLegion} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
+                                <Button aria-describedby={idCreateLegion} variant="contained" onClick={handleClickCreateLegion} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                     CREATE LEGION
                                 </Button>
                                 <Popover
-                                    id={id}
-                                    open={open}
-                                    anchorEl={anchorEl}
+                                    id={idCreateLegion}
+                                    open={openCreateLegion}
+                                    anchorEl={anchorElCreateLegion}
                                     onClose={handleCloseCreateLegion}
                                     anchorOrigin={{
                                         vertical: 'bottom',
@@ -189,43 +224,59 @@ const Home = () => {
                     linkUrl="Discord"
                 />
             </Box>
-            <Box sx={{ display: 'flex' }}>
+            {/* <Box>
+                <marquee style={{ color: 'white', fontWeight: 'bold', fontSize: '1em' }}>REMINDER: We recommend to not buy any NFTs outside of the marketplace. You might be scammed and/or lose your investment. People who try to cheat the game may have their account blocked and lose all rewards/NFTs.</marquee>
+            </Box> */}
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
-                    <Card className={classes.card}>
-                        <Box sx={{ p: 4, justifyContent: 'center' }}>
-                            <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
-                                YOUR ACHIEVEMENTS
-                            </Typography>
-                            <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                                MARKETPLACE TAX : 15%
-                            </Typography>
-                            <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                                HUNT TAX : 2%
-                            </Typography>
-                            <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                                # LEGIONS : 8 / 12
-                            </Typography>
-                            <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                                YOUR MAX: 60000
-                            </Typography>
-                            <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                                UNCALIMED $ : 558
-                            </Typography>
-                            <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                                TAX DAYS LEFT : 3
-                            </Typography>
-                        </Box>
-                    </Card>
+                    <Box sx={{ height: 320, width: 640 }}>
+                        <YouTube
+                            videoId="j942wKiXFu8"
+                            onReady={(e) => e.target.pauseVideo()}
+                        />
+                    </Box>
+                    <a href="https://docs.google.com/document/d/1g90TDsCn4a8K3JcqCRkvAp72ux5RJu_6jMxcdFEE9SE/edit#" target={'blank'} style={{ color: 'white', border: 'none' }}>
+                        <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', marginTop: 2 }}>
+                            READ INSTRUCTIONS IN WHITEPAPER
+                        </Typography>
+                    </a>
                 </Box>
-                <Box>
-                    <YouTube
-                        videoId="j942wKiXFu8"
-                        onReady={(e) => e.target.pauseVideo()}
-                    />
-                </Box>
-                <Box>
-
-                </Box>
+            </Box>
+            <Box sx={{ position: 'fixed', bottom: 20, right: 20 }}>
+                <Typography
+                    className={classes.achievementBtn}
+                    aria-owns={openYourAchievement ? 'your-achievement-popover' : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handlePopoverOpenYourAchievement}
+                    onMouseLeave={handlePopoverCloseYourAchievement}
+                    sx={{ fontWeight: 'bold', fontSize: 12 }}
+                >
+                    Your Achievements
+                </Typography>
+                <Popover
+                    id="your-achievement-popover"
+                    sx={{
+                        pointerEvents: 'none',
+                        marginBottom: 10
+                    }}
+                    open={openYourAchievement}
+                    anchorEl={anchorElYourAchievement}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    onClose={handlePopoverCloseYourAchievement}
+                    disableRestoreFocus
+                >
+                    <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Own a beast with 20 capacity.</Typography>
+                    <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a level 6 warrior.</Typography>
+                    <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Own 10 legions of 30K+ AP.</Typography>
+                    <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Hunt monster 22 successfully.</Typography>
+                </Popover>
             </Box>
         </Box >
     )
