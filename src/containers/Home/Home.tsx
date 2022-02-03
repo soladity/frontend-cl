@@ -60,6 +60,11 @@ function SimpleDialog(props: SimpleDialogProps) {
 
     return (
         <Dialog onClose={handleClose} open={open}>
+            <Box sx={{ display: 'flex' }}>
+                <Box sx={{ marginLeft: 'auto', fontWeight: 'bold', paddingRight: 1, paddingTop: 1, cursor: 'pointer' }} onClick={handleClose}>
+                    x
+                </Box>
+            </Box>
             <DialogTitle>SUMMON BEAST</DialogTitle>
             <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
                 <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>1</Button>
@@ -296,7 +301,6 @@ const Home = () => {
                     aria-owns={openYourAchievement ? 'your-achievement-popover' : undefined}
                     aria-haspopup="true"
                     onClick={handlePopoverOpenYourAchievement}
-                    // onMouseLeave={handlePopoverCloseYourAchievement}
                     sx={{ fontWeight: 'bold', fontSize: 12 }}
                 >
                     Your Achievements
