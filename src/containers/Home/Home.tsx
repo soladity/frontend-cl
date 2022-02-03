@@ -88,6 +88,18 @@ const Home = () => {
 
     const openYourAchievement = Boolean(anchorElYourAchievement);
 
+    const [anchorElSummonBeast, setAnchorElSummonBeast] = React.useState<HTMLElement | null>(null);
+
+    const handlePopoverOpenSummonBeast = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElSummonBeast(event.currentTarget);
+    };
+
+    const handlePopoverCloseSummonBeast = () => {
+        setAnchorElSummonBeast(null);
+    };
+
+    const openSummonBeast = Boolean(anchorElSummonBeast);
+
 
     const [openBeastDialog, setOpenBeastDialog] = React.useState(false);
 
@@ -176,9 +188,33 @@ const Home = () => {
                                                 <Button variant="contained" onClick={() => handleClickOpenBeastDialog()} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                                     SUMMON BEAST
                                                 </Button>
-                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                <Button aria-describedby={'summon-beast-id'} onClick={handlePopoverOpenSummonBeast} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                                     SUMMON WARROIR
                                                 </Button>
+                                                <Popover
+                                                    id={'summon-beast-id'}
+                                                    open={openSummonBeast}
+                                                    anchorEl={anchorElSummonBeast}
+                                                    onClose={handlePopoverCloseSummonBeast}
+                                                    anchorOrigin={{
+                                                        vertical: 'center',
+                                                        horizontal: 'left',
+                                                    }}
+                                                    transformOrigin={{
+                                                        vertical: 'center',
+                                                        horizontal: 'right',
+                                                    }}
+                                                >
+
+                                                    <DialogTitle>SUMMON WARRIORS</DialogTitle>
+                                                    <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
+                                                        <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>1</Button>
+                                                        <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>5</Button>
+                                                        <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>10</Button>
+                                                        <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>20</Button>
+                                                        <Button variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
+                                                    </Box>
+                                                </Popover>
                                                 <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                                     CREATE LEGION
                                                 </Button>
@@ -212,7 +248,12 @@ const Home = () => {
                     </Card>
                 </Grid>
             </Grid>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 32, marginBottom: 4 }}>
+            <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+            >
                 <ToSocialBtn
                     type="Discord"
                     linkUrl="Discord"
@@ -233,18 +274,15 @@ const Home = () => {
                     type="Medium"
                     linkUrl="Discord"
                 />
-            </Box>
-            {/* <Box>
-                <marquee style={{ color: 'white', fontWeight: 'bold', fontSize: '1em' }}>REMINDER: We recommend to not buy any NFTs outside of the marketplace. You might be scammed and/or lose your investment. People who try to cheat the game may have their account blocked and lose all rewards/NFTs.</marquee>
-            </Box> */}
+            </Grid>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
-                    {/* <Box sx={{ height: 320, width: 640 }}>
+                    <Box>
                         <YouTube
                             videoId="j942wKiXFu8"
-                            onReady={(e) => e.target.pauseVideo()}
+                            onReady={(e) => e.target.playVideo()}
                         />
-                    </Box> */}
+                    </Box>
                     <a href="https://docs.google.com/document/d/1g90TDsCn4a8K3JcqCRkvAp72ux5RJu_6jMxcdFEE9SE/edit#" target={'blank'} style={{ color: 'white', border: 'none' }}>
                         <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', marginTop: 2 }}>
                             READ INSTRUCTIONS IN WHITEPAPER
@@ -257,18 +295,14 @@ const Home = () => {
                     className={classes.achievementBtn}
                     aria-owns={openYourAchievement ? 'your-achievement-popover' : undefined}
                     aria-haspopup="true"
-                    onMouseEnter={handlePopoverOpenYourAchievement}
-                    onMouseLeave={handlePopoverCloseYourAchievement}
+                    onClick={handlePopoverOpenYourAchievement}
+                    // onMouseLeave={handlePopoverCloseYourAchievement}
                     sx={{ fontWeight: 'bold', fontSize: 12 }}
                 >
                     Your Achievements
                 </Typography>
                 <Popover
                     id="your-achievement-popover"
-                    sx={{
-                        pointerEvents: 'none',
-                        marginBottom: 10
-                    }}
                     open={openYourAchievement}
                     anchorEl={anchorElYourAchievement}
                     anchorOrigin={{
