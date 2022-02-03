@@ -8,7 +8,8 @@ import {
   FaDiscord,
   FaTwitter,
   FaTelegram,
-  FaYoutube
+  FaYoutube,
+  FaMedium
 } from 'react-icons/fa';
 
 
@@ -132,7 +133,8 @@ const Type = (type: any) => {
       return <FaTelegram />
     case 'Youtube':
       return <FaYoutube />
-
+    case 'Medium':
+      return <FaMedium />
     default:
       break;
   }

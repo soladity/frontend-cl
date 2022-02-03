@@ -2,7 +2,7 @@ import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import CardsComponent from '../../component/Cards/Cards';
-import { Grid, Card, Box, Button, Popover, Checkbox } from '@mui/material';
+import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from '@mui/material';
 import { meta_constant } from '../../config/meta.config';
 import Helmet from 'react-helmet';
 import { makeStyles } from '@mui/styles';
@@ -46,21 +46,35 @@ const useStyles = makeStyles({
     }
 });
 
+export interface SimpleDialogProps {
+    open: boolean;
+    onClose: () => void;
+}
+
+function SimpleDialog(props: SimpleDialogProps) {
+    const { onClose, open } = props;
+
+    const handleClose = () => {
+        onClose();
+    };
+
+    return (
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>SUMMON BEAST</DialogTitle>
+            <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
+                <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>1</Button>
+                <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>5</Button>
+                <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>10</Button>
+                <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>20</Button>
+                <Button variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
+            </Box>
+        </Dialog >
+    );
+}
+
 const Home = () => {
 
     const classes = useStyles();
-    const [anchorElCreateLegion, setAnchorElCreateLegion] = React.useState<HTMLButtonElement | null>(null);
-
-    const handleClickCreateLegion = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorElCreateLegion(event.currentTarget);
-    };
-
-    const handleCloseCreateLegion = () => {
-        setAnchorElCreateLegion(null);
-    };
-
-    const openCreateLegion = Boolean(anchorElCreateLegion);
-    const idCreateLegion = openCreateLegion ? 'create-legion-popover' : undefined;
 
     const [anchorElYourAchievement, setAnchorElYourAchievement] = React.useState<HTMLElement | null>(null);
 
@@ -73,6 +87,17 @@ const Home = () => {
     };
 
     const openYourAchievement = Boolean(anchorElYourAchievement);
+
+
+    const [openBeastDialog, setOpenBeastDialog] = React.useState(false);
+
+    const handleClickOpenBeastDialog = () => {
+        setOpenBeastDialog(true);
+    };
+
+    const handleCloseBeastDialog = () => {
+        setOpenBeastDialog(false);
+    };
 
     return (
         <Box>
@@ -114,7 +139,7 @@ const Home = () => {
                     <Card className={classes.card}>
                         <Box sx={{ p: 4, justifyContent: 'center' }}>
                             <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
-                                YOUR LEGIONS:
+                                YOUR INVENTORIY
                             </Typography>
                             <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
                                 # BEASTS : 3
@@ -143,64 +168,45 @@ const Home = () => {
                             <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
                                 TAKE ACTION
                             </Typography>
-                            <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                    SUMMON BEAST
-                                </Button>
-                            </Box>
-                            <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                    SUMMON WARROIR
-                                </Button>
-                            </Box>
-                            <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
-
-                                <Button aria-describedby={idCreateLegion} variant="contained" onClick={handleClickCreateLegion} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                    CREATE LEGION
-                                </Button>
-                                <Popover
-                                    id={idCreateLegion}
-                                    open={openCreateLegion}
-                                    anchorEl={anchorElCreateLegion}
-                                    onClose={handleCloseCreateLegion}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'center',
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'center',
-                                    }}
-                                    style={{ marginTop: 6, padding: 10 }}
-                                >
-                                    <Box sx={{ p: 2 }}>
-                                        <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                            <Button variant="contained" color="primary" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                                BUY BEASTS
-                                            </Button>
+                            <Box>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+                                            <Box sx={{ textAlign: 'center', width: '100%' }}>
+                                                <Button variant="contained" onClick={() => handleClickOpenBeastDialog()} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                    SUMMON BEAST
+                                                </Button>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                    SUMMON WARROIR
+                                                </Button>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                    CREATE LEGION
+                                                </Button>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
+                                                    HUNT
+                                                </Button>
+                                            </Box>
                                         </Box>
-                                        <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                                BUY WARRIORS
-                                            </Button>
+                                    </Grid>
+                                    <Grid item xs={6} >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+                                            <Box sx={{ textAlign: 'center', width: '100%' }}>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                    BUY BEASTS
+                                                </Button>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                    BUY WARRIORS
+                                                </Button>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                                    BUY LEGIONS
+                                                </Button>
+                                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
+                                                    BUY $BLST
+                                                </Button>
+                                            </Box>
                                         </Box>
-                                        <Box sx={{ textAlign: 'center', marginBottom: 1 }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                                BUY LEGIONS
-                                            </Button>
-                                        </Box>
-                                        <Box sx={{ textAlign: 'center' }}>
-                                            <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                                BUY $BLST
-                                            </Button>
-                                        </Box>
-                                    </Box>
-                                </Popover>
-                            </Box>
-                            <Box sx={{ textAlign: 'center' }}>
-                                <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                    HUNT
-                                </Button>
+                                    </Grid>
+                                </Grid>
                             </Box>
                         </Box>
                     </Card>
@@ -223,18 +229,22 @@ const Home = () => {
                     type="Youtube"
                     linkUrl="Discord"
                 />
+                <ToSocialBtn
+                    type="Medium"
+                    linkUrl="Discord"
+                />
             </Box>
             {/* <Box>
                 <marquee style={{ color: 'white', fontWeight: 'bold', fontSize: '1em' }}>REMINDER: We recommend to not buy any NFTs outside of the marketplace. You might be scammed and/or lose your investment. People who try to cheat the game may have their account blocked and lose all rewards/NFTs.</marquee>
             </Box> */}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
-                    <Box sx={{ height: 320, width: 640 }}>
+                    {/* <Box sx={{ height: 320, width: 640 }}>
                         <YouTube
                             videoId="j942wKiXFu8"
                             onReady={(e) => e.target.pauseVideo()}
                         />
-                    </Box>
+                    </Box> */}
                     <a href="https://docs.google.com/document/d/1g90TDsCn4a8K3JcqCRkvAp72ux5RJu_6jMxcdFEE9SE/edit#" target={'blank'} style={{ color: 'white', border: 'none' }}>
                         <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', marginTop: 2 }}>
                             READ INSTRUCTIONS IN WHITEPAPER
@@ -278,6 +288,10 @@ const Home = () => {
                     <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Hunt monster 22 successfully.</Typography>
                 </Popover>
             </Box>
+            <SimpleDialog
+                open={openBeastDialog}
+                onClose={handleCloseBeastDialog}
+            />
         </Box >
     )
 }
