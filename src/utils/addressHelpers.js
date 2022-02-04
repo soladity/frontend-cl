@@ -13,3 +13,7 @@ export const getWarriorAddress = () => {
 export const getLegionAddress = () => {
     return '0xba874C2a011b492F220f4d5F71fd70b9d14F69ff'
 }
+
+export const getRewardPoolAddress = () => {
+    return '0xcda6f41c153bb6f2efba948611daf3ad977d7597'
+}

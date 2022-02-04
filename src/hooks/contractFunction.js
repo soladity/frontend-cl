@@ -108,6 +108,11 @@ export const mintLegion = async (web3, contract, account, legionName, beastIds, 
     return response;
 }
 
+
+// Reward Pool
+export const getUnclaimedUSD = async (web3, contract, account) => {
+    const response = await contract.methods.getUnclaimedUSD(account).call();
+
 export const getLegionTokenIds = async (web3, contract, account) => {
     const response = await contract.methods.getTokenIds(account).call();
     return response;
