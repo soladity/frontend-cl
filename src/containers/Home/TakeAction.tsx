@@ -2,32 +2,67 @@ import * as React from 'react'
 import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { FaTimes } from 'react-icons/fa'
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintBeast, mintWarrior } from '../../hooks/contractFunction';
+import { useWeb3React } from '@web3-react/core';
+import { useBloodstone, useBeast, useWarrior, useWeb3 } from '../../hooks/useContract';
+import { useNavigate } from 'react-router-dom'
 
 const TakeAction = () => {
+    const navigate = useNavigate()
 
+    //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] = React.useState<HTMLElement | null>(null);
-
     const handlePopoverOpenSummonBeast = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElSummonBeast(event.currentTarget);
     };
-
     const handlePopoverCloseSummonBeast = () => {
         setAnchorElSummonBeast(null);
     };
-
     const openSummonBeast = Boolean(anchorElSummonBeast);
 
+    //Popover for Summon Warrior
     const [anchorElSummonWarrior, setAnchorElSummonWarrior] = React.useState<HTMLElement | null>(null);
-
     const handlePopoverOpenSummonWarrior = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElSummonWarrior(event.currentTarget);
     };
-
     const handlePopoverCloseSummonWarrior = () => {
         setAnchorElSummonWarrior(null);
     };
-
     const openSummonWarrior = Boolean(anchorElSummonWarrior);
+
+    //Account
+    const {
+        account,
+    } = useWeb3React();
+
+    const beastContract = useBeast();
+    const warriorContract = useWarrior()
+    const bloodstoneContract = useBloodstone();
+    const web3 = useWeb3();
+
+    //Mint Beast with quantity
+    const handleBeastMint = async (amount: Number) => {
+        handlePopoverCloseSummonBeast()
+        const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
+        console.log('allowance --- ', allowance)
+        if (allowance === '0') {
+            await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
+        }
+        const result = await mintBeast(web3, beastContract, account, amount);
+        console.log(result)
+        navigate('/beasts')
+    }
+
+    //Mint Warriors with quantity
+    const handleWarriorMint = async (amount: Number) => {
+        handlePopoverCloseSummonWarrior()
+        const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
+        if (allowance === '0') {
+            await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
+        }
+        await mintWarrior(web3, warriorContract, account, amount);
+        navigate('/beasts')
+    }
 
     return (
         <Card sx={{
@@ -67,10 +102,10 @@ const TakeAction = () => {
                                         </Box>
                                         <DialogTitle>SUMMON BEAST</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>1</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>5</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>10</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>20</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(1)}>1</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(5)}>5</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(10)}>10</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(20)}>20</Button>
                                             <Button variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
                                         </Box>
                                     </Popover>
@@ -96,10 +131,10 @@ const TakeAction = () => {
                                         </Box>
                                         <DialogTitle>SUMMON WARRIORS</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>1</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>5</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>10</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }}>20</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(1)}>1</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(5)}>5</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(10)}>10</Button>
+                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(20)}>20</Button>
                                             <Button variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
                                         </Box>
                                     </Popover>
