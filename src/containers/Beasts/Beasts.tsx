@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { meta_constant } from '../../config/meta.config';
 import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
-import MintCard from '../../component/Cards/MintCard';
+import BeastCard from '../../component/Cards/BeastCard';
 import { getTranslation } from '../../utils/translation';
 
 const useStyles = makeStyles({
@@ -185,7 +185,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<MintCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+								<BeastCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
 							</Grid>
 						))
 					}
