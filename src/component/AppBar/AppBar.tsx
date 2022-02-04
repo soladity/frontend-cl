@@ -21,6 +21,7 @@ import { useBloodstone, useWeb3 } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
 import { getTranslation } from '../../utils/translation';
+import { formatNumber } from '../../utils/common';
 import { AnyAaaaRecord } from 'dns';
 import NavList from '../Nav/NavList';
 
@@ -139,7 +140,6 @@ const AppBarComponent = () => {
               <Box
                 sx={{ width: 250 }}
                 role="presentation"
-                onClick={toggleDrawer(false)}
                 onKeyDown={toggleDrawer(false)}
               >
                 <NavList />
@@ -147,7 +147,7 @@ const AppBarComponent = () => {
             </SwipeableDrawer>
           </Box>
           <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
-            <img src='/assets/images/logo.png' style={{ height: '40px' }} alt='logo' />
+            <img src='/assets/images/logo.png' style={{ height: '55px' }} alt='logo' />
           </NavLink>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -177,7 +177,7 @@ const AppBarComponent = () => {
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
                   <Box sx={{ ml: { xs: 1, md: 2} }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>{balance}</Typography>
+                      <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>{formatNumber(balance)}</Typography>
                       <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>$BLST</Typography>
                     </Box>
                     <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>

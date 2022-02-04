@@ -1,4 +1,4 @@
-import { getBeastAddress, getWarriorAddress } from '../utils/addressHelpers';
+import { getBeastAddress, getWarriorAddress, getLegionAddress } from '../utils/addressHelpers';
 
 export const getBloodstoneBalance = async (web3, contract, account) => {
     const response = await contract.methods.balanceOf(account).call();
@@ -93,13 +93,45 @@ export const getWarriorToken = async (web3, contract, tokenId) => {
  * Create Legion Session
  */
 
+export const getLegionBloodstoneAllowance = async (web3, contract, account) => {
+    const response = await contract.methods.allowance(account, getLegionAddress()).call();
+    return web3.utils.fromWei(response, 'ether').toString();
+}
+
+export const setLegionBloodstoneApprove = async (web3, contract, account) => {
+    const response = await contract.methods.approve(getLegionAddress(), web3.utils.toWei('1000000000', 'ether').toString()).send({ from: account });
+    return response;
+}
+
 export const mintLegion = async (web3, contract, account, legionName, beastIds, warriorIds) => {
     const response = await contract.methods.mint(legionName, beastIds, warriorIds).send({ from: account });
     return response;
 }
 
+
 // Reward Pool
 export const getUnclaimedUSD = async (web3, contract, account) => {
     const response = await contract.methods.getUnclaimedUSD(account).call();
+
+export const getLegionTokenIds = async (web3, contract, account) => {
+    const response = await contract.methods.getTokenIds(account).call();
+    return response;
+}
+
+export const getLegionToken = async (web3, contract, tokenId) => {
+    const response = await contract.methods.getLegion(tokenId).call();
+    const legion = {
+        name: response[0],
+        image: response[1],
+        beasts: response[2],
+        warriors: response[3],
+        supplies: response[4],
+        attackPower: parseInt(response[5]),
+    }
+    return legion;
+}
+
+export const addSupply = async (web3, contract, account, tokenId, supply) => {
+    const response = await contract.methods.addSupply(tokenId, supply, true).send({ from: account });
     return response;
 }

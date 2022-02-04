@@ -16,7 +16,7 @@ type CardProps = {
     strength?: string;
 };
 
-export default function MintCard(props: CardProps) {
+export default function BeastCard(props: CardProps) {
     const {
         id,
         image,

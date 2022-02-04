@@ -70,7 +70,7 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'mainGame',
+                title: 'play',
             },
             {
                 type: 'navlink',
@@ -101,7 +101,7 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'marketplace',
+                title: 'market',
             },
             {
                 type: 'link',
@@ -126,26 +126,25 @@ export const navConfig = {
             },
             {
                 type: 'head',
-                title: 'getBloodstone',
+                title: 'usefulLinks',
             },
             {
                 type: 'link',
-                title: 'pancakeswap',
+                title: 'buyBlst',
                 icon: 'pancakeswap',
                 path: 'https://pancakeswap.com'
-            },
-            {
-                type: 'divider'
-            },
-            {
-                type: 'head',
-                title: 'howToPlay',
             },
             {
                 type: 'link',
                 title: 'whitepaper',
                 icon: 'whitepaper',
                 path: 'https://pancakeswap.com'
+            },
+            {
+                type: 'navlink',
+                title: 'help',
+                icon: 'Help',
+                path: '/help'
             },
             {
                 type: 'divider'
