@@ -64,6 +64,7 @@ const CreateLegions: React.FC = () => {
 	const warriorContract = useWarrior()
 	const beastContract = useBeast()
 	const legionContract = useLegion()
+	const bloodstoneContract = useBloodstone()
 	const web3 = useWeb3()
 
 	React.useEffect(() => {
@@ -157,7 +158,7 @@ const CreateLegions: React.FC = () => {
 		})
 		setTotalCP(cp)
 		setTotalAp(sum)
-		setIsWDropable(cp > 0 && cp >= warriorDropBoxList.length && totalAP >= createlegions.main.minAvailableAP)
+		setIsWDropable(cp > 0 && cp >= warriorDropBoxList.length && totalAP >= createlegions.main.minAvailableAP && legionName.length > 0)
 	}
 
 	const getBalance = async () => {
@@ -222,10 +223,9 @@ const CreateLegions: React.FC = () => {
 	}
 
 	const handleMint = async () => {
-		console.log(isWDropable);
-		const allowance = await getLegionBloodstoneAllowance(web3, legionContract, account);
+		const allowance = await getLegionBloodstoneAllowance(web3, bloodstoneContract, account);
 		if (allowance === '0') {
-			await setLegionBloodstoneApprove(web3, legionContract, account);
+			await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
 		}
 		await mintLegion(web3, legionContract, account, legionName,
 			beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }),
@@ -234,6 +234,7 @@ const CreateLegions: React.FC = () => {
 
 	const handleChangedName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLegionName(e.target.value);
+		setIsWDropable(totalCP > 0 && totalCP >= warriorDropBoxList.length && totalAP >= createlegions.main.minAvailableAP && legionName.length > 0)
 	}
 
 	return <Box>
