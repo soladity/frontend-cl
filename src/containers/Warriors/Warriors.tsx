@@ -4,6 +4,7 @@ import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
+import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
 import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getWarriorUrl } from '../../hooks/contractFunction';
@@ -37,7 +38,7 @@ const Warriors = () => {
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
-	const [apValue, setApValue] = React.useState<number[]>([500, 60000]);
+	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
 
 	const classes = useStyles();
 	const warriorContract = useWarrior();
@@ -159,7 +160,9 @@ const Warriors = () => {
 							{balance}
 						</Typography>
 						<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+							<NavLink to='/createlegions' className='non-style'>
 							{getTranslation('createLegion')}
+							</NavLink>
 						</Button>
 					</Box>
 				</Card>
@@ -203,10 +206,10 @@ const Warriors = () => {
 								// defaultValue={20}
 								value={apValue}
 								min={500}
-								max={60000}
+								max={6000}
 								marks={[
 									{ value: 500, label: '500' },
-									{ value: 60000, label: formatNumber('60000') },
+									{ value: 6000, label: formatNumber('6000+') },
 								]}
 								step={1}
 								valueLabelDisplay="auto"
@@ -218,7 +221,7 @@ const Warriors = () => {
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
-						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && apValue[1] > parseInt(item.power)).map((item: any, index) => (
+						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
 								<WarriorCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
 							</Grid>

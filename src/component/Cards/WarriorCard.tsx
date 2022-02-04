@@ -1,10 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
@@ -62,7 +59,7 @@ export default function WarriorCard(props: CardProps) {
                 {itemList}
             </Box>
             <Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', bottom: '20px', left: 'calc(50% - 20px)', fontWeight: 'bold' }}>
-                <Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '1.4rem', textShadow: 'grey 1px 2px' }}>{formatNumber(power)}</Typography>
+                <Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '1.4rem', textShadow: '-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000' }}>{formatNumber(power)}</Typography>
             </Box>
             <Box sx={{ display: 'flex', position: 'absolute', bottom: '15px', right: '20px', cursor: 'pointer' }}>
                 <img src='/assets/images/shopping.png' style={{ height: '20px' }} alt='Shopping' />

@@ -6,7 +6,8 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Button, Menu, MenuItem } from '@mui/material';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
@@ -28,13 +29,33 @@ const useStyles = makeStyles({
 const NavList = (props: any) => {
 	const classes = useStyles();
 
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [language, setLanguage] = React.useState<string | null>('en');
+	const open = Boolean(anchorEl);
+
+	React.useEffect(() => {
+		setLanguage(localStorage.getItem('lang') !== null ? localStorage.getItem('lang') : 'en');
+	}, []);
+
+	const handleClick = (event: any) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleLanguage = (value: any) => {
+		setAnchorEl(null);
+		setLanguage(value);
+		localStorage.setItem('lang', value);
+	};
+
 	return <div>
 		<Toolbar />
 		<Divider />
 		<List sx={{
-			// backgroundImage: 'url(https://dummyimage.com/300x1000/1c0f8c/0011ff)',
-			// backgroundAttachment: 'fixed'
-			// backgroundColor: '#555'
+			pb: 8
 		}}>
 			<Card sx={{ m: 2, p: 2 }}>
 				<Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -80,6 +101,35 @@ const NavList = (props: any) => {
 					</Card>}
 				</React.Fragment>
 			))}
+			<Box sx={{ p: 1 }}>
+				<Button
+					id="language-button"
+					aria-controls={open ? 'language-menu' : undefined}
+					aria-haspopup="true"
+					aria-expanded={open ? 'true' : undefined}
+					onClick={handleClick}
+					sx={{color: 'white'}}
+				>
+					<img src={`/assets/images/${language}.svg`} style={{ width: '30px' }} />
+					<ArrowDropDownIcon />
+				</Button>
+				<Menu
+					id="language-menu"
+					anchorEl={anchorEl}
+					open={open}
+					onClose={handleClose}
+					MenuListProps={{
+						'aria-labelledby': 'language-button',
+					}}
+				>
+					<MenuItem onClick={() => handleLanguage('en')}>
+						<img src='/assets/images/en.svg' style={{ width: '30px', marginRight: '10px' }} /> English
+					</MenuItem>
+					<MenuItem onClick={() => handleLanguage('es')}>
+						<img src='/assets/images/es.svg' style={{ width: '30px', marginRight: '10px' }} /> Espanic
+					</MenuItem>
+				</Menu>
+			</Box>
 		</List>
 	</div>
 };

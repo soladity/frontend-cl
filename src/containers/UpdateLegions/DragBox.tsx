@@ -2,7 +2,7 @@ import { CSSProperties, FC } from 'react'
 import { useDrag } from 'react-dnd'
 import { Grid } from '@mui/material';
 import { DragItemBox } from '../../constant/createlegions/createlegions';
-import MintCard from '../../component/Cards/MintCard';
+import BeastCard from '../../component/Cards/BeastCard';
 
 
 const style: CSSProperties = {
@@ -41,7 +41,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseI
     const opacity = isDragging ? 0.4 : 1
     return (
         <Grid item xs={12} sm={6} md={3} ref={drag} style={{ ...style, opacity }}>
-            {/* <MintCard image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} strength={item['strength']} /> */}
+            <BeastCard id={item['id']} image={baseUrl + item['image']} type={item['type']} capacity={item['capacity']} strength={item['strength']} />
         </Grid>
     )
 }
