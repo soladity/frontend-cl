@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import Web3 from 'web3'
 import { useWeb3React } from '@web3-react/core'
 
-import { getBloodstoneAddress, getBeastAddress, getWarriorAddress, getLegionAddress } from '../utils/addressHelpers'
+import { getBloodstoneAddress, getBeastAddress, getWarriorAddress, getLegionAddress, getRewardPoolAddress } from '../utils/addressHelpers'
 import bloodstone from '../config/abis/bloodstone.json'
 import beast from '../config/abis/beast.json'
 import warrior from '../config/abis/warrior.json'
 import legion from '../config/abis/legion.json'
+import rewardpool from '../config/abis/rewardpool.json'
 import getRpcUrl from '../utils/getRpcUrl'
 
 const RPC_URL = getRpcUrl()
@@ -45,4 +46,9 @@ export const useWarrior = _ => {
 export const useLegion = _ => {
     const abi = legion.abi
     return useContract(abi, getLegionAddress())
+}
+
+export const useRewardPool = _ => {
+    const abi = rewardpool.abi
+    return useContract(abi, getRewardPoolAddress())
 }
