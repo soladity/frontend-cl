@@ -89,6 +89,20 @@ export const getWarriorToken = async (web3, contract, tokenId) => {
     return beast;
 }
 
+/**
+ * Create Legion Session
+ */
+
+export const getLegionBloodstoneAllowance = async (web3, contract, account) => {
+    const response = await contract.methods.allowance(account, getLegionAddress()).call();
+    return web3.utils.fromWei(response, 'ether').toString();
+}
+
+export const setLegionBloodstoneApprove = async (web3, contract, account) => {
+    const response = await contract.methods.approve(getLegionAddress(), web3.utils.toWei('1000000000', 'ether').toString()).send({ from: account });
+    return response;
+}
+
 export const mintLegion = async (web3, contract, account, legionName, beastIds, warriorIds) => {
     const response = await contract.methods.mint(legionName, beastIds, warriorIds).send({ from: account });
     return response;
@@ -115,18 +129,4 @@ export const getLegionToken = async (web3, contract, tokenId) => {
 export const addSupply = async (web3, contract, account, tokenId, supply) => {
     const response = await contract.methods.addSupply(tokenId, supply, true).send({ from: account });
     return response;
-}
-
-export const getLegionDetails = async (web3, contract, tokenID) => {
-    const response = await contract.methods.getLegion(tokenID).call()
-    const legion = {
-        name: response[0],
-        imgUrl: response[1],
-        beastIDs: response[2],
-        warriorIDs: response[3],
-        supplies: response[4],
-        ap: response[5],
-        onMarket: response[6]
-    }
-    return legion
 }
