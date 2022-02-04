@@ -54,7 +54,7 @@ const Home = () => {
                 </Grid>
             </Grid>
             <ToSocial />
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                 <Box>
                     <Box>
                         <YouTube
