@@ -34,7 +34,6 @@ const YourInventory = () => {
         setWarriorBalance(warriorBalance)
 
         const unclaimedBalance = await getUnclaimedUSD(web3, rewardPoolContract, account)
-        console.log('unclaimedBalance', unclaimedBalance)
         setUnclaimedBalance(unclaimedBalance)
     }
 
