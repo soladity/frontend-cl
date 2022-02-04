@@ -1,4 +1,4 @@
-import { getBeastAddress, getLegionAddress, getWarriorAddress } from '../utils/addressHelpers';
+import { getBeastAddress, getWarriorAddress, getLegionAddress } from '../utils/addressHelpers';
 
 export const getBloodstoneBalance = async (web3, contract, account) => {
     const response = await contract.methods.balanceOf(account).call();
@@ -113,16 +113,20 @@ export const getLegionTokenIds = async (web3, contract, account) => {
     return response;
 }
 
-export const getLegionDetails = async (web3, contract, tokenID) => {
-    const response = await contract.methods.getLegion(tokenID).call()
+export const getLegionToken = async (web3, contract, tokenId) => {
+    const response = await contract.methods.getLegion(tokenId).call();
     const legion = {
         name: response[0],
-        imgUrl: response[1],
-        beastIDs: response[2],
-        warriorIDs: response[3],
+        image: response[1],
+        beasts: response[2],
+        warriors: response[3],
         supplies: response[4],
-        ap: response[5],
-        onMarket: response[6]
+        attackPower: parseInt(response[5]),
     }
-    return legion
+    return legion;
+}
+
+export const addSupply = async (web3, contract, account, tokenId, supply) => {
+    const response = await contract.methods.addSupply(tokenId, supply, true).send({ from: account });
+    return response;
 }
