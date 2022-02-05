@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import { getTranslation } from '../../utils/translation';
@@ -71,7 +71,7 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseUrl(await getBeastUrl(web3, beastContract));
+		setBaseUrl(await getBaseUrl());
 		setBalance(await getBeastBalance(web3, beastContract, account));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
 		let amount = 0;

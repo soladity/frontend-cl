@@ -1,5 +1,10 @@
 import { getBeastAddress, getWarriorAddress, getLegionAddress } from '../utils/addressHelpers';
 
+export const getBaseUrl = async () => {
+    // const response = await contract.methods._baseURL().call();
+    return "https://ipfs.infura.io:5001/api/v0/cat/";
+}
+
 export const getBloodstoneBalance = async (web3, contract, account) => {
     const response = await contract.methods.balanceOf(account).call();
     return web3.utils.fromWei(response, 'ether').toString();
@@ -42,11 +47,6 @@ export const getBeastToken = async (web3, contract, tokenId) => {
     return beast;
 }
 
-export const getBeastUrl = async (web3, contract) => {
-    // const response = await contract.methods._baseURL().call();
-    return "https://ipfs.infura.io:5001/api/v0/cat/";
-}
-
 export const getWarriorBloodstoneAllowance = async (web3, contract, account) => {
     const response = await contract.methods.allowance(account, getWarriorAddress()).call();
     return web3.utils.fromWei(response, 'ether').toString();
@@ -60,11 +60,6 @@ export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
 export const mintWarrior = async (web3, contract, account, amount) => {
     const response = await contract.methods.mint(amount).send({ from: account });
     return response;
-}
-
-export const getWarriorUrl = async (web3, contract) => {
-    // const response = await contract.methods._baseURL().call();
-    return "https://ipfs.infura.io:5001/api/v0/cat/";
 }
 
 export const getWarriorBalance = async (web3, contract, account) => {
@@ -108,6 +103,22 @@ export const mintLegion = async (web3, contract, account, legionName, beastIds, 
     return response;
 }
 
+/**
+ * Monster Contracts
+ */
+
+export const getMonsterInfo = async (web3, contract, monsterID) => {
+    const response = await contract.methods.getMonsterInfo(monsterID).call()
+    const monster = {
+        base: response[0],
+        ap: parseInt(response[1]),
+        reward: response[2],
+        image: response[3],
+        imageAlt: response[4]
+    }
+    return monster
+}
+
 
 // Reward Pool
 export const getUnclaimedUSD = async (web3, contract, account) => {
@@ -124,11 +135,10 @@ export const getLegionToken = async (web3, contract, tokenId) => {
     const response = await contract.methods.getLegion(tokenId).call();
     const legion = {
         name: response[0],
-        image: response[1],
-        beasts: response[2],
-        warriors: response[3],
-        supplies: response[4],
-        attackPower: parseInt(response[5]),
+        beasts: response[1],
+        warriors: response[2],
+        supplies: response[3],
+        attackPower: parseInt(response[4]),
     }
     return legion;
 }

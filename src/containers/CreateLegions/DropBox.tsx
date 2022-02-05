@@ -1,7 +1,6 @@
-import React, { CSSProperties, FC, useEffect, useState } from 'react'
+import React, { CSSProperties, FC, } from 'react'
 import { useDrop } from 'react-dnd'
-import { Grid, Card, Box, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles';
+import { Grid, Box, Typography } from '@mui/material'
 import { DragItemBox } from '../../constant/createlegions/createlegions'
 import { DropCard } from '../../component/Cards/DropCard'
 

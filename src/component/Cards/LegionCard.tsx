@@ -6,7 +6,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useWeb3React } from '@web3-react/core';
 
 import { useBloodstone, useBeast, useWarrior, useLegion, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getWarriorBalance, getBeastToken, getWarriorToken, getBeastUrl, getWarriorUrl, getLegionTokenIds, getLegionToken } from '../../hooks/contractFunction';
+import { getBeastBalance, getWarriorBalance, getBeastToken, getWarriorToken, getLegionTokenIds, getLegionToken } from '../../hooks/contractFunction';
 import { formatNumber } from '../../utils/common';
 import { getTranslation } from '../../utils/translation';
 

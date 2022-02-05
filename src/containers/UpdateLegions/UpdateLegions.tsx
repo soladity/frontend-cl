@@ -8,7 +8,7 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 
 import { meta_constant, createlegions } from '../../config/meta.config';
-import { mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
+import { mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common'
@@ -137,7 +137,7 @@ const UpdateLegions: React.FC = () => {
 	}, [indexForLeft, w5bInDropList]);
 
 	const getBalance = async () => {
-		setBaseUrl(await getBeastUrl(web3, beastContract));
+		setBaseUrl(await getBaseUrl());
 		setBalance(await getBeastBalance(web3, beastContract, account));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
 		let amount = 0;

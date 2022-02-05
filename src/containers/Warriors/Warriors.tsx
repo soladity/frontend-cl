@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getWarriorUrl } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import { getTranslation } from '../../utils/translation';
@@ -73,7 +73,7 @@ const Warriors = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseUrl(await getWarriorUrl(web3, warriorContract));
+		setBaseUrl(await getBaseUrl());
 		setBalance(await getWarriorBalance(web3, warriorContract, account));
 		const ids = await getWarriorTokenIds(web3, warriorContract, account);
 		let amount = 0;
@@ -161,7 +161,7 @@ const Warriors = () => {
 						</Typography>
 						<Button variant="contained" sx={{ fontWeight: 'bold' }}>
 							<NavLink to='/createlegions' className='non-style'>
-							{getTranslation('createLegion')}
+								{getTranslation('createLegion')}
 							</NavLink>
 						</Button>
 					</Box>
