@@ -137,3 +137,17 @@ export const addSupply = async (web3, contract, account, tokenId, supply) => {
     const response = await contract.methods.addSupply(tokenId, supply, true).send({ from: account });
     return response;
 }
+
+export const getLegionDetails = async (web3, contract, tokenID) => {
+    const response = await contract.methods.getLegion(tokenID).call()
+    const legion = {
+        name: response[0],
+        imgUrl: response[1],
+        beastIDs: response[2],
+        warriorIDs: response[3],
+        supplies: response[4],
+        ap: response[5],
+        onMarket: response[6]
+    }
+    return legion
+}
