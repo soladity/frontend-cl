@@ -58,7 +58,8 @@ export const translations = {
     'orange': 'Orange',
     'red': 'Red',
     'hideWeakLegions': 'Hide Weak Legions',
-    'buyMoreSupply': 'Buy More Supplies'
+    'buyMoreSupply': 'Buy More Supplies',
+    'loadingMonsters': 'Loading Monsters ...'
   },
   es: {
     'logo': 'Logotipo',
@@ -117,6 +118,7 @@ export const translations = {
     'orange': 'Orange',
     'red': 'Red',
     'hideWeakLegions': 'Hide Weak Legions',
-    'usefulLinks': 'Useful Links'
+    'usefulLinks': 'Useful Links',
+    'loadingMonsters': 'Loading Monsters ...'
   }
 }
