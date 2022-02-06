@@ -12,7 +12,8 @@ const style: CSSProperties = {
 
 export interface DragBoxProps {
     item: any,
-    baseUrl: string,
+    baseJpgUrl: string,
+    baseGifUrl: string,
     baseIndex: number,
     curIndex: number,
     w5b: boolean,
@@ -24,7 +25,7 @@ interface DropResult {
     done: boolean
 }
 
-export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseIndex, curIndex, w5b, showAnimation, dropped }) {
+export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseJpgUrl, baseGifUrl, baseIndex, curIndex, w5b, showAnimation, dropped }) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: DragItemBox.Beasts,
         item: { item, id: baseIndex, w5b: w5b },
@@ -48,11 +49,11 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseUrl, baseI
         <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>
             {
                 !w5b &&
-                <BeastCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+                <BeastCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
             }
             {
                 w5b &&
-                <WarriorCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
+                <WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
             }
         </Grid>
     )
