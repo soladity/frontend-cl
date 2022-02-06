@@ -9,7 +9,9 @@ import {
   FaTwitter,
   FaTelegram,
   FaYoutube,
-  FaMedium
+  FaMedium,
+  FaEarlybirds,
+  FaDrupal
 } from 'react-icons/fa';
 
 
@@ -148,7 +150,7 @@ export default function UnstyledButtonCustom(props: any) {
         <div style={{ textAlign: 'center', fontSize: 32 }}>
           {Type(props.type)}
         </div>
-        <div>
+        <div style={{ textAlign: 'center' }}>
           {props.type}
         </div>
       </div>

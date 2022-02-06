@@ -161,3 +161,18 @@ export const getLegionDetails = async (web3, contract, tokenID) => {
     }
     return legion
 }
+
+export const getAvailableLegionsCount = async (web3, contract, account) => {
+    const response = await contract.methods.getAvailableLegionsCount(account).call()
+    return response
+}
+
+export const getTaxLeftDays = async (web3, contract, account) => {
+    const response = await contract.methods.getTaxLeftDays(account).call()
+    return response
+}
+
+export const getMaxAttackPower = async (web3, contract, account) => {
+    const response = await contract.methods.getMaxAttackPower(account).call()
+    return response
+}

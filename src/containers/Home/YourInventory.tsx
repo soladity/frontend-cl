@@ -3,18 +3,30 @@ import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from 
 import Typography from '@mui/material/Typography';
 
 import { useWeb3React } from '@web3-react/core';
-import { getBeastBalance, getWarriorBalance, getUnclaimedUSD } from '../../hooks/contractFunction';
-import { useBeast, useWarrior, useRewardPool, useWeb3 } from '../../hooks/useContract';
+import { getBeastBalance, getWarriorBalance, getUnclaimedUSD, getAvailableLegionsCount, getTaxLeftDays, getMaxAttackPower, getLegionTokenIds } from '../../hooks/contractFunction';
+import { useBeast, useWarrior, useLegion, useRewardPool, useWeb3 } from '../../hooks/useContract';
+import { useSelector } from 'react-redux'
+import { getTranslation } from '../../utils/translation';
 
 const YourInventory = () => {
+    const { reloadContractStatus } = useSelector((state: any) => state.contractReducer)
+
     const [beastBalance, setBeastBalance] = React.useState(0)
     const [warriorBalance, setWarriorBalance] = React.useState(0)
     const [unclaimedBalance, setUnclaimedBalance] = React.useState(0)
+    const [availableLegionCount, setAvailableLegionCount] = React.useState(0)
+    const [legionTokenIds, setLegionTokenIds] = React.useState([])
+    const [taxLeftDays, setTaxLeftDays] = React.useState(0)
+    const [maxAttackPower, setMaxAttackPower] = React.useState(0)
+
 
 
     //account
     const { account } = useWeb3React()
     const web3 = useWeb3()
+
+    //Legion Contract
+    const legionContract = useLegion()
 
     //Beast Contract
     const beastContract = useBeast()
@@ -35,11 +47,23 @@ const YourInventory = () => {
 
         const unclaimedBalance = await getUnclaimedUSD(web3, rewardPoolContract, account)
         setUnclaimedBalance(unclaimedBalance)
+
+        const availableLegionCount = await getAvailableLegionsCount(web3, legionContract, account)
+        setAvailableLegionCount(availableLegionCount)
+
+        const legionTokenIds = await getLegionTokenIds(web3, legionContract, account)
+        setLegionTokenIds(legionTokenIds)
+
+        const taxLeftDays = await getTaxLeftDays(web3, legionContract, account)
+        setTaxLeftDays(taxLeftDays)
+
+        const maxAttackPower = await getMaxAttackPower(web3, legionContract, account)
+        setMaxAttackPower(maxAttackPower)
     }
 
     React.useEffect(() => {
         getBalance()
-    }, [])
+    }, [reloadContractStatus])
 
     return (
         <Card sx={{
@@ -50,25 +74,25 @@ const YourInventory = () => {
         }}>
             <Box sx={{ p: 4, justifyContent: 'center' }}>
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
-                    YOUR INVENTORIY
+                    {getTranslation('yourInventory')}
                 </Typography>
                 <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    BEASTS : {beastBalance}
+                    {getTranslation('BEASTS')} : {beastBalance}
                 </Typography>
                 <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    WARRORS : {warriorBalance}
+                    {getTranslation('WARRIORS')} : {warriorBalance}
                 </Typography>
                 <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    LEGIONS : 8 / 12
+                    {getTranslation('LEGIONS')} : {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
                 <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    YOUR MAX AP : 60000
+                    {getTranslation('yourMaxAp')} : {maxAttackPower}
                 </Typography>
                 <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    UNCLAIMED $ : {unclaimedBalance}
+                    {getTranslation('unClaimed')} $ : {unclaimedBalance}
                 </Typography>
                 <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    TAX DAYS LEFT : 3
+                    {getTranslation('taxDaysLeft')} : {taxLeftDays}
                 </Typography>
             </Box>
         </Card>
