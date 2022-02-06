@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Card, CardMedia } from '@mui/material'
 import { MonsterCard } from '../../component/Cards/MonsterCard'
-import Helmet from 'react-helmet';
-import { meta_constant, createlegions } from '../../config/meta.config';
-import { useWeb3React } from '@web3-react/core';
-import { useBeast, useLegion, useWarrior, useMonster, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseUrl } from '../../hooks/contractFunction';
-import { getTranslation } from '../../utils/translation';
+import Helmet from 'react-helmet'
+import { meta_constant, createlegions, allConstants } from '../../config/meta.config'
+import { useWeb3React } from '@web3-react/core'
+import { useBeast, useLegion, useWarrior, useMonster, useWeb3 } from '../../hooks/useContract'
+import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseUrl } from '../../hooks/contractFunction'
+import { getTranslation } from '../../utils/translation'
 
 interface MonsterInterface {
     base: string
@@ -33,7 +33,7 @@ const Monsters = () => {
     const monsterContract = useMonster()
 
     const [loading, setLoading] = useState(true)
-    const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
+    const [showAnimation, setShowAnimation] = useState<string | null>('0')
     const [baseUrl, setBaseUrl] = useState('')
     const [curComboLegionValue, setCurComboLegionValue] = useState('0')
     const [legions, setLegions] = useState(Array)
@@ -43,7 +43,12 @@ const Monsters = () => {
     const [mintedWarriorCnt, setMintedWarriorCnt] = useState(0)
     const [curLegion, setCurLegion] = useState<LegionInterface | null>()
     const [monsters, setMonsters] = useState(Array)
-    const [scrollPosition, setScrollPosition] = useState(0)
+    const [scrollMaxHeight, setScrollMaxHeight] = useState(0)
+    const scrollArea = useCallback(node => {
+        if (node != null) {
+            setScrollMaxHeight(node.scrollHeight)
+        }
+    }, [])
 
     useEffect(() => {
         if (account) {
@@ -52,22 +57,19 @@ const Monsters = () => {
         setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
     }, [])
 
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll)
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    }, [])
-
-    const handleScroll = () => {
-        const position = window.pageYOffset
-        setScrollPosition(position)
-    }
-
     const handleCurLegionValue = (e: SelectChangeEvent) => {
         const selectedIndex = parseInt(e.target.value)
+        const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface
+        let indexOfCurMonster = 0
+        for (let i = 0; i < allConstants.listOfMonsterAP.length; i++) {
+            if (allConstants.listOfMonsterAP[i] < curLegionTmp.attackPower &&
+                curLegionTmp.attackPower < allConstants.listOfMonsterAP[i + 1])
+                indexOfCurMonster = i;
+        }
+        const scrollPosition = (scrollMaxHeight / 22 * indexOfCurMonster)
         setCurComboLegionValue(e.target.value as string)
-        setCurLegion((legions as any)[selectedIndex])
+        setCurLegion(curLegionTmp)
+        window.scrollTo({ top: scrollPosition, left: 0, behavior: 'smooth' })
     }
 
     const initMonster = async () => {
@@ -103,9 +105,7 @@ const Monsters = () => {
         setCurLegion(legionArrayTmp[0])
         setLoading(false)
     }
-    console.log(monsters)
 
-    console.log(legions, curLegion)
     return (
         <Box>
             <Helmet>
@@ -116,7 +116,7 @@ const Monsters = () => {
             </Helmet>
             {
                 loading === false && legions.length > 0 &&
-                <Box component='div' sx={{ position: 'relative' }}>
+                <Box component='div' sx={{ position: 'relative' }} ref={scrollArea}>
                     <Card sx={{ position: 'sticky', top: '100px', zIndex: 100, my: 2, py: 2 }}>
                         <Grid container spacing={2} sx={{ justifyContent: 'space-evenly' }} alignItems="center">
                             <Grid item xs={4}>
@@ -131,7 +131,7 @@ const Monsters = () => {
                                     >
                                         {
                                             legions.map((value: any, index) => (
-                                                <MenuItem value={index} key={index}>Legion #{value.id} {value.name}</MenuItem>
+                                                <MenuItem value={index} key={index} sx={{ background: 'blue' }}>Legion #{value.id} {value.name}</MenuItem>
                                             ))
                                         }
                                     </Select>
@@ -154,8 +154,8 @@ const Monsters = () => {
                     <Grid container spacing={2} columns={60} justifyContent="center" alignItems="center">
                         {
                             monsters.map((monster: any | MonsterInterface, index) => (
-                                <Box component='div' sx={{ width: '100%', my: 1 }}>
-                                    <Grid item xs={60} sm={30} md={20} lg={15} xl={12} sx={{ maxWidth: '500px', margin: 'auto' }} key={index}>
+                                <Box component='div' sx={{ width: '100%', my: 1 }} key={index}>
+                                    <Grid item xs={60} sm={30} md={20} lg={15} xl={12} sx={{ maxWidth: '500px', margin: 'auto' }}>
                                         <MonsterCard
                                             image={baseUrl + (showAnimation === '0' ? monster.imageAlt : monster.image)}
                                             base={monster.base}
