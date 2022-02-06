@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import { meta_constant, createlegions, allConstants } from '../../config/meta.config'
 import { useWeb3React } from '@web3-react/core'
 import { useBeast, useLegion, useWarrior, useMonster, useWeb3 } from '../../hooks/useContract'
-import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseUrl } from '../../hooks/contractFunction'
+import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseJpgURL, getBaseGifURL, canHunt } from '../../hooks/contractFunction'
 import { getTranslation } from '../../utils/translation'
 
 interface MonsterInterface {
@@ -34,7 +34,8 @@ const Monsters = () => {
 
     const [loading, setLoading] = useState(true)
     const [showAnimation, setShowAnimation] = useState<string | null>('0')
-    const [baseUrl, setBaseUrl] = useState('')
+    const [baseJpgUrl, setBaseJpgUrl] = useState('')
+    const [baseGifUrl, setBaseGifUrl] = useState('')
     const [curComboLegionValue, setCurComboLegionValue] = useState('0')
     const [legions, setLegions] = useState(Array)
     const [legionIDs, setLegionIDs] = useState(Array)
@@ -87,16 +88,19 @@ const Monsters = () => {
         const legionIDS = await getLegionTokenIds(web3, legionContract, account)
         let legionTmp
         let legionArrayTmp = []
+        let legionStatus = ''
         let warriorCnt = 0
         for (let i = 0; i < legionIDS.length; i++) {
             // if (legionIDS[i] != 1) {
+            legionStatus = await canHunt(web3, legionContract, legionIDS[i])
             legionTmp = await getLegionToken(web3, legionContract, legionIDS[i])
-            legionArrayTmp.push({ ...legionTmp, id: legionIDS[i] })
+            legionArrayTmp.push({ ...legionTmp, id: legionIDS[i], status: legionStatus })
             warriorCnt += legionTmp.warriors.length
             // }
         }
         await initMonster()
-        setBaseUrl(await getBaseUrl())
+        setBaseJpgUrl(await getBaseJpgURL(web3, monsterContract))
+        setBaseGifUrl(await getBaseGifURL(web3, monsterContract))
         setBeasts(await getBeastBalance(web3, beastContract, account))
         setWarriors(await getWarriorBalance(web3, warriorContract, account))
         setLegionIDs(legionIDS)
@@ -130,8 +134,14 @@ const Monsters = () => {
                                         onChange={handleCurLegionValue}
                                     >
                                         {
-                                            legions.map((value: any, index) => (
-                                                <MenuItem value={index} key={index} sx={{ background: 'blue' }}>Legion #{value.id} {value.name}</MenuItem>
+                                            legions.map((legion: any, index) => (
+                                                <MenuItem
+                                                    value={index}
+                                                    key={index}
+                                                    sx={{ background: legion.status === 1 ? 'green' : legion.status === 2 ? 'orange' : 'red' }}
+                                                >
+                                                    Legion #{legion.id} {legion.name}
+                                                </MenuItem>
                                             ))
                                         }
                                     </Select>
@@ -157,7 +167,7 @@ const Monsters = () => {
                                 <Box component='div' sx={{ width: '100%', my: 1 }} key={index}>
                                     <Grid item xs={60} sm={30} md={20} lg={15} xl={12} sx={{ maxWidth: '500px', margin: 'auto' }}>
                                         <MonsterCard
-                                            image={baseUrl + (showAnimation === '0' ? monster.imageAlt : monster.image)}
+                                            image={(showAnimation === '0' ? baseJpgUrl + '/' + (index + 1) + '.jpg' : baseGifUrl + '/' + (index + 1) + '.gif')}
                                             base={monster.base}
                                             minAP={monster.ap}
                                             bouns={monster.ap < (curLegion as LegionInterface).attackPower ? '' + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 : '0'}
