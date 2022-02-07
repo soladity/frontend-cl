@@ -1,8 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -10,21 +7,15 @@ import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid'
 
 type CardProps = {
-    id: string;
-    image: string;
-    type: string;
-    capacity: string;
-    strength?: string;
+    image: string,
+    minAP: string
+    base: string
+    bouns: string
+    price: string
+    isHuntable: boolean
 };
 
-export default function MonsterCard() {
-    // const {
-    //     id,
-    //     image,
-    //     type,
-    //     capacity,
-    //     strength
-    // } = props;
+export const MonsterCard: React.FC<CardProps> = function MonsterCard({ image, minAP, base, bouns, price, isHuntable }) {
 
     const [loaded, setLoaded] = React.useState(false);
 
@@ -33,10 +24,10 @@ export default function MonsterCard() {
     }
 
     return (
-        <Card sx={{ position: 'relative' }}>
+        <Card sx={{ position: 'relative', textAlign: 'center' }}>
             <CardMedia
                 component="img"
-                image=''
+                image={image}
                 alt="Monster Image"
                 loading="lazy"
                 onLoad={handleImageLoaded}
@@ -49,27 +40,27 @@ export default function MonsterCard() {
                     <Skeleton width="60%" />
                 </React.Fragment>
             }
-            <Grid container direction='column' spacing={2} sx={{ position: 'absolute', alignItems: 'center', top: '15px', left: '0px', fontWeight: 'bold' }}>
+            <Grid container direction='column' spacing={2} sx={{ position: 'absolute', alignItems: 'center', top: '15px', left: '0px', fontWeight: 'bold', color: 'darkgrey' }} alignItems="center">
                 <Grid item xs={12}><Typography variant='h6'>3 Name</Typography></Grid>
                 <Grid container spacing={2} sx={{ justifyContent: 'space-around' }}>
                     <Grid item>
-                        <Typography variant='subtitle2'>MIN AP</Typography>
-                        <Typography variant='subtitle2'>30000</Typography>
+                        <Typography variant='subtitle1'>MIN AP</Typography>
+                        <Typography variant='subtitle1'>{minAP}</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant='subtitle2'>MIN AP</Typography>
-                        <Typography variant='subtitle2'>30000</Typography>
+                        <Typography variant='subtitle1'>Base %</Typography>
+                        <Typography variant='subtitle1'>{base}</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant='subtitle2'>MIN AP</Typography>
-                        <Typography variant='subtitle2'>30000</Typography>
+                        <Typography variant='subtitle1'>Bouns %</Typography>
+                        <Typography variant='subtitle1'>{bouns}</Typography>
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid container sx={{ position: 'absolute', bottom: '15px', left: '0px', color: 'darkgrey', justifyContent: 'space-around' }}>
-                <Grid item><Typography variant="subtitle2">57% to win</Typography></Grid>
-                <Grid item>300 $BLST</Grid>
-                <Grid item><Button variant='outlined'>HUNT</Button></Grid>
+            <Grid container sx={{ position: 'absolute', bottom: '15px', left: '0px', color: 'darkgrey', justifyContent: 'space-around' }} alignItems="center">
+                <Grid item><Typography variant="h6">{base}% to win</Typography></Grid>
+                <Grid item>{price} $BLST</Grid>
+                <Grid item><Button variant='outlined' disabled={!isHuntable}>HUNT</Button></Grid>
             </Grid>
         </Card>
     );

@@ -1,15 +1,16 @@
 import React from 'react'
+import { NavLink, useNavigate } from 'react-router-dom';
 import Helmet from 'react-helmet'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Box, Typography, Grid, Card, CardMedia, Input, Slider, MenuItem, Button, IconButton, FormControl, FormLabel, ButtonGroup } from '@mui/material'
+import { Box, Typography, Grid, Card, CardMedia, Input, Slider, Button, IconButton, FormControl, FormLabel, ButtonGroup } from '@mui/material'
 import { ErrorOutline, ArrowBack } from '@mui/icons-material'
 import { makeStyles } from '@mui/styles'
 import { useWeb3React } from '@web3-react/core'
 
 import { meta_constant, createlegions } from '../../config/meta.config'
 import { getLegionBloodstoneAllowance, setLegionBloodstoneApprove, getWarriorTokenIds, getWarriorToken } from '../../hooks/contractFunction'
-import { mintLegion, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction'
+import { mintLegion, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction'
 import { useBloodstone, useBeast, useWarrior, useWeb3, useLegion } from '../../hooks/useContract'
 import { getTranslation } from '../../utils/translation'
 import { formatNumber } from '../../utils/common'
@@ -38,6 +39,10 @@ const CreateLegions: React.FC = () => {
 	const { account } = useWeb3React()
 
 	const [loading, setLoading] = React.useState(true)
+	const [baseBeastJpgUrl, setBaseBeastJpgUrl] = React.useState('')
+	const [baseBeastGifUrl, setBaseBeastGifUrl] = React.useState('')
+	const [baseWarriorJpgUrl, setBaseWarriorJpgUrl] = React.useState('')
+	const [baseWarriorGifUrl, setBaseWarriorGifUrl] = React.useState('')
 	const [apValue, setApValue] = React.useState<number[]>([500, 60000])
 	const [warrior5beast, setWarrior5beat] = React.useState(true)
 	const [warriorDropBoxList, setWarriorDropBoxList] = React.useState(Array)
@@ -46,8 +51,6 @@ const CreateLegions: React.FC = () => {
 	const [beastDragBoxList, setBeastDragBoxList] = React.useState(Array)
 	const [beasts, setBeasts] = React.useState(Array)
 	const [warriors, setWarriors] = React.useState(Array)
-	const [balance, setBalance] = React.useState('0')
-	const [baseUrl, setBaseUrl] = React.useState('')
 	const [filter, setFilter] = React.useState('all')
 	const [droppedID, setDroppedID] = React.useState(-1)
 	const [w5bInDropList, setW5bInDropList] = React.useState(Boolean)
@@ -60,6 +63,7 @@ const CreateLegions: React.FC = () => {
 	const [legionName, setLegionName] = React.useState('')
 	const [isWDropable, setIsWDropable] = React.useState(false)
 
+	const navigate = useNavigate()
 	const classes = useStyles()
 	const warriorContract = useWarrior()
 	const beastContract = useBeast()
@@ -163,8 +167,10 @@ const CreateLegions: React.FC = () => {
 
 	const getBalance = async () => {
 		setLoading(true)
-		setBaseUrl(await getBeastUrl(web3, beastContract))
-		setBalance(await getBeastBalance(web3, beastContract, account))
+		setBaseBeastJpgUrl(await getBaseJpgURL(web3, beastContract))
+		setBaseBeastGifUrl(await getBaseGifURL(web3, beastContract))
+		setBaseWarriorJpgUrl(await getBaseJpgURL(web3, warriorContract))
+		setBaseWarriorGifUrl(await getBaseGifURL(web3, warriorContract))
 		const beastIds = await getBeastTokenIds(web3, beastContract, account)
 		const warriorIds = await getWarriorTokenIds(web3, warriorContract, account)
 		let amount = 0
@@ -223,13 +229,14 @@ const CreateLegions: React.FC = () => {
 	}
 
 	const handleMint = async () => {
-		const allowance = await getLegionBloodstoneAllowance(web3, bloodstoneContract, account);
+		const allowance = await getLegionBloodstoneAllowance(web3, bloodstoneContract, account)
 		if (allowance === '0') {
-			await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
+			await setLegionBloodstoneApprove(web3, bloodstoneContract, account)
 		}
 		await mintLegion(web3, legionContract, account, legionName,
 			beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }),
-			warriors.filter((w, index) => warriorDropBoxList.includes(index)).map((warrior: any) => { return parseInt(warrior['id']) }));
+			warriors.filter((w, index) => warriorDropBoxList.includes(index)).map((warrior: any) => { return parseInt(warrior['id']) }))
+		navigate("/legions")
 	}
 
 	const handleChangedName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,10 +266,12 @@ const CreateLegions: React.FC = () => {
 			</Grid>
 			<Grid item xs={12}>
 				<Button variant="contained" sx={{ fontWeight: 'bold', p: 2 }}>
-					<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black', bgcolor: 'smooth' }}>
-						<ArrowBack />
-					</IconButton>
-					{getTranslation('btnBackToLegions')}
+					<NavLink to='/legions' className='non-style'>
+						<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black', bgcolor: 'smooth' }}>
+							<ArrowBack />
+						</IconButton>
+						{getTranslation('btnBackToLegions')}
+					</NavLink>
 				</Button>
 			</Grid>
 			{
@@ -328,13 +337,13 @@ const CreateLegions: React.FC = () => {
 									{
 										warrior5beast &&
 										warriors.filter((fitem: any, findex) => warriorDragBoxList.includes(findex) && (apValue[0] < parseInt(fitem.power) && apValue[1] > parseInt(fitem.power))).map((item: any, index) => (
-											<DragBox item={item} showAnimation={showAnimation} baseUrl={baseUrl} baseIndex={warriorDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={warriorDragBoxList[index] as number} />
+											<DragBox item={item} showAnimation={showAnimation} baseJpgUrl={baseWarriorJpgUrl} baseGifUrl={baseWarriorGifUrl} baseIndex={warriorDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={warriorDragBoxList[index] as number} />
 										))
 									}
 									{
 										!warrior5beast &&
 										beasts.filter((fitem: any, findex) => beastDragBoxList.includes(findex) && (filter === 'all' ? parseInt(fitem.capacity) >= 0 : fitem.capacity === filter)).map((item: any, index) => (
-											<DragBox item={item} showAnimation={showAnimation} baseUrl={baseUrl} baseIndex={beastDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={beastDragBoxList[index] as number} />
+											<DragBox item={item} showAnimation={showAnimation} baseJpgUrl={baseBeastJpgUrl} baseGifUrl={baseWarriorGifUrl} baseIndex={beastDragBoxList[index] as number} dropped={changeDroppedIndex} curIndex={index} w5b={warrior5beast} key={beastDragBoxList[index] as number} />
 										))
 									}
 								</Grid>
@@ -350,28 +359,19 @@ const CreateLegions: React.FC = () => {
 											<Input placeholder={getTranslation('nameLegion')} value={legionName} onChange={handleChangedName} />
 										</Grid>
 										<Grid item>
-											{
-												isWDropable &&
-												<Button color='error' variant='contained' onClick={() => handleMint()} >
-													{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
-												</Button>
-											}
-											{
-												!isWDropable &&
-												<Button variant='contained' disabled>
-													{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
-												</Button>
-											}
+											<Button color='error' variant='contained' onClick={() => handleMint()} disabled={!isWDropable}>
+												{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
+											</Button>
 										</Grid>
 									</Grid>
 								</Grid>
 								<Grid item xs={12} sx={{ p: 4 }}>
 									<Grid container sx={{ display: 'flex', justifyContent: 'space-around', pb: 2, borderBottom: '2px dashed grey' }}>
 										<Grid item><Typography>{getTranslation('beasts')}: {beastDropBoxList.length}/{createlegions.main.maxAvailableDragCount}</Typography></Grid>
-										<Grid item><Typography>{getTranslation('warriors')}: {totalAP}/{formatNumber(createlegions.main.maxAvailableAP)}</Typography></Grid>
+										<Grid item><Typography>{getTranslation('warriors')}: {warriorDropBoxList.length}/{formatNumber(totalCP)}</Typography></Grid>
 									</Grid>
 								</Grid>
-								<DropBox baseUrl={baseUrl} items={dropItemList} toLeft={moveToLeft} moveToRight={moveToRight} />
+								<DropBox showAnim={showAnimation} baseBeastJpgUrl={baseBeastJpgUrl} baseBeastGifUrl={baseBeastGifUrl} baseWarriorJpgUrl={baseWarriorJpgUrl} baseWarriorGifUrl={baseWarriorGifUrl} items={dropItemList} toLeft={moveToLeft} moveToRight={moveToRight} />
 							</Card>
 						</Grid>
 					</Grid>

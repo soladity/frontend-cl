@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBeastUrl } from '../../hooks/contractFunction';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import { getTranslation } from '../../utils/translation';
@@ -29,10 +29,11 @@ const Beasts = () => {
 		account,
 	} = useWeb3React();
 
+	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
+	const [baseGifUrl, setBaseGifUrl] = React.useState('');
 	const [showMint, setShowMint] = React.useState(false);
 	const [balance, setBalance] = React.useState('0');
 	const [maxWarrior, setMaxWarrior] = React.useState(0);
-	const [baseUrl, setBaseUrl] = React.useState('');
 	const [beasts, setBeasts] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
@@ -71,7 +72,8 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseUrl(await getBeastUrl(web3, beastContract));
+		setBaseJpgUrl(await getBaseJpgURL(web3, beastContract));
+		setBaseGifUrl(await getBaseGifURL(web3, beastContract));
 		setBalance(await getBeastBalance(web3, beastContract, account));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
 		let amount = 0;
@@ -185,7 +187,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+								<BeastCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
 							</Grid>
 						))
 					}

@@ -9,16 +9,26 @@ import { BrowserRouter } from 'react-router-dom';
 import { Web3ReactProvider } from '@web3-react/core';
 import { getLibrary } from './wallet';
 
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import rootReducer from './reducers'
+
+const store = createStore(rootReducer, composeWithDevTools())
+
+
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={themeConfig}>
-        <CssBaseline />
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <App />
-        </Web3ReactProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={themeConfig}>
+          <CssBaseline />
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <App />
+          </Web3ReactProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -7,7 +7,9 @@ import { useWeb3React } from '@web3-react/core';
 import { useBloodstone, useBeast, useWarrior, useWeb3 } from '../../hooks/useContract';
 import { useNavigate } from 'react-router-dom'
 import Slide, { SlideProps } from '@mui/material/Slide';
-
+import { useDispatch } from 'react-redux'
+import { setReloadStatus } from '../../actions/contractActions'
+import { getTranslation } from '../../utils/translation';
 
 type TransitionProps = Omit<SlideProps, 'direction'>;
 
@@ -17,6 +19,7 @@ function TransitionUp(props: TransitionProps) {
 
 const TakeAction = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] = React.useState<HTMLElement | null>(null);
@@ -59,9 +62,12 @@ const TakeAction = () => {
         await mintBeast(web3, beastContract, account, amount);
 
         setTransition(() => Transition);
-        setSnackBarMessage('Summon Beasts successfully! If you see your all beasts, please click this!')
+        setSnackBarMessage(getTranslation('summonBeastSuccessful'))
         setSnackBarNavigation('/beasts')
         setOpenSnackBar(true)
+        dispatch(setReloadStatus({
+            reloadContractStatus: new Date()
+        }))
     }
 
     //Mint Warriors with quantity
@@ -74,9 +80,12 @@ const TakeAction = () => {
         await mintWarrior(web3, warriorContract, account, amount);
 
         setTransition(() => Transition);
-        setSnackBarMessage('Summon Warriors successfully! If you see your all warriors, please click this!')
+        setSnackBarMessage(getTranslation('summonWarriorSuccessful'))
         setSnackBarNavigation('/warriors')
         setOpenSnackBar(true)
+        dispatch(setReloadStatus({
+            reloadContractStatus: new Date()
+        }))
     }
 
     //SnackBar
@@ -118,7 +127,7 @@ const TakeAction = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
                                     <Button variant="contained" aria-describedby={'summon-beast-id'} onClick={handlePopoverOpenSummonBeast} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        SUMMON BEAST
+                                        {getTranslation('takeActionSummonBeast')}
                                     </Button>
                                     <Popover
                                         id={'summon-beast-id'}
@@ -137,7 +146,7 @@ const TakeAction = () => {
                                         <Box sx={{ display: 'flex' }}>
                                             <Box sx={{ marginLeft: 'auto', cursor: 'pointer', marginRight: 1, marginTop: 1 }}><FaTimes onClick={handlePopoverCloseSummonBeast} /></Box>
                                         </Box>
-                                        <DialogTitle>SUMMON BEAST</DialogTitle>
+                                        <DialogTitle>{getTranslation('takeActionSummonBeast')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
                                             <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(1, TransitionUp)}>1</Button>
                                             <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(5, TransitionUp)}>5</Button>
@@ -147,7 +156,7 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <Button aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        SUMMON WARROIR
+                                        {getTranslation('takeActionSummonWarrior')}
                                     </Button>
                                     <Popover
                                         id={'summon-warrior-id'}
@@ -166,7 +175,7 @@ const TakeAction = () => {
                                         <Box sx={{ display: 'flex' }}>
                                             <Box sx={{ marginLeft: 'auto', cursor: 'pointer', marginRight: 1, marginTop: 1 }}><FaTimes onClick={handlePopoverCloseSummonWarrior} /></Box>
                                         </Box>
-                                        <DialogTitle>SUMMON WARRIORS</DialogTitle>
+                                        <DialogTitle>{getTranslation('takeActionSummonWarrior')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
                                             <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(1, TransitionUp)}>1</Button>
                                             <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(5, TransitionUp)}>5</Button>
@@ -176,10 +185,10 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        CREATE LEGION
+                                        {getTranslation('takeActionCreateLegion')}
                                     </Button>
                                     <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                        HUNT
+                                        {getTranslation('takeActionHunt')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -188,16 +197,16 @@ const TakeAction = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
                                     <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        BUY BEASTS
+                                        {getTranslation('takeActionBuyBeasts')}
                                     </Button>
                                     <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        BUY WARRIORS
+                                        {getTranslation('takeActionBuyWarriors')}
                                     </Button>
                                     <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        BUY LEGIONS
+                                        {getTranslation('takeActionBuyLegions')}
                                     </Button>
                                     <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                        BUY $BLST
+                                        {getTranslation('takeActionBuyBlst')}
                                     </Button>
                                 </Box>
                             </Box>

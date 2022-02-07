@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
 import Web3 from 'web3'
 import { useWeb3React } from '@web3-react/core'
 
-import { getBloodstoneAddress, getBeastAddress, getWarriorAddress, getLegionAddress, getRewardPoolAddress } from '../utils/addressHelpers'
+import { getBloodstoneAddress, getBeastAddress, getWarriorAddress, getLegionAddress, getRewardPoolAddress, getMonsterAddress } from '../utils/addressHelpers'
 import bloodstone from '../config/abis/bloodstone.json'
 import beast from '../config/abis/beast.json'
 import warrior from '../config/abis/warrior.json'
 import legion from '../config/abis/legion.json'
+import monster from '../config/abis/monster.json'
 import rewardpool from '../config/abis/rewardpool.json'
 import getRpcUrl from '../utils/getRpcUrl'
 
@@ -28,12 +28,12 @@ const useContract = (abi, address) => {
     return new web3.eth.Contract(abi, address)
 }
 
-export const useBloodstone = () => {
+export const useBloodstone = _ => {
     const abi = bloodstone.abi
     return useContract(abi, getBloodstoneAddress())
 }
 
-export const useBeast = () => {
+export const useBeast = _ => {
     const abi = beast.abi
     return useContract(abi, getBeastAddress())
 }
@@ -46,6 +46,11 @@ export const useWarrior = _ => {
 export const useLegion = _ => {
     const abi = legion.abi
     return useContract(abi, getLegionAddress())
+}
+
+export const useMonster = _ => {
+    const abi = monster.abi
+    return useContract(abi, getMonsterAddress())
 }
 
 export const useRewardPool = _ => {

@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import LegionCard from '../../component/Cards/LegionCard';
 import { useBeast, useWarrior, useLegion, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getWarriorBalance, getWarriorUrl, getLegionTokenIds, getLegionToken, addSupply } from '../../hooks/contractFunction';
+import { getBeastBalance, getWarriorBalance, getLegionTokenIds, getLegionToken, addSupply, getBaseUrl } from '../../hooks/contractFunction';
 import { meta_constant } from '../../config/meta.config';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
@@ -57,7 +57,7 @@ const Legions = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseUrl(await getWarriorUrl(web3, warriorContract));
+		setBaseUrl(await getBaseUrl());
 		setBeastBalance(await getBeastBalance(web3, beastContract, account));
 		setWarriorBalance(await getWarriorBalance(web3, warriorContract, account));
 		const ids = await getLegionTokenIds(web3, legionContract, account);
@@ -104,9 +104,9 @@ const Legions = () => {
 	};
 
 	const handleSupplyClick = async (value: string) => {
-    setOpenSupply(false);
+		setOpenSupply(false);
 		await addSupply(web3, legionContract, account, selectedLegion, parseInt(value));
-  };
+	};
 
 	const handleOpenSupply = (id: number) => {
 		setSelectedLegion(id);
