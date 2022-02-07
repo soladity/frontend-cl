@@ -16,28 +16,33 @@ const useStyles = makeStyles({
         height: '100%'
     },
     achievementBtn: {
-        background: 'red',
         padding: 10,
         borderRadius: 5,
         cursor: 'pointer',
-        color: 'black',
-        animation: `$Flash linear 1s infinite`
+        animation: `$Flash linear 1s infinite`,
+        background: 'radial-gradient(#c6ae40, #9d4a00)',
+        '&:hover': {
+            background: 'radial-gradient(#ab973c, #743700)'
+        },
+        border: '1px solid #9d4a00',
+        color: 'white'
     },
     "@keyframes Flash": {
         "0%": {
-            background: '#19aa6f',
+            background: 'radial-gradient(#c6ae40, #9d4a00)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "50%": {
-            background: '#24f39f',
+            background: 'radial-gradient(#ab973c, #743700)',
             boxShadow: '0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "100%": {
-            background: '#19aa6f',
+            background: 'radial-gradient(#c6ae40, #9d4a00)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         }
     }
 });
+
 const YourAchievements = () => {
 
     const classes = useStyles();

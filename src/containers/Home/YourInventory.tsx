@@ -76,22 +76,22 @@ const YourInventory = () => {
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
                     {getTranslation('yourInventory')}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('BEASTS')} : {beastBalance}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('WARRIORS')} : {warriorBalance}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('LEGIONS')} : {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('yourMaxAp')} : {maxAttackPower}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('unClaimed')} $ : {unclaimedBalance}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('taxDaysLeft')} : {taxLeftDays}
                 </Typography>
             </Box>
