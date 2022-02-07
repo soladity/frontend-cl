@@ -20,7 +20,7 @@ const useStyles = makeStyles({
         borderRadius: 5,
         cursor: 'pointer',
         animation: `$Flash linear 1s infinite`,
-        background: 'radial-gradient(#c6ae40, #9d4a00)',
+        background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
         '&:hover': {
             background: 'radial-gradient(#ab973c, #743700)'
         },
@@ -29,15 +29,15 @@ const useStyles = makeStyles({
     },
     "@keyframes Flash": {
         "0%": {
-            background: 'radial-gradient(#c6ae40, #9d4a00)',
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "50%": {
-            background: 'radial-gradient(#ab973c, #743700)',
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
             boxShadow: '0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "100%": {
-            background: 'radial-gradient(#c6ae40, #9d4a00)',
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         }
     }

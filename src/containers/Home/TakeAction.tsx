@@ -20,9 +20,11 @@ function TransitionUp(props: TransitionProps) {
 
 const useStyles = makeStyles({
     legionBtn: {
-        background: 'radial-gradient(#c6ae40, #9d4a00)',
+        background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
+        transition: '.4s all',
         '&:hover': {
-            background: 'radial-gradient(#ab973c, #743700)'
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
+            transition: '.4s all',
         },
         border: '1px solid #9d4a00',
         color: 'white'
@@ -148,7 +150,8 @@ const TakeAction = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '180px',
-            height: '100%'
+            height: '100%',
+            background: '#16161699'
         }}>
             <Snackbar
                 open={openSnackBar}

@@ -1068,8 +1068,8 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  '14DaysHuntingFee': {
-    en: '14 Days Hunting Supplies Discounted Fee',
+  '14DaysSuppliesFee': {
+    en: '14 Days Supplies Fee',
     es: '',
     cn: '',
     pt: '',
@@ -1080,8 +1080,8 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  '28DaysHuntingFee': {
-    en: '28 Days Hunting Supplies Discounted Fee',
+  '28DaysSuppliesFee': {
+    en: '28 Days Supplies Fee',
     es: '',
     cn: '',
     pt: '',

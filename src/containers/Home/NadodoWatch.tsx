@@ -9,7 +9,8 @@ const NadodoWatch = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '180px',
-            height: '100%'
+            height: '100%',
+            background: '#16161699'
         }}>
             <Box sx={{ p: 4, justifyContent: 'center' }}>
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
@@ -31,13 +32,13 @@ const NadodoWatch = () => {
                     {getTranslation('legionDamagePerHunt')} : 2%
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('legionDamagePerHunt')} : 20$
+                    {getTranslation('summoningFee')} : 20$
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('14DaysHuntingFee')} : 12$
+                    {getTranslation('14DaysSuppliesFee')} : 12$
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('28DaysHuntingFee')} : 16$
+                    {getTranslation('28DaysSuppliesFee')} : 16$
                 </Typography>
             </Box>
         </Card>

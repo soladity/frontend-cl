@@ -5,8 +5,8 @@ import ButtonUnstyled, {
 } from '@mui/base/ButtonUnstyled';
 import { styled, Theme } from '@mui/system';
 import {
-  FaPlay,
-  FaPause,
+  FaVideo,
+  FaVideoSlash
 } from 'react-icons/fa';
 
 
@@ -127,10 +127,10 @@ export default function UnstyledButtonCustom(props: any) {
       <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(false)}>
         <div style={{ color: '#caa959' }}>
           <div style={{ textAlign: 'center', fontSize: 32 }}>
-            <FaPlay />
+            <FaVideo />
           </div>
           <div style={{ textAlign: 'center' }}>
-            NFT - GIF
+            NFT Videos
           </div>
         </div>
       </SvgButton>
@@ -140,10 +140,10 @@ export default function UnstyledButtonCustom(props: any) {
       <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(true)}>
         <div style={{ color: '#caa959' }}>
           <div style={{ textAlign: 'center', fontSize: 32 }}>
-            <FaPause />
+            <FaVideoSlash />
           </div>
           <div style={{ textAlign: 'center' }}>
-            NFT - JPEG
+            NFT Images
           </div>
         </div>
       </SvgButton>

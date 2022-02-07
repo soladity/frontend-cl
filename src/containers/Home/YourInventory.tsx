@@ -70,7 +70,8 @@ const YourInventory = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '180px',
-            height: '100%'
+            height: '100%',
+            background: '#16161699'
         }}>
             <Box sx={{ p: 4, justifyContent: 'center' }}>
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>

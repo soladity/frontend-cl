@@ -6,14 +6,19 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { ReadableByteStreamController } from 'stream/web';
-import { Box } from '@mui/material';
+import { Box, Container, fabClasses, Grid } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../wallet';
 
 const image = {
+    METAMASK: '/assets/images/metamask.jpg',
+    METAMASK_WINK: '/assets/images/metamask2.jpg',
     FOX_FAILED: '/assets/images/metamask-logo-bw.png',
     FOX_LOADING: '/assets/images/metamask-front.png',
     FOX_INIT: '/assets/images/metamask-logo.png',
+    DRAGON_INIT: '/assets/images/dragon1.jpg',
+    DRAGON_HOVER: '/assets/images/dragon2.jpg',
+    LOGO: '/assets/images/logo.png'
 };
 
 const content = {
@@ -35,74 +40,118 @@ const AskMetaLogin = () => {
         chainId
     } = useWeb3React();
 
-    const [open, setOpen] = React.useState(!active);
     const [loading, setLoading] = React.useState(false);
     const [failed, setFailed] = React.useState(false);
 
-    const [foxImage, setFoxImage] = React.useState(image.FOX_INIT);
-    const [viewContent, setViewContent] = React.useState(content.INIT);
+    const [mouseOver, setMouseOver] = React.useState(false)
 
-    const handleCloseClick = (event: any) => {
+    const [logoImage, setLogoImage] = React.useState(image.LOGO);
+
+    const handleCloseClick = () => {
         setLoading(true);
         activate(injected);
     };
 
     React.useEffect(() => {
-        if(loading) {
-            setFoxImage(image.FOX_LOADING);
-            setViewContent(content.LOADING);
-        } else if(failed) {
-            setFoxImage(image.FOX_FAILED);
-            setViewContent(content.FAILED);
-        } else {
-            setFoxImage(image.FOX_INIT);
-            setViewContent(content.INIT);
-        }
-    }, [loading, failed])
-
-    React.useEffect(() => {
         setLoading(false);
-        if(active) {
-            setOpen(false);
-        } 
-        if(error) {
+        if (active) {
+        }
+        if (error) {
             setFailed(true);
         }
     }, [active, error])
 
     return (
-        <div>
-            <Dialog
-                open={open}
-                disableEscapeKeyDown
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {viewContent}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                    Seems like you are not connected to MetaMask (Ethereum Wallet).
-                    </DialogContentText>
-                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <img
-                            src={foxImage}
-                            style={{height: '200px', margin: '1rem auto'}}
-                            alt={'metamask'}
-                            loading="lazy"
-                        />
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button disabled={loading} onClick={handleCloseClick} autoFocus>
-                        {loading && 'Please wait'}
-                        {!loading && !failed && 'Connect to Metamask'}
-                        {!loading && failed && 'Retry now'}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+        <div style={{ background: 'black', position: 'fixed', top: '0', left: '0', bottom: '0', right: '0' }}>
+            <Container sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', cursor: 'pointer' }}>
+                <Box sx={{ textAlign: 'center' }}>
+                    <img
+                        src={logoImage}
+                        style={{ width: '60%' }}
+                    />
+                </Box>
+                <Grid container spacing={2}>
+                    <Grid item md={2}>
+
+                    </Grid>
+                    <Grid item md={8}>
+                        <Grid container spacing={2}>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={8}
+                                onMouseOver={() => {
+                                    setMouseOver(true)
+                                }}
+                                onMouseLeave={() => {
+                                    setMouseOver(false)
+                                }}
+                                onClick={handleCloseClick}
+                            >
+                                {
+                                    loading || mouseOver ? (
+                                        <img
+                                            src={image.DRAGON_HOVER}
+                                            style={{ width: '100%' }}
+                                        />
+                                    ) : (
+
+                                        <img
+                                            src={image.DRAGON_INIT}
+                                            style={{ width: '100%' }}
+                                        />
+                                    )
+                                }
+                            </Grid>
+                            <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Box sx={{ textAlign: 'center' }}>
+                                    {
+                                        !loading && failed ? (
+                                            <>
+                                                <img
+                                                    src={image.METAMASK}
+                                                    style={{ width: '40%' }}
+                                                />
+                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
+                                                    PLEASE RETRY!
+                                                </p>
+                                            </>
+                                        ) :
+                                            !loading && !mouseOver ? (
+                                                <>
+                                                    <img
+                                                        src={image.METAMASK}
+                                                        style={{ width: '40%' }}
+                                                    />
+                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
+                                                        LOGIN WITH METAMASK
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <img
+                                                        src={image.METAMASK_WINK}
+                                                        style={{ width: '40%' }}
+                                                    />
+                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
+                                                        CLICK TO FLY
+                                                    </p>
+                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
+                                                        TO NICAH
+                                                    </p>
+                                                </>
+                                            )
+                                    }
+                                </Box>
+
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item md={2}>
+                    </Grid>
+                </Grid>
+            </Container>
+        </div >
     )
 }
 
