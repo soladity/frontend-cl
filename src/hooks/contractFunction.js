@@ -20,6 +20,20 @@ export const setBeastBloodstoneApprove = async (web3, contract, account) => {
     return response;
 }
 
+export const getBaseGifURL = async (web3, contract) => {
+    const response = await contract.methods.baseGifUrl().call();
+    return response;
+}
+
+export const getBaseJpgURL = async (web3, contract) => {
+    const response = await contract.methods.baseJpgUrl().call();
+    return response;
+}
+
+/**
+ * Beast Session
+ */
+
 export const mintBeast = async (web3, contract, account, amount) => {
     const response = await contract.methods.mint(amount).send({ from: account });
     return response;
@@ -41,11 +55,15 @@ export const getBeastToken = async (web3, contract, tokenId) => {
         type: response[0],
         strength: response[1],
         capacity: response[2],
-        image: response[3],
-        imageAlt: response[4]
+        // image: response[3],
+        // imageAlt: response[4]
     }
     return beast;
 }
+
+/**
+ * Warrior Session
+ */
 
 export const getWarriorBloodstoneAllowance = async (web3, contract, account) => {
     const response = await contract.methods.allowance(account, getWarriorAddress()).call();
@@ -78,8 +96,8 @@ export const getWarriorToken = async (web3, contract, tokenId) => {
         type: response[0],
         strength: response[1],
         power: response[2],
-        image: response[3],
-        imageAlt: response[4]
+        // image: response[3],
+        // imageAlt: response[4]
     }
     return beast;
 }
@@ -103,6 +121,11 @@ export const mintLegion = async (web3, contract, account, legionName, beastIds, 
     return response;
 }
 
+export const canHunt = async (web3, contract, tokenID) => {
+    const response = await contract.methods.canHuntMonster(tokenID).call()
+    return response
+}
+
 /**
  * Monster Contracts
  */
@@ -113,12 +136,11 @@ export const getMonsterInfo = async (web3, contract, monsterID) => {
         base: response[0],
         ap: parseInt(response[1]),
         reward: response[2],
-        image: response[3],
-        imageAlt: response[4]
+        // image: response[3],
+        // imageAlt: response[4]
     }
     return monster
 }
-
 
 // Reward Pool
 export const getUnclaimedUSD = async (web3, contract, account) => {

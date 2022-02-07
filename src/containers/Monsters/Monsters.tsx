@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Card, CardMedia } from '@mui/material'
 import { MonsterCard } from '../../component/Cards/MonsterCard'
-import Helmet from 'react-helmet';
-import { meta_constant, createlegions } from '../../config/meta.config';
-import { useWeb3React } from '@web3-react/core';
-import { useBeast, useLegion, useWarrior, useMonster, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseUrl } from '../../hooks/contractFunction';
-import { getTranslation } from '../../utils/translation';
+import Helmet from 'react-helmet'
+import { meta_constant, createlegions, allConstants } from '../../config/meta.config'
+import { useWeb3React } from '@web3-react/core'
+import { useBeast, useLegion, useWarrior, useMonster, useWeb3 } from '../../hooks/useContract'
+import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseJpgURL, getBaseGifURL, canHunt } from '../../hooks/contractFunction'
+import { getTranslation } from '../../utils/translation'
 
 interface MonsterInterface {
     base: string
@@ -33,8 +33,9 @@ const Monsters = () => {
     const monsterContract = useMonster()
 
     const [loading, setLoading] = useState(true)
-    const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
-    const [baseUrl, setBaseUrl] = useState('')
+    const [showAnimation, setShowAnimation] = useState<string | null>('0')
+    const [baseJpgUrl, setBaseJpgUrl] = useState('')
+    const [baseGifUrl, setBaseGifUrl] = useState('')
     const [curComboLegionValue, setCurComboLegionValue] = useState('0')
     const [legions, setLegions] = useState(Array)
     const [legionIDs, setLegionIDs] = useState(Array)
@@ -43,6 +44,12 @@ const Monsters = () => {
     const [mintedWarriorCnt, setMintedWarriorCnt] = useState(0)
     const [curLegion, setCurLegion] = useState<LegionInterface | null>()
     const [monsters, setMonsters] = useState(Array)
+    const [scrollMaxHeight, setScrollMaxHeight] = useState(0)
+    const scrollArea = useCallback(node => {
+        if (node != null) {
+            setScrollMaxHeight(node.scrollHeight)
+        }
+    }, [])
 
     useEffect(() => {
         if (account) {
@@ -53,8 +60,17 @@ const Monsters = () => {
 
     const handleCurLegionValue = (e: SelectChangeEvent) => {
         const selectedIndex = parseInt(e.target.value)
+        const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface
+        let indexOfCurMonster = 0
+        for (let i = 0; i < allConstants.listOfMonsterAP.length; i++) {
+            if (allConstants.listOfMonsterAP[i] < curLegionTmp.attackPower &&
+                curLegionTmp.attackPower < allConstants.listOfMonsterAP[i + 1])
+                indexOfCurMonster = i;
+        }
+        const scrollPosition = (scrollMaxHeight / 22 * indexOfCurMonster)
         setCurComboLegionValue(e.target.value as string)
-        setCurLegion((legions as any)[selectedIndex])
+        setCurLegion(curLegionTmp)
+        window.scrollTo({ top: scrollPosition, left: 0, behavior: 'smooth' })
     }
 
     const initMonster = async () => {
@@ -72,16 +88,19 @@ const Monsters = () => {
         const legionIDS = await getLegionTokenIds(web3, legionContract, account)
         let legionTmp
         let legionArrayTmp = []
+        let legionStatus = ''
         let warriorCnt = 0
         for (let i = 0; i < legionIDS.length; i++) {
             // if (legionIDS[i] != 1) {
+            legionStatus = await canHunt(web3, legionContract, legionIDS[i])
             legionTmp = await getLegionToken(web3, legionContract, legionIDS[i])
-            legionArrayTmp.push({ ...legionTmp, id: legionIDS[i] })
+            legionArrayTmp.push({ ...legionTmp, id: legionIDS[i], status: legionStatus })
             warriorCnt += legionTmp.warriors.length
             // }
         }
         await initMonster()
-        setBaseUrl(await getBaseUrl())
+        setBaseJpgUrl(await getBaseJpgURL(web3, monsterContract))
+        setBaseGifUrl(await getBaseGifURL(web3, monsterContract))
         setBeasts(await getBeastBalance(web3, beastContract, account))
         setWarriors(await getWarriorBalance(web3, warriorContract, account))
         setLegionIDs(legionIDS)
@@ -90,9 +109,7 @@ const Monsters = () => {
         setCurLegion(legionArrayTmp[0])
         setLoading(false)
     }
-    console.log(monsters)
 
-    console.log(legions, curLegion)
     return (
         <Box>
             <Helmet>
@@ -103,56 +120,66 @@ const Monsters = () => {
             </Helmet>
             {
                 loading === false && legions.length > 0 &&
-                <>
-                    <Grid container spacing={2} sx={{ justifyContent: 'space-evenly', my: 2 }}>
-                        <Grid item xs={4}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Legions</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={curComboLegionValue}
-                                    label="Current Legion"
-                                    onChange={handleCurLegionValue}
-                                >
-                                    {
-                                        legions.map((value: any, index) => (
-                                            <MenuItem value={index} key={index}>Legion #{value.id} {value.name}</MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </FormControl>
+                <Box component='div' sx={{ position: 'relative' }} ref={scrollArea}>
+                    <Card sx={{ position: 'sticky', top: '100px', zIndex: 100, my: 2, py: 2 }}>
+                        <Grid container spacing={2} sx={{ justifyContent: 'space-evenly' }} alignItems="center">
+                            <Grid item xs={4}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Legions</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={curComboLegionValue}
+                                        label="Current Legion"
+                                        onChange={handleCurLegionValue}
+                                    >
+                                        {
+                                            legions.map((legion: any, index) => (
+                                                <MenuItem
+                                                    value={index}
+                                                    key={index}
+                                                    sx={{ background: legion.status === 1 ? 'green' : legion.status === 2 ? 'orange' : 'red' }}
+                                                >
+                                                    Legion #{legion.id} {legion.name}
+                                                </MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant='h5'>{(curLegion as LegionInterface).attackPower} AP</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant='h5'>{(curLegion as LegionInterface).beasts.length}/{createlegions.main.maxAvailableDragCount}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant='h5'>{(curLegion as LegionInterface).warriors.length}/{warriors.length + mintedWarriorCnt}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant='h5'>{(curLegion as LegionInterface).supplies} dS</Typography>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Typography variant='h5'>{(curLegion as LegionInterface).attackPower} AP</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant='h5'>{(curLegion as LegionInterface).beasts.length}/{createlegions.main.maxAvailableDragCount}</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant='h5'>{(curLegion as LegionInterface).warriors.length}/{warriors.length + mintedWarriorCnt}</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant='h5'>{(curLegion as LegionInterface).supplies} dS</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center">
+                    </Card>
+                    <Grid container spacing={2} columns={60} justifyContent="center" alignItems="center">
                         {
                             monsters.map((monster: any | MonsterInterface, index) => (
-                                <Grid item sx={{ width: '50%' }} key={index}>
-                                    <MonsterCard
-                                        image={baseUrl + (showAnimation === '0' ? monster.imageAlt : monster.image)}
-                                        base={monster.base}
-                                        minAP={monster.ap}
-                                        bouns={monster.ap < (curLegion as LegionInterface).attackPower ? '' + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 : '0'}
-                                        price={monster.reward}
-                                        isHuntable={monster.ap <= (curLegion as LegionInterface).attackPower}
-                                    />
-                                </Grid>
+                                <Box component='div' sx={{ width: '100%', my: 1 }} key={index}>
+                                    <Grid item xs={60} sm={30} md={20} lg={15} xl={12} sx={{ maxWidth: '500px', margin: 'auto' }}>
+                                        <MonsterCard
+                                            image={(showAnimation === '0' ? baseJpgUrl + '/' + (index + 1) + '.jpg' : baseGifUrl + '/' + (index + 1) + '.gif')}
+                                            base={monster.base}
+                                            minAP={monster.ap}
+                                            bouns={monster.ap < (curLegion as LegionInterface).attackPower ? '' + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 : '0'}
+                                            price={monster.reward}
+                                            isHuntable={monster.ap <= (curLegion as LegionInterface).attackPower}
+                                        />
+                                    </Grid>
+                                </Box>
                             ))
                         }
                     </Grid>
-                </>
+                </Box>
             }
             {
                 loading === false && legions.length === 0 &&

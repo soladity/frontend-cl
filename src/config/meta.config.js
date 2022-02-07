@@ -48,3 +48,32 @@ export const createlegions = {
         minAvailableAP: 2000
     }
 }
+
+export const allConstants = {
+    minHunterAP: 2000,
+    maxHunterAP: 300000,
+    listOfMonsterAP: [
+        2000,
+        5000,
+        8000,
+        10000,
+        13000,
+        17000,
+        20000,
+        22000,
+        25000,
+        28000,
+        31000,
+        34000,
+        37000,
+        40000,
+        42000,
+        47000,
+        50000,
+        53000,
+        56000,
+        60000,
+        250000,
+        300000
+    ]
+}

@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseUrl } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import { getTranslation } from '../../utils/translation';
@@ -30,10 +30,11 @@ const Warriors = () => {
 		account,
 	} = useWeb3React();
 
+	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
+	const [baseGifUrl, setBaseGifUrl] = React.useState('');
 	const [showMint, setShowMint] = React.useState(false);
 	const [balance, setBalance] = React.useState('0');
 	const [maxPower, setMaxPower] = React.useState(0);
-	const [baseUrl, setBaseUrl] = React.useState('');
 	const [warriors, setWarriors] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
@@ -73,7 +74,8 @@ const Warriors = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseUrl(await getBaseUrl());
+		setBaseJpgUrl(await getBaseJpgURL(web3, warriorContract));
+		setBaseGifUrl(await getBaseGifURL(web3, warriorContract));
 		setBalance(await getWarriorBalance(web3, warriorContract, account));
 		const ids = await getWarriorTokenIds(web3, warriorContract, account);
 		let amount = 0;
@@ -223,7 +225,7 @@ const Warriors = () => {
 					{
 						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorCard image={baseUrl + (showAnimation === '0' ? item['imageAlt'] : item['image'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
+								<WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
 							</Grid>
 						))
 					}
