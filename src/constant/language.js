@@ -59,7 +59,8 @@ export const translations = {
     'red': 'Red',
     'hideWeakLegions': 'Hide Weak Legions',
     'buyMoreSupply': 'Buy More Supplies',
-    'loadingMonsters': 'Loading Monsters ...'
+    'loadingMonsters': 'Loading Monsters ...',
+    'noMintedLegion': 'No minted Legion yet'
   },
   es: {
     'logo': 'Logotipo',
@@ -119,6 +120,7 @@ export const translations = {
     'red': 'Red',
     'hideWeakLegions': 'Hide Weak Legions',
     'usefulLinks': 'Useful Links',
-    'loadingMonsters': 'Loading Monsters ...'
+    'loadingMonsters': 'Loading Monsters ...',
+    'noMintedLegion': 'No minted Legion yet'
   }
 }

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Box, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Card, CardMedia } from '@mui/material'
+import { Box, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Card, CardMedia, Dialog, DialogTitle } from '@mui/material'
 import { MonsterCard } from '../../component/Cards/MonsterCard'
 import Helmet from 'react-helmet'
 import { meta_constant, createlegions, allConstants } from '../../config/meta.config'
 import { useWeb3React } from '@web3-react/core'
 import { useBeast, useLegion, useWarrior, useMonster, useWeb3 } from '../../hooks/useContract'
-import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseJpgURL, getBaseGifURL, canHunt } from '../../hooks/contractFunction'
+import { getBeastBalance, getLegionTokenIds, getLegionToken, getWarriorBalance, getMonsterInfo, getBaseJpgURL, getBaseGifURL, canHunt, hunt } from '../../hooks/contractFunction'
 import { getTranslation } from '../../utils/translation'
 
 interface MonsterInterface {
@@ -14,6 +14,7 @@ interface MonsterInterface {
     reward: string
     image: string
     imageAlt: string
+    name: string
 }
 
 interface LegionInterface {
@@ -22,6 +23,8 @@ interface LegionInterface {
     warriors: string
     supplies: string
     attackPower: number
+    id: number
+    status: string
 }
 
 const Monsters = () => {
@@ -44,10 +47,15 @@ const Monsters = () => {
     const [mintedWarriorCnt, setMintedWarriorCnt] = useState(0)
     const [curLegion, setCurLegion] = useState<LegionInterface | null>()
     const [monsters, setMonsters] = useState(Array)
+    const [curMonster, setCurMonster] = useState<MonsterInterface | null>()
+    const [curMonsterID, setCurMonsterID] = useState(0)
     const [scrollMaxHeight, setScrollMaxHeight] = useState(0)
+    const [dialogVisible, setDialogVisible] = useState(false)
+    const [huntedStatus, setHuntedStatus] = useState(0)
     const scrollArea = useCallback(node => {
         if (node != null) {
             setScrollMaxHeight(node.scrollHeight)
+            console.log(node.scrollHeight)
         }
     }, [])
 
@@ -57,21 +65,6 @@ const Monsters = () => {
         }
         setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
     }, [])
-
-    const handleCurLegionValue = (e: SelectChangeEvent) => {
-        const selectedIndex = parseInt(e.target.value)
-        const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface
-        let indexOfCurMonster = 0
-        for (let i = 0; i < allConstants.listOfMonsterAP.length; i++) {
-            if (allConstants.listOfMonsterAP[i] < curLegionTmp.attackPower &&
-                curLegionTmp.attackPower < allConstants.listOfMonsterAP[i + 1])
-                indexOfCurMonster = i;
-        }
-        const scrollPosition = (scrollMaxHeight / 22 * indexOfCurMonster)
-        setCurComboLegionValue(e.target.value as string)
-        setCurLegion(curLegionTmp)
-        window.scrollTo({ top: scrollPosition, left: 0, behavior: 'smooth' })
-    }
 
     const initMonster = async () => {
         let monsterTmp
@@ -110,6 +103,35 @@ const Monsters = () => {
         setLoading(false)
     }
 
+    const handleDialogVisible = () => {
+
+    }
+
+    const handleCurLegionValue = (e: SelectChangeEvent) => {
+        const selectedIndex = parseInt(e.target.value)
+        const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface
+        let indexOfCurMonster = 0
+        for (let i = 0; i < allConstants.listOfMonsterAP.length; i++) {
+            if (allConstants.listOfMonsterAP[i] < curLegionTmp.attackPower &&
+                curLegionTmp.attackPower < allConstants.listOfMonsterAP[i + 1])
+                indexOfCurMonster = i;
+        }
+        const scrollPosition = (scrollMaxHeight / 22 * indexOfCurMonster)
+        console.log(scrollPosition, indexOfCurMonster, scrollMaxHeight)
+        setCurComboLegionValue(e.target.value as string)
+        setCurLegion(curLegionTmp)
+        window.scrollTo({ top: scrollPosition, left: 0, behavior: 'smooth' })
+    }
+
+    const handleHunt = async (monsterTokenID: number) => {
+        setDialogVisible(true)
+        setCurMonsterID(monsterTokenID)
+        setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface)
+        let response = await hunt(web3, legionContract, account, curLegion?.id, monsterTokenID)
+        console.log(response)
+        setHuntedStatus(response ? 1 : 2)
+    }
+
     return (
         <Box>
             <Helmet>
@@ -121,11 +143,11 @@ const Monsters = () => {
             {
                 loading === false && legions.length > 0 &&
                 <Box component='div' sx={{ position: 'relative' }} ref={scrollArea}>
-                    <Card sx={{ position: 'sticky', top: '100px', zIndex: 100, my: 2, py: 2 }}>
+                    <Card sx={{ position: 'sticky', top: '110px', zIndex: 100, my: 2, py: 2 }}>
                         <Grid container spacing={2} sx={{ justifyContent: 'space-evenly' }} alignItems="center">
                             <Grid item xs={4}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Legions</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">getTranslation("legions")</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
@@ -138,7 +160,7 @@ const Monsters = () => {
                                                 <MenuItem
                                                     value={index}
                                                     key={index}
-                                                    sx={{ background: legion.status === 1 ? 'green' : legion.status === 2 ? 'orange' : 'red' }}
+                                                    sx={{ background: legion.status === '1' ? '#18a601' : legion.status === '2' ? 'orange' : '#47010b' }}
                                                 >
                                                     Legion #{legion.id} {legion.name}
                                                 </MenuItem>
@@ -148,43 +170,46 @@ const Monsters = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{(curLegion as LegionInterface).attackPower} AP</Typography>
+                                <Typography variant='h5'>{curLegion?.attackPower} AP</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{(curLegion as LegionInterface).beasts.length}/{createlegions.main.maxAvailableDragCount}</Typography>
+                                <Typography variant='h5'>{curLegion?.beasts.length}/{createlegions.main.maxAvailableDragCount}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{(curLegion as LegionInterface).warriors.length}/{warriors.length + mintedWarriorCnt}</Typography>
+                                <Typography variant='h5'>{curLegion?.warriors.length}/{warriors.length + mintedWarriorCnt}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{(curLegion as LegionInterface).supplies} dS</Typography>
+                                <Typography variant='h5'>{curLegion?.supplies} dS</Typography>
                             </Grid>
                         </Grid>
                     </Card>
-                    <Grid container spacing={2} columns={60} justifyContent="center" alignItems="center">
+                    <Grid container justifyContent="center" alignItems="center">
                         {
                             monsters.map((monster: any | MonsterInterface, index) => (
-                                <Box component='div' sx={{ width: '100%', my: 1 }} key={index}>
-                                    <Grid item xs={60} sm={30} md={20} lg={15} xl={12} sx={{ maxWidth: '500px', margin: 'auto' }}>
-                                        <MonsterCard
-                                            image={(showAnimation === '0' ? baseJpgUrl + '/' + (index + 1) + '.jpg' : baseGifUrl + '/' + (index + 1) + '.gif')}
-                                            base={monster.base}
-                                            minAP={monster.ap}
-                                            bouns={monster.ap < (curLegion as LegionInterface).attackPower ? '' + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 : '0'}
-                                            price={monster.reward}
-                                            isHuntable={monster.ap <= (curLegion as LegionInterface).attackPower}
-                                        />
-                                    </Grid>
-                                </Box>
+                                // <Box component='div' sx={{ width: '100%', my: 1 }} key={index}> xs={32} sm={30} md={20} lg={15} xl={12}
+                                <Grid item sx={{ width: '700px', height: '500px', maxWidth: '500px', maxHeight: '700px', margin: 'auto', marginBottom: '200px' }} key={index}>
+                                    <MonsterCard
+                                        image={(showAnimation === '0' ? baseJpgUrl + '/' + (index + 1) + '.jpg' : baseGifUrl + '/' + (index + 1) + '.gif')}
+                                        name={monster.name}
+                                        tokenID={index + 1}
+                                        base={monster.base}
+                                        minAP={monster.ap}
+                                        bouns={monster.ap < (curLegion as LegionInterface).attackPower ? '' + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 : '0'}
+                                        price={monster.reward}
+                                        isHuntable={curLegion?.status === '1'}
+                                        handleHunt={handleHunt}
+                                    />
+                                </Grid>
+                                // </Box>
                             ))
                         }
                     </Grid>
-                </Box>
+                </Box >
             }
             {
                 loading === false && legions.length === 0 &&
                 <Grid container justifyContent='center'>
-                    <Grid item><Typography variant='h4'>No minted Legion yet</Typography></Grid>
+                    <Grid item><Typography variant='h4'>{getTranslation('noMintedLegion')}</Typography></Grid>
                 </Grid>
             }
             {
@@ -207,7 +232,54 @@ const Monsters = () => {
                     </Grid>
                 </>
             }
-        </Box>
+            <Dialog onClose={() => setDialogVisible(false)} open={dialogVisible}>
+                {
+                    huntedStatus === 0 &&
+                    <>
+                        <DialogTitle sx={{ textAlign: 'center' }}>
+                            <Typography variant='h4'>Hunting Time!</Typography>
+                            Your legion is now attacking the monster: <Typography variant='h5'>{curMonster?.name}</Typography>
+                        </DialogTitle>
+                        <CardMedia
+                            component="img"
+                            image="/assets/images/waiting.gif"
+                            alt="Monster Image"
+                            loading="lazy"
+                        />
+                    </>
+                }
+                {
+                    huntedStatus === 1 &&
+                    <>
+                        <DialogTitle sx={{ textAlign: 'center' }}>
+                            <Typography variant='h3'>Congratulations!</Typography>
+                            You defeated this monster! You have rewarded <Typography variant='h5'>{curMonster?.reward}</Typography> $$BLST
+                        </DialogTitle>
+                        <CardMedia
+                            component="img"
+                            image={baseGifUrl + '/' + curMonsterID + '.gif'}
+                            alt="Monster Image"
+                            loading="lazy"
+                        />
+                    </>
+                }
+                {
+                    huntedStatus === 2 &&
+                    <>
+                        <DialogTitle sx={{ textAlign: 'center' }}>
+                            <Typography variant='h4'>Better Luck Next Time...</Typography>
+                            Your legion did not succeed in getting Bloodstoone from this monster, this time
+                        </DialogTitle>
+                        <CardMedia
+                            component="img"
+                            image="/assets/images/loosing.gif"
+                            alt="Monster Image"
+                            loading="lazy"
+                        />
+                    </>
+                }
+            </Dialog>
+        </Box >
     )
 }
 

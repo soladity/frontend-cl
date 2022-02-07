@@ -135,7 +135,7 @@ const Legions = () => {
 									{getTranslation('availableWarrior')}
 								</Typography>
 								<Typography variant='h6' color='secondary' sx={{ fontWeight: 'bold', ml: 2 }}>
-									{beastBalance}
+									{warriorBalance}
 								</Typography>
 							</Box>
 							<Box sx={{ display: 'flex' }}>
@@ -143,7 +143,7 @@ const Legions = () => {
 									{getTranslation('availableBeast')}
 								</Typography>
 								<Typography variant='h6' color='secondary' sx={{ fontWeight: 'bold', ml: 2 }}>
-									{warriorBalance}
+									{beastBalance}
 								</Typography>
 							</Box>
 						</Box>
