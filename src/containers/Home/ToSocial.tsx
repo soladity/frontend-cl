@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Grid } from '@mui/material'
 import ToSocialBtn from '../../component/Buttons/ToSocialBtn';
+import SwitchNFTtype from '../../component/Buttons/SwitchNFTtype';
 
 const ToSocial = () => {
     return (
@@ -30,6 +31,7 @@ const ToSocial = () => {
                 type="Medium"
                 linkUrl="Discord"
             />
+            <SwitchNFTtype />
         </Grid>
     )
 }
