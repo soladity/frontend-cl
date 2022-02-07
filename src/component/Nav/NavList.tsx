@@ -151,7 +151,7 @@ const NavList = (props: any) => {
 			<Box sx={{ display: 'flex', px: 2, pt: 2 }}>
 				{navConfig.navBar.left.map((navItem, index) => (
 					navItem.type === "social" &&
-					<a target='_blank' href={navItem.path || ''}>
+					<a target='_blank' href={navItem.path || ''} key={index}>
 						<img src={navItem.icon} style={{ height: '32px', marginRight: '7px' }} alt='social icon' />
 					</a>
 				))}
@@ -187,7 +187,7 @@ const NavList = (props: any) => {
 				</Menu>
 				{navConfig.navBar.left.map((navItem, index) => (
 					navItem.type === "privacy" &&
-					<NavLink to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
+					<NavLink key={index} to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
 						<Tooltip title={navItem.title || ""} placement="right">
 							<ListItemButton>
 								<ListItemText primary={getTranslation(navItem.title)} />
@@ -198,7 +198,7 @@ const NavList = (props: any) => {
 			</Box>
 			{navConfig.navBar.left.map((navItem, index) => (
 				navItem.type === "footer" &&
-				<Card sx={{ m: 2, p: 2 }}>
+				<Card key={index} sx={{ m: 2, p: 2 }}>
 					<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
 				</Card>
 			))}

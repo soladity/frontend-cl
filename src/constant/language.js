@@ -719,6 +719,18 @@ export const translations = {
     pl: 'Kup więcej materiałów eksploatacyjnych!',
     ph: 'Bumili ng Higit pang Supplies'
   },
+  'filterLevel': {
+    en: 'Filter By Level',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'loadingMonsters':
   {
     en: 'Loading Monsters ...',
