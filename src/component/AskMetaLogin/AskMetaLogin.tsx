@@ -22,7 +22,7 @@ const useStyles = makeStyles({
         transition: '.4s all',
         '&:hover': {
             transition: '.4s all',
-            color: '#a2530d'
+            color: '#f89c35'
         },
     },
     logo: {
@@ -33,34 +33,46 @@ const useStyles = makeStyles({
     },
     "@keyframes LogoBang": {
         "0%": {
-            transform: "scale(20)"
+            transform: "scale(5)"
         },
         "20%": {
             transform: "scale(0.1)"
         },
         "30%": {
-            transform: "scale(4)"
+            transform: "scale(3)"
         },
         "40%": {
-            transform: "scale(0.4)"
-        },
-        "50%": {
-            transform: "scale(2)"
-        },
-        "60%": {
             transform: "scale(0.6)"
         },
-        "70%": {
+        "50%": {
             transform: "scale(1)"
+        },
+        "60%": {
+            transform: "translate(5px, 0px)"
+        },
+        "65%": {
+            transform: "translate(-5px, 0px)"
+        },
+        "70%": {
+            transform: "translate(5px, 0px)"
+        },
+        "75%": {
+            transform: "translate(-5px, 0px)"
         },
         "80%": {
-            transform: "scale(0.8)"
+            transform: "translate(5px, 0px)"
+        },
+        "85%": {
+            transform: "translate(-5px, 0px)"
         },
         "90%": {
-            transform: "scale(1)"
+            transform: "translate(0px, 0px)"
+        },
+        "95%": {
+            transform: "translate(0x, 0px)"
         },
         "100%": {
-            transform: "scale(1)"
+            transform: "translate(0px, 0px)"
         }
     },
     "@keyframes fadeIn": {
@@ -171,18 +183,19 @@ const AskMetaLogin = () => {
                                 sm={8}
                             >
                                 {
-                                    loading || mouseOver ? (
+                                    <>
                                         <img
                                             src={image.DRAGON_HOVER}
                                             style={{ width: '100%' }}
+                                            hidden={!(loading || mouseOver)}
                                         />
-                                    ) : (
 
                                         <img
                                             src={image.DRAGON_INIT}
                                             style={{ width: '100%' }}
+                                            hidden={loading || mouseOver}
                                         />
-                                    )
+                                    </>
                                 }
                             </Grid>
                             <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -237,12 +250,12 @@ const AskMetaLogin = () => {
                 </Grid>
                 <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>
                     <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
-                        Need instructions? Read our Whitepaper.
+                        Need instructions? Read our Whitepaper
                     </a>
                     <br></br>
-                    <a href="https://cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
+                    {/* <a href="https://cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
                         Visit our homepage
-                    </a>
+                    </a> */}
                 </Box>
             </Container>
             <Snackbar
