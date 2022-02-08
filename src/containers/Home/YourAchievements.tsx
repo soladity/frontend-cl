@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
+import { getTranslation } from '../../utils/translation';
 
 const useStyles = makeStyles({
     root: {
@@ -62,7 +63,7 @@ const YourAchievements = () => {
                 onClick={handlePopoverOpenYourAchievement}
                 sx={{ fontWeight: 'bold', fontSize: 12 }}
             >
-                Your Achievements
+                {getTranslation('yourAchievements')}
             </Typography>
             <Popover
                 id="your-achievement-popover"

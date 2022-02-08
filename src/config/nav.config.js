@@ -147,43 +147,45 @@ export const navConfig = {
                 path: '/help'
             },
             {
-                type: 'divider'
-            },
-            {
-                type: 'head',
-                title: 'social',
-            },
-            {
-                type: 'link',
+                type: 'social',
                 title: 'twitter',
-                icon: 'beasts',
+                icon: '/assets/images/twitter.png',
                 path: 'https://www.twitter.com'
             },
             {
-                type: 'link',
+                type: 'social',
                 title: 'telegram',
-                icon: 'beasts',
+                icon: '/assets/images/telegram.png',
                 path: 'https://www.telegram.com'
             },
             {
-                type: 'link',
+                type: 'social',
                 title: 'discord',
-                icon: 'beasts',
+                icon: '/assets/images/discord.png',
                 path: 'https://www.discord.com'
             },
             {
-                type: 'divider'
+                type: 'social',
+                title: 'youtube',
+                icon: '/assets/images/youtube.png',
+                path: 'https://www.youtube.com'
             },
             {
-                type: 'head',
-                title: 'privacy',
+                type: 'social',
+                title: 'medium',
+                icon: '/assets/images/medium.png',
+                path: 'https://medium.com'
             },
             {
-                type: 'navlink',
+                type: 'privacy',
                 title: 'policy',
                 icon: 'policy',
                 path: '/policy'
             },
+            {
+                type: 'footer',
+                title: 'footerContent',
+            }
         ],
         top: []
     }

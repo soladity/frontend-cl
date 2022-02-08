@@ -203,7 +203,7 @@ const Legions = () => {
 									min={2000}
 									max={250000}
 									marks={[
-										{ value: 2000, label: '2000' },
+										{ value: 2000, label: '2K' },
 										{ value: 250000, label: formatNumber('250K+') },
 									]}
 									step={1}
@@ -277,14 +277,14 @@ const Legions = () => {
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
 				<DialogTitle>{getTranslation('buyMoreSupply')}</DialogTitle>
 				<List sx={{ pt: 0 }}>
-					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('7')}>
-						<ListItemText primary='7' />
+					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('7')}>
+						<ListItemText primary='7 days' />
 					</ListItem>
-					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('14')}>
-						<ListItemText primary='14' />
+					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('14')}>
+						<ListItemText primary='14 days' />
 					</ListItem>
-					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('28')}>
-						<ListItemText primary='28' />
+					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('28')}>
+						<ListItemText primary='28 days' />
 					</ListItem>
 				</List>
 			</Dialog>

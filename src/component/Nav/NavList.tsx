@@ -33,6 +33,49 @@ const NavList = (props: any) => {
 	const [language, setLanguage] = React.useState<string | null>('en');
 	const open = Boolean(anchorEl);
 
+	const languages = [
+		{
+			title: 'en',
+			name: 'English'
+		},
+		{
+			title: 'es',
+			name: 'Spanish'
+		},
+		{
+			title: 'cn',
+			name: 'Chinese'
+		},
+		{
+			title: 'pt',
+			name: 'Portuguese'
+		},
+		{
+			title: 'tr',
+			name: 'Turkish'
+		},
+		{
+			title: 'ru',
+			name: 'Russian'
+		},
+		{
+			title: 'fr',
+			name: 'French'
+		},
+		{
+			title: 'de',
+			name: 'Dutch'
+		},
+		{
+			title: 'pl',
+			name: 'Polish'
+		},
+		{
+			title: 'ph',
+			name: 'Filipino'
+		}
+	];
+
 	React.useEffect(() => {
 		setLanguage(localStorage.getItem('lang') !== null ? localStorage.getItem('lang') : 'en');
 	}, []);
@@ -72,16 +115,18 @@ const NavList = (props: any) => {
 			</Card>
 			{navConfig.navBar.left.map((navItem, index) => (
 				<React.Fragment key={'nav_item_' + index} >
-					{navItem.type === "link" && <a target="_blank" className="nav-bar-item" href={navItem.path || ''}>
-						<Tooltip title={navItem.title || ""} placement="right">
-							<ListItemButton>
-								<ListItemIcon>
-									<InboxIcon />
-								</ListItemIcon>
-								<ListItemText primary={getTranslation(navItem.title)} />
-							</ListItemButton>
-						</Tooltip>
-					</a>
+					{
+						navItem.type === "link" &&
+						<a target="_blank" className="nav-bar-item" href={navItem.path || ''}>
+							<Tooltip title={navItem.title || ""} placement="right">
+								<ListItemButton>
+									<ListItemIcon>
+										<InboxIcon />
+									</ListItemIcon>
+									<ListItemText primary={getTranslation(navItem.title)} />
+								</ListItemButton>
+							</Tooltip>
+						</a>
 					}
 					{navItem.type === "navlink" &&
 						<NavLink to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
@@ -96,21 +141,31 @@ const NavList = (props: any) => {
 						</NavLink>
 					}
 					{navItem.type === "divider" && <Divider />}
-					{navItem.type === "head" && <Card sx={{ m: 2, p: 2 }}>
-						<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
-					</Card>}
+					{navItem.type === "head" &&
+						<Card sx={{ m: 2, p: 2 }}>
+							<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
+						</Card>
+					}
 				</React.Fragment>
 			))}
-			<Box sx={{ p: 1 }}>
+			<Box sx={{ display: 'flex', px: 2, pt: 2 }}>
+				{navConfig.navBar.left.map((navItem, index) => (
+					navItem.type === "social" &&
+					<a target='_blank' href={navItem.path || ''} key={index}>
+						<img src={navItem.icon} style={{ height: '32px', marginRight: '7px' }} alt='social icon' />
+					</a>
+				))}
+			</Box>
+			<Box sx={{ px: 2, py: 1, display: 'flex', justifyContent: 'space-between' }}>
 				<Button
 					id="language-button"
 					aria-controls={open ? 'language-menu' : undefined}
 					aria-haspopup="true"
 					aria-expanded={open ? 'true' : undefined}
 					onClick={handleClick}
-					sx={{color: 'white'}}
+					sx={{ color: 'white' }}
 				>
-					<img src={`/assets/images/${language}.svg`} style={{ width: '30px' }} />
+					<img src={`/assets/images/flags/${language}.svg`} style={{ width: '30px' }} />
 					<ArrowDropDownIcon />
 				</Button>
 				<Menu
@@ -122,14 +177,31 @@ const NavList = (props: any) => {
 						'aria-labelledby': 'language-button',
 					}}
 				>
-					<MenuItem onClick={() => handleLanguage('en')}>
-						<img src='/assets/images/en.svg' style={{ width: '30px', marginRight: '10px' }} /> English
-					</MenuItem>
-					<MenuItem onClick={() => handleLanguage('es')}>
-						<img src='/assets/images/es.svg' style={{ width: '30px', marginRight: '10px' }} /> Espanic
-					</MenuItem>
+					{
+						languages.map((item, index) => (
+							<MenuItem key={index} onClick={() => handleLanguage(item.title)}>
+								<img src={`/assets/images/flags/${item.title}.svg`} style={{ width: '30px', marginRight: '10px' }} /> {item.name}
+							</MenuItem>
+						))
+					}
 				</Menu>
+				{navConfig.navBar.left.map((navItem, index) => (
+					navItem.type === "privacy" &&
+					<NavLink key={index} to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
+						<Tooltip title={navItem.title || ""} placement="right">
+							<ListItemButton>
+								<ListItemText primary={getTranslation(navItem.title)} />
+							</ListItemButton>
+						</Tooltip>
+					</NavLink>
+				))}
 			</Box>
+			{navConfig.navBar.left.map((navItem, index) => (
+				navItem.type === "footer" &&
+				<Card key={index} sx={{ m: 2, p: 2 }}>
+					<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
+				</Card>
+			))}
 		</List>
 	</div>
 };
