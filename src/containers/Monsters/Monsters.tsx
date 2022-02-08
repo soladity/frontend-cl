@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Box, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Card, CardMedia, Dialog, DialogTitle } from '@mui/material'
+import { Box, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Typography, Card, CardMedia, Dialog, DialogTitle, DialogActions, Button, DialogContent } from '@mui/material'
 import { MonsterCard } from '../../component/Cards/MonsterCard'
 import Helmet from 'react-helmet'
 import { meta_constant, createlegions, allConstants } from '../../config/meta.config'
@@ -103,8 +103,11 @@ const Monsters = () => {
         setLoading(false)
     }
 
-    const handleDialogVisible = () => {
-
+    const handleDialogClose = (reason: string) => {
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+            return
+        }
+        setDialogVisible(false)
     }
 
     const handleCurLegionValue = (e: SelectChangeEvent) => {
@@ -196,7 +199,7 @@ const Monsters = () => {
                                         minAP={monster.ap}
                                         bouns={monster.ap < (curLegion as LegionInterface).attackPower ? '' + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 : '0'}
                                         price={monster.reward}
-                                        isHuntable={curLegion?.status === '1'}
+                                        isHuntable={curLegion?.status === '1' && monster.ap <= (curLegion as LegionInterface).attackPower}
                                         handleHunt={handleHunt}
                                     />
                                 </Grid>
@@ -232,50 +235,74 @@ const Monsters = () => {
                     </Grid>
                 </>
             }
-            <Dialog onClose={() => setDialogVisible(false)} open={dialogVisible}>
+            <Dialog disableEscapeKeyDown onClose={(_, reason) => handleDialogClose(reason)} open={dialogVisible}>
                 {
                     huntedStatus === 0 &&
                     <>
                         <DialogTitle sx={{ textAlign: 'center' }}>
-                            <Typography variant='h4'>Hunting Time!</Typography>
-                            Your legion is now attacking the monster: <Typography variant='h5'>{curMonster?.name}</Typography>
+                            <Box component="p">Hunting Time!</Box>
+                            Your legion is now attacking the monster:
+                            <Box component='p'>{curMonster?.name.toUpperCase()}</Box>
                         </DialogTitle>
-                        <CardMedia
-                            component="img"
-                            image="/assets/images/waiting.gif"
-                            alt="Monster Image"
-                            loading="lazy"
-                        />
+                        <DialogContent>
+                            <CardMedia
+                                component="img"
+                                image="/assets/images/waiting.gif"
+                                alt="Monster Image"
+                                loading="lazy"
+                            />
+                        </DialogContent>
                     </>
                 }
                 {
                     huntedStatus === 1 &&
                     <>
                         <DialogTitle sx={{ textAlign: 'center' }}>
-                            <Typography variant='h3'>Congratulations!</Typography>
-                            You defeated this monster! You have rewarded <Typography variant='h5'>{curMonster?.reward}</Typography> $$BLST
+                            <>
+                                <Box component="p">Congratulations!</Box>
+                                You defeated this monster! You have rewarded
+                                <Box component="p">{curMonster?.reward} $BLST</Box>
+                            </>
                         </DialogTitle>
-                        <CardMedia
-                            component="img"
-                            image={baseGifUrl + '/' + curMonsterID + '.gif'}
-                            alt="Monster Image"
-                            loading="lazy"
-                        />
+                        <DialogContent>
+                            <CardMedia
+                                component="img"
+                                image={baseGifUrl + '/' + curMonsterID + '.gif'}
+                                alt="Monster Image"
+                                loading="lazy"
+                            />
+                            <Typography>
+                                To win you need to roll equal or less than: {parseInt(curMonster?.base as string) + ((curMonster?.ap as number) < (curLegion?.attackPower as number) ? ((curLegion?.attackPower as number) - (curMonster?.ap as number)) / 2000 : 0)}
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button variant='outlined' onClick={() => setDialogVisible(false)}>Continue</Button>
+                        </DialogActions>
                     </>
                 }
                 {
                     huntedStatus === 2 &&
                     <>
                         <DialogTitle sx={{ textAlign: 'center' }}>
-                            <Typography variant='h4'>Better Luck Next Time...</Typography>
-                            Your legion did not succeed in getting Bloodstoone from this monster, this time
+                            <>
+                                <Box component="p">Better Luck Next Time...</Box>
+                                Your legion did not succeed in getting Bloodstoone from this monster, this time
+                            </>
                         </DialogTitle>
-                        <CardMedia
-                            component="img"
-                            image="/assets/images/loosing.gif"
-                            alt="Monster Image"
-                            loading="lazy"
-                        />
+                        <DialogContent>
+                            <CardMedia
+                                component="img"
+                                image="/assets/images/loosing.gif"
+                                alt="Monster Image"
+                                loading="lazy"
+                            />
+                            <Typography>
+                                To win you need to roll equal or less than: {parseInt(curMonster?.base as string) + ((curMonster?.ap as number) < (curLegion?.attackPower as number) ? ((curLegion?.attackPower as number) - (curMonster?.ap as number)) / 2000 : 0)}
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button variant='outlined' onClick={() => setDialogVisible(false)}>Continue</Button>
+                        </DialogActions>
                     </>
                 }
             </Dialog>
