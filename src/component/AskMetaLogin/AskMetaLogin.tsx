@@ -92,8 +92,8 @@ const image = {
     FOX_FAILED: '/assets/images/metamask-logo-bw.png',
     FOX_LOADING: '/assets/images/metamask-front.png',
     FOX_INIT: '/assets/images/metamask-logo.png',
-    DRAGON_INIT: '/assets/images/dragon1.jpg',
-    DRAGON_HOVER: '/assets/images/dragon2.jpg',
+    DRAGON_INIT: '/assets/images/dragon1.png',
+    DRAGON_HOVER: '/assets/images/dragon2.png',
     LOGO: '/assets/images/logo.png'
 };
 
