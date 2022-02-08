@@ -17,7 +17,7 @@ const useStyles = makeStyles({
         cursor: 'pointer',
         fontWeight: 'bold',
         fontSize: 18,
-        color: '#f89c35',
+        color: '#565656',
         textDecoration: 'none',
         transition: '.4s all',
         '&:hover': {
@@ -237,7 +237,11 @@ const AskMetaLogin = () => {
                 </Grid>
                 <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>
                     <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
-                        READ INSTRUCTIONS IN WHITEPAPER
+                        Need instructions? Read our Whitepaper.
+                    </a>
+                    <br></br>
+                    <a href="https://cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
+                        Visit our homepage
                     </a>
                 </Box>
             </Container>
