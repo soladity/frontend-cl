@@ -27,7 +27,7 @@ const useStyles = makeStyles({
             transition: '.4s all',
         },
         border: '1px solid #9d4a00',
-        color: 'white'
+        color: 'white !important'
     },
     root: {
         display: 'flex',

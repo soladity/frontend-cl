@@ -23,8 +23,54 @@ const useStyles = makeStyles({
         '&:hover': {
             transition: '.4s all',
             color: '#a2530d'
+        },
+    },
+    logo: {
+        animation: `$LogoBang cubic-bezier(0.4, 0, 1, 1) 3s`,
+    },
+    fadeAnimation: {
+        animation: `$fadeIn cubic-bezier(0.4, 0, 1, 1) 3s`,
+    },
+    "@keyframes LogoBang": {
+        "0%": {
+            transform: "scale(20)"
+        },
+        "20%": {
+            transform: "scale(0.1)"
+        },
+        "30%": {
+            transform: "scale(4)"
+        },
+        "40%": {
+            transform: "scale(0.4)"
+        },
+        "50%": {
+            transform: "scale(2)"
+        },
+        "60%": {
+            transform: "scale(0.6)"
+        },
+        "70%": {
+            transform: "scale(1)"
+        },
+        "80%": {
+            transform: "scale(0.8)"
+        },
+        "90%": {
+            transform: "scale(1)"
+        },
+        "100%": {
+            transform: "scale(1)"
         }
     },
+    "@keyframes fadeIn": {
+        "0%": {
+            opacity: '0'
+        },
+        "100%": {
+            opacity: '1'
+        }
+    }
 
 })
 
@@ -100,13 +146,14 @@ const AskMetaLogin = () => {
                     <img
                         src={logoImage}
                         style={{ width: '60%' }}
+                        className={classes.logo}
                     />
                 </Box>
                 <Grid container spacing={2}>
                     <Grid item md={2}>
 
                     </Grid>
-                    <Grid item md={8}>
+                    <Grid item md={8} className={classes.fadeAnimation}>
                         <Grid
                             container
                             spacing={2}
@@ -188,7 +235,7 @@ const AskMetaLogin = () => {
                     <Grid item md={2}>
                     </Grid>
                 </Grid>
-                <Box sx={{ marginTop: 2, textAlign: 'center' }}>
+                <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>
                     <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
                         READ INSTRUCTIONS IN WHITEPAPER
                     </a>
