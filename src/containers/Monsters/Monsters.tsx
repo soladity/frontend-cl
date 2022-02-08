@@ -150,7 +150,7 @@ const Monsters = () => {
                         <Grid container spacing={2} sx={{ justifyContent: 'space-evenly' }} alignItems="center">
                             <Grid item xs={4}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">getTranslation("legions")</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">{getTranslation("legions")}</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"

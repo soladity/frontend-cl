@@ -983,5 +983,17 @@ export const translations = {
     de: '',
     pl: '',
     ph: ''
+  },
+  'noMintedLegion': {
+    en: 'You have no minted Legion, yet!',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   }
 }
