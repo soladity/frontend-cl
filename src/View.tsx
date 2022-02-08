@@ -4,11 +4,23 @@ import Box from '@mui/material/Box';
 import Navigation from './component/Nav/Navigation';
 import AppBarComponent from './component/AppBar/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import { makeStyles } from '@mui/styles';
 
 import { navConfig } from './config';
 
+const useStyle = makeStyles({
+    mainBox: {
+        background: "url('./assets/images/nicah_background.jpg')",
+        backgroundAttachment: 'fixed',
+        backgroundSize: '100% 100%',
+        height: '100%'
+    }
+})
+
 const View = () => {
     const routing = useRoutes(navConfig.routes());
+
+    const classes = useStyle()
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -36,6 +48,7 @@ const View = () => {
             </Box>
             <Box
                 component="main"
+                className={classes.mainBox}
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${navConfig.drawerWidth}px)` } }}
             >
                 <Toolbar />
