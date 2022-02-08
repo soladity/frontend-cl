@@ -14,6 +14,7 @@ import NadodoWatch from './NadodoWatch';
 import TakeAction from './TakeAction';
 import ToSocial from './ToSocial';
 import YourAchievements from './YourAchievements';
+import nicahBackground from '../../assets/images/nicah_background.jpg'
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -62,7 +63,7 @@ const Home = () => {
                             onReady={(e) => e.target.playVideo()}
                         />
                     </Box>
-                    <a href="https://docs.google.com/document/d/1g90TDsCn4a8K3JcqCRkvAp72ux5RJu_6jMxcdFEE9SE/edit#" target={'blank'} style={{ color: 'white', border: 'none' }}>
+                    <a href="https://docs.cryptolegions.app/" target={'blank'} style={{ color: 'white', border: 'none' }}>
                         <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', marginTop: 2 }}>
                             READ INSTRUCTIONS IN WHITEPAPER
                         </Typography>

@@ -16,28 +16,33 @@ const useStyles = makeStyles({
         height: '100%'
     },
     achievementBtn: {
-        background: 'red',
         padding: 10,
         borderRadius: 5,
         cursor: 'pointer',
-        color: 'black',
-        animation: `$Flash linear 1s infinite`
+        animation: `$Flash linear 1s infinite`,
+        background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
+        '&:hover': {
+            background: 'radial-gradient(#ab973c, #743700)'
+        },
+        border: '1px solid #9d4a00',
+        color: 'white'
     },
     "@keyframes Flash": {
         "0%": {
-            background: '#19aa6f',
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "50%": {
-            background: '#24f39f',
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
             boxShadow: '0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "100%": {
-            background: '#19aa6f',
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         }
     }
 });
+
 const YourAchievements = () => {
 
     const classes = useStyles();
@@ -80,10 +85,10 @@ const YourAchievements = () => {
                 onClose={handlePopoverCloseYourAchievement}
                 disableRestoreFocus
             >
-                <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Own a beast with 20 capacity.</Typography>
+                <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a beast with 20 capacity.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a level 6 warrior.</Typography>
-                <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Own 10 legions of 30K+ AP.</Typography>
-                <Typography sx={{ p: 1 }}><Checkbox checked={true} /> Hunt monster 22 successfully.</Typography>
+                <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own 10 legions of 30K+ AP.</Typography>
+                <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Hunt monster 22 successfully.</Typography>
             </Popover>
         </Box>
     )

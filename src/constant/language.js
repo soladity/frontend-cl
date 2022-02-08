@@ -984,8 +984,105 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  'noMintedLegion': {
-    en: 'You have no minted Legion, yet!',
+
+  'nadodoWatching': {
+    en: 'NADODO IS WATCHING',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'marketplaceTax': {
+    en: 'MARKETPLACE TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'huntTax': {
+    en: 'HUNT TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'buyTax': {
+    en: 'BUY TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'sellTax': {
+    en: 'SELL TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'legionDamagePerHunt': {
+    en: 'Legion Damage Per Hunt',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'summoningFee': {
+    en: 'SUMMOING FEE',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  '14DaysSuppliesFee': {
+    en: '14 Days Supplies Fee',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  '28DaysSuppliesFee': {
+    en: '28 Days Supplies Fee',
     es: '',
     cn: '',
     pt: '',
