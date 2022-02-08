@@ -6,9 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { ReadableByteStreamController } from 'stream/web';
-import { Box, Container, fabClasses, Grid } from '@mui/material';
+import { Box, Container, Snackbar, Grid, Alert } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../wallet';
+import Slide, { SlideProps } from '@mui/material/Slide';
 
 const image = {
     METAMASK: '/assets/images/metamask.jpg',
@@ -27,6 +28,12 @@ const content = {
     LOADING: 'Trying to connect!'
 }
 
+type TransitionProps = Omit<SlideProps, 'direction'>;
+
+function TransitionUp(props: TransitionProps) {
+    return <Slide {...props} direction="up" />;
+}
+
 const AskMetaLogin = () => {
     const {
         activate,
@@ -42,6 +49,7 @@ const AskMetaLogin = () => {
 
     const [loading, setLoading] = React.useState(false);
     const [failed, setFailed] = React.useState(false);
+    const [openSnackBar, setOpenSnackBar] = React.useState(false)
 
     const [mouseOver, setMouseOver] = React.useState(false)
 
@@ -53,6 +61,11 @@ const AskMetaLogin = () => {
     };
 
     React.useEffect(() => {
+        if (error) {
+            if (error.toString().indexOf('NoEthereumProviderError') > -1) {
+                setOpenSnackBar(true)
+            }
+        }
         setLoading(false);
         if (active) {
         }
@@ -151,6 +164,20 @@ const AskMetaLogin = () => {
                     </Grid>
                 </Grid>
             </Container>
+            <Snackbar
+                open={openSnackBar}
+                TransitionComponent={TransitionUp}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackBar(false)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                key={TransitionUp.name}
+            >
+                <Alert onClose={() => setOpenSnackBar(false)} variant='filled' severity="error" sx={{ width: '100%' }}>
+                    <Box sx={{ cursor: 'pointer' }}>
+                        Please Install MetaMask
+                    </Box>
+                </Alert>
+            </Snackbar>
         </div >
     )
 }
