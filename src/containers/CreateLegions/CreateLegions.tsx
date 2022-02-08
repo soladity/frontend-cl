@@ -44,7 +44,7 @@ const CreateLegions: React.FC = () => {
 	const [baseWarriorJpgUrl, setBaseWarriorJpgUrl] = React.useState('')
 	const [baseWarriorGifUrl, setBaseWarriorGifUrl] = React.useState('')
 	const [apValue, setApValue] = React.useState<number[]>([500, 60000])
-	const [warrior5beast, setWarrior5beat] = React.useState(true)
+	const [warrior5beast, setWarrior5beat] = React.useState(false)
 	const [warriorDropBoxList, setWarriorDropBoxList] = React.useState(Array)
 	const [beastDropBoxList, setBeastDropBoxList] = React.useState(Array)
 	const [warriorDragBoxList, setWarriorDragBoxList] = React.useState(Array)
