@@ -10,6 +10,23 @@ import { Box, Container, Snackbar, Grid, Alert } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../wallet';
 import Slide, { SlideProps } from '@mui/material/Slide';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+    loginToWhitePaperBtn: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        fontSize: 18,
+        color: '#f89c35',
+        textDecoration: 'none',
+        transition: '.4s all',
+        '&:hover': {
+            transition: '.4s all',
+            color: '#a2530d'
+        }
+    },
+
+})
 
 const image = {
     METAMASK: '/assets/images/metamask.jpg',
@@ -46,6 +63,8 @@ const AskMetaLogin = () => {
         error,
         chainId
     } = useWeb3React();
+
+    const classes = useStyles()
 
     const [loading, setLoading] = React.useState(false);
     const [failed, setFailed] = React.useState(false);
@@ -88,18 +107,21 @@ const AskMetaLogin = () => {
 
                     </Grid>
                     <Grid item md={8}>
-                        <Grid container spacing={2}>
+                        <Grid
+                            container
+                            spacing={2}
+                            onMouseOver={() => {
+                                setMouseOver(true)
+                            }}
+                            onMouseLeave={() => {
+                                setMouseOver(false)
+                            }}
+                            onClick={handleCloseClick}
+                        >
                             <Grid
                                 item
                                 xs={12}
                                 sm={8}
-                                onMouseOver={() => {
-                                    setMouseOver(true)
-                                }}
-                                onMouseLeave={() => {
-                                    setMouseOver(false)
-                                }}
-                                onClick={handleCloseClick}
                             >
                                 {
                                     loading || mouseOver ? (
@@ -117,9 +139,25 @@ const AskMetaLogin = () => {
                                 }
                             </Grid>
                             <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box
+                                    sx={{ textAlign: 'center' }}
+                                >
                                     {
-                                        !loading && failed ? (
+                                        mouseOver || loading ? (
+                                            <>
+                                                <img
+                                                    src={image.METAMASK_WINK}
+                                                    style={{ width: '40%' }}
+                                                />
+                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
+                                                    CLICK TO FLY
+                                                </p>
+                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
+                                                    TO NICAH
+                                                </p>
+                                            </>
+                                        ) : failed ? (
+
                                             <>
                                                 <img
                                                     src={image.METAMASK}
@@ -129,31 +167,18 @@ const AskMetaLogin = () => {
                                                     PLEASE RETRY!
                                                 </p>
                                             </>
-                                        ) :
-                                            !loading && !mouseOver ? (
-                                                <>
-                                                    <img
-                                                        src={image.METAMASK}
-                                                        style={{ width: '40%' }}
-                                                    />
-                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
-                                                        LOGIN WITH METAMASK
-                                                    </p>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <img
-                                                        src={image.METAMASK_WINK}
-                                                        style={{ width: '40%' }}
-                                                    />
-                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
-                                                        CLICK TO FLY
-                                                    </p>
-                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
-                                                        TO NICAH
-                                                    </p>
-                                                </>
-                                            )
+                                        ) : (
+
+                                            <>
+                                                <img
+                                                    src={image.METAMASK}
+                                                    style={{ width: '40%' }}
+                                                />
+                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
+                                                    LOGIN WITH METAMASK
+                                                </p>
+                                            </>
+                                        )
                                     }
                                 </Box>
 
@@ -164,7 +189,7 @@ const AskMetaLogin = () => {
                     </Grid>
                 </Grid>
                 <Box sx={{ marginTop: 2, textAlign: 'center' }}>
-                    <a href="https://docs.cryptolegions.app/" target={'blank'} style={{ border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: 18, color: 'white' }}>
+                    <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
                         READ INSTRUCTIONS IN WHITEPAPER
                     </a>
                 </Box>
