@@ -163,6 +163,11 @@ const AskMetaLogin = () => {
                     <Grid item md={2}>
                     </Grid>
                 </Grid>
+                <Box sx={{ marginTop: 2, textAlign: 'center' }}>
+                    <a href="https://docs.cryptolegions.app/" target={'blank'} style={{ border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: 18, color: 'white' }}>
+                        READ INSTRUCTIONS IN WHITEPAPER
+                    </a>
+                </Box>
             </Container>
             <Snackbar
                 open={openSnackBar}

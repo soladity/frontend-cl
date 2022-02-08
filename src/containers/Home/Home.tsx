@@ -58,10 +58,10 @@ const Home = () => {
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                 <Box>
                     <Box>
-                        <YouTube
+                        {/* <YouTube
                             videoId="j942wKiXFu8"
                             onReady={(e) => e.target.playVideo()}
-                        />
+                        /> */}
                     </Box>
                     <a href="https://docs.cryptolegions.app/" target={'blank'} style={{ color: 'white', border: 'none' }}>
                         <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', marginTop: 2 }}>

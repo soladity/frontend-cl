@@ -852,8 +852,32 @@ export const translations = {
     pl: '',
     ph: ''
   },
+  'takeActionSummonBeastQuantity': {
+    en: 'SUMMON BEAST QUANTITY',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'takeActionSummonWarrior': {
     en: 'SUMMON WARRIOR',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'takeActionSummonWarriorQuantity': {
+    en: 'SUMMON WARRIOR QUANTITY',
     es: '',
     cn: '',
     pt: '',
