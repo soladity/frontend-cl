@@ -21,7 +21,7 @@ type CardProps = {
 	handleOpenSupply: Function;
 };
 
-export default function WarriorCard(props: CardProps) {
+export default function LegionCard(props: CardProps) {
 	const {
 		id,
 		image,

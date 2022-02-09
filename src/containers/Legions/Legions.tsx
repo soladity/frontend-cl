@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Slider, FormLabel, FormControl, Checkbox, Dialog, DialogTitle, List, ListItem, ListItemText } from '@mui/material';
 import Helmet from 'react-helmet';

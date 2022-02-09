@@ -359,8 +359,8 @@ const CreateLegions: React.FC = () => {
 											<Input placeholder={getTranslation('nameLegion')} value={legionName} onChange={handleChangedName} />
 										</Grid>
 										<Grid item>
-											<Button color='error' variant='contained' onClick={() => handleMint()} disabled={!isWDropable}>
-												{getTranslation('createLegionsBtn')} {totalAP < createlegions.main.minAvailableAP ? ('Minimum' + createlegions.main.minAvailableAP) : totalAP} AP
+											<Button variant='contained' onClick={() => handleMint()} disabled={!isWDropable}>
+												{getTranslation('createLegion')} {totalAP < createlegions.main.minAvailableAP ? '(min 2000 AP needed)' : totalAP + ' AP'}
 											</Button>
 										</Grid>
 									</Grid>
