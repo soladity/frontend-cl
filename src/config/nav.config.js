@@ -135,7 +135,7 @@ export const navConfig = {
                 type: 'link',
                 title: 'whitepaper',
                 icon: 'whitepaper',
-                path: 'https://pancakeswap.com'
+                path: 'https://docs.cryptolegions.app/'
             },
             {
                 type: 'navlink',
