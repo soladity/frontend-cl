@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { getTranslation } from '../../utils/translation';
 
 const NadodoWatch = () => {
     return (
@@ -8,29 +9,36 @@ const NadodoWatch = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '180px',
-            height: '100%'
+            height: '100%',
+            background: '#16161699'
         }}>
             <Box sx={{ p: 4, justifyContent: 'center' }}>
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
-                    NADODO IS WATCHING
+                    {getTranslation('nadodoWatching')}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    MARKETPLACE TAX : 15%
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('marketplaceTax')} : 15%
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    HUNT TAX : 2%
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('huntTax')} : 2%
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    # LEGIONS : 8 / 12
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('buyTax')} : 2%
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    YOUR MAX: 60000
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('sellTax')} : 8%
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    UNCALIMED $ : 558
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('legionDamagePerHunt')} : 2%
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    TAX DAYS LEFT : 3
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('summoningFee')} : 20$
+                </Typography>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('14DaysSuppliesFee')} : 12$
+                </Typography>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('28DaysSuppliesFee')} : 16$
                 </Typography>
             </Box>
         </Card>

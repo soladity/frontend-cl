@@ -100,19 +100,6 @@ const NavList = (props: any) => {
 		<List sx={{
 			pb: 8
 		}}>
-			<Card sx={{ m: 2, p: 2 }}>
-				<Box sx={{ display: 'flex', alignItems: 'center' }}>
-					<img
-						src='/assets/images/welcome.svg'
-						style={{ height: '25px', margin: '0 15px 0 0' }}
-						alt={'welcome'}
-						loading="lazy"
-					/>
-					<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.green}>
-						{getTranslation('welcome')}
-					</Typography>
-				</Box>
-			</Card>
 			{navConfig.navBar.left.map((navItem, index) => (
 				<React.Fragment key={'nav_item_' + index} >
 					{
@@ -200,7 +187,11 @@ const NavList = (props: any) => {
 				navItem.type === "footer" &&
 				<a href='https://cryptogames.agency' target='_blank' className='non-style' key={index}>
 					<Card key={index} sx={{ m: 2, p: 2 }}>
-						<Typography variant="subtitle2" className={classes.root}>{getTranslation(navItem.title)}</Typography>
+						<Typography variant="subtitle2" color='gray' sx={{display: 'flex', flexWrap: 'wrap'}}>
+							{getTranslation(navItem.title1)}
+							<img src='/assets/images/heart.png' alt='favorite' style={{width: '20px', height: '20px', margin: '0 10px'}} />
+							{getTranslation(navItem.title2)}
+						</Typography>
 					</Card>
 				</a>
 			))}

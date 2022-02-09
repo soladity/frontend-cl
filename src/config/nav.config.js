@@ -66,9 +66,6 @@ export const navConfig = {
     navBar: {
         left: [
             {
-                type: 'divider'
-            },
-            {
                 type: 'head',
                 title: 'play',
             },
@@ -184,7 +181,8 @@ export const navConfig = {
             },
             {
                 type: 'footer',
-                title: 'footerContent',
+                title1: 'madeWith',
+                title2: 'cryptoAgency'
             }
         ],
         top: []

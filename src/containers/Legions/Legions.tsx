@@ -22,6 +22,10 @@ const useStyles = makeStyles({
 		display: 'flex',
 		flexDirection: 'column',
 		minHeight: '180px'
+	},
+	warning: {
+		display: 'flex',
+		minHeight: '80px',
 	}
 });
 
@@ -41,6 +45,7 @@ const Legions = () => {
 	const [openSupply, setOpenSupply] = React.useState(false);
 	const [selectedLegion, setSelectedLegion] = React.useState(0);
 	const [loading, setLoading] = React.useState(false);
+	const [supplyLoading, setSupplyLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
 
 	const classes = useStyles();
@@ -108,8 +113,11 @@ const Legions = () => {
 	};
 
 	const handleSupplyClick = async (value: string) => {
+		setSupplyLoading(true);
 		setOpenSupply(false);
 		await addSupply(web3, legionContract, account, selectedLegion, parseInt(value));
+		setSupplyLoading(false);
+		getBalance();
 	};
 
 	const handleOpenSupply = (id: number) => {
@@ -126,6 +134,17 @@ const Legions = () => {
 				{meta_constant.legions.keywords && <meta name="keywords" content={meta_constant.legions.keywords.join(',')} />}
 			</Helmet>
 			<Grid container spacing={2} sx={{ my: 4 }}>
+				<Grid item xs={12}>
+					<Card>
+						<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+							<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+								<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+									{getTranslation('legions')}
+								</Typography>
+							</Box>
+						</Box>
+					</Card>
+				</Grid>
 				<Grid item xs={12} md={4}>
 					<Card>
 						<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
@@ -183,7 +202,7 @@ const Legions = () => {
 										<Typography variant='subtitle1'>
 											{item.name}
 										</Typography>
-										<Typography variant='subtitle1' color='secondary' sx={{ ml: 2 }}>
+										<Typography variant='subtitle1' sx={{ ml: 2, color: item.huntStatus === 'green' ? 'green' : item.huntStatus === 'orange' ? 'orange' : 'red' }}>
 											{formatNumber(item.attackPower)} AP
 										</Typography>
 									</Box>
@@ -194,7 +213,7 @@ const Legions = () => {
 				</Grid>
 			</Grid>
 			{
-				loading === false &&
+				(loading === false && supplyLoading === false) &&
 				<React.Fragment>
 					<Grid container spacing={2} sx={{ my: 3 }}>
 						<Grid item xs={12} md={3}>
@@ -236,7 +255,7 @@ const Legions = () => {
 								</ButtonGroup>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} md={3} sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+						<Grid item xs={12} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
 							<FormControl component="fieldset" sx={{ width: '90%' }}>
 								<FormLabel component="legend">{getTranslation('hideWeakLegions')}:</FormLabel>
 							</FormControl>
@@ -262,7 +281,27 @@ const Legions = () => {
 				loading === true &&
 				<>
 					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
-						<Typography variant='h4' >{getTranslation('loadingWarriors')}</Typography>
+						<Typography variant='h4' >{getTranslation('loadingLegions')}</Typography>
+					</Grid>
+					<Grid container sx={{ justifyContent: 'center' }}>
+						<Grid item xs={1}>
+							<Card>
+								<CardMedia
+									component="img"
+									image="/assets/images/loading.gif"
+									alt="Loading"
+									loading="lazy"
+								/>
+							</Card>
+						</Grid>
+					</Grid>
+				</>
+			}
+			{
+				supplyLoading === true &&
+				<>
+					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
+						<Typography variant='h4' >{getTranslation('buyingSupplies')}</Typography>
 					</Grid>
 					<Grid container sx={{ justifyContent: 'center' }}>
 						<Grid item xs={1}>
@@ -279,15 +318,15 @@ const Legions = () => {
 				</>
 			}
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
-				<DialogTitle>{getTranslation('buyMoreSupply')}</DialogTitle>
+				<DialogTitle>{getTranslation('buySupply')}</DialogTitle>
 				<List sx={{ pt: 0 }}>
-					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('7')}>
+					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('7')}>
 						<ListItemText primary='7 days' />
 					</ListItem>
-					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('14')}>
+					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('14')}>
 						<ListItemText primary='14 days' />
 					</ListItem>
-					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('28')}>
+					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('28')}>
 						<ListItemText primary='28 days' />
 					</ListItem>
 				</List>

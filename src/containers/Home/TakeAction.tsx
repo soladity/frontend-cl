@@ -10,6 +10,7 @@ import Slide, { SlideProps } from '@mui/material/Slide';
 import { useDispatch } from 'react-redux'
 import { setReloadStatus } from '../../actions/contractActions'
 import { getTranslation } from '../../utils/translation';
+import { makeStyles } from '@mui/styles';
 
 type TransitionProps = Omit<SlideProps, 'direction'>;
 
@@ -17,9 +18,57 @@ function TransitionUp(props: TransitionProps) {
     return <Slide {...props} direction="up" />;
 }
 
+const useStyles = makeStyles({
+    legionBtn: {
+        background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
+        transition: '.4s all',
+        '&:hover': {
+            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
+            transition: '.4s all',
+        },
+        border: '1px solid #9d4a00',
+        color: 'white'
+    },
+    root: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    card: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '180px',
+        height: '100%'
+    },
+    achievementBtn: {
+        background: 'red',
+        padding: 10,
+        borderRadius: 5,
+        cursor: 'pointer',
+        color: 'black',
+        animation: `$Flash linear 1s infinite`
+    },
+    "@keyframes Flash": {
+        "0%": {
+            background: '#19aa6f',
+            boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
+        },
+        "50%": {
+            background: '#24f39f',
+            boxShadow: '0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
+        },
+        "100%": {
+            background: '#19aa6f',
+            boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
+        }
+    }
+});
+
+
 const TakeAction = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const classes = useStyles();
 
     //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] = React.useState<HTMLElement | null>(null);
@@ -101,7 +150,8 @@ const TakeAction = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '180px',
-            height: '100%'
+            height: '100%',
+            background: '#16161699'
         }}>
             <Snackbar
                 open={openSnackBar}
@@ -126,7 +176,7 @@ const TakeAction = () => {
                         <Grid item xs={6}>
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
-                                    <Button variant="contained" aria-describedby={'summon-beast-id'} onClick={handlePopoverOpenSummonBeast} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <Button variant="contained" className={classes.legionBtn} aria-describedby={'summon-beast-id'} onClick={handlePopoverOpenSummonBeast} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionSummonBeast')}
                                     </Button>
                                     <Popover
@@ -148,14 +198,14 @@ const TakeAction = () => {
                                         </Box>
                                         <DialogTitle>{getTranslation('takeActionSummonBeast')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(1, TransitionUp)}>1</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(5, TransitionUp)}>5</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(10, TransitionUp)}>10</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(20, TransitionUp)}>20</Button>
-                                            <Button variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(1, TransitionUp)}>1</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(5, TransitionUp)}>5</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(10, TransitionUp)}>10</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(20, TransitionUp)}>20</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
                                         </Box>
                                     </Popover>
-                                    <Button aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <Button className={classes.legionBtn} aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionSummonWarrior')}
                                     </Button>
                                     <Popover
@@ -177,17 +227,17 @@ const TakeAction = () => {
                                         </Box>
                                         <DialogTitle>{getTranslation('takeActionSummonWarrior')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(1, TransitionUp)}>1</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(5, TransitionUp)}>5</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(10, TransitionUp)}>10</Button>
-                                            <Button variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(20, TransitionUp)}>20</Button>
-                                            <Button variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(1, TransitionUp)}>1</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(5, TransitionUp)}>5</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(10, TransitionUp)}>10</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(20, TransitionUp)}>20</Button>
+                                            <Button className={classes.legionBtn} variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
                                         </Box>
                                     </Popover>
-                                    <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionCreateLegion')}
                                     </Button>
-                                    <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
+                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                         {getTranslation('takeActionHunt')}
                                     </Button>
                                 </Box>
@@ -196,16 +246,16 @@ const TakeAction = () => {
                         <Grid item xs={6} >
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
-                                    <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionBuyBeasts')}
                                     </Button>
-                                    <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionBuyWarriors')}
                                     </Button>
-                                    <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionBuyLegions')}
                                     </Button>
-                                    <Button variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
+                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
                                         {getTranslation('takeActionBuyBlst')}
                                     </Button>
                                 </Box>

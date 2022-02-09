@@ -70,28 +70,29 @@ const YourInventory = () => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '180px',
-            height: '100%'
+            height: '100%',
+            background: '#16161699'
         }}>
             <Box sx={{ p: 4, justifyContent: 'center' }}>
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', marginBottom: 3 }}>
                     {getTranslation('yourInventory')}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('BEASTS')} : {beastBalance}
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('beasts')} : {beastBalance}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('WARRIORS')} : {warriorBalance}
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('warriors')} : {warriorBalance}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('LEGIONS')} : {availableLegionCount} / {legionTokenIds.length}
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('legions')} : {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('yourMaxAp')} : {maxAttackPower}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('unClaimed')} $ : {unclaimedBalance}
                 </Typography>
-                <Typography variant='subtitle1' color='primary' sx={{ fontWeight: 'bold' }}>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('taxDaysLeft')} : {taxLeftDays}
                 </Typography>
             </Box>

@@ -126,6 +126,11 @@ export const canHunt = async (web3, contract, tokenID) => {
     return response
 }
 
+export const hunt = async (web3, contract, account, legionID, monsterID) => {
+    const response = await contract.methods.hunt(legionID, monsterID).send({ from: account })
+    return response
+}
+
 /**
  * Monster Contracts
  */
@@ -133,9 +138,10 @@ export const canHunt = async (web3, contract, tokenID) => {
 export const getMonsterInfo = async (web3, contract, monsterID) => {
     const response = await contract.methods.getMonsterInfo(monsterID).call()
     const monster = {
-        base: response[0],
-        ap: parseInt(response[1]),
-        reward: response[2],
+        name: response[0],
+        base: response[1],
+        ap: parseInt(response[2]),
+        reward: response[3],
         // image: response[3],
         // imageAlt: response[4]
     }

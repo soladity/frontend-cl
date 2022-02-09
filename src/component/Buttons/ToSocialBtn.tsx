@@ -40,7 +40,7 @@ const blue = {
   500: '#007FFF',
   600: '#0072E5',
   800: '#004C99',
-  900: '#221c5a',
+  900: '#623313',
 };
 
 const CustomButtonRoot = styled(ButtonRoot)(
@@ -146,14 +146,14 @@ export default function UnstyledButtonCustom(props: any) {
   return (
 
     <SvgButton style={{ margin: 10 }}>
-      <div>
+      <div style={{ color: '#caa959' }}>
         <div style={{ textAlign: 'center', fontSize: 32 }}>
           {Type(props.type)}
         </div>
         <div style={{ textAlign: 'center' }}>
           {props.type}
         </div>
-      </div>
-    </SvgButton>
+      </div >
+    </SvgButton >
   );
 }

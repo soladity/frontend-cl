@@ -22,6 +22,10 @@ const useStyles = makeStyles({
 		display: 'flex',
 		flexDirection: 'column',
 		minHeight: '180px'
+	},
+	warning: {
+		display: 'flex',
+		minHeight: '80px',
 	}
 });
 
@@ -118,6 +122,17 @@ const Warriors = () => {
 			{meta_constant.warriors.keywords && <meta name="keywords" content={meta_constant.warriors.keywords.join(',')} />}
 		</Helmet>
 		<Grid container spacing={2} sx={{ my: 4 }}>
+			<Grid item xs={12}>
+				<Card>
+					<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+						<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+							<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+								{getTranslation('warriors')}
+							</Typography>
+						</Box>
+					</Box>
+				</Card>
+			</Grid>
 			<Grid item xs={12} md={4}>
 				<Card>
 					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
