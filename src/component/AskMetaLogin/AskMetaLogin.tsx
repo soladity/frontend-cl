@@ -87,8 +87,8 @@ const image = {
     FOX_FAILED: '/assets/images/metamask-logo-bw.png',
     FOX_LOADING: '/assets/images/metamask-front.png',
     FOX_INIT: '/assets/images/metamask-logo.png',
-    DRAGON_INIT: '/assets/images/dragon1.png',
-    DRAGON_HOVER: '/assets/images/dragon2.png',
+    DRAGON_INIT: '/assets/images/login_page_without_mouse.jpg',
+    DRAGON_HOVER: '/assets/images/login_page_with_mouse_hovering_over_dragon.jpg',
     LOGO: '/assets/images/logo.png'
 };
 
@@ -175,7 +175,7 @@ const AskMetaLogin = () => {
                             <Grid
                                 item
                                 xs={12}
-                                sm={8}
+                                sm={12}
                             >
                                 {
                                     <>
@@ -184,7 +184,6 @@ const AskMetaLogin = () => {
                                             style={{ width: '100%' }}
                                             hidden={!(loading || mouseOver)}
                                         />
-
                                         <img
                                             src={image.DRAGON_INIT}
                                             style={{ width: '100%' }}
@@ -193,7 +192,7 @@ const AskMetaLogin = () => {
                                     </>
                                 }
                             </Grid>
-                            <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {/* <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Box
                                     sx={{ textAlign: 'center' }}
                                 >
@@ -237,7 +236,7 @@ const AskMetaLogin = () => {
                                     }
                                 </Box>
 
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </Grid>
                     <Grid item md={2}>
