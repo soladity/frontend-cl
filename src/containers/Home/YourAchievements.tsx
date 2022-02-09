@@ -29,7 +29,8 @@ const useStyles = makeStyles({
             background: 'radial-gradient(#ab973c, #743700)'
         },
         border: '1px solid white !important',
-        color: 'white !important'
+        color: 'white !important',
+        textShadow: "3px 3px 0 #00000085"
     },
     "@keyframes Flash": {
         "0%": {
@@ -75,6 +76,7 @@ const YourAchievements = () => {
 
     const getStatus = async () => {
         const ids = await getBeastTokenIds(web3, beastContract, account);
+        console.log(ids)
         for (let i = 0; i < ids.length; i++) {
             const beast = await getBeastToken(web3, beastContract, ids[i]);
             console.log(beast)

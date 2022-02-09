@@ -27,28 +27,19 @@ const useStyles = makeStyles({
     },
     logo: {
         animation: `$LogoBang cubic-bezier(0.4, 0, 1, 1) 2s`,
+        // opacity: 0
     },
     fadeAnimation: {
         animation: `$fadeIn cubic-bezier(0.4, 0, 1, 1) 3s`,
     },
     "@keyframes LogoBang": {
         "0%": {
+            opacity: 0,
             transform: "scale(8)"
         },
-        "15%": {
-            transform: "scale(1)"
-        },
-        "20%": {
-            transform: "translate(5px, 0px)"
-        },
-        "25%": {
-            transform: "translate(-5px, 0px)"
-        },
-        "30%": {
-            transform: "translate(5px, 0px)"
-        },
         "35%": {
-            transform: "translate(-5px, 0px)"
+            opacity: 1,
+            transform: "scale(1)"
         },
         "40%": {
             transform: "translate(5px, 0px)"
@@ -57,12 +48,25 @@ const useStyles = makeStyles({
             transform: "translate(-5px, 0px)"
         },
         "50%": {
-            transform: "translate(0px, 0px)"
+            transform: "translate(5px, 0px)"
         },
         "55%": {
+            transform: "translate(-5px, 0px)"
+        },
+        "60%": {
+            transform: "translate(5px, 0px)"
+        },
+        "65%": {
+            transform: "translate(-5px, 0px)"
+        },
+        "70%": {
+            transform: "translate(0px, 0px)"
+        },
+        "75%": {
             transform: "translate(0x, 0px)"
         },
         "100%": {
+            opacity: 1,
             transform: "translate(0px, 0px)"
         }
     },

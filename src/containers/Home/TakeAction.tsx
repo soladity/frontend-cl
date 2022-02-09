@@ -27,7 +27,7 @@ const useStyles = makeStyles({
             transition: '.4s all',
         },
         color: 'white !important',
-        '-webkit-text-stroke': '1px #e89f30'
+        textShadow: "3px 3px 0 #00000085, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
     },
     root: {
         display: 'flex',
