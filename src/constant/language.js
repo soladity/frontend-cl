@@ -467,7 +467,7 @@ export const translations = {
     pl: 'Ładowanie bestii i wojowników...',
     ph: 'load ng mga Hayop at Mandirigma...'
   },
-  'createLegionsBtn': {
+  'mintLegionsBtn': {
     en: 'Create legion with ',
     es: 'Crea legión con ',
     cn: '创建军团 ',

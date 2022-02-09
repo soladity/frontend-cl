@@ -44,7 +44,7 @@ export const navConfig = {
             element: <CreateLegions />
         },
         {
-            path: '/updatelegions',
+            path: '/updatelegions/:id',
             element: <UpdateLegions />
         },
         {

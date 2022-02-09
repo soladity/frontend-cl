@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom'
 import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Slider, FormLabel, FormControl, Checkbox, Dialog, DialogTitle, List, ListItem, ListItemText } from '@mui/material';
 import Helmet from 'react-helmet';
 import { makeStyles } from '@mui/styles';
@@ -48,6 +49,7 @@ const Legions = () => {
 	const beastContract = useBeast();
 	const warriorContract = useWarrior();
 	const web3 = useWeb3();
+	const navigate = useNavigate()
 
 	React.useEffect(() => {
 		if (account) {
@@ -247,7 +249,7 @@ const Legions = () => {
 						{
 							legions.filter((item: any) => apValue[0] < parseInt(item.attackPower) && (apValue[1] === 250000 ? true : apValue[1] > parseInt(item.attackPower))).filter((item: any) => hideWeak === true ? item.attackPower >= 2000 : true).map((item: any, index) => (
 								<Grid item xs={12} sm={6} md={4} key={index}>
-									<LegionCard id={item['id']} image={baseUrl + 'QmdnZYpBhNuxjieUZrnR14weZtiXRdz75SRAfhEAkissMm'} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} supplies={item['supplies']} attackPower={item['attackPower']} handleOpenSupply={handleOpenSupply} />
+									<LegionCard id={item['id']} image={baseUrl + 'QmdnZYpBhNuxjieUZrnR14weZtiXRdz75SRAfhEAkissMm'} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} supplies={item['supplies']} attackPower={item['attackPower']} handleOpenSupply={handleOpenSupply} handleUpdate={() => { navigate('/updatelegions/' + item['id']) }} />
 								</Grid>
 							))
 						}
@@ -277,13 +279,13 @@ const Legions = () => {
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
 				<DialogTitle>{getTranslation('buyMoreSupply')}</DialogTitle>
 				<List sx={{ pt: 0 }}>
-					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('7')}>
+					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('7')}>
 						<ListItemText primary='7 days' />
 					</ListItem>
-					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('14')}>
+					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('14')}>
 						<ListItemText primary='14 days' />
 					</ListItem>
-					<ListItem button sx={{textAlign: 'center'}} onClick={() => handleSupplyClick('28')}>
+					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('28')}>
 						<ListItemText primary='28 days' />
 					</ListItem>
 				</List>

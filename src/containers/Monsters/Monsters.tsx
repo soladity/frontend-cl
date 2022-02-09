@@ -163,7 +163,7 @@ const Monsters = () => {
                                                 <MenuItem
                                                     value={index}
                                                     key={index}
-                                                    sx={{ background: legion.status === '1' ? '#18a601' : legion.status === '2' ? 'orange' : '#47010b' }}
+                                                    sx={{ background: legion.status === '1' ? '#18a601' : legion.status === '2' ? '#9c5c00' : '#47010b' }}
                                                 >
                                                     Legion #{legion.id} {legion.name}
                                                 </MenuItem>
@@ -176,13 +176,13 @@ const Monsters = () => {
                                 <Typography variant='h5'>{curLegion?.attackPower} AP</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{curLegion?.beasts.length}/{createlegions.main.maxAvailableDragCount}</Typography>
+                                <Typography variant='h5'>W {curLegion?.warriors.length}/{warriors.length + mintedWarriorCnt}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{curLegion?.warriors.length}/{warriors.length + mintedWarriorCnt}</Typography>
+                                <Typography variant='h5'>B {curLegion?.beasts.length}/{createlegions.main.maxAvailableDragCount}</Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='h5'>{curLegion?.supplies} dS</Typography>
+                                <Typography variant='h5'>{curLegion?.supplies} D</Typography>
                             </Grid>
                         </Grid>
                     </Card>
