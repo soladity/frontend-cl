@@ -124,7 +124,13 @@ export default function UnstyledButtonCustom(props: any) {
   const [showAnimation, setShowAnimation] = React.useState(false)
   if (showAnimation) {
     return (
-      <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(false)}>
+      <SvgButton
+        style={{ margin: 10 }}
+        onClick={() => {
+          setShowAnimation(false)
+          localStorage.setItem('showAnimation', '0')
+        }}
+      >
         <div style={{ color: '#caa959' }}>
           <div style={{ textAlign: 'center', fontSize: 32 }}>
             <FaVideo />
@@ -137,7 +143,14 @@ export default function UnstyledButtonCustom(props: any) {
     );
   } else {
     return (
-      <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(true)}>
+
+      <SvgButton
+        style={{ margin: 10 }}
+        onClick={() => {
+          setShowAnimation(true)
+          localStorage.setItem('showAnimation', '1')
+        }}
+      >
         <div style={{ color: '#caa959' }}>
           <div style={{ textAlign: 'center', fontSize: 32 }}>
             <FaVideoSlash />

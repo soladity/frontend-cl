@@ -3,6 +3,13 @@ import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from 
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
 import { getTranslation } from '../../utils/translation';
+import { useWeb3React } from '@web3-react/core';
+
+import { getBeastTokenIds, getBeastToken, getWarriorTokenIds, getWarriorToken } from '../../hooks/contractFunction';
+import { useBeast, useWarrior, useWeb3 } from '../../hooks/useContract';
+
+import { useSelector } from 'react-redux'
+
 
 const useStyles = makeStyles({
     root: {
@@ -24,26 +31,32 @@ const useStyles = makeStyles({
         '&:hover': {
             background: 'radial-gradient(#ab973c, #743700)'
         },
-        border: '1px solid #9d4a00',
-        color: 'white'
+        border: '1px solid white !important',
+        color: 'white !important',
+        textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
     },
     "@keyframes Flash": {
         "0%": {
-            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
+            background: 'linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "50%": {
-            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
+            background: 'linear-gradient(360deg, #973b04, #ffffff29), radial-gradient(#db5300, #ecff0e)',
             boxShadow: '0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         },
         "100%": {
-            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
+            background: 'linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)',
             boxShadow: '0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset'
         }
     }
 });
 
 const YourAchievements = () => {
+    const { reloadContractStatus } = useSelector((state: any) => state.contractReducer)
+
+    const {
+        account,
+    } = useWeb3React();
 
     const classes = useStyles();
 
@@ -58,6 +71,45 @@ const YourAchievements = () => {
     };
 
     const openYourAchievement = Boolean(anchorElYourAchievement);
+
+    //Beast Contract
+    const beastContract = useBeast()
+    const warriorContract = useWarrior()
+    const web3 = useWeb3()
+
+    const [ownBeastWith20, setOwnBeastWith20] = React.useState(false)
+    const [ownWarriorWith6, setOwnWarriorWith6] = React.useState(false)
+
+    const getBeastStatus = async () => {
+        const ids = await getBeastTokenIds(web3, beastContract, account);
+        console.log(ids)
+        for (let i = 0; i < ids.length; i++) {
+            const beast = await getBeastToken(web3, beastContract, ids[i]);
+            console.log(beast.capacity)
+            if (beast.capacity === '4') {
+                setOwnBeastWith20(true)
+                return
+            }
+        }
+    }
+
+    const getWarriorStatus = async () => {
+        const ids = await getWarriorTokenIds(web3, warriorContract, account)
+        console.log(ids)
+        for (let i = 0; i < ids.length; i++) {
+            const warrior = await getWarriorToken(web3, warriorContract, ids[i]);
+            console.log(warrior)
+            if (warrior.strength === '6') {
+                setOwnWarriorWith6(true)
+                return
+            }
+        }
+    }
+
+    React.useEffect(() => {
+        getBeastStatus()
+        getWarriorStatus()
+    }, [reloadContractStatus])
 
     return (
         <Box sx={{ position: 'fixed', bottom: 20, right: 20 }}>
@@ -85,7 +137,7 @@ const YourAchievements = () => {
                 onClose={handlePopoverCloseYourAchievement}
                 disableRestoreFocus
             >
-                <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a beast with 20 capacity.</Typography>
+                <Typography sx={{ p: 1 }}><Checkbox checked={ownBeastWith20} /> Own a beast with 20 capacity.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a level 6 warrior.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own 10 legions of 30K+ AP.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Hunt monster 22 successfully.</Typography>
