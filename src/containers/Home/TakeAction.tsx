@@ -20,14 +20,14 @@ function TransitionUp(props: TransitionProps) {
 
 const useStyles = makeStyles({
     legionBtn: {
-        background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#ecff0e, #a54e00)',
+        background: 'linear-gradient(360deg, #973b04, #ffffff29), radial-gradient(#db5300, #ecff0e)',
         transition: '.4s all',
         '&:hover': {
-            background: 'linear-gradient(360deg, #a54e00, #ffffff29), radial-gradient(#cadb0f, #64370f)',
+            background: 'linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)',
             transition: '.4s all',
         },
-        border: '1px solid #9d4a00',
-        color: 'white'
+        color: 'white !important',
+        textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
     },
     root: {
         display: 'flex',
@@ -196,7 +196,7 @@ const TakeAction = () => {
                                         <Box sx={{ display: 'flex' }}>
                                             <Box sx={{ marginLeft: 'auto', cursor: 'pointer', marginRight: 1, marginTop: 1 }}><FaTimes onClick={handlePopoverCloseSummonBeast} /></Box>
                                         </Box>
-                                        <DialogTitle>{getTranslation('takeActionSummonBeast')}</DialogTitle>
+                                        <DialogTitle>{getTranslation('takeActionSummonBeastQuantity')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
                                             <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(1, TransitionUp)}>1</Button>
                                             <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(5, TransitionUp)}>5</Button>
@@ -225,7 +225,7 @@ const TakeAction = () => {
                                         <Box sx={{ display: 'flex' }}>
                                             <Box sx={{ marginLeft: 'auto', cursor: 'pointer', marginRight: 1, marginTop: 1 }}><FaTimes onClick={handlePopoverCloseSummonWarrior} /></Box>
                                         </Box>
-                                        <DialogTitle>{getTranslation('takeActionSummonWarrior')}</DialogTitle>
+                                        <DialogTitle>{getTranslation('takeActionSummonWarriorQuantity')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
                                             <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(1, TransitionUp)}>1</Button>
                                             <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(5, TransitionUp)}>5</Button>

@@ -793,7 +793,7 @@ export const translations = {
     ph: ''
   },
   'LEGIONS': {
-    en: 'LEGIONS',
+    en: 'LEGIONS READY TO HUNT',
     es: '',
     cn: '',
     pt: '',
@@ -852,8 +852,32 @@ export const translations = {
     pl: '',
     ph: ''
   },
+  'takeActionSummonBeastQuantity': {
+    en: 'SUMMON BEAST QUANTITY',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'takeActionSummonWarrior': {
     en: 'SUMMON WARRIOR',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'takeActionSummonWarriorQuantity': {
+    en: 'SUMMON WARRIOR QUANTITY',
     es: '',
     cn: '',
     pt: '',
@@ -1058,7 +1082,7 @@ export const translations = {
     ph: ''
   },
   'summoningFee': {
-    en: 'SUMMOING FEE',
+    en: 'SUMMONING FEE',
     es: '',
     cn: '',
     pt: '',
