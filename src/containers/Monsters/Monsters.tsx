@@ -165,7 +165,7 @@ const Monsters = () => {
                                                     key={index}
                                                     sx={{ background: legion.status === '1' ? '#18a601' : legion.status === '2' ? '#9c5c00' : '#47010b' }}
                                                 >
-                                                    Legion #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name}
                                                 </MenuItem>
                                             ))
                                         }
