@@ -1008,6 +1008,7 @@ export const translations = {
     pl: '',
     ph: ''
   },
+
   'nadodoWatching': {
     en: 'NADODO IS WATCHING',
     es: '',
@@ -1106,6 +1107,18 @@ export const translations = {
   },
   '28DaysSuppliesFee': {
     en: '28 Days Supplies Fee',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'noMintedLegion': {
+    en: 'You need to create a legion first to start hunting!',
     es: '',
     cn: '',
     pt: '',
