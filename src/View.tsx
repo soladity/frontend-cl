@@ -13,7 +13,8 @@ const useStyle = makeStyles({
         background: "url('./assets/images/nicah_background.jpg')",
         backgroundAttachment: 'fixed',
         backgroundSize: '100% 100%',
-        height: '100%'
+        height: '100%',
+        overflowY: 'auto'
     }
 })
 
@@ -23,7 +24,7 @@ const View = () => {
     const classes = useStyle()
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', position: 'fixed', top: 0, left: 0, bottom: 0, right: 0 }}>
             <Box
                 component="header"
                 sx={{
