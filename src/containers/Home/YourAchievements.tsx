@@ -5,8 +5,11 @@ import { makeStyles } from '@mui/styles';
 import { getTranslation } from '../../utils/translation';
 import { useWeb3React } from '@web3-react/core';
 
-import { getBeastTokenIds, getBeastToken } from '../../hooks/contractFunction';
+import { getBeastTokenIds, getBeastToken, getWarriorTokenIds, getWarriorToken } from '../../hooks/contractFunction';
 import { useBeast, useWarrior, useWeb3 } from '../../hooks/useContract';
+
+import { useSelector } from 'react-redux'
+
 
 const useStyles = makeStyles({
     root: {
@@ -30,7 +33,7 @@ const useStyles = makeStyles({
         },
         border: '1px solid white !important',
         color: 'white !important',
-        textShadow: "3px 3px 0 #00000085"
+        textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
     },
     "@keyframes Flash": {
         "0%": {
@@ -49,6 +52,7 @@ const useStyles = makeStyles({
 });
 
 const YourAchievements = () => {
+    const { reloadContractStatus } = useSelector((state: any) => state.contractReducer)
 
     const {
         account,
@@ -70,22 +74,42 @@ const YourAchievements = () => {
 
     //Beast Contract
     const beastContract = useBeast()
+    const warriorContract = useWarrior()
     const web3 = useWeb3()
 
     const [ownBeastWith20, setOwnBeastWith20] = React.useState(false)
+    const [ownWarriorWith6, setOwnWarriorWith6] = React.useState(false)
 
-    const getStatus = async () => {
+    const getBeastStatus = async () => {
         const ids = await getBeastTokenIds(web3, beastContract, account);
         console.log(ids)
         for (let i = 0; i < ids.length; i++) {
             const beast = await getBeastToken(web3, beastContract, ids[i]);
-            console.log(beast)
+            console.log(beast.capacity)
+            if (beast.capacity === '4') {
+                setOwnBeastWith20(true)
+                return
+            }
+        }
+    }
+
+    const getWarriorStatus = async () => {
+        const ids = await getWarriorTokenIds(web3, warriorContract, account)
+        console.log(ids)
+        for (let i = 0; i < ids.length; i++) {
+            const warrior = await getWarriorToken(web3, warriorContract, ids[i]);
+            console.log(warrior)
+            if (warrior.strength === '6') {
+                setOwnWarriorWith6(true)
+                return
+            }
         }
     }
 
     React.useEffect(() => {
-        getStatus()
-    }, [])
+        getBeastStatus()
+        getWarriorStatus()
+    }, [reloadContractStatus])
 
     return (
         <Box sx={{ position: 'fixed', bottom: 20, right: 20 }}>
@@ -113,7 +137,7 @@ const YourAchievements = () => {
                 onClose={handlePopoverCloseYourAchievement}
                 disableRestoreFocus
             >
-                <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a beast with 20 capacity.</Typography>
+                <Typography sx={{ p: 1 }}><Checkbox checked={ownBeastWith20} /> Own a beast with 20 capacity.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own a level 6 warrior.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Own 10 legions of 30K+ AP.</Typography>
                 <Typography sx={{ p: 1 }}><Checkbox checked={false} /> Hunt monster 22 successfully.</Typography>
