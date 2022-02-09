@@ -467,7 +467,7 @@ export const translations = {
     pl: 'Ładowanie bestii i wojowników...',
     ph: 'load ng mga Hayop at Mandirigma...'
   },
-  'mintLegionsBtn': {
+  'createLegionsBtn': {
     en: 'Create legion with ',
     es: 'Crea legión con ',
     cn: '创建军团 ',
@@ -984,8 +984,117 @@ export const translations = {
     pl: '',
     ph: ''
   },
+
+  'nadodoWatching': {
+    en: 'NADODO IS WATCHING',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'marketplaceTax': {
+    en: 'MARKETPLACE TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'huntTax': {
+    en: 'HUNT TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'buyTax': {
+    en: 'BUY TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'sellTax': {
+    en: 'SELL TAX',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'legionDamagePerHunt': {
+    en: 'Legion Damage Per Hunt',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'summoningFee': {
+    en: 'SUMMOING FEE',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  '14DaysSuppliesFee': {
+    en: '14 Days Supplies Fee',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  '28DaysSuppliesFee': {
+    en: '28 Days Supplies Fee',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'noMintedLegion': {
-    en: 'You have no minted Legion, yet!',
+    en: 'You need to create a legion first to start hunting!',
     es: '',
     cn: '',
     pt: '',

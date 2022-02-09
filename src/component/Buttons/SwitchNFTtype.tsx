@@ -1,50 +1,45 @@
 import * as React from 'react';
 import ButtonUnstyled, {
-    ButtonUnstyledProps,
-    buttonUnstyledClasses,
+  ButtonUnstyledProps,
+  buttonUnstyledClasses,
 } from '@mui/base/ButtonUnstyled';
 import { styled, Theme } from '@mui/system';
 import {
-    FaDiscord,
-    FaTwitter,
-    FaTelegram,
-    FaYoutube,
-    FaMedium,
-    FaEarlybirds,
-    FaDrupal
+  FaVideo,
+  FaVideoSlash
 } from 'react-icons/fa';
 
 
 const ButtonRoot = React.forwardRef(function ButtonRoot(
-    props: React.PropsWithChildren<{}>,
-    ref: React.ForwardedRef<any>,
+  props: React.PropsWithChildren<{}>,
+  ref: React.ForwardedRef<any>,
 ) {
-    const { children, ...other } = props;
+  const { children, ...other } = props;
 
-    return (
-        <svg width="150" height="100" {...other} ref={ref}>
-            <polygon points="0,100 0,0 150,0 150,100" className="bg" />
-            <polygon points="0,100 0,0 150,0 150,100" className="borderEffect" />
-            <foreignObject x="0" y="0" width="150" height="100">
-                <div className="content">{children}</div>
-            </foreignObject>
-        </svg>
-    );
+  return (
+    <svg width="150" height="100" {...other} ref={ref}>
+      <polygon points="0,100 0,0 150,0 150,100" className="bg" />
+      <polygon points="0,100 0,0 150,0 150,100" className="borderEffect" />
+      <foreignObject x="0" y="0" width="150" height="100">
+        <div className="content">{children}</div>
+      </foreignObject>
+    </svg>
+  );
 });
 
 const blue = {
-    50: '#F0F7FF',
-    100: '#C2E0FF',
-    200: '#99CCF3',
-    400: '#3399FF',
-    500: '#007FFF',
-    600: '#0072E5',
-    800: '#004C99',
-    900: '#221c5a',
+  50: '#F0F7FF',
+  100: '#C2E0FF',
+  200: '#99CCF3',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  800: '#004C99',
+  900: '#623313',
 };
 
 const CustomButtonRoot = styled(ButtonRoot)(
-    ({ theme }: { theme: Theme }) => `
+  ({ theme }: { theme: Theme }) => `
   overflow: visible;
   cursor: pointer;
   --main-color: ${theme.palette.mode === 'light' ? blue[600] : blue[100]};
@@ -119,39 +114,39 @@ const CustomButtonRoot = styled(ButtonRoot)(
 );
 
 const SvgButton = React.forwardRef(function SvgButton(
-    props: ButtonUnstyledProps,
-    ref: React.ForwardedRef<any>,
+  props: ButtonUnstyledProps,
+  ref: React.ForwardedRef<any>,
 ) {
-    return <ButtonUnstyled {...props} component={CustomButtonRoot} ref={ref} />;
+  return <ButtonUnstyled {...props} component={CustomButtonRoot} ref={ref} />;
 });
 
 export default function UnstyledButtonCustom(props: any) {
-    const [showAnimation, setShowAnimation] = React.useState(false)
-    if (showAnimation) {
-        return (
-            <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(false)}>
-                <div>
-                    <div style={{ textAlign: 'center', fontSize: 32 }}>
-                        <FaEarlybirds />
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        NFT - GIF
-                    </div>
-                </div>
-            </SvgButton>
-        );
-    } else {
-        return (
-            <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(true)}>
-                <div>
-                    <div style={{ textAlign: 'center', fontSize: 32 }}>
-                        <FaDrupal />
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        NFT - JPEG
-                    </div>
-                </div>
-            </SvgButton>
-        );
-    }
+  const [showAnimation, setShowAnimation] = React.useState(false)
+  if (showAnimation) {
+    return (
+      <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(false)}>
+        <div style={{ color: '#caa959' }}>
+          <div style={{ textAlign: 'center', fontSize: 32 }}>
+            <FaVideo />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            NFT Videos
+          </div>
+        </div>
+      </SvgButton>
+    );
+  } else {
+    return (
+      <SvgButton style={{ margin: 10 }} onClick={() => setShowAnimation(true)}>
+        <div style={{ color: '#caa959' }}>
+          <div style={{ textAlign: 'center', fontSize: 32 }}>
+            <FaVideoSlash />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            NFT Images
+          </div>
+        </div>
+      </SvgButton>
+    );
+  }
 }
