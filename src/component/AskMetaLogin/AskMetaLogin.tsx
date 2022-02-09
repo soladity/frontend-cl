@@ -26,7 +26,7 @@ const useStyles = makeStyles({
         },
     },
     logo: {
-        animation: `$LogoBang cubic-bezier(0.4, 0, 1, 1) 2s`,
+        animation: `$LogoBang linear 1s`,
         // opacity: 0
     },
     fadeAnimation: {
@@ -34,36 +34,25 @@ const useStyles = makeStyles({
     },
     "@keyframes LogoBang": {
         "0%": {
-            opacity: 0,
-            transform: "scale(8)"
+            transform: "scale(12)"
         },
-        "35%": {
-            opacity: 1,
+        "15%": {
             transform: "scale(1)"
         },
-        "40%": {
-            transform: "translate(5px, 0px)"
-        },
-        "45%": {
-            transform: "translate(-5px, 0px)"
-        },
-        "50%": {
+        "35%": {
             transform: "translate(5px, 0px)"
         },
         "55%": {
             transform: "translate(-5px, 0px)"
         },
-        "60%": {
+        "70%": {
             transform: "translate(5px, 0px)"
         },
-        "65%": {
+        "80%": {
             transform: "translate(-5px, 0px)"
         },
-        "70%": {
+        "90%": {
             transform: "translate(0px, 0px)"
-        },
-        "75%": {
-            transform: "translate(0x, 0px)"
         },
         "100%": {
             opacity: 1,
@@ -160,7 +149,7 @@ const AskMetaLogin = () => {
                     <Grid item md={2}>
 
                     </Grid>
-                    <Grid item md={8} className={classes.fadeAnimation}>
+                    <Grid item md={8}>
                         <Grid
                             container
                             spacing={2}
@@ -177,20 +166,22 @@ const AskMetaLogin = () => {
                                 xs={12}
                                 sm={12}
                             >
-                                {
-                                    <>
-                                        <img
-                                            src={image.DRAGON_HOVER}
-                                            style={{ width: '100%' }}
-                                            hidden={!(loading || mouseOver)}
-                                        />
-                                        <img
-                                            src={image.DRAGON_INIT}
-                                            style={{ width: '100%' }}
-                                            hidden={loading || mouseOver}
-                                        />
-                                    </>
-                                }
+                                <Box sx={{ paddingTop: '50%', position: 'relative' }}>
+                                    {
+                                        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0 }} className={classes.fadeAnimation}>
+                                            <img
+                                                src={image.DRAGON_HOVER}
+                                                style={{ width: '100%' }}
+                                                hidden={!(loading || mouseOver)}
+                                            />
+                                            <img
+                                                src={image.DRAGON_INIT}
+                                                style={{ width: '100%' }}
+                                                hidden={loading || mouseOver}
+                                            />
+                                        </Box>
+                                    }
+                                </Box>
                             </Grid>
                             {/* <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Box
