@@ -793,7 +793,7 @@ export const translations = {
     ph: ''
   },
   'LEGIONS': {
-    en: 'LEGIONS',
+    en: 'LEGIONS READY TO HUNT',
     es: '',
     cn: '',
     pt: '',
@@ -1081,7 +1081,7 @@ export const translations = {
     ph: ''
   },
   'summoningFee': {
-    en: 'SUMMOING FEE',
+    en: 'SUMMONING FEE',
     es: '',
     cn: '',
     pt: '',

@@ -3,7 +3,9 @@ import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from 
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
 import { getTranslation } from '../../utils/translation';
+import { useWeb3React } from '@web3-react/core';
 
+import { getBeastTokenIds, getBeastToken } from '../../hooks/contractFunction';
 import { useBeast, useWarrior, useWeb3 } from '../../hooks/useContract';
 
 const useStyles = makeStyles({
@@ -26,8 +28,8 @@ const useStyles = makeStyles({
         '&:hover': {
             background: 'radial-gradient(#ab973c, #743700)'
         },
-        border: '1px solid #9d4a00',
-        color: 'white'
+        border: '1px solid white !important',
+        color: 'white !important'
     },
     "@keyframes Flash": {
         "0%": {
@@ -46,6 +48,10 @@ const useStyles = makeStyles({
 });
 
 const YourAchievements = () => {
+
+    const {
+        account,
+    } = useWeb3React();
 
     const classes = useStyles();
 
@@ -67,12 +73,16 @@ const YourAchievements = () => {
 
     const [ownBeastWith20, setOwnBeastWith20] = React.useState(false)
 
-    const getStatus = () => {
-
+    const getStatus = async () => {
+        const ids = await getBeastTokenIds(web3, beastContract, account);
+        for (let i = 0; i < ids.length; i++) {
+            const beast = await getBeastToken(web3, beastContract, ids[i]);
+            console.log(beast)
+        }
     }
 
     React.useEffect(() => {
-
+        getStatus()
     }, [])
 
     return (

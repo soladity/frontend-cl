@@ -26,8 +26,8 @@ const useStyles = makeStyles({
             background: 'linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)',
             transition: '.4s all',
         },
-        border: '1px solid #9d4a00',
-        color: 'white !important'
+        color: 'white !important',
+        '-webkit-text-stroke': '1px #e89f30'
     },
     root: {
         display: 'flex',
