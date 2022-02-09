@@ -26,49 +26,40 @@ const useStyles = makeStyles({
         },
     },
     logo: {
-        animation: `$LogoBang cubic-bezier(0.4, 0, 1, 1) 3s`,
+        animation: `$LogoBang cubic-bezier(0.4, 0, 1, 1) 2s`,
     },
     fadeAnimation: {
         animation: `$fadeIn cubic-bezier(0.4, 0, 1, 1) 3s`,
     },
     "@keyframes LogoBang": {
         "0%": {
-            transform: "scale(5)"
+            transform: "scale(8)"
         },
-        "20%": {
-            transform: "scale(0.1)"
-        },
-        "30%": {
-            transform: "scale(3)"
-        },
-        "40%": {
-            transform: "scale(0.6)"
-        },
-        "50%": {
+        "15%": {
             transform: "scale(1)"
         },
-        "60%": {
+        "20%": {
             transform: "translate(5px, 0px)"
         },
-        "65%": {
+        "25%": {
             transform: "translate(-5px, 0px)"
         },
-        "70%": {
+        "30%": {
             transform: "translate(5px, 0px)"
         },
-        "75%": {
+        "35%": {
             transform: "translate(-5px, 0px)"
         },
-        "80%": {
+        "40%": {
             transform: "translate(5px, 0px)"
         },
-        "85%": {
+        "45%": {
             transform: "translate(-5px, 0px)"
         },
-        "90%": {
+        "50%": {
             transform: "translate(0px, 0px)"
         },
-        "95%": {
+        "55%": {
             transform: "translate(0x, 0px)"
         },
         "100%": {
