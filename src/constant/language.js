@@ -1092,5 +1092,17 @@ export const translations = {
     de: '',
     pl: '',
     ph: ''
+  },
+  'noMintedLegion': {
+    en: 'You need to create a legion first to start hunting!',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   }
 }

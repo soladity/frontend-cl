@@ -19,9 +19,10 @@ type CardProps = {
 	supplies: string;
 	attackPower: number;
 	handleOpenSupply: Function;
+	handleUpdate: Function
 };
 
-export default function WarriorCard(props: CardProps) {
+export default function LegionCard(props: CardProps) {
 	const {
 		id,
 		image,
@@ -30,7 +31,8 @@ export default function WarriorCard(props: CardProps) {
 		warriors,
 		supplies,
 		attackPower,
-		handleOpenSupply
+		handleOpenSupply,
+		handleUpdate
 	} = props;
 
 	const [loaded, setLoaded] = React.useState(false);
@@ -189,7 +191,7 @@ export default function WarriorCard(props: CardProps) {
 				}
 			</Box>
 			<Box sx={{ display: 'flex', position: 'absolute', bottom: '30px', left: '20px', cursor: 'pointer' }}>
-				<IconButton aria-label="claim" component="span" sx={{ padding: 0 }}>
+				<IconButton aria-label="claim" component="span" sx={{ padding: 0 }} onClick={() => { handleUpdate() }}>
 					<CachedIcon />
 				</IconButton>
 			</Box>
