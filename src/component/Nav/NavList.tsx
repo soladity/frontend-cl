@@ -187,10 +187,10 @@ const NavList = (props: any) => {
 				</Menu>
 				{navConfig.navBar.left.map((navItem, index) => (
 					navItem.type === "privacy" &&
-					<NavLink key={index} to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
+					<NavLink key={index} to={navItem.path || ''} style={{ color: 'gray' }} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
 						<Tooltip title={navItem.title || ""} placement="right">
 							<ListItemButton>
-								<ListItemText primary={getTranslation(navItem.title)} />
+								<ListItemText primary={getTranslation(navItem.title)} sx={{ fontSize: '0.7rem' }} />
 							</ListItemButton>
 						</Tooltip>
 					</NavLink>
@@ -198,9 +198,11 @@ const NavList = (props: any) => {
 			</Box>
 			{navConfig.navBar.left.map((navItem, index) => (
 				navItem.type === "footer" &&
-				<Card key={index} sx={{ m: 2, p: 2 }}>
-					<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
-				</Card>
+				<a href='https://cryptogames.agency' target='_blank' className='non-style' key={index}>
+					<Card key={index} sx={{ m: 2, p: 2 }}>
+						<Typography variant="subtitle2" className={classes.root}>{getTranslation(navItem.title)}</Typography>
+					</Card>
+				</a>
 			))}
 		</List>
 	</div>

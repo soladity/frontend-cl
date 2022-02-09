@@ -74,15 +74,15 @@ export const navConfig = {
             },
             {
                 type: 'navlink',
-                title: 'beasts',
-                icon: 'beasts',
-                path: '/beasts'
-            },
-            {
-                type: 'navlink',
                 title: 'warriors',
                 icon: 'warriors',
                 path: '/warriors'
+            },
+            {
+                type: 'navlink',
+                title: 'beasts',
+                icon: 'beasts',
+                path: '/beasts'
             },
             {
                 type: 'navlink',
@@ -105,15 +105,15 @@ export const navConfig = {
             },
             {
                 type: 'link',
-                title: 'beasts',
-                icon: 'beasts',
-                path: '/beasts'
-            },
-            {
-                type: 'link',
                 title: 'warriors',
                 icon: 'warriors',
                 path: '/warrios'
+            },
+            {
+                type: 'link',
+                title: 'beasts',
+                icon: 'beasts',
+                path: '/beasts'
             },
             {
                 type: 'link',

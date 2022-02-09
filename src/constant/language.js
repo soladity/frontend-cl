@@ -983,5 +983,29 @@ export const translations = {
     de: '',
     pl: '',
     ph: ''
+  },
+  'summoningBeasts': {
+    en: 'Summoning Beasts...',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'summoningWarriors': {
+    en: 'Summoning Warriors...',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   }
 }

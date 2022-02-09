@@ -38,6 +38,7 @@ const Beasts = () => {
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
+	const [mintLoading, setMintLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const beastContract = useBeast();
@@ -62,12 +63,14 @@ const Beasts = () => {
 	};
 
 	const handleMint = async (amount: Number) => {
+		setMintLoading(true);
 		const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
 		if (allowance === '0') {
 			await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
 		}
 		await mintBeast(web3, beastContract, account, amount);
 		getBalance();
+		setMintLoading(false);
 	}
 
 	const getBalance = async () => {
@@ -165,7 +168,7 @@ const Beasts = () => {
 			</Grid>
 		</Grid>
 		{
-			loading === false &&
+			(loading === false && mintLoading === false) &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
 					<Grid item md={12}>
@@ -199,6 +202,26 @@ const Beasts = () => {
 			<>
 				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
 					<Typography variant='h4' >{getTranslation('loadingBeasts')}</Typography>
+				</Grid>
+				<Grid container sx={{ justifyContent: 'center' }}>
+					<Grid item xs={1}>
+						<Card>
+							<CardMedia
+								component="img"
+								image="/assets/images/loading.gif"
+								alt="Loading"
+								loading="lazy"
+							/>
+						</Card>
+					</Grid>
+				</Grid>
+			</>
+		}
+		{
+			mintLoading === true &&
+			<>
+				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
+					<Typography variant='h4' >{getTranslation('summoningBeasts')}</Typography>
 				</Grid>
 				<Grid container sx={{ justifyContent: 'center' }}>
 					<Grid item xs={1}>

@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import LegionCard from '../../component/Cards/LegionCard';
 import { useBeast, useWarrior, useLegion, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getWarriorBalance, getLegionTokenIds, getLegionToken, addSupply, getBaseUrl } from '../../hooks/contractFunction';
+import { getBeastBalance, getWarriorBalance, getLegionTokenIds, getLegionToken, addSupply, getBaseUrl, getLegionImage, getHuntStatus } from '../../hooks/contractFunction';
 import { meta_constant } from '../../config/meta.config';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
@@ -41,7 +41,7 @@ const Legions = () => {
 	const [openSupply, setOpenSupply] = React.useState(false);
 	const [selectedLegion, setSelectedLegion] = React.useState(0);
 	const [loading, setLoading] = React.useState(false);
-	const [apValue, setApValue] = React.useState<number[]>([2000, 250000]);
+	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
 
 	const classes = useStyles();
 	const legionContract = useLegion();
@@ -63,10 +63,14 @@ const Legions = () => {
 		const ids = await getLegionTokenIds(web3, legionContract, account);
 		let amount = 0;
 		let legion;
+		let image;
+		let huntStatus;
 		let tempLegions = [];
 		for (let i = 0; i < ids.length; i++) {
 			legion = await getLegionToken(web3, legionContract, ids[i]);
-			tempLegions.push({ ...legion, id: ids[i] });
+			image = await getLegionImage(web3, legionContract, legion.attackPower);
+			huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
+			tempLegions.push({ ...legion, id: ids[i], ...image, huntStatus: huntStatus });
 			amount += legion.attackPower;
 		}
 		setTotalPower(amount);
@@ -176,10 +180,10 @@ const Legions = () => {
 							{
 								legions.filter((item: any, index) => index < 3).map((item: any, index) => (
 									<Box sx={{ display: 'flex' }} key={index}>
-										<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+										<Typography variant='subtitle1'>
 											{item.name}
 										</Typography>
-										<Typography variant='h6' color='secondary' sx={{ fontWeight: 'bold', ml: 2 }}>
+										<Typography variant='subtitle1' color='secondary' sx={{ ml: 2 }}>
 											{formatNumber(item.attackPower)} AP
 										</Typography>
 									</Box>
@@ -200,10 +204,10 @@ const Legions = () => {
 									getAriaLabel={() => "Custom marks"}
 									// defaultValue={20}
 									value={apValue}
-									min={2000}
+									min={0}
 									max={250000}
 									marks={[
-										{ value: 2000, label: '2K' },
+										{ value: 2000, label: '0' },
 										{ value: 250000, label: formatNumber('250K+') },
 									]}
 									step={1}
@@ -232,7 +236,7 @@ const Legions = () => {
 								</ButtonGroup>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} md={3}>
+						<Grid item xs={12} md={3} sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
 							<FormControl component="fieldset" sx={{ width: '90%' }}>
 								<FormLabel component="legend">{getTranslation('hideWeakLegions')}:</FormLabel>
 							</FormControl>
@@ -245,9 +249,9 @@ const Legions = () => {
 					</Grid>
 					<Grid container spacing={4} sx={{ mb: 4, flexDirection: highest ? 'row' : 'row-reverse', justifyContent: highest ? 'flex-start' : 'flex-end' }}>
 						{
-							legions.filter((item: any) => apValue[0] < parseInt(item.attackPower) && (apValue[1] === 250000 ? true : apValue[1] > parseInt(item.attackPower))).filter((item: any) => hideWeak === true ? item.attackPower >= 2000 : true).map((item: any, index) => (
+							legions.filter((item: any) => apValue[0] < parseInt(item.attackPower) && (apValue[1] === 250000 ? true : apValue[1] > parseInt(item.attackPower))).filter((item: any) => hideWeak === true ? item.attackPower >= 2000 : true).filter((item: any) => huntStatus === item.huntStatus || huntStatus === '').map((item: any, index) => (
 								<Grid item xs={12} sm={6} md={4} key={index}>
-									<LegionCard id={item['id']} image={baseUrl + 'QmdnZYpBhNuxjieUZrnR14weZtiXRdz75SRAfhEAkissMm'} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} supplies={item['supplies']} attackPower={item['attackPower']} handleOpenSupply={handleOpenSupply} />
+									<LegionCard id={item['id']} image={baseUrl + item.image} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} handleOpenSupply={handleOpenSupply} />
 								</Grid>
 							))
 						}
