@@ -186,7 +186,7 @@ const TakeAction = () => {
                                         aria-describedby={'summon-beast-id'}
                                         sx={{ fontSize: 14, fontWeight: 'bold', width: '100%', marginBottom: 1 }}
                                     >
-                                        {getTranslation('takeActionSummonBeast')}
+                                        {getTranslation('summonBeast')}
                                     </CommonBtn>
                                     <Popover
                                         id={'summon-beast-id'}
@@ -240,7 +240,7 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <Button className={classes.legionBtn} aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('takeActionSummonWarrior')}
+                                        {getTranslation('summonWarrior')}
                                     </Button>
                                     <Popover
                                         id={'summon-warrior-id'}
@@ -294,10 +294,10 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('takeActionCreateLegion')}
+                                        {getTranslation('createLegion')}
                                     </Button>
                                     <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                        {getTranslation('takeActionHunt')}
+                                        {getTranslation('hunt')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -315,7 +315,7 @@ const TakeAction = () => {
                                         {getTranslation('takeActionBuyLegions')}
                                     </Button>
                                     <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                        {getTranslation('takeActionBuyBlst')}
+                                        {getTranslation('buyBlst')}
                                     </Button>
                                 </Box>
                             </Box>

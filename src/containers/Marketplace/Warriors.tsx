@@ -10,7 +10,6 @@ import { meta_constant } from '../../config/meta.config';
 import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
-import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 
@@ -37,7 +36,8 @@ const Warriors = () => {
 
 	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
 	const [baseGifUrl, setBaseGifUrl] = React.useState('');
-	const [showMint, setShowMint] = React.useState(false);
+	const [sortAp, setSortAp] = React.useState(false);
+	const [sortBlst, setSortBlst] = React.useState(false);
 	const [balance, setBalance] = React.useState('0');
 	const [maxPower, setMaxPower] = React.useState(0);
 	const [warriors, setWarriors] = React.useState(Array);
@@ -59,15 +59,6 @@ const Warriors = () => {
 		}
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
-
-
-	const handleOpenMint = () => {
-		setShowMint(true);
-	};
-
-	const handleCloseMint = () => {
-		setShowMint(false);
-	};
 
 	const handleMint = async (amount: Number) => {
 		setMintLoading(true);
@@ -128,75 +119,9 @@ const Warriors = () => {
 					<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
 						<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
 							<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-								{getTranslation('warriors')}
+								{getTranslation('warriors')} {getTranslation('marketplace')}
 							</Typography>
 						</Box>
-					</Box>
-				</Card>
-			</Grid>
-			<Grid item xs={12} md={4}>
-				<Card>
-					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							{getTranslation('summonWarrior')}
-						</Typography>
-						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
-							<CommonBtn sx={{ fontWeight: 'bold' }}>
-								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
-									<HorizontalSplitIcon />
-								</IconButton>
-								{getTranslation('summonQuantity')}
-							</CommonBtn>
-							{
-								showMint &&
-								<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
-									<CommonBtn onClick={() => handleMint(1)}>
-										1
-									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(5)}>
-										5
-									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(10)}>
-										10
-									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(20)}>
-										20
-									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(100)}>
-										100
-									</CommonBtn>
-								</Box>
-							}
-						</Box>
-					</Box>
-				</Card>
-			</Grid>
-			<Grid item xs={12} md={4}>
-				<Card>
-					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							{getTranslation('currentWarriors')}
-						</Typography>
-						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
-							{balance}
-						</Typography>
-						<CommonBtn sx={{ fontWeight: 'bold' }}>
-							<NavLink to='/createlegions' className='non-style'>
-								{getTranslation('createLegion')}
-							</NavLink>
-						</CommonBtn>
-					</Box>
-				</Card>
-			</Grid>
-			<Grid item xs={12} md={4}>
-				<Card>
-					<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-						<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-							{getTranslation('attackPower')}
-						</Typography>
-						<Typography variant='h4' color='primary' sx={{ fontWeight: 'bold' }}>
-							{formatNumber(maxPower)}
-						</Typography>
 					</Box>
 				</Card>
 			</Grid>
@@ -230,7 +155,7 @@ const Warriors = () => {
 								max={6000}
 								marks={[
 									{ value: 500, label: '500' },
-									{ value: 6000, label: formatNumber('6000+') },
+									{ value: 6000, label: formatNumber('6K+') },
 								]}
 								step={1}
 								valueLabelDisplay="auto"
@@ -239,6 +164,24 @@ const Warriors = () => {
 							/>
 						</FormControl>
 					</Grid>
+					<Grid item xs={12} md={3}>
+						<FormControl component="fieldset" sx={{ width: '90%' }}>
+							<FormLabel component="legend">{getTranslation('sortByAp')}:</FormLabel>
+							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
+								<Button variant={!sortAp ? "contained" : "outlined"} onClick={() => { setSortAp(!sortAp) }}>{getTranslation('lowest')}</Button>
+								<Button variant={sortAp ? "contained" : "outlined"} onClick={() => { setSortAp(!sortAp) }}>{getTranslation('highest')}</Button>
+							</ButtonGroup>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} md={3}>
+							<FormControl component="fieldset" sx={{ width: '90%' }}>
+								<FormLabel component="legend">{getTranslation('sortBy')} $:</FormLabel>
+								<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
+									<Button variant={!sortBlst ? "contained" : "outlined"} onClick={() => { setSortBlst(!sortBlst) }}>{getTranslation('lowest')}</Button>
+									<Button variant={sortBlst ? "contained" : "outlined"} onClick={() => { setSortBlst(!sortBlst) }}>{getTranslation('highest')}</Button>
+								</ButtonGroup>
+							</FormControl>
+						</Grid>
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{

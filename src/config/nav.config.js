@@ -5,6 +5,7 @@ import Home from '../containers/Home/Home';
 import Beasts from '../containers/Beasts/Beasts';
 import Warriors from '../containers/Warriors/Warriors';
 import Legions from '../containers/Legions/Legions';
+import WarriorsMarketplace from '../containers/Marketplace/Warriors';
 import CreateLegions from '../containers/CreateLegions/CreateLegions';
 import UpdateLegions from '../containers/UpdateLegions';
 import Profile from '../containers/Profile/Profile';
@@ -38,6 +39,10 @@ export const navConfig = {
             path: '/legions',
             // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
             element: <Legions />
+        },
+        {
+            path: '/marketplace/warriors',
+            element: <WarriorsMarketplace />
         },
         {
             path: '/createlegions',
@@ -101,19 +106,19 @@ export const navConfig = {
                 title: 'market',
             },
             {
-                type: 'link',
+                type: 'navlink',
                 title: 'warriors',
                 icon: 'warriors',
-                path: '/warrios'
+                path: '/marketplace/warriors'
             },
             {
-                type: 'link',
+                type: 'navlink',
                 title: 'beasts',
                 icon: 'beasts',
                 path: '/beasts'
             },
             {
-                type: 'link',
+                type: 'navlink',
                 title: 'legions',
                 icon: 'legions',
                 path: '/legions'
