@@ -240,7 +240,7 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <CommonBtn aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('takeActionSummonWarrior')}
+                                        {getTranslation('summonWarrior')}
                                     </CommonBtn>
                                     <Popover
                                         id={'summon-warrior-id'}
