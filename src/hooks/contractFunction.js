@@ -224,3 +224,13 @@ export const getHuntStatus = async (web3, contract, id) => {
         status = 'red';
     return status;
 }
+
+export const addBeasts = async (web3, contract, account, legionID, beastsIDs) => {
+    const response = await contract.methods.addBeasts(legionID, beastsIDs).send({ from: account })
+    return response
+}
+
+export const addWarriors = async (web3, contract, account, legionID, warriosIDs) => {
+    const response = await contract.methods.addWarriors(legionID, warriosIDs).send({ from: account })
+    return response
+}
