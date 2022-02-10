@@ -63,7 +63,7 @@ const Home = () => {
                         <Grid item md={6} sm={8} xs={10}>
                             <YouTube
                                 videoId="j942wKiXFu8"
-                                opts={{ width: '100%', height: 'auto' }}
+                                opts={{ width: '100%', height: '100%' }}
                             />
                         </Grid>
                         <Grid item md={3} sm={2} xs={1}>
