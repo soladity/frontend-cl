@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { setReloadStatus } from '../../actions/contractActions'
 import { getTranslation } from '../../utils/translation';
 import { makeStyles } from '@mui/styles';
+import { NavLink } from 'react-router-dom';
 
 import CommonBtn from '../../component/Buttons/CommonBtn'
 
@@ -294,10 +295,14 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('takeActionCreateLegion')}
+                                        <NavLink to='/createlegions' className='non-style'>
+                                            {getTranslation('takeActionCreateLegion')}
+                                        </NavLink>
                                     </CommonBtn>
                                     <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%' }}>
-                                        {getTranslation('takeActionHunt')}
+                                        <NavLink to='/hunt' className='non-style'>
+                                            {getTranslation('takeActionHunt')}
+                                        </NavLink>
                                     </CommonBtn>
                                 </Box>
                             </Box>
