@@ -93,7 +93,7 @@ const YourInventory = () => {
                     {getTranslation('unClaimed')} $ : {unclaimedBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('taxDaysLeft')} : {taxLeftDays}
+                    {getTranslation('taxHuntsLeft')} : {taxLeftDays}
                 </Typography>
             </Box>
         </Card>

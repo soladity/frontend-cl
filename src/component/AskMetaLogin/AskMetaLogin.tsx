@@ -153,10 +153,10 @@ const AskMetaLogin = () => {
                     />
                 </Box>
                 <Grid container spacing={2}>
-                    <Grid item md={2}>
+                    <Grid item md={2} xs={12}>
 
                     </Grid>
-                    <Grid item md={8}>
+                    <Grid item md={8} xs={12}>
                         <Grid
                             container
                             spacing={2}
@@ -192,17 +192,13 @@ const AskMetaLogin = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item md={2}>
+                    <Grid item md={2} xs={12}>
                     </Grid>
                 </Grid>
                 <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>
                     <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
                         Need instructions? Read our Whitepaper
                     </a>
-                    <br></br>
-                    {/* <a href="https://cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
-                        Visit our homepage
-                    </a> */}
                 </Box>
             </Container>
             <Snackbar

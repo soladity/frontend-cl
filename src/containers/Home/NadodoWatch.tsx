@@ -35,10 +35,10 @@ const NadodoWatch = () => {
                     {getTranslation('summoningFee')} : 20$
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('14DaysSuppliesFee')} : 12$
+                    {getTranslation('SuppliesFee14Hunts')} : 12$
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('28DaysSuppliesFee')} : 16$
+                    {getTranslation('SuppliesFee28Hunts')} : 16$
                 </Typography>
             </Box>
         </Card>
