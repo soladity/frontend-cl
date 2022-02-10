@@ -63,7 +63,6 @@ const Home = () => {
                         <Grid item md={6} sm={8} xs={10}>
                             <YouTube
                                 videoId="j942wKiXFu8"
-                                onReady={(e) => e.target.playVideo()}
                                 opts={{ width: '100%', height: 'auto' }}
                             />
                         </Grid>
