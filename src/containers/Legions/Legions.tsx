@@ -320,13 +320,13 @@ const Legions = () => {
 				<DialogTitle>{getTranslation('buySupply')}</DialogTitle>
 				<List sx={{ pt: 0 }}>
 					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('7')}>
-						<ListItemText primary='7 days' />
+						<ListItemText primary='7 hunts' />
 					</ListItem>
 					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('14')}>
-						<ListItemText primary='14 days' />
+						<ListItemText primary='14 hunts' />
 					</ListItem>
 					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('28')}>
-						<ListItemText primary='28 days' />
+						<ListItemText primary='28 hunts' />
 					</ListItem>
 				</List>
 			</Dialog>

@@ -10,6 +10,65 @@ import { Box, Container, Snackbar, Grid, Alert } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../wallet';
 import Slide, { SlideProps } from '@mui/material/Slide';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+    loginToWhitePaperBtn: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        fontSize: 18,
+        color: '#565656',
+        textDecoration: 'none',
+        transition: '.4s all',
+        '&:hover': {
+            transition: '.4s all',
+            color: '#f89c35'
+        },
+    },
+    logo: {
+        animation: `$LogoBang linear 1s`,
+        // opacity: 0
+    },
+    fadeAnimation: {
+        animation: `$fadeIn cubic-bezier(0.4, 0, 1, 1) 3s`,
+    },
+    "@keyframes LogoBang": {
+        "0%": {
+            transform: "scale(12)"
+        },
+        "15%": {
+            transform: "scale(1)"
+        },
+        "35%": {
+            transform: "translate(5px, 0px)"
+        },
+        "55%": {
+            transform: "translate(-5px, 0px)"
+        },
+        "70%": {
+            transform: "translate(5px, 0px)"
+        },
+        "80%": {
+            transform: "translate(-5px, 0px)"
+        },
+        "90%": {
+            transform: "translate(0px, 0px)"
+        },
+        "100%": {
+            opacity: 1,
+            transform: "translate(0px, 0px)"
+        }
+    },
+    "@keyframes fadeIn": {
+        "0%": {
+            opacity: '0'
+        },
+        "100%": {
+            opacity: '1'
+        }
+    }
+
+})
 
 const image = {
     METAMASK: '/assets/images/metamask.jpg',
@@ -17,8 +76,8 @@ const image = {
     FOX_FAILED: '/assets/images/metamask-logo-bw.png',
     FOX_LOADING: '/assets/images/metamask-front.png',
     FOX_INIT: '/assets/images/metamask-logo.png',
-    DRAGON_INIT: '/assets/images/dragon1.jpg',
-    DRAGON_HOVER: '/assets/images/dragon2.jpg',
+    DRAGON_INIT: '/assets/images/login_page_without_mouse.jpg',
+    DRAGON_HOVER: '/assets/images/login_page_with_mouse_hovering_over_dragon.jpg',
     LOGO: '/assets/images/logo.png'
 };
 
@@ -47,6 +106,8 @@ const AskMetaLogin = () => {
         chainId
     } = useWeb3React();
 
+    const classes = useStyles()
+
     const [loading, setLoading] = React.useState(false);
     const [failed, setFailed] = React.useState(false);
     const [openSnackBar, setOpenSnackBar] = React.useState(false)
@@ -54,6 +115,8 @@ const AskMetaLogin = () => {
     const [mouseOver, setMouseOver] = React.useState(false)
 
     const [logoImage, setLogoImage] = React.useState(image.LOGO);
+
+    const [errorMsg, setErrorMsg] = React.useState('')
 
     const handleCloseClick = () => {
         setLoading(true);
@@ -63,6 +126,11 @@ const AskMetaLogin = () => {
     React.useEffect(() => {
         if (error) {
             if (error.toString().indexOf('NoEthereumProviderError') > -1) {
+                setErrorMsg('Please Install MetaMask!')
+                setOpenSnackBar(true)
+            }
+            if (error.toString().indexOf('UnsupportedChainIdError') > -1) {
+                setErrorMsg('Please choose Kovan Network!')
                 setOpenSnackBar(true)
             }
         }
@@ -81,6 +149,7 @@ const AskMetaLogin = () => {
                     <img
                         src={logoImage}
                         style={{ width: '60%' }}
+                        className={classes.logo}
                     />
                 </Box>
                 <Grid container spacing={2}>
@@ -88,81 +157,53 @@ const AskMetaLogin = () => {
 
                     </Grid>
                     <Grid item md={8}>
-                        <Grid container spacing={2}>
+                        <Grid
+                            container
+                            spacing={2}
+                            onMouseOver={() => {
+                                setMouseOver(true)
+                            }}
+                            onMouseLeave={() => {
+                                setMouseOver(false)
+                            }}
+                            onClick={handleCloseClick}
+                        >
                             <Grid
                                 item
                                 xs={12}
-                                sm={8}
-                                onMouseOver={() => {
-                                    setMouseOver(true)
-                                }}
-                                onMouseLeave={() => {
-                                    setMouseOver(false)
-                                }}
-                                onClick={handleCloseClick}
+                                sm={12}
                             >
-                                {
-                                    loading || mouseOver ? (
-                                        <img
-                                            src={image.DRAGON_HOVER}
-                                            style={{ width: '100%' }}
-                                        />
-                                    ) : (
-
-                                        <img
-                                            src={image.DRAGON_INIT}
-                                            style={{ width: '100%' }}
-                                        />
-                                    )
-                                }
-                            </Grid>
-                            <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box sx={{ paddingTop: '50%', position: 'relative' }}>
                                     {
-                                        !loading && failed ? (
-                                            <>
-                                                <img
-                                                    src={image.METAMASK}
-                                                    style={{ width: '40%' }}
-                                                />
-                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
-                                                    PLEASE RETRY!
-                                                </p>
-                                            </>
-                                        ) :
-                                            !loading && !mouseOver ? (
-                                                <>
-                                                    <img
-                                                        src={image.METAMASK}
-                                                        style={{ width: '40%' }}
-                                                    />
-                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
-                                                        LOGIN WITH METAMASK
-                                                    </p>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <img
-                                                        src={image.METAMASK_WINK}
-                                                        style={{ width: '40%' }}
-                                                    />
-                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
-                                                        CLICK TO FLY
-                                                    </p>
-                                                    <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
-                                                        TO NICAH
-                                                    </p>
-                                                </>
-                                            )
+                                        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0 }} className={classes.fadeAnimation}>
+                                            <img
+                                                src={image.DRAGON_HOVER}
+                                                style={{ width: '100%' }}
+                                                hidden={!(loading || mouseOver)}
+                                            />
+                                            <img
+                                                src={image.DRAGON_INIT}
+                                                style={{ width: '100%' }}
+                                                hidden={loading || mouseOver}
+                                            />
+                                        </Box>
                                     }
                                 </Box>
-
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item md={2}>
                     </Grid>
                 </Grid>
+                <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>
+                    <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
+                        Need instructions? Read our Whitepaper
+                    </a>
+                    <br></br>
+                    {/* <a href="https://cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
+                        Visit our homepage
+                    </a> */}
+                </Box>
             </Container>
             <Snackbar
                 open={openSnackBar}
@@ -174,7 +215,7 @@ const AskMetaLogin = () => {
             >
                 <Alert onClose={() => setOpenSnackBar(false)} variant='filled' severity="error" sx={{ width: '100%' }}>
                     <Box sx={{ cursor: 'pointer' }}>
-                        Please Install MetaMask
+                        {errorMsg}
                     </Box>
                 </Alert>
             </Snackbar>
