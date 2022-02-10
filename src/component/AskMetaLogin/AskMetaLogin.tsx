@@ -116,6 +116,8 @@ const AskMetaLogin = () => {
 
     const [logoImage, setLogoImage] = React.useState(image.LOGO);
 
+    const [errorMsg, setErrorMsg] = React.useState('')
+
     const handleCloseClick = () => {
         setLoading(true);
         activate(injected);
@@ -124,6 +126,11 @@ const AskMetaLogin = () => {
     React.useEffect(() => {
         if (error) {
             if (error.toString().indexOf('NoEthereumProviderError') > -1) {
+                setErrorMsg('Please Install MetaMask!')
+                setOpenSnackBar(true)
+            }
+            if (error.toString().indexOf('UnsupportedChainIdError') > -1) {
+                setErrorMsg('Please choose Kovan Network!')
                 setOpenSnackBar(true)
             }
         }
@@ -146,10 +153,10 @@ const AskMetaLogin = () => {
                     />
                 </Box>
                 <Grid container spacing={2}>
-                    <Grid item md={2}>
+                    <Grid item md={2} xs={12}>
 
                     </Grid>
-                    <Grid item md={8}>
+                    <Grid item md={8} xs={12}>
                         <Grid
                             container
                             spacing={2}
@@ -183,64 +190,15 @@ const AskMetaLogin = () => {
                                     }
                                 </Box>
                             </Grid>
-                            {/* <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Box
-                                    sx={{ textAlign: 'center' }}
-                                >
-                                    {
-                                        mouseOver || loading ? (
-                                            <>
-                                                <img
-                                                    src={image.METAMASK_WINK}
-                                                    style={{ width: '40%' }}
-                                                />
-                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
-                                                    CLICK TO FLY
-                                                </p>
-                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35', marginTop: 4, marginBottom: 4 }}>
-                                                    TO NICAH
-                                                </p>
-                                            </>
-                                        ) : failed ? (
-
-                                            <>
-                                                <img
-                                                    src={image.METAMASK}
-                                                    style={{ width: '40%' }}
-                                                />
-                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
-                                                    PLEASE RETRY!
-                                                </p>
-                                            </>
-                                        ) : (
-
-                                            <>
-                                                <img
-                                                    src={image.METAMASK}
-                                                    style={{ width: '40%' }}
-                                                />
-                                                <p style={{ fontSize: '16px', fontWeight: 'bold', color: '#f89c35' }}>
-                                                    LOGIN WITH METAMASK
-                                                </p>
-                                            </>
-                                        )
-                                    }
-                                </Box>
-
-                            </Grid> */}
                         </Grid>
                     </Grid>
-                    <Grid item md={2}>
+                    <Grid item md={2} xs={12}>
                     </Grid>
                 </Grid>
                 <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>
                     <a href="https://docs.cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
                         Need instructions? Read our Whitepaper
                     </a>
-                    <br></br>
-                    {/* <a href="https://cryptolegions.app/" className={classes.loginToWhitePaperBtn} target={'blank'}>
-                        Visit our homepage
-                    </a> */}
                 </Box>
             </Container>
             <Snackbar
@@ -253,7 +211,7 @@ const AskMetaLogin = () => {
             >
                 <Alert onClose={() => setOpenSnackBar(false)} variant='filled' severity="error" sx={{ width: '100%' }}>
                     <Box sx={{ cursor: 'pointer' }}>
-                        Please Install MetaMask
+                        {errorMsg}
                     </Box>
                 </Alert>
             </Snackbar>

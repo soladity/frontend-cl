@@ -44,7 +44,7 @@ export const navConfig = {
             element: <CreateLegions />
         },
         {
-            path: '/updatelegions/:id',
+            path: '/updatelegions',
             element: <UpdateLegions />
         },
         {
@@ -66,23 +66,20 @@ export const navConfig = {
     navBar: {
         left: [
             {
-                type: 'divider'
-            },
-            {
                 type: 'head',
                 title: 'play',
-            },
-            {
-                type: 'navlink',
-                title: 'beasts',
-                icon: 'beasts',
-                path: '/beasts'
             },
             {
                 type: 'navlink',
                 title: 'warriors',
                 icon: 'warriors',
                 path: '/warriors'
+            },
+            {
+                type: 'navlink',
+                title: 'beasts',
+                icon: 'beasts',
+                path: '/beasts'
             },
             {
                 type: 'navlink',
@@ -105,15 +102,15 @@ export const navConfig = {
             },
             {
                 type: 'link',
-                title: 'beasts',
-                icon: 'beasts',
-                path: '/beasts'
-            },
-            {
-                type: 'link',
                 title: 'warriors',
                 icon: 'warriors',
                 path: '/warrios'
+            },
+            {
+                type: 'link',
+                title: 'beasts',
+                icon: 'beasts',
+                path: '/beasts'
             },
             {
                 type: 'link',
@@ -138,7 +135,7 @@ export const navConfig = {
                 type: 'link',
                 title: 'whitepaper',
                 icon: 'whitepaper',
-                path: 'https://pancakeswap.com'
+                path: 'https://docs.cryptolegions.app/'
             },
             {
                 type: 'navlink',
@@ -184,7 +181,8 @@ export const navConfig = {
             },
             {
                 type: 'footer',
-                title: 'footerContent',
+                title1: 'madeWith',
+                title2: 'cryptoAgency'
             }
         ],
         top: []

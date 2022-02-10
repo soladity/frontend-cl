@@ -78,13 +78,13 @@ const YourInventory = () => {
                     {getTranslation('yourInventory')}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('BEASTS')} : {beastBalance}
+                    {getTranslation('beasts')} : {beastBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('WARRIORS')} : {warriorBalance}
+                    {getTranslation('warriors')} : {warriorBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('LEGIONS')} : {availableLegionCount} / {legionTokenIds.length}
+                    {getTranslation('legions')} : {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('yourMaxAp')} : {maxAttackPower}
@@ -93,7 +93,7 @@ const YourInventory = () => {
                     {getTranslation('unClaimed')} $ : {unclaimedBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('taxDaysLeft')} : {taxLeftDays}
+                    {getTranslation('taxHuntsLeft')} : {taxLeftDays}
                 </Typography>
             </Box>
         </Card>

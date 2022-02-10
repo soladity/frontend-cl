@@ -1,6 +1,4 @@
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom'
 import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Slider, FormLabel, FormControl, Checkbox, Dialog, DialogTitle, List, ListItem, ListItemText } from '@mui/material';
 import Helmet from 'react-helmet';
 import { makeStyles } from '@mui/styles';
@@ -9,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 import LegionCard from '../../component/Cards/LegionCard';
 import { useBeast, useWarrior, useLegion, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getWarriorBalance, getLegionTokenIds, getLegionToken, addSupply, getBaseUrl } from '../../hooks/contractFunction';
+import { getBeastBalance, getWarriorBalance, getLegionTokenIds, getLegionToken, addSupply, getBaseUrl, getLegionImage, getHuntStatus } from '../../hooks/contractFunction';
 import { meta_constant } from '../../config/meta.config';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
@@ -23,6 +21,10 @@ const useStyles = makeStyles({
 		display: 'flex',
 		flexDirection: 'column',
 		minHeight: '180px'
+	},
+	warning: {
+		display: 'flex',
+		minHeight: '80px',
 	}
 });
 
@@ -42,14 +44,14 @@ const Legions = () => {
 	const [openSupply, setOpenSupply] = React.useState(false);
 	const [selectedLegion, setSelectedLegion] = React.useState(0);
 	const [loading, setLoading] = React.useState(false);
-	const [apValue, setApValue] = React.useState<number[]>([2000, 250000]);
+	const [supplyLoading, setSupplyLoading] = React.useState(false);
+	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
 
 	const classes = useStyles();
 	const legionContract = useLegion();
 	const beastContract = useBeast();
 	const warriorContract = useWarrior();
 	const web3 = useWeb3();
-	const navigate = useNavigate()
 
 	React.useEffect(() => {
 		if (account) {
@@ -65,10 +67,14 @@ const Legions = () => {
 		const ids = await getLegionTokenIds(web3, legionContract, account);
 		let amount = 0;
 		let legion;
+		let image;
+		let huntStatus;
 		let tempLegions = [];
 		for (let i = 0; i < ids.length; i++) {
 			legion = await getLegionToken(web3, legionContract, ids[i]);
-			tempLegions.push({ ...legion, id: ids[i] });
+			image = await getLegionImage(web3, legionContract, legion.attackPower);
+			huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
+			tempLegions.push({ ...legion, id: ids[i], ...image, huntStatus: huntStatus });
 			amount += legion.attackPower;
 		}
 		setTotalPower(amount);
@@ -106,8 +112,11 @@ const Legions = () => {
 	};
 
 	const handleSupplyClick = async (value: string) => {
+		setSupplyLoading(true);
 		setOpenSupply(false);
 		await addSupply(web3, legionContract, account, selectedLegion, parseInt(value));
+		setSupplyLoading(false);
+		getBalance();
 	};
 
 	const handleOpenSupply = (id: number) => {
@@ -124,6 +133,17 @@ const Legions = () => {
 				{meta_constant.legions.keywords && <meta name="keywords" content={meta_constant.legions.keywords.join(',')} />}
 			</Helmet>
 			<Grid container spacing={2} sx={{ my: 4 }}>
+				<Grid item xs={12}>
+					<Card>
+						<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+							<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+								<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
+									{getTranslation('legions')}
+								</Typography>
+							</Box>
+						</Box>
+					</Card>
+				</Grid>
 				<Grid item xs={12} md={4}>
 					<Card>
 						<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
@@ -178,10 +198,10 @@ const Legions = () => {
 							{
 								legions.filter((item: any, index) => index < 3).map((item: any, index) => (
 									<Box sx={{ display: 'flex' }} key={index}>
-										<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+										<Typography variant='subtitle1'>
 											{item.name}
 										</Typography>
-										<Typography variant='h6' color='secondary' sx={{ fontWeight: 'bold', ml: 2 }}>
+										<Typography variant='subtitle1' sx={{ ml: 2, color: item.huntStatus === 'green' ? 'green' : item.huntStatus === 'orange' ? 'orange' : 'red' }}>
 											{formatNumber(item.attackPower)} AP
 										</Typography>
 									</Box>
@@ -192,7 +212,7 @@ const Legions = () => {
 				</Grid>
 			</Grid>
 			{
-				loading === false &&
+				(loading === false && supplyLoading === false) &&
 				<React.Fragment>
 					<Grid container spacing={2} sx={{ my: 3 }}>
 						<Grid item xs={12} md={3}>
@@ -202,10 +222,10 @@ const Legions = () => {
 									getAriaLabel={() => "Custom marks"}
 									// defaultValue={20}
 									value={apValue}
-									min={2000}
+									min={0}
 									max={250000}
 									marks={[
-										{ value: 2000, label: '2K' },
+										{ value: 2000, label: '0' },
 										{ value: 250000, label: formatNumber('250K+') },
 									]}
 									step={1}
@@ -234,7 +254,7 @@ const Legions = () => {
 								</ButtonGroup>
 							</FormControl>
 						</Grid>
-						<Grid item xs={12} md={3}>
+						<Grid item xs={12} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
 							<FormControl component="fieldset" sx={{ width: '90%' }}>
 								<FormLabel component="legend">{getTranslation('hideWeakLegions')}:</FormLabel>
 							</FormControl>
@@ -247,9 +267,9 @@ const Legions = () => {
 					</Grid>
 					<Grid container spacing={4} sx={{ mb: 4, flexDirection: highest ? 'row' : 'row-reverse', justifyContent: highest ? 'flex-start' : 'flex-end' }}>
 						{
-							legions.filter((item: any) => apValue[0] < parseInt(item.attackPower) && (apValue[1] === 250000 ? true : apValue[1] > parseInt(item.attackPower))).filter((item: any) => hideWeak === true ? item.attackPower >= 2000 : true).map((item: any, index) => (
+							legions.filter((item: any) => apValue[0] < parseInt(item.attackPower) && (apValue[1] === 250000 ? true : apValue[1] > parseInt(item.attackPower))).filter((item: any) => hideWeak === true ? item.attackPower >= 2000 : true).filter((item: any) => huntStatus === item.huntStatus || huntStatus === '').map((item: any, index) => (
 								<Grid item xs={12} sm={6} md={4} key={index}>
-									<LegionCard id={item['id']} image={baseUrl + 'QmdnZYpBhNuxjieUZrnR14weZtiXRdz75SRAfhEAkissMm'} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} supplies={item['supplies']} attackPower={item['attackPower']} handleOpenSupply={handleOpenSupply} handleUpdate={() => { navigate('/updatelegions/' + item['id']) }} />
+									<LegionCard id={item['id']} image={baseUrl + item.image} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} handleOpenSupply={handleOpenSupply} />
 								</Grid>
 							))
 						}
@@ -260,7 +280,27 @@ const Legions = () => {
 				loading === true &&
 				<>
 					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
-						<Typography variant='h4' >{getTranslation('loadingWarriors')}</Typography>
+						<Typography variant='h4' >{getTranslation('loadingLegions')}</Typography>
+					</Grid>
+					<Grid container sx={{ justifyContent: 'center' }}>
+						<Grid item xs={1}>
+							<Card>
+								<CardMedia
+									component="img"
+									image="/assets/images/loading.gif"
+									alt="Loading"
+									loading="lazy"
+								/>
+							</Card>
+						</Grid>
+					</Grid>
+				</>
+			}
+			{
+				supplyLoading === true &&
+				<>
+					<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
+						<Typography variant='h4' >{getTranslation('buyingSupplies')}</Typography>
 					</Grid>
 					<Grid container sx={{ justifyContent: 'center' }}>
 						<Grid item xs={1}>
@@ -277,7 +317,7 @@ const Legions = () => {
 				</>
 			}
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
-				<DialogTitle>{getTranslation('buyMoreSupply')}</DialogTitle>
+				<DialogTitle>{getTranslation('buySupply')}</DialogTitle>
 				<List sx={{ pt: 0 }}>
 					<ListItem button sx={{ textAlign: 'center' }} onClick={() => handleSupplyClick('7')}>
 						<ListItemText primary='7 days' />

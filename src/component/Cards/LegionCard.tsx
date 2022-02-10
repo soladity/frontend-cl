@@ -3,10 +3,9 @@ import { Box, Typography, Grid, Card, CardMedia, CardContent, ButtonGroup, Butto
 import CachedIcon from '@mui/icons-material/Cached';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { useWeb3React } from '@web3-react/core';
 
-import { useBloodstone, useBeast, useWarrior, useLegion, useWeb3 } from '../../hooks/useContract';
-import { getBeastBalance, getWarriorBalance, getBeastToken, getWarriorToken, getLegionTokenIds, getLegionToken } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useWarrior, useWeb3 } from '../../hooks/useContract';
+import { getBeastToken, getWarriorToken } from '../../hooks/contractFunction';
 import { formatNumber } from '../../utils/common';
 import { getTranslation } from '../../utils/translation';
 
@@ -18,8 +17,8 @@ type CardProps = {
 	warriors: Array<number>;
 	supplies: string;
 	attackPower: number;
+	huntStatus: string;
 	handleOpenSupply: Function;
-	handleUpdate: Function
 };
 
 export default function LegionCard(props: CardProps) {
@@ -31,8 +30,8 @@ export default function LegionCard(props: CardProps) {
 		warriors,
 		supplies,
 		attackPower,
-		handleOpenSupply,
-		handleUpdate
+		huntStatus,
+		handleOpenSupply
 	} = props;
 
 	const [loaded, setLoaded] = React.useState(false);
@@ -43,7 +42,6 @@ export default function LegionCard(props: CardProps) {
 
 	const beastContract = useBeast();
 	const warriorContract = useWarrior();
-	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 
 	React.useEffect(() => {
@@ -102,7 +100,7 @@ export default function LegionCard(props: CardProps) {
 			}
 			{
 				show === true &&
-				<CardContent sx={{ pt: 6 }}>
+				<CardContent sx={{ pt: 6, pb: 12 }}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} md={12}>
 							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
@@ -165,7 +163,7 @@ export default function LegionCard(props: CardProps) {
 			<Typography variant='h6' sx={{ position: 'absolute', top: '15px', left: '20px', fontWeight: 'bold' }}>
 				{name}
 			</Typography>
-			<Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '10px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => open(id)}>
+			<Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '10px', fontWeight: 'bold', cursor: 'pointer', color: huntStatus === 'green' ? 'green' : huntStatus === 'orange' ? 'orange' : 'red' }} onClick={() => open(id)}>
 				{supplies} D
 			</Box>
 			<Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', bottom: '40px', left: 'calc(50% - 40px)', fontWeight: 'bold' }}>
@@ -191,7 +189,7 @@ export default function LegionCard(props: CardProps) {
 				}
 			</Box>
 			<Box sx={{ display: 'flex', position: 'absolute', bottom: '30px', left: '20px', cursor: 'pointer' }}>
-				<IconButton aria-label="claim" component="span" sx={{ padding: 0 }} onClick={() => { handleUpdate() }}>
+				<IconButton aria-label="claim" component="span" sx={{ padding: 0 }}>
 					<CachedIcon />
 				</IconButton>
 			</Box>
