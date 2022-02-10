@@ -10,6 +10,7 @@ import { meta_constant } from '../../config/meta.config';
 import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
+import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 
@@ -140,30 +141,30 @@ const Warriors = () => {
 							{getTranslation('summonWarrior')}
 						</Typography>
 						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
-							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+							<CommonBtn sx={{ fontWeight: 'bold' }}>
 								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
 									<HorizontalSplitIcon />
 								</IconButton>
 								{getTranslation('summonQuantity')}
-							</Button>
+							</CommonBtn>
 							{
 								showMint &&
 								<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
-									<Button variant="contained" onClick={() => handleMint(1)}>
+									<CommonBtn onClick={() => handleMint(1)}>
 										1
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(5)}>
+									</CommonBtn>
+									<CommonBtn onClick={() => handleMint(5)}>
 										5
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(10)}>
+									</CommonBtn>
+									<CommonBtn onClick={() => handleMint(10)}>
 										10
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(20)}>
+									</CommonBtn>
+									<CommonBtn onClick={() => handleMint(20)}>
 										20
-									</Button>
-									<Button variant="contained" onClick={() => handleMint(100)}>
+									</CommonBtn>
+									<CommonBtn onClick={() => handleMint(100)}>
 										100
-									</Button>
+									</CommonBtn>
 								</Box>
 							}
 						</Box>
@@ -179,11 +180,11 @@ const Warriors = () => {
 						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
 							{balance}
 						</Typography>
-						<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+						<CommonBtn sx={{ fontWeight: 'bold' }}>
 							<NavLink to='/createlegions' className='non-style'>
 								{getTranslation('createLegion')}
 							</NavLink>
-						</Button>
+						</CommonBtn>
 					</Box>
 				</Card>
 			</Grid>

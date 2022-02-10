@@ -10,6 +10,7 @@ import { useBeast, useWarrior, useLegion, useWeb3 } from '../../hooks/useContrac
 import { getBeastBalance, getWarriorBalance, getLegionTokenIds, getLegionToken, addSupply, getBaseUrl, getLegionImage, getHuntStatus } from '../../hooks/contractFunction';
 import { meta_constant } from '../../config/meta.config';
 import { getTranslation } from '../../utils/translation';
+import CommonBtn from '../../component/Buttons/CommonBtn';
 import { formatNumber } from '../../utils/common';
 
 const useStyles = makeStyles({
@@ -147,11 +148,11 @@ const Legions = () => {
 				<Grid item xs={12} md={4}>
 					<Card>
 						<Box className={classes.card} sx={{ p: 4, justifyContent: 'center', alignItems: 'center' }}>
-							<Button variant="contained" sx={{ fontWeight: 'bold' }}>
+							<CommonBtn sx={{ fontWeight: 'bold' }}>
 								<NavLink to='/createlegions' className='non-style'>
 									{getTranslation('createLegion')}
 								</NavLink>
-							</Button>
+							</CommonBtn>
 							<Box sx={{ display: 'flex', mt: 2 }}>
 								<Typography variant='h6' sx={{ fontWeight: 'bold' }}>
 									{getTranslation('availableWarrior')}
