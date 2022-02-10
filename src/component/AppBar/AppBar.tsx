@@ -16,8 +16,8 @@ import { Menu, MenuItem } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
-import { getBloodstoneBalance } from '../../hooks/contractFunction';
-import { useBloodstone, useWeb3 } from '../../hooks/useContract';
+import { getBloodstoneBalance, getUnclaimedUSD } from '../../hooks/contractFunction';
+import { useBloodstone, useWeb3, useRewardPool } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
 import { getTranslation } from '../../utils/translation';
@@ -55,8 +55,11 @@ const AppBarComponent = () => {
   const [balance, setBalance] = React.useState('0');
   const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
   const [showMenu, setShowMenu] = React.useState<boolean>(false);
+  const [unClaimedUSD, setUnclaimedUSD] = React.useState(0)
 
   const bloodstoneContract = useBloodstone();
+  const rewardPoolContract = useRewardPool();
+
   const web3 = useWeb3();
 
   React.useEffect(() => {
@@ -69,6 +72,7 @@ const AppBarComponent = () => {
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
+    setUnclaimedUSD(await getUnclaimedUSD(web3, rewardPoolContract, account));
   }
 
   const handleOpenNavMenu = (event: any) => {
@@ -177,7 +181,7 @@ const AppBarComponent = () => {
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
-                  {getTranslation('claim')} 0 ${getTranslation('bloodstone')}
+                  {getTranslation('claim')} {unClaimedUSD} ${getTranslation('bloodstone')}
                 </CommonBtn>
                 <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0 } }}>
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
