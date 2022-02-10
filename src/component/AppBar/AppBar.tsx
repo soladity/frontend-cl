@@ -24,6 +24,8 @@ import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import { AnyAaaaRecord } from 'dns';
 import NavList from '../Nav/NavList';
+import { useSelector } from 'react-redux'
+import CommonBtn from '../../component/Buttons/CommonBtn'
 
 declare const window: any;
 
@@ -36,6 +38,8 @@ const AppBarComponent = () => {
     deactivate,
     connector,
   } = useWeb3React();
+
+  const { reloadContractStatus } = useSelector((state: any) => state.contractReducer)
 
   async function connect() {
     try {
@@ -54,13 +58,14 @@ const AppBarComponent = () => {
 
   const bloodstoneContract = useBloodstone();
   const web3 = useWeb3();
+
   React.useEffect(() => {
     setIsActive(window.ethereum.selectedAddress);
     if (account) {
       getBalance();
     }
     setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
-  }, []);
+  }, [reloadContractStatus]);
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
@@ -69,6 +74,7 @@ const AppBarComponent = () => {
   const handleOpenNavMenu = (event: any) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: any) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -119,7 +125,7 @@ const AppBarComponent = () => {
         py: 1
       }}>
       <Container maxWidth={false}>
-        <Toolbar disableGutters sx={{flexFlow: 'wrap'}}>
+        <Toolbar disableGutters sx={{ flexFlow: 'wrap' }}>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -166,26 +172,26 @@ const AppBarComponent = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             {
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', md:'inherit'} }}>
-                <Button variant="contained" sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5}, fontSize: {xs: '0.7rem', md:'1rem'} }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' } }}>
+                <CommonBtn sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}>
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
                   {getTranslation('claim')} 0 ${getTranslation('bloodstone')}
-                </Button>
-                <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0} }}>
+                </CommonBtn>
+                <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0 } }}>
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
-                  <Box sx={{ ml: { xs: 1, md: 2} }}>
+                  <Box sx={{ ml: { xs: 1, md: 2 } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>{formatNumber(balance)}</Typography>
-                      <Typography variant='h6' sx={{fontSize: {xs: '0.8rem', md:'1rem'}}}>$BLST</Typography>
+                      <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>{formatNumber(balance)}</Typography>
+                      <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>$BLST</Typography>
                     </Box>
                     <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
                         <BadgeIcon />
                       </IconButton>
                       <NavLink to='/profile' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
-                        <Typography variant='subtitle1' sx={{fontSize: {xs: '0.7rem', md:'1rem'}}}>
+                        <Typography variant='subtitle1' sx={{ fontSize: { xs: '0.7rem', md: '1rem' } }}>
                           {account === undefined || account === null ? '...' : account.substr(0, 6) + '...' + account.substr(account.length - 4, 4)}</Typography>
                       </NavLink>
                     </Button>

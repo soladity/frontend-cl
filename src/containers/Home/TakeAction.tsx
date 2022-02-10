@@ -12,6 +12,8 @@ import { setReloadStatus } from '../../actions/contractActions'
 import { getTranslation } from '../../utils/translation';
 import { makeStyles } from '@mui/styles';
 
+import CommonBtn from '../../component/Buttons/CommonBtn'
+
 type TransitionProps = Omit<SlideProps, 'direction'>;
 
 function TransitionUp(props: TransitionProps) {
@@ -22,10 +24,10 @@ const useStyles = makeStyles({
     legionBtn: {
         background: 'linear-gradient(360deg, #973b04, #ffffff29), radial-gradient(#db5300, #ecff0e)',
         transition: '.4s all',
-        '&:hover': {
-            background: 'linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)',
-            transition: '.4s all',
-        },
+        // '&:hover': {
+        //     background: 'linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)',
+        //     transition: '.4s all',
+        // },
         color: 'white !important',
         textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
     },
@@ -102,6 +104,9 @@ const TakeAction = () => {
 
     //Mint Beast with quantity
     const handleBeastMint = async (amount: Number, Transition: React.ComponentType<TransitionProps>) => {
+
+        console.log(amount, Transition)
+
         handlePopoverCloseSummonBeast()
         const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
         console.log('allowance --- ', allowance)
@@ -176,9 +181,13 @@ const TakeAction = () => {
                         <Grid item xs={6}>
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
-                                    <Button variant="contained" className={classes.legionBtn} aria-describedby={'summon-beast-id'} onClick={handlePopoverOpenSummonBeast} sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <CommonBtn
+                                        onClick={handlePopoverOpenSummonBeast}
+                                        aria-describedby={'summon-beast-id'}
+                                        sx={{ fontSize: 14, fontWeight: 'bold', width: '100%', marginBottom: 1 }}
+                                    >
                                         {getTranslation('takeActionSummonBeast')}
-                                    </Button>
+                                    </CommonBtn>
                                     <Popover
                                         id={'summon-beast-id'}
                                         open={openSummonBeast}
@@ -198,11 +207,36 @@ const TakeAction = () => {
                                         </Box>
                                         <DialogTitle>{getTranslation('takeActionSummonBeastQuantity')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(1, TransitionUp)}>1</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(5, TransitionUp)}>5</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(10, TransitionUp)}>10</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleBeastMint(20, TransitionUp)}>20</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
+                                            <CommonBtn
+                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                1
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                5
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                10
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                20
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                100
+                                            </CommonBtn>
                                         </Box>
                                     </Popover>
                                     <Button className={classes.legionBtn} aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
@@ -227,11 +261,36 @@ const TakeAction = () => {
                                         </Box>
                                         <DialogTitle>{getTranslation('takeActionSummonWarriorQuantity')}</DialogTitle>
                                         <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(1, TransitionUp)}>1</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(5, TransitionUp)}>5</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(10, TransitionUp)}>10</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ marginBottom: 1, fontWeight: 'bold' }} onClick={() => handleWarriorMint(20, TransitionUp)}>20</Button>
-                                            <Button className={classes.legionBtn} variant='contained' sx={{ fontWeight: 'bold' }}>100</Button>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                1
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                5
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                10
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                20
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                100
+                                            </CommonBtn>
                                         </Box>
                                     </Popover>
                                     <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>

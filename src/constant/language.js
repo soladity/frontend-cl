@@ -816,8 +816,8 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  'taxDaysLeft': {
-    en: 'TAX DAYS LEFT',
+  'taxHuntsLeft': {
+    en: 'TAX HUNTS LEFT',
     es: '',
     cn: '',
     pt: '',
@@ -1093,8 +1093,8 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  '14DaysSuppliesFee': {
-    en: '14 Days Supplies Fee',
+  'SuppliesFee14Hunts': {
+    en: 'Supplies Fee for 14 Hunts',
     es: '',
     cn: '',
     pt: '',
@@ -1105,8 +1105,8 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  '28DaysSuppliesFee': {
-    en: '28 Days Supplies Fee',
+  'SuppliesFee28Hunts': {
+    en: 'Supplies Fee for 28 Hunts',
     es: '',
     cn: '',
     pt: '',
