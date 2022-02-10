@@ -840,6 +840,30 @@ export const translations = {
     pl: 'Ilość przywołania wojownika',
     ph: 'Ipatawag ang Dami ng Mandirigma'
   },
+  'takeActionCreateLegion': {
+    en: 'CREATE LEGION',
+    es: 'Comprar Bestias',
+    cn: '购买野兽',
+    pt: 'Comprar Bestas',
+    tr: 'Canavar satın al',
+    ru: 'Купить зверей',
+    fr: 'Acheter des bêtes',
+    de: 'Beesten kopen',
+    pl: 'Kup bestie',
+    ph: 'Bumili ng mga Hayop'
+  },
+  'takeActionHunt': {
+    en: 'HUNT',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'takeActionBuyBeasts': {
     en: 'BUY BEASTS',
     es: 'Comprar Bestias',
@@ -866,15 +890,27 @@ export const translations = {
   },
   'takeActionBuyLegions': {
     en: 'BUY LEGIONS',
-    es: 'Comprar legiones',
-    cn: '购买军团',
-    pt: 'Compre Legiões',
-    tr: 'Lejyon satın al',
-    ru: 'Купить легионы',
-    fr: 'Acheter des légions',
-    de: 'Legioenen kopen',
-    pl: 'Kup legiony',
-    ph: 'Bumili ng Legions'
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'takeActionBuyBlst': {
+    en: 'BUY BLST',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'yourAchievements': {
     en: 'YOUR ACHIEVEMENTS',

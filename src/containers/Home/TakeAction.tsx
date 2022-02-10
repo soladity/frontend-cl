@@ -239,9 +239,9 @@ const TakeAction = () => {
                                             </CommonBtn>
                                         </Box>
                                     </Popover>
-                                    <Button className={classes.legionBtn} aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <CommonBtn aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('summonWarrior')}
-                                    </Button>
+                                    </CommonBtn>
                                     <Popover
                                         id={'summon-warrior-id'}
                                         open={openSummonWarrior}
@@ -293,30 +293,30 @@ const TakeAction = () => {
                                             </CommonBtn>
                                         </Box>
                                     </Popover>
-                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('createLegion')}
-                                    </Button>
-                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                        {getTranslation('hunt')}
-                                    </Button>
+                                    <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
+                                        {getTranslation('takeActionCreateLegion')}
+                                    </CommonBtn>
+                                    <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%' }}>
+                                        {getTranslation('takeActionHunt')}
+                                    </CommonBtn>
                                 </Box>
                             </Box>
                         </Grid>
                         <Grid item xs={6} >
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
-                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionBuyBeasts')}
-                                    </Button>
-                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    </CommonBtn>
+                                    <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionBuyWarriors')}
-                                    </Button>
-                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%', marginBottom: 1 }}>
+                                    </CommonBtn>
+                                    <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
                                         {getTranslation('takeActionBuyLegions')}
-                                    </Button>
-                                    <Button className={classes.legionBtn} variant="contained" sx={{ fontWeight: 'bold', fontSize: 12, width: '100%' }}>
-                                        {getTranslation('buyBlst')}
-                                    </Button>
+                                    </CommonBtn>
+                                    <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%' }}>
+                                        {getTranslation('takeActionBuyBlst')}
+                                    </CommonBtn>
                                 </Box>
                             </Box>
                         </Grid>
