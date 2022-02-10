@@ -164,7 +164,7 @@ export default function LegionCard(props: CardProps) {
 				{name}
 			</Typography>
 			<Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', top: '15px', right: '10px', fontWeight: 'bold', cursor: 'pointer', color: huntStatus === 'green' ? 'green' : huntStatus === 'orange' ? 'orange' : 'red' }} onClick={() => open(id)}>
-				{supplies} D
+				{supplies} H
 			</Box>
 			<Box sx={{ display: 'flex', position: 'absolute', alignItems: 'center', bottom: '40px', left: 'calc(50% - 40px)', fontWeight: 'bold' }}>
 				<Typography variant='h6' sx={{ fontWeight: 'bold', fontSize: '1.2rem', textShadow: '-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000' }}>W/{warriors.length} B/{beasts.length}</Typography>

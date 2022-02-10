@@ -186,7 +186,7 @@ const TakeAction = () => {
                                         aria-describedby={'summon-beast-id'}
                                         sx={{ fontSize: 14, fontWeight: 'bold', width: '100%', marginBottom: 1 }}
                                     >
-                                        {getTranslation('takeActionSummonBeast')}
+                                        {getTranslation('summonBeast')}
                                     </CommonBtn>
                                     <Popover
                                         id={'summon-beast-id'}
