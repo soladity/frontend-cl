@@ -9,7 +9,7 @@ import { makeStyles } from '@mui/styles'
 import { useWeb3React } from '@web3-react/core'
 
 import { meta_constant, createlegions } from '../../config/meta.config'
-import { getLegionBloodstoneAllowance, setLegionBloodstoneApprove, getWarriorTokenIds, getWarriorToken, getLegionToken } from '../../hooks/contractFunction'
+import { getLegionBloodstoneAllowance, setLegionBloodstoneApprove, getWarriorTokenIds, getWarriorToken, getLegionToken, addBeasts, addWarriors } from '../../hooks/contractFunction'
 import { mintLegion, getBeastTokenIds, getBeastToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction'
 import { useBloodstone, useBeast, useWarrior, useWeb3, useLegion } from '../../hooks/useContract'
 import { getTranslation } from '../../utils/translation'
@@ -37,8 +37,8 @@ const useStyles = makeStyles({
 
 interface LegionInterface {
 	name: string
-	beasts: string
-	warriors: string
+	beasts: Array<Number>
+	warriors: Array<Number>
 	supplies: string
 	attackPower: number
 }
@@ -72,6 +72,8 @@ const UpdateLegions: React.FC = () => {
 	const [totalCP, setTotalCP] = React.useState(0)
 	const [legionName, setLegionName] = React.useState('')
 	const [isWDropable, setIsWDropable] = React.useState(false)
+	const [tempCP, setTempCP] = React.useState(0)
+	const [tempAP, setTempAP] = React.useState(0)
 
 	const navigate = useNavigate()
 	const params = useParams()
@@ -167,14 +169,50 @@ const UpdateLegions: React.FC = () => {
 		let sum = 0
 		let cp = 0
 		warriorDropBoxList.forEach((index: any) => {
-			sum += parseInt((warriors[index] as any)['power'])
+			console.log(index, index !== -1, index != -1)
+			if (index != -1) {
+				sum += parseInt((warriors[index] as any)['power'])
+			}
 		})
 		beastDropBoxList.forEach((index: any) => {
-			cp += parseInt((beasts[index] as any)['capacity'])
+			if (index != -1) {
+				cp += parseInt((beasts[index] as any)['capacity'])
+			}
 		})
-		setTotalCP(cp)
-		setTotalAp(sum)
+		setTotalCP(tempCP + cp)
+		setTotalAp(tempAP + sum)
 		setIsWDropable(cp > 0 && cp >= warriorDropBoxList.length && totalAP >= createlegions.main.minAvailableAP && legionName.length > 0)
+	}
+
+	const setDropBoxListbySelectedLegion = async () => {
+		const curLegionTmp = await getLegionToken(web3, legionContract, curLegionID)
+		let beast
+		// let tempDropItemList = []
+		let tempBeasts = []
+		let tempCP = 0
+		for (let i = 0; i < curLegionTmp?.beasts.length; i++) {
+			beast = await getBeastToken(web3, beastContract, curLegionTmp?.beasts[i])
+			tempCP += parseInt(beast['capacity'])
+			tempBeasts.push(-1)
+			// tempDropItemList.push({ ...beast, id: curLegionTmp?.beasts[i], w5b: false, movable: false })
+		}
+		setBeastDropBoxList(tempBeasts)
+		let warrior;
+		let tempWarriors = []
+		let tempAP = 0
+		for (let i = 0; i < curLegionTmp?.warriors.length; i++) {
+			warrior = await getWarriorToken(web3, warriorContract, curLegionTmp?.warriors[i]);
+			tempWarriors.push(-1)
+			tempAP += parseInt(warrior['power'])
+			// tempDropItemList.push({ ...warrior, id: curLegionTmp?.warriors[i], w5b: true, movable: false })
+		}
+		setWarriorDropBoxList(tempWarriors)
+		setTempCP(tempCP)
+		setTempAP(tempAP)
+		setTotalCP(tempCP)
+		setTotalAp(tempAP)
+		setCurLegion({ ...curLegionTmp })
+		// setDropItemList(tempDropItemList)
 	}
 
 	const getBalance = async () => {
@@ -183,7 +221,6 @@ const UpdateLegions: React.FC = () => {
 		setBaseBeastGifUrl(await getBaseGifURL(web3, beastContract))
 		setBaseWarriorJpgUrl(await getBaseJpgURL(web3, warriorContract))
 		setBaseWarriorGifUrl(await getBaseGifURL(web3, warriorContract))
-		const curLegionTmp = await getLegionToken(web3, legionContract, curLegionID)
 		const beastIds = await getBeastTokenIds(web3, beastContract, account)
 		const warriorIds = await getWarriorTokenIds(web3, warriorContract, account)
 		let amount = 0
@@ -205,11 +242,12 @@ const UpdateLegions: React.FC = () => {
 			tempWarriorsIndexS.push(i as number)
 			amount += parseInt(warrior.power)
 		}
+		// Set selected beasts and warriors to dropList
+		await setDropBoxListbySelectedLegion()
 		setBeasts(tempBeasts)
 		setWarriors(tempWarriors)
 		setBeastDragBoxList(tempBeastsIndexS)
 		setWarriorDragBoxList(tempWarriorsIndexS)
-		setCurLegion({ ...curLegionTmp })
 		setLoading(false)
 	}
 
@@ -247,9 +285,8 @@ const UpdateLegions: React.FC = () => {
 		if (allowance === '0') {
 			await setLegionBloodstoneApprove(web3, bloodstoneContract, account)
 		}
-		await mintLegion(web3, legionContract, account, legionName,
-			beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }),
-			warriors.filter((w, index) => warriorDropBoxList.includes(index)).map((warrior: any) => { return parseInt(warrior['id']) }))
+		await addBeasts(web3, legionContract, account, curLegionID, beasts.filter((b, index) => beastDropBoxList.includes(index)).map((beast: any) => { return parseInt(beast['id']) }))
+		await addWarriors(web3, legionContract, account, curLegionID, warriors.filter((w, index) => warriorDropBoxList.includes(index)).map((warrior: any) => { return parseInt(warrior['id']) }))
 		navigate("/legions")
 	}
 
@@ -272,7 +309,7 @@ const UpdateLegions: React.FC = () => {
 						<ErrorOutline color='error' fontSize='large' />
 						<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
 							<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-								{getTranslation('createLegion')}
+								{getTranslation('updateLegion')}
 							</Typography>
 						</Box>
 					</Box>
@@ -367,14 +404,17 @@ const UpdateLegions: React.FC = () => {
 						{/* Right Panel */}
 						<Grid item xs={12} sm={12} md={6}>
 							<Card sx={{ height: '100%' }}>
+								<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
+									<Typography variant="h6">Your existing legion has {tempAP} AP</Typography>
+								</Grid>
 								<Grid item xs={12} sx={{ p: 4 }}>
 									<Grid container sx={{ justifyContent: 'space-around' }}>
 										<Grid item>
-											<Input placeholder={getTranslation('nameLegion')} value={legionName} onChange={handleChangedName} />
+											<Input placeholder={getTranslation('updateNamePlaceholder')} value={legionName} onChange={handleChangedName} />
 										</Grid>
 										<Grid item>
 											<Button variant='contained' onClick={() => handleMint()} disabled={!isWDropable}>
-												{getTranslation('createLegion')} {totalAP < createlegions.main.minAvailableAP ? '(min 2000 AP needed)' : totalAP + ' AP'}
+												{getTranslation('updateLegion')} to {totalAP} AP
 											</Button>
 										</Grid>
 									</Grid>

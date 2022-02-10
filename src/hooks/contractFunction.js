@@ -204,3 +204,13 @@ export const getMaxAttackPower = async (web3, contract, account) => {
     const response = await contract.methods.getMaxAttackPower(account).call()
     return response
 }
+
+export const addBeasts = async (web3, contract, account, legionID, beastsIDs) => {
+    const response = await contract.methods.addBeasts(legionID, beastsIDs).send({ from: account })
+    return response
+}
+
+export const addWarriors = async (web3, contract, account, legionID, warriosIDs) => {
+    const response = await contract.methods.addWarriors(legionID, warriosIDs).send({ from: account })
+    return response
+}
