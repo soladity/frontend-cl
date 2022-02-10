@@ -180,7 +180,6 @@ export const getLegionDetails = async (web3, contract, tokenID) => {
     const response = await contract.methods.getLegion(tokenID).call()
     const legion = {
         name: response[0],
-        imgUrl: response[1],
         beastIDs: response[2],
         warriorIDs: response[3],
         supplies: response[4],
@@ -203,4 +202,25 @@ export const getTaxLeftDays = async (web3, contract, account) => {
 export const getMaxAttackPower = async (web3, contract, account) => {
     const response = await contract.methods.getMaxAttackPower(account).call()
     return response
+}
+
+export const getLegionImage = async (web3, contract, ap) => {
+    const response = await contract.methods.getImage(ap).call();
+    const image = {
+        image: response[1],
+        animationImage: response[0]
+    }
+    return image;
+}
+
+export const getHuntStatus = async (web3, contract, id) => {
+    const response = await contract.methods.canHuntMonster(id).call();
+    let status = '';
+    if (response === '1')
+        status = 'green';
+    else if (response === '2')
+        status = 'orange';
+    else
+        status = 'red';
+    return status;
 }

@@ -347,17 +347,29 @@ export const translations = {
     pl: 'Polityka',
     ph: 'Patakaran'
   },
-  'footerContent': {
-    en: 'Made with ❤️ by Crypto Games Agency',
-    es: 'Hecho con ❤️ por Crypto Games Agency',
-    cn: 'Crypto Games Agency 用❤️制作',
-    pt: 'Feito com ❤️ pela Crypto Games Agency',
-    tr: '❤️ ile Crypto Games Agency tarafından yapılmıştır',
-    ru: 'Сделано с ❤️ агентством Crypto Games',
-    fr: 'Fait avec ❤️ par Crypto Games Agency',
-    de: 'Gemaakt met ❤️ door Crypto Games Agency',
-    pl: 'Wykonane z ❤️ przez Crypto Games Agency',
-    ph: 'Ginawa gamit ang ❤️ ng Crypto Games Agency'
+  'madeWith': {
+    en: 'Made with',
+    es: 'Hecho con',
+    cn: '用制作',
+    pt: 'Feito com',
+    tr: 'tarafından yapılmıştır',
+    ru: 'Сделано с',
+    fr: 'Fait avec',
+    de: 'Gemaakt met',
+    pl: 'Wykonane z',
+    ph: 'Ginawa gamit ang'
+  },
+  'cryptoAgency': {
+    en: 'by Crypto Games Agency',
+    es: 'por Crypto Games Agency',
+    cn: 'Crypto Games Agency',
+    pt: 'pela Crypto Games Agency',
+    tr: 'ile Crypto Games Agency',
+    ru: 'агентством Crypto Games',
+    fr: 'par Crypto Games Agency',
+    de: 'door Crypto Games Agency',
+    pl: 'przez Crypto Games Agency',
+    ph: 'ng Crypto Games Agency'
   },
   'createLegion': {
     en: 'Create Legion',
@@ -707,8 +719,8 @@ export const translations = {
     pl: 'Ukryj słabe legiony',
     ph: 'Itago ang Mahina Legions'
   },
-  'buyMoreSupply': {
-    en: 'Buy More Supplies',
+  'buySupply': {
+    en: 'Buy Supplies',
     es: 'Comprar más suministros',
     cn: '购买更多用品',
     pt: 'Comprar mais suprimentos',
@@ -758,42 +770,6 @@ export const translations = {
   },
   'yourMaxAp': {
     en: 'YOUR MAX AP',
-    es: '',
-    cn: '',
-    pt: '',
-    tr: '',
-    ru: '',
-    fr: '',
-    de: '',
-    pl: '',
-    ph: ''
-  },
-  'BEASTS': {
-    en: 'BEASTS',
-    es: '',
-    cn: '',
-    pt: '',
-    tr: '',
-    ru: '',
-    fr: '',
-    de: '',
-    pl: '',
-    ph: ''
-  },
-  "WARRIORS": {
-    en: 'WARRIORS',
-    es: '',
-    cn: '',
-    pt: '',
-    tr: '',
-    ru: '',
-    fr: '',
-    de: '',
-    pl: '',
-    ph: ''
-  },
-  'LEGIONS': {
-    en: 'LEGIONS READY TO HUNT',
     es: '',
     cn: '',
     pt: '',
@@ -1008,9 +984,32 @@ export const translations = {
     pl: '',
     ph: ''
   },
-
+  'summoningBeasts': {
+    en: 'Summoning Beasts...',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'nadodoWatching': {
     en: 'NADODO IS WATCHING',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'summoningWarriors': {
+    en: 'Summoning Warriors...',
     es: '',
     cn: '',
     pt: '',
@@ -1107,6 +1106,30 @@ export const translations = {
   },
   'SuppliesFee28Hunts': {
     en: 'Supplies Fee for 28 Hunts',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'buyingSupplies': {
+    en: 'Buying Supplies...',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'loadingLegions': {
+    en: 'Loading Legions...',
     es: '',
     cn: '',
     pt: '',
