@@ -234,3 +234,8 @@ export const addWarriors = async (web3, contract, account, legionID, warriosIDs)
     const response = await contract.methods.addWarriors(legionID, warriosIDs).send({ from: account })
     return response
 }
+
+export const claimReward = async (web3, contract, account) => {
+    const response = await contract.methods.claimReward().send({ from: account })
+    return response
+}

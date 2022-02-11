@@ -16,22 +16,26 @@ import { Menu, MenuItem } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
-import { getBloodstoneBalance, getUnclaimedUSD } from '../../hooks/contractFunction';
-import { useBloodstone, useWeb3, useRewardPool } from '../../hooks/useContract';
+import { getBloodstoneBalance, getUnclaimedUSD, claimReward } from '../../hooks/contractFunction';
+import { useBloodstone, useWeb3, useRewardPool, useLegion } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import { AnyAaaaRecord } from 'dns';
 import NavList from '../Nav/NavList';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import CommonBtn from '../../component/Buttons/CommonBtn'
+import { setReloadStatus } from '../../actions/contractActions'
+
 
 declare const window: any;
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const AppBarComponent = () => {
+  const dispatch = useDispatch()
+
   const {
     activate,
     account,
@@ -59,6 +63,7 @@ const AppBarComponent = () => {
 
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
+  const legionContract = useLegion()
 
   const web3 = useWeb3();
 
@@ -120,6 +125,14 @@ const AppBarComponent = () => {
     }
   }
 
+  const handleClaimReward = async () => {
+    const response = await claimReward(web3, legionContract, account)
+    console.log(response)
+    dispatch(setReloadStatus({
+      reloadContractStatus: new Date()
+    }))
+  }
+
   return (
     <AppBar position="fixed"
       sx={{
@@ -177,7 +190,10 @@ const AppBarComponent = () => {
           <Box sx={{ flexGrow: 0 }}>
             {
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' } }}>
-                <CommonBtn sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}>
+                <CommonBtn
+                  sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}
+                  onClick={() => handleClaimReward()}
+                >
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
