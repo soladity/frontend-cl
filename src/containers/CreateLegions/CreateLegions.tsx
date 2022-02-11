@@ -579,11 +579,10 @@ const CreateLegions: React.FC = () => {
                           {mintLoading ? (
                             <Spinner color="white" size={40} />
                           ) : (
-                            getTranslation("createLegion")(
-                              totalAP < createlegions.main.minAvailableAP
-                                ? " (min 2000 AP needed)"
-                                : " " + totalAP + " AP"
-                            )
+                            getTranslation("createLegion") +
+                            (totalAP < createlegions.main.minAvailableAP
+                              ? " (min 2000 AP needed)"
+                              : " " + totalAP + " AP")
                           )}
                         </CommonBtn>
                       </Grid>
