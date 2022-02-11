@@ -200,7 +200,7 @@ const Monsters = () => {
       {loading === false && legions.length > 0 && (
         <Box component="div" sx={{ position: "relative" }} ref={scrollArea}>
           <Card
-            sx={{ position: "sticky", top: "5%", zIndex: 100, my: 2, py: 2 }}
+            sx={{ position: "sticky", top: "10%", zIndex: 100, my: 2, py: 2 }}
           >
             <Grid
               container
