@@ -208,7 +208,7 @@ const Monsters = () => {
               sx={{ justifyContent: "space-evenly" }}
               alignItems="center"
             >
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} sm={4} md={3}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     {getTranslation("legions")}
@@ -239,27 +239,25 @@ const Monsters = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={8}>
-                <Grid item>
-                  <Typography variant="h5">
-                    {curLegion?.attackPower} AP
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5">
-                    W {curLegion?.warriors.length}/
-                    {warriors.length + mintedWarriorCnt}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5">
-                    B {curLegion?.beasts.length}/
-                    {createlegions.main.maxAvailableDragCount}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5">{curLegion?.supplies} D</Typography>
-                </Grid>
+              <Grid item xs={12} sm={2} md={3}>
+                <Typography variant="h5">
+                  {curLegion?.attackPower} AP
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={2} md={3}>
+                <Typography variant="h5">
+                  W {curLegion?.warriors.length}/
+                  {warriors.length + mintedWarriorCnt}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={2} md={3}>
+                <Typography variant="h5">
+                  B {curLegion?.beasts.length}/
+                  {createlegions.main.maxAvailableDragCount}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={2} md={3}>
+                <Typography variant="h5">{curLegion?.supplies} H</Typography>
               </Grid>
             </Grid>
           </Card>
