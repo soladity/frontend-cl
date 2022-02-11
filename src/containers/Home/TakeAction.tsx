@@ -215,25 +215,25 @@ const TakeAction = () => {
                                                 1
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(5, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 5
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(10, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 10
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(20, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 20
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(100, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 100
@@ -269,25 +269,25 @@ const TakeAction = () => {
                                                 1
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(5, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 5
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(10, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 10
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(20, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 20
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(100, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 100
