@@ -187,6 +187,14 @@ const Monsters = () => {
     setHuntedStatus(response ? 1 : 2);
   };
 
+  console.log(
+    curLegion?.status === "1" &&
+      (monsters[0] as MonsterInterface).ap <=
+        (curLegion as LegionInterface).attackPower,
+    curLegion?.status,
+    (curLegion as LegionInterface).attackPower
+  );
+
   return (
     <Box>
       <Helmet>
