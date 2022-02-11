@@ -224,3 +224,33 @@ export const getHuntStatus = async (web3, contract, id) => {
         status = 'red';
     return status;
 }
+
+export const sendToMarketplace = async (web3, contract, account, id, price) => {
+    const response = await contract.methods.sendToMarketplace(id, price).send({ from: account });
+    return response;
+}
+
+export const getOnMarketplace = async (web3, contract) => {
+    const response = await contract.methods.getTokenIdsOnMarket().call();
+    return response;
+}
+
+export const getOwner = async (web3, contract, id) => {
+    const response = await contract.methods.ownerOf(id).call();
+    return response;
+}
+
+export const cancelMarketplace = async (web3, contract, account, id) => {
+    const response = await contract.methods.sendBackFromMarketplace(id).send({ from: account });
+    return response;
+}
+
+export const buyToken = async (web3, contract, account, id) => {
+    const response = await contract.methods.sendBackFromMarketplace(id).send({ from: account });
+    return response;
+}
+
+export const getPrice = async (web3, contract, id) => {
+    const response = await contract.methods.tokenPrice(id).call();
+    return response;
+}
