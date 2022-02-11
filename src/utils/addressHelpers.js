@@ -15,9 +15,9 @@ export const getLegionAddress = () => {
 }
 
 export const getMonsterAddress = () => {
-    return '0x334136267b672970e53a74e5dd45384d0152b5de'
+    return '0xc443b0f1769b572fb3986a4ec07a31edbc9ca221'
 }
 
 export const getRewardPoolAddress = () => {
-    return '0x4a514deefe5cc2b21b664865f82bfd392e1f40d7'
+    return '0xf3be30b4af8985a46d89f0215a2e41d6c91f2a7d'
 }
