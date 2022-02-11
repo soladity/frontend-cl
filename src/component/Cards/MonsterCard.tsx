@@ -38,6 +38,8 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
     setLoaded(true);
   };
 
+  console.log(isHuntable);
+
   return (
     <Card sx={{ position: "relative", textAlign: "center" }}>
       <Grid

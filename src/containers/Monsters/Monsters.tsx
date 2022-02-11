@@ -242,7 +242,7 @@ const Monsters = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={8}>
                 <Grid item>
                   <Typography variant="h5">
                     {curLegion?.attackPower} AP
