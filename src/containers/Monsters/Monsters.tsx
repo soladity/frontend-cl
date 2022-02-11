@@ -91,7 +91,6 @@ const Monsters = () => {
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
-      console.log(node.scrollHeight);
     }
   }, []);
 
@@ -166,7 +165,6 @@ const Monsters = () => {
         indexOfCurMonster = i;
     }
     const scrollPosition = (scrollMaxHeight / 22) * indexOfCurMonster;
-    console.log(scrollPosition, indexOfCurMonster, scrollMaxHeight);
     setCurComboLegionValue(e.target.value as string);
     setCurLegion(curLegionTmp);
     window.scrollTo({ top: scrollPosition, left: 0, behavior: "smooth" });
@@ -183,17 +181,8 @@ const Monsters = () => {
       curLegion?.id,
       monsterTokenID
     );
-    console.log(response);
     setHuntedStatus(response ? 1 : 2);
   };
-
-  console.log(
-    curLegion?.status === "1" &&
-      (monsters[0] as MonsterInterface).ap <=
-        (curLegion as LegionInterface).attackPower,
-    curLegion?.status,
-    (curLegion as LegionInterface).attackPower
-  );
 
   return (
     <Box>
