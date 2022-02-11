@@ -768,29 +768,41 @@ export const translations = {
     pl: 'TWÓJ Ekwipunek',
     ph: 'IYONG IMBENTARYO'
   },
+  'availableLegions': {
+    en: 'Available legions to hunt',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'yourMaxAp': {
-    en: 'Your Max AP',
-    es: 'TU AP MÁXIMO',
-    cn: '您的 MAX AP',
-    pt: 'SEU AP MÁXIMO',
-    tr: "MAKSİMUM AP'NİZ",
-    ru: 'ВАШ МАКСИМАЛЬНЫЙ AP',
-    fr: 'VOTRE PA MAX',
-    de: 'UW MAX AP',
-    pl: 'TWÓJ MAX AP',
-    ph: 'IYONG MAX AP'
+    en: 'AP of top legion',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'unClaimed': {
-    en: 'Unclaimed',
-    es: 'no reclamado',
-    cn: '无人认领',
-    pt: 'não reivindicado',
-    tr: 'sahipsiz',
-    ru: 'невостребованный',
-    fr: 'non réclamés',
-    de: 'niet geclaimd',
-    pl: 'nieodebrane',
-    ph: 'hindi na-claim'
+    en: 'Unclaimed $BLST',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'taxHuntsLeft': {
     en: 'Tax Hunts Left',
@@ -901,7 +913,7 @@ export const translations = {
     ph: ''
   },
   'takeActionBuyBlst': {
-    en: 'BUY BLST',
+    en: 'BUY $BLST',
     es: '',
     cn: '',
     pt: '',
