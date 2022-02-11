@@ -157,7 +157,7 @@ const AppBarComponent = () => {
             </SwipeableDrawer>
           </Box>
           <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
-            <img src='/assets/images/logo.png' style={{ height: '55px' }} alt='logo' />
+            <img src='/assets/images/logo_dashboard.png' style={{ height: '55px' }} alt='logo' />
           </NavLink>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
