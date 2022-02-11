@@ -1164,6 +1164,30 @@ export const translations = {
     pl: 'Sortuj według',
     ph: 'Pagbukud-bukurin Ayon'
   },
+  'sendToMarketplace': {
+    en: 'Send To Marketplace',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'confirm': {
+    en: 'Confirm',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'huntTime': {
     en: 'Hunting Time!',
     es: '',

@@ -7,9 +7,9 @@ import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getOnMarketplace, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, getOwner, cancelMarketplace, buyToken, getPrice } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
-import WarriorCard from '../../component/Cards/WarriorCard';
+import WarriorMarketCard from '../../component/Cards/WarriorMarketCard';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 
@@ -29,6 +29,15 @@ const useStyles = makeStyles({
 	}
 });
 
+type WarriorProps = {
+	id: string;
+	type: string;
+	power: string;
+	strength: string;
+	owner: boolean;
+	price: string;
+};
+
 const Warriors = () => {
 	const {
 		account,
@@ -38,8 +47,6 @@ const Warriors = () => {
 	const [baseGifUrl, setBaseGifUrl] = React.useState('');
 	const [sortAp, setSortAp] = React.useState(false);
 	const [sortBlst, setSortBlst] = React.useState(false);
-	const [balance, setBalance] = React.useState('0');
-	const [maxPower, setMaxPower] = React.useState(0);
 	const [warriors, setWarriors] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
@@ -75,17 +82,18 @@ const Warriors = () => {
 		setLoading(true);
 		setBaseJpgUrl(await getBaseJpgURL(web3, warriorContract));
 		setBaseGifUrl(await getBaseGifURL(web3, warriorContract));
-		setBalance(await getWarriorBalance(web3, warriorContract, account));
-		const ids = await getWarriorTokenIds(web3, warriorContract, account);
-		let amount = 0;
+
+		const ids = await getOnMarketplace(web3, warriorContract);
 		let warrior;
+		let owner;
+		let price;
 		let tempWarriors = [];
 		for (let i = 0; i < ids.length; i++) {
 			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			tempWarriors.push({ ...warrior, id: ids[i] });
-			amount += parseInt(warrior.power);
+			owner = await getOwner(web3, warriorContract, ids[i]);
+			price = await getPrice(web3, warriorContract, ids[i]);
+			tempWarriors.push({ ...warrior, id: ids[i], owner: owner === account ? true : false, price: price });
 		}
-		setMaxPower(amount);
 		setWarriors(tempWarriors);
 		setLoading(false);
 	}
@@ -105,6 +113,67 @@ const Warriors = () => {
 			setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
 		}
 	};
+
+	const handleCancel = async (id: number) => {
+		await cancelMarketplace(web3, warriorContract, account, id);
+		getBalance();
+	}
+
+	const handleBuy = async (id: number) => {
+		await buyToken(web3, warriorContract, account, id);
+		getBalance();
+	}
+
+	const handleSortAp = (value: boolean) => {
+		setSortAp(value);
+		handleSort('ap');
+	}
+
+	const handleSortBlst = (value: boolean) => {
+		setSortBlst(value);
+		handleSort('blst');
+	}
+
+	const handleSort = (type: string) => {
+		let temp = warriors;
+		temp.sort((a: any, b: any) => {
+			if (type === 'ap') {
+				if (sortAp === true) {
+					if (parseInt(a.power) > parseInt(b.power)) {
+						return 1;
+					}
+					if (parseInt(a.power) < parseInt(b.power)) {
+						return -1;
+					}
+				} else {
+					if (parseInt(a.power) > parseInt(b.power)) {
+						return -1;
+					}
+					if (parseInt(a.power) < parseInt(b.power)) {
+						return 1;
+					}
+				}
+			} else {
+				if (sortBlst === true) {
+					if (parseInt(a.price) > parseInt(b.price)) {
+						return 1;
+					}
+					if (parseInt(a.price) < parseInt(b.price)) {
+						return -1;
+					}
+				} else {
+					if (parseInt(a.price) > parseInt(b.price)) {
+						return -1;
+					}
+					if (parseInt(a.price) < parseInt(b.price)) {
+						return 1;
+					}
+				}
+			}
+			return 0;
+		});
+		setWarriors(temp);
+	}
 
 	return <Box>
 		<Helmet>
@@ -130,7 +199,7 @@ const Warriors = () => {
 			(loading === false && mintLoading === false) &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
-					<Grid item md={4} xs={12}>
+					<Grid item md={3} xs={12}>
 						<FormControl component="fieldset">
 							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterLevel')}:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
@@ -144,7 +213,7 @@ const Warriors = () => {
 							</ButtonGroup>
 						</FormControl>
 					</Grid>
-					<Grid item xs={12} md={4}>
+					<Grid item xs={12} md={3}>
 						<FormControl component="fieldset" sx={{ width: '90%' }}>
 							<FormLabel component="legend">Filter by AP:</FormLabel>
 							<Slider
@@ -168,26 +237,26 @@ const Warriors = () => {
 						<FormControl component="fieldset" sx={{ width: '90%' }}>
 							<FormLabel component="legend">{getTranslation('sortByAp')}:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
-								<Button variant={!sortAp ? "contained" : "outlined"} onClick={() => { setSortAp(!sortAp) }}>{getTranslation('lowest')}</Button>
-								<Button variant={sortAp ? "contained" : "outlined"} onClick={() => { setSortAp(!sortAp) }}>{getTranslation('highest')}</Button>
+								<Button variant={!sortAp ? "contained" : "outlined"} onClick={() => { handleSortAp(!sortAp) }}>{getTranslation('lowest')}</Button>
+								<Button variant={sortAp ? "contained" : "outlined"} onClick={() => { handleSortAp(!sortAp) }}>{getTranslation('highest')}</Button>
 							</ButtonGroup>
 						</FormControl>
 					</Grid>
 					<Grid item xs={12} md={3}>
-							<FormControl component="fieldset" sx={{ width: '90%' }}>
-								<FormLabel component="legend">{getTranslation('sortBy')} $:</FormLabel>
-								<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
-									<Button variant={!sortBlst ? "contained" : "outlined"} onClick={() => { setSortBlst(!sortBlst) }}>{getTranslation('lowest')}</Button>
-									<Button variant={sortBlst ? "contained" : "outlined"} onClick={() => { setSortBlst(!sortBlst) }}>{getTranslation('highest')}</Button>
-								</ButtonGroup>
-							</FormControl>
-						</Grid>
+						<FormControl component="fieldset" sx={{ width: '90%' }}>
+							<FormLabel component="legend">{getTranslation('sortBy')} $:</FormLabel>
+							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
+								<Button variant={!sortBlst ? "contained" : "outlined"} onClick={() => { handleSortBlst(!sortBlst) }}>{getTranslation('lowest')}</Button>
+								<Button variant={sortBlst ? "contained" : "outlined"} onClick={() => { handleSortBlst(!sortBlst) }}>{getTranslation('highest')}</Button>
+							</ButtonGroup>
+						</FormControl>
+					</Grid>
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
 						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
+								<WarriorMarketCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
 							</Grid>
 						))
 					}
