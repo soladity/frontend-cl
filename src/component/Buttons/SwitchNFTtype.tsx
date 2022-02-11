@@ -121,7 +121,7 @@ const SvgButton = React.forwardRef(function SvgButton(
 });
 
 export default function UnstyledButtonCustom(props: any) {
-  const [showAnimation, setShowAnimation] = React.useState(false)
+  const [showAnimation, setShowAnimation] = React.useState(localStorage.getItem('showAnimation') === '1' ? true : false)
   if (showAnimation) {
     return (
       <SvgButton
