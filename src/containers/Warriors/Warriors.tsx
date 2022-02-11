@@ -1,13 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogActions, DialogContent, TextField } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, sendToMarketplace } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
@@ -42,6 +42,9 @@ const Warriors = () => {
 	const [maxPower, setMaxPower] = React.useState(0);
 	const [warriors, setWarriors] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
+	const [openSupply, setOpenSupply] = React.useState(false);
+	const [selectedWarrior, setSelectedWarrior] = React.useState(0);
+	const [price, setPrice] = React.useState(0);
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
@@ -114,6 +117,25 @@ const Warriors = () => {
 			setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
 		}
 	};
+
+	const handleSupplyClose = () => {
+		setOpenSupply(false);
+	};
+
+	const handleOpenSupply = (id: number) => {
+		setSelectedWarrior(id);
+		setOpenSupply(true);
+	}
+
+	const handlePrice = (e: any) => {
+		setPrice(e.target.value);
+	}
+
+	const handleSendToMarketplace = async () => {
+		setOpenSupply(false);
+		await sendToMarketplace(web3, warriorContract, account, selectedWarrior, price);
+		getBalance();
+	}
 
 	return <Box>
 		<Helmet>
@@ -244,7 +266,7 @@ const Warriors = () => {
 					{
 						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
+								<WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} />
 							</Grid>
 						))
 					}
@@ -291,6 +313,25 @@ const Warriors = () => {
 				</Grid>
 			</>
 		}
+		<Dialog onClose={handleSupplyClose} open={openSupply}>
+			<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
+			<DialogContent>
+				<TextField
+					autoFocus
+					margin="dense"
+					id="price"
+					label="Price"
+					type="number"
+					fullWidth
+					variant="standard"
+					value={price}
+					onChange={handlePrice}
+				/>
+			</DialogContent>
+			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
+				{getTranslation('confirm')}
+			</CommonBtn>
+		</Dialog>
 	</Box>
 }
 

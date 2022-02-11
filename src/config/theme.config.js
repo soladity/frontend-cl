@@ -16,7 +16,7 @@ export const themeConfig = createTheme({
   palette: {
     backgroundColor: '#bbb',
     primary: {
-      main: '#24f39f'
+      main: '#f66810'
     },
     secondary: {
       main: '#ef4444'
