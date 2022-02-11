@@ -225,6 +225,16 @@ export const getHuntStatus = async (web3, contract, id) => {
     return status;
 }
 
+export const addBeasts = async (web3, contract, account, legionID, beastsIDs) => {
+    const response = await contract.methods.addBeasts(legionID, beastsIDs).send({ from: account })
+    return response
+}
+
+export const addWarriors = async (web3, contract, account, legionID, warriosIDs) => {
+    const response = await contract.methods.addWarriors(legionID, warriosIDs).send({ from: account })
+    return response
+}
+
 export const sendToMarketplace = async (web3, contract, account, id, price) => {
     const response = await contract.methods.sendToMarketplace(id, price).send({ from: account });
     return response;

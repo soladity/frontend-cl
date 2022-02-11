@@ -56,13 +56,19 @@ const Home = () => {
             </Grid>
             <ToSocial />
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-                <Box>
-                    <Box>
-                        <YouTube
-                            videoId="j942wKiXFu8"
-                            onReady={(e) => e.target.playVideo()}
-                        />
-                    </Box>
+                <Box sx={{ width: '100%' }}>
+                    <Grid spacing={2} container>
+                        <Grid item md={3} sm={2} xs={1}>
+                        </Grid>
+                        <Grid item md={6} sm={8} xs={10}>
+                            <YouTube
+                                videoId="SA-PmNW7syw"
+                                opts={{ width: '100%', height: '100%' }}
+                            />
+                        </Grid>
+                        <Grid item md={3} sm={2} xs={1}>
+                        </Grid>
+                    </Grid>
                     <a href="https://docs.cryptolegions.app/" target={'blank'} style={{ color: 'white', border: 'none' }}>
                         <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', marginTop: 2 }}>
                             READ INSTRUCTIONS IN WHITEPAPER

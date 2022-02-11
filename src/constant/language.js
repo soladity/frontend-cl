@@ -769,7 +769,7 @@ export const translations = {
     ph: 'IYONG IMBENTARYO'
   },
   'yourMaxAp': {
-    en: 'YOUR MAX AP',
+    en: 'Your Max AP',
     es: 'TU AP MÁXIMO',
     cn: '您的 MAX AP',
     pt: 'SEU AP MÁXIMO',
@@ -781,7 +781,7 @@ export const translations = {
     ph: 'IYONG MAX AP'
   },
   'unClaimed': {
-    en: 'UNCLAIMED',
+    en: 'Unclaimed',
     es: 'no reclamado',
     cn: '无人认领',
     pt: 'não reivindicado',
@@ -840,6 +840,30 @@ export const translations = {
     pl: 'Ilość przywołania wojownika',
     ph: 'Ipatawag ang Dami ng Mandirigma'
   },
+  'takeActionCreateLegion': {
+    en: 'CREATE LEGION',
+    es: 'Comprar Bestias',
+    cn: '购买野兽',
+    pt: 'Comprar Bestas',
+    tr: 'Canavar satın al',
+    ru: 'Купить зверей',
+    fr: 'Acheter des bêtes',
+    de: 'Beesten kopen',
+    pl: 'Kup bestie',
+    ph: 'Bumili ng mga Hayop'
+  },
+  'takeActionHunt': {
+    en: 'HUNT',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'takeActionBuyBeasts': {
     en: 'BUY BEASTS',
     es: 'Comprar Bestias',
@@ -866,15 +890,27 @@ export const translations = {
   },
   'takeActionBuyLegions': {
     en: 'BUY LEGIONS',
-    es: 'Comprar legiones',
-    cn: '购买军团',
-    pt: 'Compre Legiões',
-    tr: 'Lejyon satın al',
-    ru: 'Купить легионы',
-    fr: 'Acheter des légions',
-    de: 'Legioenen kopen',
-    pl: 'Kup legiony',
-    ph: 'Bumili ng Legions'
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'takeActionBuyBlst': {
+    en: 'BUY BLST',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'yourAchievements': {
     en: 'YOUR ACHIEVEMENTS',
@@ -961,7 +997,7 @@ export const translations = {
     ph: 'Pagtawag ng mga Mandirigma...'
   },
   'marketplaceTax': {
-    en: 'MARKETPLACE TAX',
+    en: 'Marketplace Tax',
     es: 'Impuesto del Mercado',
     cn: '市场税',
     pt: 'Imposto do mercado',
@@ -973,7 +1009,7 @@ export const translations = {
     ph: 'Buwis sa Marketplace'
   },
   'huntTax': {
-    en: 'HUNT TAX',
+    en: 'Hunt Tax',
     es: 'Impuesto de caza',
     cn: '=狩猎税',
     pt: 'Taxa de caça',
@@ -985,7 +1021,7 @@ export const translations = {
     ph: 'Buwis sa Hunt'
   },
   'buyTax': {
-    en: 'BUY TAX',
+    en: 'Buy Tax',
     es: 'Comprar impuestos',
     cn: '购买税',
     pt: 'Comprar imposto',
@@ -997,7 +1033,7 @@ export const translations = {
     ph: 'Bumili ng Buwis'
   },
   'sellTax': {
-    en: 'SELL TAX',
+    en: 'Sell Tax',
     es: 'Impuesto de venta',
     cn: '销售税',
     pt: 'Imposto sobre vendas',
@@ -1021,7 +1057,7 @@ export const translations = {
     ph: 'Legion Damage Bawat Hunt'
   },
   'summoningFee': {
-    en: 'SUMMONING FEE',
+    en: 'Summoning Fee',
     es: 'Cuota de convocatoria...',
     cn: '召唤费...',
     pt: 'taxa de invocação...',
@@ -1130,6 +1166,126 @@ export const translations = {
   },
   'confirm': {
     en: 'Confirm',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'huntTime': {
+    en: 'Hunting Time!',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'huntTimeSubtitle1': {
+    en: 'Your legion is now attacking the monster:',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'congratulation': {
+    en: 'Congratulations!',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'congSubtitle1': {
+    en: 'You defeated this monster!',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'congSubtitle2': {
+    en: 'You have rewarded',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'congSubtitle3': {
+    en: 'To win you need to roll equal or less than:',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'continue': {
+    en: 'Continue',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'defeatTitle': {
+    en: 'Better Luck Next Time...',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'defeatSubtitle1': {
+    en: 'Your legion did not succeed in getting Bloodstoone from this monster, this time',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'defeatSubtitle2': {
+    en: 'To win you need to roll equal or less than:',
     es: '',
     cn: '',
     pt: '',
