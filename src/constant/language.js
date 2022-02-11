@@ -769,7 +769,7 @@ export const translations = {
     ph: 'IYONG IMBENTARYO'
   },
   'yourMaxAp': {
-    en: 'YOUR MAX AP',
+    en: 'Your Max AP',
     es: 'TU AP MÁXIMO',
     cn: '您的 MAX AP',
     pt: 'SEU AP MÁXIMO',
@@ -781,7 +781,7 @@ export const translations = {
     ph: 'IYONG MAX AP'
   },
   'unClaimed': {
-    en: 'UNCLAIMED',
+    en: 'Unclaimed',
     es: 'no reclamado',
     cn: '无人认领',
     pt: 'não reivindicado',
@@ -997,7 +997,7 @@ export const translations = {
     ph: 'Pagtawag ng mga Mandirigma...'
   },
   'marketplaceTax': {
-    en: 'MARKETPLACE TAX',
+    en: 'Marketplace Tax',
     es: 'Impuesto del Mercado',
     cn: '市场税',
     pt: 'Imposto do mercado',
@@ -1009,7 +1009,7 @@ export const translations = {
     ph: 'Buwis sa Marketplace'
   },
   'huntTax': {
-    en: 'HUNT TAX',
+    en: 'Hunt Tax',
     es: 'Impuesto de caza',
     cn: '=狩猎税',
     pt: 'Taxa de caça',
@@ -1021,7 +1021,7 @@ export const translations = {
     ph: 'Buwis sa Hunt'
   },
   'buyTax': {
-    en: 'BUY TAX',
+    en: 'Buy Tax',
     es: 'Comprar impuestos',
     cn: '购买税',
     pt: 'Comprar imposto',
@@ -1033,7 +1033,7 @@ export const translations = {
     ph: 'Bumili ng Buwis'
   },
   'sellTax': {
-    en: 'SELL TAX',
+    en: 'Sell Tax',
     es: 'Impuesto de venta',
     cn: '销售税',
     pt: 'Imposto sobre vendas',
@@ -1057,7 +1057,7 @@ export const translations = {
     ph: 'Legion Damage Bawat Hunt'
   },
   'summoningFee': {
-    en: 'SUMMONING FEE',
+    en: 'Summoning Fee',
     es: 'Cuota de convocatoria...',
     cn: '召唤费...',
     pt: 'taxa de invocação...',
