@@ -21,7 +21,7 @@ export const navConfig = {
             children: [],
         },
         {
-            path: '/monsters',
+            path: '/hunt',
             // element: React.lazy(() => import('./../containers/Monsters/Monsters'))
             element: <Monsters />
         },
@@ -96,7 +96,7 @@ export const navConfig = {
                 type: 'navlink',
                 title: 'hunt',
                 icon: 'hunt',
-                path: '/monsters'
+                path: '/hunt'
             },
             {
                 type: 'divider'
