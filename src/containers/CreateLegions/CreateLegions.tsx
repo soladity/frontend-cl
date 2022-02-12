@@ -197,6 +197,12 @@ const CreateLegions: React.FC = () => {
     );
     tmpDropItemList.splice(indexOfRight, 1);
     setDropItemList(tmpDropItemList);
+    setIsWDropable(
+      totalCP > 0 &&
+        totalCP >= warriorDropBoxList.length &&
+        totalAP >= createlegions.main.minAvailableAP &&
+        legionName.length > 0
+    );
     setIndexForLeft(-1);
     getTotalAP_CP();
   }, [indexForLeft, w5bInDropList]);
