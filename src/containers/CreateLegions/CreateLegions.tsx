@@ -265,6 +265,8 @@ const CreateLegions: React.FC = () => {
   const moveToLeft = (index: number, w5b: boolean) => {
     setIndexForLeft(index);
     setW5bInDropList(w5b);
+    console.log(index, w5b);
+    console.log(beastDragBoxList, warriorDragBoxList);
   };
 
   const handleChangeAp = (
@@ -573,8 +575,14 @@ const CreateLegions: React.FC = () => {
                       <Grid item>
                         <CommonBtn
                           variant="contained"
+                          sx={{
+                            fontSize: 14,
+                            fontWeight: "bold",
+                            width: "100%",
+                            marginBottom: 1,
+                          }}
                           onClick={() => handleMint()}
-                          disabled={!isWDropable}
+                          disabled={!isWDropable || mintLoading}
                         >
                           {mintLoading ? (
                             <Spinner color="white" size={40} />
