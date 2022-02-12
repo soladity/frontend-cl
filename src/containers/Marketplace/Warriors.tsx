@@ -116,7 +116,7 @@ const Warriors = () => {
 
 	const handleCancel = async (id: number) => {
 		await cancelMarketplace(web3, warriorContract, account, id);
-		getBalance();
+		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 	}
 
 	const handleBuy = async (id: number) => {

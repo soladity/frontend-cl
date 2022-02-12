@@ -134,7 +134,7 @@ const Warriors = () => {
 	const handleSendToMarketplace = async () => {
 		setOpenSupply(false);
 		await sendToMarketplace(web3, warriorContract, account, selectedWarrior, price);
-		getBalance();
+		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior));
 	}
 
 	return <Box>
