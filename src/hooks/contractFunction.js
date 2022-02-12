@@ -235,6 +235,11 @@ export const addWarriors = async (web3, contract, account, legionID, warriosIDs)
     return response
 }
 
+export const claimReward = async (web3, contract, account) => {
+    const response = await contract.methods.claimReward().send({ from: account })
+    return response
+}
+
 export const sendToMarketplace = async (web3, contract, account, id, price) => {
     const response = await contract.methods.sendToMarketplace(id, price).send({ from: account });
     return response;

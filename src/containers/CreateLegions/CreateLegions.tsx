@@ -214,9 +214,9 @@ const CreateLegions: React.FC = () => {
     setTotalAp(sum);
     setIsWDropable(
       cp > 0 &&
-        cp >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
+      cp >= warriorDropBoxList.length &&
+      totalAP >= createlegions.main.minAvailableAP &&
+      legionName.length > 0
     );
   };
 
@@ -317,9 +317,9 @@ const CreateLegions: React.FC = () => {
     setLegionName(e.target.value);
     setIsWDropable(
       totalCP > 0 &&
-        totalCP >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
+      totalCP >= warriorDropBoxList.length &&
+      totalAP >= createlegions.main.minAvailableAP &&
+      legionName.length > 0
     );
   };
 
@@ -448,57 +448,50 @@ const CreateLegions: React.FC = () => {
                                 aria-label="outlined button group"
                               >
                                 <Button
-                                  variant={`${
-                                    filter === "all" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "all" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("all")}
                                 >
                                   {getTranslation("all")}
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "1" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "1" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("1")}
                                 >
                                   1
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "2" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "2" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("2")}
                                 >
                                   2
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "3" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "3" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("3")}
                                 >
                                   3
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "4" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "4" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("4")}
                                 >
                                   4
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "5" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "5" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("5")}
                                 >
                                   5
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "20" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "20" ? "contained" : "outlined"
+                                    }`}
                                   onClick={() => setFilter("20")}
                                 >
                                   20
@@ -579,7 +572,9 @@ const CreateLegions: React.FC = () => {
                           {mintLoading ? (
                             <Spinner color="white" size={40} />
                           ) : (
-                            getTranslation("createLegion")(
+                            getTranslation("createLegion")
+                            + "" +
+                            (
                               totalAP < createlegions.main.minAvailableAP
                                 ? " (min 2000 AP needed)"
                                 : " " + totalAP + " AP"
