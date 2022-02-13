@@ -133,13 +133,13 @@ export const navConfig = {
             {
                 type: 'link',
                 title: 'buyBlst',
-                icon: 'pancakeswap',
+                icon: 'pancake.png',
                 path: 'https://pancakeswap.com'
             },
             {
                 type: 'link',
                 title: 'whitepaper',
-                icon: 'whitepaper',
+                icon: 'pancake.png',
                 path: 'https://docs.cryptolegions.app/'
             },
             {

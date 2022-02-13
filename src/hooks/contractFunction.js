@@ -261,7 +261,7 @@ export const cancelMarketplace = async (web3, contract, account, id) => {
 }
 
 export const buyToken = async (web3, contract, account, id) => {
-    const response = await contract.methods.sendBackFromMarketplace(id).send({ from: account });
+    const response = await contract.methods.buyToken(id).send({ from: account });
     return response;
 }
 

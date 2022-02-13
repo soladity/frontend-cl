@@ -1,14 +1,12 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider } from '@mui/material';
-import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
-import { NavLink } from 'react-router-dom';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getOnMarketplace, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, getOwner, cancelMarketplace, buyToken, getPrice } from '../../hooks/contractFunction';
-import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
+import { getOnMarketplace, getWarriorToken, getBaseJpgURL, getBaseGifURL, getOwner, cancelMarketplace, buyToken, getPrice } from '../../hooks/contractFunction';
+import { useWarrior, useWeb3 } from '../../hooks/useContract';
 import WarriorMarketCard from '../../component/Cards/WarriorMarketCard';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
@@ -52,11 +50,9 @@ const Warriors = () => {
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
-	const [mintLoading, setMintLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const warriorContract = useWarrior();
-	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 
 
@@ -66,17 +62,6 @@ const Warriors = () => {
 		}
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
-
-	const handleMint = async (amount: Number) => {
-		setMintLoading(true);
-		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0') {
-			await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
-		}
-		await mintWarrior(web3, warriorContract, account, amount);
-		getBalance();
-		setMintLoading(false);
-	}
 
 	const getBalance = async () => {
 		setLoading(true);
@@ -121,7 +106,7 @@ const Warriors = () => {
 
 	const handleBuy = async (id: number) => {
 		await buyToken(web3, warriorContract, account, id);
-		getBalance();
+		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 	}
 
 	const handleSortAp = (value: boolean) => {
@@ -196,7 +181,7 @@ const Warriors = () => {
 			</Grid>
 		</Grid>
 		{
-			(loading === false && mintLoading === false) &&
+			loading === false &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
 					<Grid item md={3} xs={12}>
@@ -268,26 +253,6 @@ const Warriors = () => {
 			<>
 				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
 					<Typography variant='h4' >{getTranslation('loadingWarriors')}</Typography>
-				</Grid>
-				<Grid container sx={{ justifyContent: 'center' }}>
-					<Grid item xs={1}>
-						<Card>
-							<CardMedia
-								component="img"
-								image="/assets/images/loading.gif"
-								alt="Loading"
-								loading="lazy"
-							/>
-						</Card>
-					</Grid>
-				</Grid>
-			</>
-		}
-		{
-			mintLoading === true &&
-			<>
-				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
-					<Typography variant='h4' >{getTranslation('summoningWarriors')}</Typography>
 				</Grid>
 				<Grid container sx={{ justifyContent: 'center' }}>
 					<Grid item xs={1}>
