@@ -255,6 +255,13 @@
     },
     {
       "inputs": [],
+      "name": "claimReward",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "denominator",
       "outputs": [
         {
@@ -282,6 +289,19 @@
       "name": "execute",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "feehandler",
+      "outputs": [
+        {
+          "internalType": "contract FeeHandler",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -698,6 +718,11 @@
           "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
         }
       ],
       "name": "sendToMarketplace",
@@ -727,16 +752,16 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_tax",
+          "name": "_fee",
           "type": "uint256"
         },
         {
-          "internalType": "uint256",
-          "name": "_startTax",
-          "type": "uint256"
+          "internalType": "uint8",
+          "name": "_index",
+          "type": "uint8"
         }
       ],
-      "name": "setEarlyClaimTax",
+      "name": "setFee",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -890,37 +915,6 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address payable",
-          "name": "_addr",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawBNB",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawBNBOwner",
-      "outputs": [],
-      "stateMutability": "nonpayable",
       "type": "function"
     }
   ]

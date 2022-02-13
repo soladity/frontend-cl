@@ -768,29 +768,41 @@ export const translations = {
     pl: 'TWÓJ Ekwipunek',
     ph: 'IYONG IMBENTARYO'
   },
+  'availableLegions': {
+    en: 'Available legions to hunt',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'yourMaxAp': {
-    en: 'YOUR MAX AP',
-    es: 'TU AP MÁXIMO',
-    cn: '您的 MAX AP',
-    pt: 'SEU AP MÁXIMO',
-    tr: "MAKSİMUM AP'NİZ",
-    ru: 'ВАШ МАКСИМАЛЬНЫЙ AP',
-    fr: 'VOTRE PA MAX',
-    de: 'UW MAX AP',
-    pl: 'TWÓJ MAX AP',
-    ph: 'IYONG MAX AP'
+    en: 'AP of top legion',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'unClaimed': {
-    en: 'UNCLAIMED',
-    es: 'no reclamado',
-    cn: '无人认领',
-    pt: 'não reivindicado',
-    tr: 'sahipsiz',
-    ru: 'невостребованный',
-    fr: 'non réclamés',
-    de: 'niet geclaimd',
-    pl: 'nieodebrane',
-    ph: 'hindi na-claim'
+    en: 'Unclaimed $BLST',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'taxHuntsLeft': {
     en: 'Tax Hunts Left',
@@ -901,7 +913,7 @@ export const translations = {
     ph: ''
   },
   'takeActionBuyBlst': {
-    en: 'BUY BLST',
+    en: 'BUY $BLST',
     es: '',
     cn: '',
     pt: '',
@@ -997,7 +1009,7 @@ export const translations = {
     ph: 'Pagtawag ng mga Mandirigma...'
   },
   'marketplaceTax': {
-    en: 'MARKETPLACE TAX',
+    en: 'Marketplace Tax',
     es: 'Impuesto del Mercado',
     cn: '市场税',
     pt: 'Imposto do mercado',
@@ -1009,7 +1021,7 @@ export const translations = {
     ph: 'Buwis sa Marketplace'
   },
   'huntTax': {
-    en: 'HUNT TAX',
+    en: 'Hunt Tax',
     es: 'Impuesto de caza',
     cn: '=狩猎税',
     pt: 'Taxa de caça',
@@ -1021,7 +1033,7 @@ export const translations = {
     ph: 'Buwis sa Hunt'
   },
   'buyTax': {
-    en: 'BUY TAX',
+    en: 'Buy Tax',
     es: 'Comprar impuestos',
     cn: '购买税',
     pt: 'Comprar imposto',
@@ -1033,7 +1045,7 @@ export const translations = {
     ph: 'Bumili ng Buwis'
   },
   'sellTax': {
-    en: 'SELL TAX',
+    en: 'Sell Tax',
     es: 'Impuesto de venta',
     cn: '销售税',
     pt: 'Imposto sobre vendas',
@@ -1057,7 +1069,7 @@ export const translations = {
     ph: 'Legion Damage Bawat Hunt'
   },
   'summoningFee': {
-    en: 'SUMMONING FEE',
+    en: 'Summoning Fee',
     es: 'Cuota de convocatoria...',
     cn: '召唤费...',
     pt: 'taxa de invocação...',
@@ -1151,6 +1163,30 @@ export const translations = {
     de: 'Sorteer op',
     pl: 'Sortuj według',
     ph: 'Pagbukud-bukurin Ayon'
+  },
+  'sendToMarketplace': {
+    en: 'Send To Marketplace',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'confirm': {
+    en: 'Confirm',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'huntTime': {
     en: 'Hunting Time!',

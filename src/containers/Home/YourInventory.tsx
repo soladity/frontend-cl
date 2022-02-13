@@ -84,13 +84,13 @@ const YourInventory = () => {
                     {getTranslation('warriors')} : {warriorBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('legions')} : {availableLegionCount} / {legionTokenIds.length}
+                    {getTranslation('availableLegions')} : {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('yourMaxAp')} : {maxAttackPower}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('unClaimed')} $ : {unclaimedBalance}
+                    {getTranslation('unClaimed')} : {unclaimedBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('taxHuntsLeft')} : {taxLeftDays}

@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { setReloadStatus } from '../../actions/contractActions'
 import { getTranslation } from '../../utils/translation';
 import { makeStyles } from '@mui/styles';
+import { NavLink } from 'react-router-dom';
 
 import CommonBtn from '../../component/Buttons/CommonBtn'
 
@@ -214,25 +215,25 @@ const TakeAction = () => {
                                                 1
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(5, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 5
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(10, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 10
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(20, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 20
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(1, TransitionUp)}
+                                                onClick={() => handleBeastMint(100, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 100
@@ -268,25 +269,25 @@ const TakeAction = () => {
                                                 1
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(5, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 5
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(10, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 10
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(20, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 20
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                onClick={() => handleWarriorMint(100, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 100
@@ -294,10 +295,14 @@ const TakeAction = () => {
                                         </Box>
                                     </Popover>
                                     <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('takeActionCreateLegion')}
+                                        <NavLink to='/createlegions' className='non-style'>
+                                            {getTranslation('takeActionCreateLegion')}
+                                        </NavLink>
                                     </CommonBtn>
                                     <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%' }}>
-                                        {getTranslation('takeActionHunt')}
+                                        <NavLink to='/hunt' className='non-style'>
+                                            {getTranslation('takeActionHunt')}
+                                        </NavLink>
                                     </CommonBtn>
                                 </Box>
                             </Box>

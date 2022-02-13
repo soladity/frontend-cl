@@ -16,22 +16,26 @@ import { Menu, MenuItem } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
-import { getBloodstoneBalance } from '../../hooks/contractFunction';
-import { useBloodstone, useWeb3 } from '../../hooks/useContract';
+import { getBloodstoneBalance, getUnclaimedUSD, claimReward } from '../../hooks/contractFunction';
+import { useBloodstone, useWeb3, useRewardPool, useLegion } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import { AnyAaaaRecord } from 'dns';
 import NavList from '../Nav/NavList';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import CommonBtn from '../../component/Buttons/CommonBtn'
+import { setReloadStatus } from '../../actions/contractActions'
+
 
 declare const window: any;
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const AppBarComponent = () => {
+  const dispatch = useDispatch()
+
   const {
     activate,
     account,
@@ -55,8 +59,12 @@ const AppBarComponent = () => {
   const [balance, setBalance] = React.useState('0');
   const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
   const [showMenu, setShowMenu] = React.useState<boolean>(false);
+  const [unClaimedUSD, setUnclaimedUSD] = React.useState(0)
 
   const bloodstoneContract = useBloodstone();
+  const rewardPoolContract = useRewardPool();
+  const legionContract = useLegion()
+
   const web3 = useWeb3();
 
   React.useEffect(() => {
@@ -69,6 +77,7 @@ const AppBarComponent = () => {
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
+    setUnclaimedUSD(await getUnclaimedUSD(web3, rewardPoolContract, account));
   }
 
   const handleOpenNavMenu = (event: any) => {
@@ -116,6 +125,14 @@ const AppBarComponent = () => {
     }
   }
 
+  const handleClaimReward = async () => {
+    const response = await claimReward(web3, legionContract, account)
+    console.log(response)
+    dispatch(setReloadStatus({
+      reloadContractStatus: new Date()
+    }))
+  }
+
   return (
     <AppBar position="fixed"
       sx={{
@@ -153,7 +170,7 @@ const AppBarComponent = () => {
             </SwipeableDrawer>
           </Box>
           <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
-            <img src='/assets/images/logo.png' style={{ height: '55px' }} alt='logo' />
+            <img src='/assets/images/logo_dashboard.png' style={{ height: '55px' }} alt='logo' />
           </NavLink>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -173,11 +190,14 @@ const AppBarComponent = () => {
           <Box sx={{ flexGrow: 0 }}>
             {
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' } }}>
-                <CommonBtn sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}>
+                <CommonBtn
+                  sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}
+                  onClick={() => handleClaimReward()}
+                >
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
-                  {getTranslation('claim')} 0 ${getTranslation('bloodstone')}
+                  {getTranslation('claim')} {unClaimedUSD} ${getTranslation('bloodstone')}
                 </CommonBtn>
                 <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0 } }}>
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />

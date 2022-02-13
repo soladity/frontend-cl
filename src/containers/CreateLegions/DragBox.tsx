@@ -44,7 +44,10 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseJpgUrl, ba
             handlerId: monitor.getHandlerId(),
         }),
     }))
-    const opacity = isDragging ? 0.4 : 1
+    const opacity = isDragging ? 0.4 : 1;
+    const empty = () => {
+        
+    }
     return (
         <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>
             {
@@ -53,7 +56,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseJpgUrl, ba
             }
             {
                 w5b &&
-                <WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} />
+                <WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} handleOpenSupply={empty}/>
             }
         </Grid>
     )
