@@ -206,7 +206,7 @@ const AppBarComponent = () => {
                       <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>{formatNumber(balance)}</Typography>
                       <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>$BLST</Typography>
                     </Box>
-                    <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
+                    <Button variant="contained" sx={{ fontWeight: 'bold', color: 'white', background: '#622f11' }}>
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
                         <BadgeIcon />
                       </IconButton>

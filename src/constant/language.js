@@ -804,17 +804,29 @@ export const translations = {
     pl: '',
     ph: ''
   },
-  'taxHuntsLeft': {
-    en: 'Tax Hunts Left',
-    es: 'Caza de impuestos a la izquierda',
-    cn: '剩下的税收狩猎',
-    pt: 'Buscas fiscais restantes',
-    tr: 'Vergi Avları Sol',
-    ru: 'Осталась налоговая охота',
-    fr: 'Chasses aux impôts à gauche',
-    de: 'Belastingjacht nog over',
-    pl: 'Poszukiwania podatkowe w lewo',
-    ph: 'Naiwan ang mga Tax Hunt'
+  'taxDaysLeft': {
+    en: 'Tax Days Left',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'BLSTInYourWallet': {
+    en: '$BLST in Your Wallet',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'takeAction': {
     en: 'TAKE ACTION',
