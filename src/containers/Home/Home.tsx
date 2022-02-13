@@ -68,6 +68,7 @@ const Home = () => {
                             /> */}
                             <ReactPlayer
                                 url="https://youtu.be/SA-PmNW7syw"
+                                style={{ width: "100%", height: 'auto' }}
                             />
                         </Grid>
                         <Grid item md={3} sm={2} xs={1}>
