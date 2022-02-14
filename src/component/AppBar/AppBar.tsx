@@ -281,21 +281,27 @@ const AppBarComponent = () => {
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {/* {console.log(typeof unClaimedUSD)} */}
-            {/* {
+            {
               taxLeftDays == '0' ? (
                 <>
-                  <p>You are about to claim {unClaimedUSD} $BLST tax-free.</p>
-                  <p>You will receive {unClaimedUSD} $BLST in your wallet.</p>
-                  <p>Do you want to go ahead?</p>
+                  You are about to claim {unClaimedUSD} $BLST tax-free.
+                  <br />
+                  You will receive {unClaimedUSD} $BLST in your wallet.
+                  <br />
+                  Do you want to go ahead?
+                  <br />
                 </>
               ) : (
                 <>
-                  <p>You will pay {(2 * parseInt(taxLeftDays) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST, and receive only {((100 - 2 * parseInt(taxLeftDays)) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST in your wallet.</p>
-                  <p>If you wait {taxLeftDays} days, then you will be albe to claim tax-free.</p>
-                  <p>Are you sure you want to go ahead now?</p>
+                  You will pay {(2 * parseInt(taxLeftDays) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST, and receive only {((100 - 2 * parseInt(taxLeftDays)) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST in your wallet.
+                  <br />
+                  If you wait {taxLeftDays} days, then you will be albe to claim tax-free.
+                  <br />
+                  Are you sure you want to go ahead now?
+                  <br />
                 </>
               )
-            } */}
+            }
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
