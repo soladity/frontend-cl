@@ -117,9 +117,7 @@ const NavList = (props: any) => {
 						<NavLink to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
 							<Tooltip title={navItem.title || ""} placement="right">
 								<ListItemButton>
-									<ListItemIcon>
-										<InboxIcon />
-									</ListItemIcon>
+								<img src={`/assets/images/${navItem.icon}`} style={{ width: '22px', height: '22px', marginRight: '34px' }} alt='icon' />
 									<ListItemText primary={getTranslation(navItem.title)} />
 								</ListItemButton>
 							</Tooltip>

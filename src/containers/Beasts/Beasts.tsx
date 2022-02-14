@@ -5,8 +5,10 @@ import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
+import { setReloadStatus } from '../../actions/contractActions';
 import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
@@ -49,7 +51,7 @@ const Beasts = () => {
 	const beastContract = useBeast();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
-
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		if (account) {
@@ -74,6 +76,9 @@ const Beasts = () => {
 			await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
 		}
 		await mintBeast(web3, beastContract, account, amount);
+		dispatch(setReloadStatus({
+			reloadContractStatus: new Date()
+		}));
 		getBalance();
 		setMintLoading(false);
 	}

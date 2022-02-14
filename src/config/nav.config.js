@@ -77,25 +77,25 @@ export const navConfig = {
             {
                 type: 'navlink',
                 title: 'warriors',
-                icon: 'warriors',
+                icon: 'warrior.png',
                 path: '/warriors'
             },
             {
                 type: 'navlink',
                 title: 'beasts',
-                icon: 'beasts',
+                icon: 'beast.png',
                 path: '/beasts'
             },
             {
                 type: 'navlink',
                 title: 'legions',
-                icon: 'legions',
+                icon: 'legion.png',
                 path: '/legions'
             },
             {
                 type: 'navlink',
                 title: 'hunt',
-                icon: 'hunt',
+                icon: 'hunt.png',
                 path: '/hunt'
             },
             {
@@ -108,20 +108,20 @@ export const navConfig = {
             {
                 type: 'navlink',
                 title: 'warriors',
-                icon: 'warriors',
+                icon: 'marketWarrior.png',
                 path: '/marketplace/warriors'
             },
             {
                 type: 'navlink',
                 title: 'beasts',
-                icon: 'beasts',
-                path: '/beasts'
+                icon: 'marketBeast.png',
+                path: '/marketplace/beasts'
             },
             {
                 type: 'navlink',
                 title: 'legions',
-                icon: 'legions',
-                path: '/legions'
+                icon: 'marketLegion.png',
+                path: '/marketplace/legions'
             },
             {
                 type: 'divider'
@@ -139,44 +139,44 @@ export const navConfig = {
             {
                 type: 'link',
                 title: 'whitepaper',
-                icon: 'pancake.png',
+                icon: 'whitepaper.png',
                 path: 'https://docs.cryptolegions.app/'
             },
             {
                 type: 'navlink',
                 title: 'help',
-                icon: 'Help',
+                icon: 'support.png',
                 path: '/help'
             },
             {
                 type: 'social',
                 title: 'twitter',
                 icon: '/assets/images/twitter.png',
-                path: 'https://www.twitter.com'
+                path: 'https://twitter.com/LegionsCrypto'
             },
             {
                 type: 'social',
                 title: 'telegram',
                 icon: '/assets/images/telegram.png',
-                path: 'https://www.telegram.com'
+                path: 'https://t.me/CryptoLegionsCommunity'
             },
             {
                 type: 'social',
                 title: 'discord',
                 icon: '/assets/images/discord.png',
-                path: 'https://www.discord.com'
+                path: 'https://discord.gg/V4Z4JykfdH'
             },
             {
                 type: 'social',
                 title: 'youtube',
                 icon: '/assets/images/youtube.png',
-                path: 'https://www.youtube.com'
+                path: 'https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA'
             },
             {
                 type: 'social',
                 title: 'medium',
                 icon: '/assets/images/medium.png',
-                path: 'https://medium.com'
+                path: 'http://cryptolegions.medium.com'
             },
             {
                 type: 'privacy',

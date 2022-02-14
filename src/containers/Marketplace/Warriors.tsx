@@ -3,10 +3,12 @@ import Helmet from 'react-helmet';
 import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
+import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
-import { getOnMarketplace, getWarriorToken, getBaseJpgURL, getBaseGifURL, getOwner, cancelMarketplace, buyToken, getPrice } from '../../hooks/contractFunction';
-import { useWarrior, useWeb3 } from '../../hooks/useContract';
+import { setReloadStatus } from '../../actions/contractActions';
+import { getOnMarketplace, getWarriorToken, getBaseJpgURL, getBaseGifURL, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { useWarrior, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
 import WarriorMarketCard from '../../component/Cards/WarriorMarketCard';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
@@ -53,8 +55,10 @@ const Warriors = () => {
 
 	const classes = useStyles();
 	const warriorContract = useWarrior();
+	const marketplaceContract = useMarketplace();
+	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
-
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		if (account) {
@@ -70,14 +74,12 @@ const Warriors = () => {
 
 		const ids = await getOnMarketplace(web3, warriorContract);
 		let warrior;
-		let owner;
-		let price;
+		let marketItem;
 		let tempWarriors = [];
 		for (let i = 0; i < ids.length; i++) {
 			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			owner = await getOwner(web3, warriorContract, ids[i]);
-			price = await getPrice(web3, warriorContract, ids[i]);
-			tempWarriors.push({ ...warrior, id: ids[i], owner: owner === account ? true : false, price: price });
+			marketItem = await getMarketItem(web3, marketplaceContract, '2', ids[i]);
+			tempWarriors.push({ ...warrior, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price });
 		}
 		setWarriors(tempWarriors);
 		setLoading(false);
@@ -100,12 +102,19 @@ const Warriors = () => {
 	};
 
 	const handleCancel = async (id: number) => {
-		await cancelMarketplace(web3, warriorContract, account, id);
+		await cancelMarketplace(web3, marketplaceContract, account, '2', id);
 		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 	}
 
 	const handleBuy = async (id: number) => {
-		await buyToken(web3, warriorContract, account, id);
+		const allowance = await getMarketplaceBloodstoneAllowance(web3, bloodstoneContract, account);
+		if (allowance === '0') {
+			await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
+		}
+		await buyToken(web3, marketplaceContract, account, '2', id);
+		dispatch(setReloadStatus({
+			reloadContractStatus: new Date()
+		}))
 		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 	}
 
