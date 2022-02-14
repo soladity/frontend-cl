@@ -1,14 +1,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider } from '@mui/material';
-import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
-import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getOnMarketplace, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, getOwner, cancelMarketplace, buyToken, getPrice } from '../../hooks/contractFunction';
-import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
+import { setReloadStatus } from '../../actions/contractActions';
+import { getOnMarketplace, getWarriorToken, getBaseJpgURL, getBaseGifURL, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { useWarrior, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
 import WarriorMarketCard from '../../component/Cards/WarriorMarketCard';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
@@ -52,13 +52,13 @@ const Warriors = () => {
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
-	const [mintLoading, setMintLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const warriorContract = useWarrior();
+	const marketplaceContract = useMarketplace();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
-
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		if (account) {
@@ -67,17 +67,6 @@ const Warriors = () => {
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
 
-	const handleMint = async (amount: Number) => {
-		setMintLoading(true);
-		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0') {
-			await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
-		}
-		await mintWarrior(web3, warriorContract, account, amount);
-		getBalance();
-		setMintLoading(false);
-	}
-
 	const getBalance = async () => {
 		setLoading(true);
 		setBaseJpgUrl(await getBaseJpgURL(web3, warriorContract));
@@ -85,14 +74,12 @@ const Warriors = () => {
 
 		const ids = await getOnMarketplace(web3, warriorContract);
 		let warrior;
-		let owner;
-		let price;
+		let marketItem;
 		let tempWarriors = [];
 		for (let i = 0; i < ids.length; i++) {
 			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			owner = await getOwner(web3, warriorContract, ids[i]);
-			price = await getPrice(web3, warriorContract, ids[i]);
-			tempWarriors.push({ ...warrior, id: ids[i], owner: owner === account ? true : false, price: price });
+			marketItem = await getMarketItem(web3, marketplaceContract, '2', ids[i]);
+			tempWarriors.push({ ...warrior, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price });
 		}
 		setWarriors(tempWarriors);
 		setLoading(false);
@@ -115,13 +102,20 @@ const Warriors = () => {
 	};
 
 	const handleCancel = async (id: number) => {
-		await cancelMarketplace(web3, warriorContract, account, id);
-		getBalance();
+		await cancelMarketplace(web3, marketplaceContract, account, '2', id);
+		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 	}
 
 	const handleBuy = async (id: number) => {
-		await buyToken(web3, warriorContract, account, id);
-		getBalance();
+		const allowance = await getMarketplaceBloodstoneAllowance(web3, bloodstoneContract, account);
+		if (allowance === '0') {
+			await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
+		}
+		await buyToken(web3, marketplaceContract, account, '2', id);
+		dispatch(setReloadStatus({
+			reloadContractStatus: new Date()
+		}))
+		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 	}
 
 	const handleSortAp = (value: boolean) => {
@@ -196,7 +190,7 @@ const Warriors = () => {
 			</Grid>
 		</Grid>
 		{
-			(loading === false && mintLoading === false) &&
+			loading === false &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
 					<Grid item md={3} xs={12}>
@@ -268,26 +262,6 @@ const Warriors = () => {
 			<>
 				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
 					<Typography variant='h4' >{getTranslation('loadingWarriors')}</Typography>
-				</Grid>
-				<Grid container sx={{ justifyContent: 'center' }}>
-					<Grid item xs={1}>
-						<Card>
-							<CardMedia
-								component="img"
-								image="/assets/images/loading.gif"
-								alt="Loading"
-								loading="lazy"
-							/>
-						</Card>
-					</Grid>
-				</Grid>
-			</>
-		}
-		{
-			mintLoading === true &&
-			<>
-				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
-					<Typography variant='h4' >{getTranslation('summoningWarriors')}</Typography>
 				</Grid>
 				<Grid container sx={{ justifyContent: 'center' }}>
 					<Grid item xs={1}>

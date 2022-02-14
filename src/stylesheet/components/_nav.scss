@@ -13,7 +13,8 @@
 
         &.active {
             background: #1f2a37;  
-            border-right: 5px solid #24f39f;         
+            // border-right: 5px solid #24f39f;        
+            background-image: '/assets/images/fireMenu.png';
         }
     }
     &-nostyle{
