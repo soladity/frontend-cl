@@ -124,42 +124,45 @@ export default function UnstyledButtonCustom(props: any) {
   const [showAnimation, setShowAnimation] = React.useState(localStorage.getItem('showAnimation') === '1' ? true : false)
   if (showAnimation) {
     return (
-      <SvgButton
-        style={{ margin: 10 }}
-        onClick={() => {
-          setShowAnimation(false)
-          localStorage.setItem('showAnimation', '0')
-        }}
-      >
-        <div style={{ color: '#caa959' }}>
-          <div style={{ textAlign: 'center', fontSize: 32 }}>
-            <FaVideo />
+      <a>
+        <SvgButton
+          style={{ margin: 10 }}
+          onClick={() => {
+            setShowAnimation(false)
+            localStorage.setItem('showAnimation', '0')
+          }}
+        >
+          <div style={{ color: '#caa959' }}>
+            <div style={{ textAlign: 'center', fontSize: 32 }}>
+              <FaVideo />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              NFT Videos
+            </div>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            NFT Videos
-          </div>
-        </div>
-      </SvgButton>
+        </SvgButton>
+      </a>
     );
   } else {
     return (
-
-      <SvgButton
-        style={{ margin: 10 }}
-        onClick={() => {
-          setShowAnimation(true)
-          localStorage.setItem('showAnimation', '1')
-        }}
-      >
-        <div style={{ color: '#caa959' }}>
-          <div style={{ textAlign: 'center', fontSize: 32 }}>
-            <FaVideoSlash />
+      <a>
+        <SvgButton
+          style={{ margin: 10 }}
+          onClick={() => {
+            setShowAnimation(true)
+            localStorage.setItem('showAnimation', '1')
+          }}
+        >
+          <div style={{ color: '#caa959' }}>
+            <div style={{ textAlign: 'center', fontSize: 32 }}>
+              <FaVideoSlash />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              NFT Images
+            </div>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            NFT Images
-          </div>
-        </div>
-      </SvgButton>
+        </SvgButton>
+      </a>
     );
   }
 }

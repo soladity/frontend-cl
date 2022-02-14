@@ -103,7 +103,7 @@ const YourInventory = () => {
                     {getTranslation('taxDaysLeft')}: {taxLeftDays}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('BLSTInYourWallet')}: {formatNumber(BLSTBalance)}
+                    {getTranslation('BLSTInYourWallet')}: {formatNumber(parseFloat(BLSTBalance).toFixed(2))}
                 </Typography>
             </Box>
         </Card>
