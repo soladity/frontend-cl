@@ -3,25 +3,25 @@ export const getBloodstoneAddress = () => {
 }
 
 export const getBeastAddress = () => {
-    return '0x1406cd8cde2559499752d75218231d3266869331'
+    return '0x1ce66cb8ad305c4b3ca222af84e5159db1f6b35d'
 }
 
 export const getWarriorAddress = () => {
-    return '0xf35bfccfcd72fc0853344d2268e5ffb6e008b306'
+    return '0x7c0f6dde3c2b13d41b93babb5f10f539346b3563'
 }
 
 export const getLegionAddress = () => {
-    return '0x52e39Fc851De2CCbb8828bBc6f2d6aB71CebFD06'
+    return '0xfE51630d3BF728C99884c062D4Bae1C35a7a0C63'
 }
 
 export const getMonsterAddress = () => {
-    return '0xea51a5956758e12c24e75a215594b2351981f6c8'
+    return '0xe79cdb432c3f4b080afe3c1d2a63df2351351c49'
 }
 
 export const getRewardPoolAddress = () => {
-    return '0xf3be30b4af8985a46d89f0215a2e41d6c91f2a7d'
+    return '0x6f0a3e178c715d84ac64eb507535d1098b75fb5c'
 }
 
 export const getMarketplaceAddress = () => {
-    return '0xc00369e919f55d40bf3850bd44e87098aa7ef9a8'
+    return '0xdb2b3abb5cd5f79699eca85b95520d24182cc1fc'
 }

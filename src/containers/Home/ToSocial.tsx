@@ -13,23 +13,23 @@ const ToSocial = () => {
         >
             <ToSocialBtn
                 type="Discord"
-                linkUrl="Discord"
+                linkUrl="https://discord.gg/V4Z4JykfdH"
             />
             <ToSocialBtn
                 type="Twitter"
-                linkUrl="Discord"
+                linkUrl="https://twitter.com/LegionsCrypto"
             />
             <ToSocialBtn
                 type="Telegram"
-                linkUrl="Discord"
+                linkUrl="https://t.me/CryptoLegionsCommunity"
             />
             <ToSocialBtn
                 type="Youtube"
-                linkUrl="Discord"
+                linkUrl="https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA"
             />
             <ToSocialBtn
                 type="Medium"
-                linkUrl="Discord"
+                linkUrl="Http://cryptolegions.medium.com"
             />
             <SwitchNFTtype />
         </Grid>

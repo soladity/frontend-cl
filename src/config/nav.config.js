@@ -10,6 +10,7 @@ import CreateLegions from '../containers/CreateLegions/CreateLegions';
 import UpdateLegions from '../containers/UpdateLegions';
 import Profile from '../containers/Profile/Profile';
 import Policy from '../containers/Policy/Policy';
+import Help from '../containers/Help/Help';
 
 export const navConfig = {
     drawerWidth: 250,
@@ -61,6 +62,10 @@ export const navConfig = {
             path: '/policy',
             // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
             element: <Policy />
+        },
+        {
+            path: '/help',
+            element: <Help />
         },
         {
             path: '*',

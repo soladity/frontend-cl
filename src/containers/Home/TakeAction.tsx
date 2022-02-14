@@ -182,6 +182,60 @@ const TakeAction = () => {
                         <Grid item xs={6}>
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
                                 <Box sx={{ textAlign: 'center', width: '100%' }}>
+                                    <CommonBtn aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
+                                        {getTranslation('summonWarrior')}
+                                    </CommonBtn>
+                                    <Popover
+                                        id={'summon-warrior-id'}
+                                        open={openSummonWarrior}
+                                        anchorEl={anchorElSummonWarrior}
+                                        onClose={handlePopoverCloseSummonWarrior}
+                                        anchorOrigin={{
+                                            vertical: 'center',
+                                            horizontal: 'left',
+                                        }}
+                                        transformOrigin={{
+                                            vertical: 'center',
+                                            horizontal: 'right',
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex' }}>
+                                            <Box sx={{ marginLeft: 'auto', cursor: 'pointer', marginRight: 1, marginTop: 1 }}><FaTimes onClick={handlePopoverCloseSummonWarrior} /></Box>
+                                        </Box>
+                                        <DialogTitle>{getTranslation('takeActionSummonWarriorQuantity')}</DialogTitle>
+                                        <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                1
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(5, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                5
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(10, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                10
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(20, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                20
+                                            </CommonBtn>
+                                            <CommonBtn
+                                                onClick={() => handleWarriorMint(100, TransitionUp)}
+                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
+                                            >
+                                                100
+                                            </CommonBtn>
+                                        </Box>
+                                    </Popover>
                                     <CommonBtn
                                         onClick={handlePopoverOpenSummonBeast}
                                         aria-describedby={'summon-beast-id'}
@@ -234,60 +288,6 @@ const TakeAction = () => {
                                             </CommonBtn>
                                             <CommonBtn
                                                 onClick={() => handleBeastMint(100, TransitionUp)}
-                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
-                                            >
-                                                100
-                                            </CommonBtn>
-                                        </Box>
-                                    </Popover>
-                                    <CommonBtn aria-describedby={'summon-warrior-id'} onClick={handlePopoverOpenSummonWarrior} sx={{ fontWeight: 'bold', fontSize: 14, width: '100%', marginBottom: 1 }}>
-                                        {getTranslation('summonWarrior')}
-                                    </CommonBtn>
-                                    <Popover
-                                        id={'summon-warrior-id'}
-                                        open={openSummonWarrior}
-                                        anchorEl={anchorElSummonWarrior}
-                                        onClose={handlePopoverCloseSummonWarrior}
-                                        anchorOrigin={{
-                                            vertical: 'center',
-                                            horizontal: 'left',
-                                        }}
-                                        transformOrigin={{
-                                            vertical: 'center',
-                                            horizontal: 'right',
-                                        }}
-                                    >
-                                        <Box sx={{ display: 'flex' }}>
-                                            <Box sx={{ marginLeft: 'auto', cursor: 'pointer', marginRight: 1, marginTop: 1 }}><FaTimes onClick={handlePopoverCloseSummonWarrior} /></Box>
-                                        </Box>
-                                        <DialogTitle>{getTranslation('takeActionSummonWarriorQuantity')}</DialogTitle>
-                                        <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column' }}>
-                                            <CommonBtn
-                                                onClick={() => handleWarriorMint(1, TransitionUp)}
-                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
-                                            >
-                                                1
-                                            </CommonBtn>
-                                            <CommonBtn
-                                                onClick={() => handleWarriorMint(5, TransitionUp)}
-                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
-                                            >
-                                                5
-                                            </CommonBtn>
-                                            <CommonBtn
-                                                onClick={() => handleWarriorMint(10, TransitionUp)}
-                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
-                                            >
-                                                10
-                                            </CommonBtn>
-                                            <CommonBtn
-                                                onClick={() => handleWarriorMint(20, TransitionUp)}
-                                                sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
-                                            >
-                                                20
-                                            </CommonBtn>
-                                            <CommonBtn
-                                                onClick={() => handleWarriorMint(100, TransitionUp)}
                                                 sx={{ fontSize: 14, fontWeight: 'bold', marginBottom: 1 }}
                                             >
                                                 100
