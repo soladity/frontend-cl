@@ -5,10 +5,12 @@ import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, sendToMarketplace } from '../../hooks/contractFunction';
-import { useBloodstone, useWarrior, useWeb3 } from '../../hooks/useContract';
+import { setReloadStatus } from '../../actions/contractActions';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, sellToken, setMarketplaceApprove } from '../../hooks/contractFunction';
+import { useBloodstone, useWarrior, useMarketplace, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
@@ -53,8 +55,9 @@ const Warriors = () => {
 	const classes = useStyles();
 	const warriorContract = useWarrior();
 	const bloodstoneContract = useBloodstone();
+	const marketplaceContract = useMarketplace();
 	const web3 = useWeb3();
-
+	const dispatch = useDispatch();
 
 	React.useEffect(() => {
 		if (account) {
@@ -79,6 +82,9 @@ const Warriors = () => {
 			await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
 		}
 		await mintWarrior(web3, warriorContract, account, amount);
+		dispatch(setReloadStatus({
+			reloadContractStatus: new Date()
+		}));
 		getBalance();
 		setMintLoading(false);
 	}
@@ -133,8 +139,9 @@ const Warriors = () => {
 
 	const handleSendToMarketplace = async () => {
 		setOpenSupply(false);
-		await sendToMarketplace(web3, warriorContract, account, selectedWarrior, price);
-		getBalance();
+		await setMarketplaceApprove(web3, warriorContract, account, selectedWarrior);
+		await sellToken(web3, marketplaceContract, account, '2', selectedWarrior, price);
+		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior));
 	}
 
 	return <Box>

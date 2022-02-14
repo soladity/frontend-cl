@@ -1,4 +1,4 @@
-import { getBeastAddress, getWarriorAddress, getLegionAddress } from '../utils/addressHelpers';
+import { getBeastAddress, getWarriorAddress, getLegionAddress, getMarketplaceAddress } from '../utils/addressHelpers';
 
 export const getBaseUrl = async () => {
     // const response = await contract.methods._baseURL().call();
@@ -240,13 +240,13 @@ export const claimReward = async (web3, contract, account) => {
     return response
 }
 
-export const sendToMarketplace = async (web3, contract, account, id, price) => {
-    const response = await contract.methods.sendToMarketplace(id, price).send({ from: account });
+export const sellToken = async (web3, contract, account, type, id, price) => {
+    const response = await contract.methods.sellToken(type, id, price).send({ from: account });
     return response;
 }
 
 export const getOnMarketplace = async (web3, contract) => {
-    const response = await contract.methods.getTokenIdsOnMarket().call();
+    const response = await contract.methods.getTokenIds(getMarketplaceAddress()).call();
     return response;
 }
 
@@ -255,17 +255,36 @@ export const getOwner = async (web3, contract, id) => {
     return response;
 }
 
-export const cancelMarketplace = async (web3, contract, account, id) => {
-    const response = await contract.methods.sendBackFromMarketplace(id).send({ from: account });
+export const cancelMarketplace = async (web3, contract, account, type, id) => {
+    const response = await contract.methods.cancelSelling(type, id).send({ from: account });
     return response;
 }
 
-export const buyToken = async (web3, contract, account, id) => {
-    const response = await contract.methods.sendBackFromMarketplace(id).send({ from: account });
+export const buyToken = async (web3, contract, account, type, id) => {
+    const response = await contract.methods.buyToken(type, id).send({ from: account });
     return response;
 }
 
-export const getPrice = async (web3, contract, id) => {
-    const response = await contract.methods.tokenPrice(id).call();
+export const getMarketItem = async (web3, contract, type, id) => {
+    const response = await contract.methods.getMarketItem(type, id).call();
+    const item = {
+        price: response[0],
+        owner: response[1]
+    }
+    return item;
+}
+
+export const setMarketplaceApprove = async (web3, contract, account, id) => {
+    const response = await contract.methods.approve(getMarketplaceAddress(), id).send({ from: account });
     return response;
+}
+
+export const setMarketplaceBloodstoneApprove = async (web3, contract, account) => {
+    const response = await contract.methods.approve(getMarketplaceAddress(), web3.utils.toWei('1000000000', 'ether').toString()).send({ from: account });
+    return response;
+}
+
+export const getMarketplaceBloodstoneAllowance = async (web3, contract, account) => {
+    const response = await contract.methods.allowance(account, getMarketplaceAddress()).call();
+    return web3.utils.fromWei(response, 'ether').toString();
 }
