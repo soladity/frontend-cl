@@ -107,9 +107,7 @@ const NavList = (props: any) => {
 						<a target="_blank" className="nav-bar-item" href={navItem.path || ''}>
 							<Tooltip title={navItem.title || ""} placement="right">
 								<ListItemButton>
-									<ListItemIcon>
-										<InboxIcon />
-									</ListItemIcon>
+									<img src={`/assets/images/${navItem.icon}`} style={{ width: '22px', height: '22px', marginRight: '34px' }} alt='icon' />
 									<ListItemText primary={getTranslation(navItem.title)} />
 								</ListItemButton>
 							</Tooltip>
@@ -119,9 +117,7 @@ const NavList = (props: any) => {
 						<NavLink to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
 							<Tooltip title={navItem.title || ""} placement="right">
 								<ListItemButton>
-									<ListItemIcon>
-										<InboxIcon />
-									</ListItemIcon>
+								<img src={`/assets/images/${navItem.icon}`} style={{ width: '22px', height: '22px', marginRight: '34px' }} alt='icon' />
 									<ListItemText primary={getTranslation(navItem.title)} />
 								</ListItemButton>
 							</Tooltip>
@@ -129,9 +125,7 @@ const NavList = (props: any) => {
 					}
 					{navItem.type === "divider" && <Divider />}
 					{navItem.type === "head" &&
-						<Card sx={{ m: 2, p: 2 }}>
-							<Typography variant="subtitle1" sx={{ fontWeight: 'bolder' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
-						</Card>
+						<Typography variant="h6" sx={{ fontWeight: 'bolder', color: '#a44916', textTransform: 'uppercase', textAlign: 'center', paddingTop: '15px', paddingBottom: '10px' }} className={classes.root}>{getTranslation(navItem.title)}</Typography>
 					}
 				</React.Fragment>
 			))}
@@ -187,9 +181,9 @@ const NavList = (props: any) => {
 				navItem.type === "footer" &&
 				<a href='https://cryptogames.agency' target='_blank' className='non-style' key={index}>
 					<Card key={index} sx={{ m: 2, p: 2 }}>
-						<Typography variant="subtitle2" color='gray' sx={{display: 'flex', flexWrap: 'wrap'}}>
+						<Typography variant="subtitle2" color='gray' sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
 							{getTranslation(navItem.title1)}
-							<img src='/assets/images/heart.png' alt='favorite' style={{width: '20px', height: '20px', margin: '0 10px'}} />
+							<img src='/assets/images/heart.png' alt='favorite' style={{ width: '14px', height: '14px', margin: '0 10px' }} />
 							{getTranslation(navItem.title2)}
 						</Typography>
 					</Card>

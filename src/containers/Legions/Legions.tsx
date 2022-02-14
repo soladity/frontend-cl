@@ -187,6 +187,11 @@ const Legions = () => {
 							<Typography variant='h6' color='primary' sx={{ fontWeight: 'bold' }}>
 								{formatNumber(totalPower)}
 							</Typography>
+							<CommonBtn sx={{ fontWeight: 'bold' }}>
+								<NavLink to='/hunt' className='non-style'>
+									{getTranslation('hunt')}
+								</NavLink>
+							</CommonBtn>
 						</Box>
 					</Card>
 				</Grid>

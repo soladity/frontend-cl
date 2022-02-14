@@ -91,7 +91,7 @@ export default function WarriorMarketCard(props: CardProps) {
 			</Card>
 			{
 				owner === false &&
-				<CommonBtn sx={{ fontWeight: 'bold', marginTop: '10px', fontSize: '1rem' }} onClick={buy}>
+				<CommonBtn sx={{ fontWeight: 'bold', marginTop: '10px', fontSize: '1rem' }} onClick={() => buy(id)}>
 					{price} $BLST
 				</CommonBtn>
 			}
