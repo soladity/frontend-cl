@@ -1116,6 +1116,42 @@ export const translations = {
     pl: 'Opłata za zapasy za 28 polowań',
     ph: 'Bayad sa Supplies para sa 28 na Hunt'
   },
+  'RewardPool': {
+    en: 'Reward Pool',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'ReservePool': {
+    en: 'Reserve Pool',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'LiquidityPool': {
+    en: 'Liquidity Pool',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'buyingSupplies': {
     en: 'Buying Supplies...',
     es: 'Compra de suministros...',

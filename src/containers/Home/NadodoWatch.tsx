@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { getTranslation } from '../../utils/translation';
+import { FaGrinBeam } from 'react-icons/fa'
 
 const NadodoWatch = () => {
     return (
@@ -39,6 +40,15 @@ const NadodoWatch = () => {
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('SuppliesFee28Hunts')}: 16$
+                </Typography>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                    <span>{getTranslation('RewardPool')}:&nbsp;</span><FaGrinBeam style={{ color: 'lime' }} /> <span>&nbsp;Healthy</span>
+                </Typography>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                    <span>{getTranslation('ReservePool')}:&nbsp;</span><FaGrinBeam style={{ color: 'lime' }} /> <span>&nbsp;Healthy</span>
+                </Typography>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                    <span>{getTranslation('LiquidityPool')}:&nbsp;</span><FaGrinBeam style={{ color: 'lime' }} /> <span>&nbsp;Healthy</span>
                 </Typography>
             </Box>
         </Card>
