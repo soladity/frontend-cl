@@ -99,6 +99,8 @@ const AppBarComponent = () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
     setUnclaimedUSD(await getUnclaimedUSD(web3, rewardPoolContract, account));
     setTaxLeftDays(await getTaxLeftDays(web3, legionContract, account))
+    // console.log(typeof await getUnclaimedUSD(web3, rewardPoolContract, account))
+    // console.log(typeof await getTaxLeftDays(web3, rewardPoolContract, account))
   }
 
   const handleOpenNavMenu = (event: any) => {
@@ -278,7 +280,8 @@ const AppBarComponent = () => {
         <DialogTitle>Claim {unClaimedUSD} $BLST</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {
+            {/* {console.log(typeof unClaimedUSD)} */}
+            {/* {
               taxLeftDays == '0' ? (
                 <>
                   <p>You are about to claim {unClaimedUSD} $BLST tax-free.</p>
@@ -292,7 +295,7 @@ const AppBarComponent = () => {
                   <p>Are you sure you want to go ahead now?</p>
                 </>
               )
-            }
+            } */}
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
