@@ -21,3 +21,7 @@ export const getMonsterAddress = () => {
 export const getRewardPoolAddress = () => {
     return '0x6f0a3e178c715d84ac64eb507535d1098b75fb5c'
 }
+
+export const getMarketplaceAddress = () => {
+    return '0xdb2b3abb5cd5f79699eca85b95520d24182cc1fc'
+}
