@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Button, Box, Card, Grid, Typography, TextField, MenuItem, styled, IconButton, Snackbar, Alert } from '@mui/material';
 import Slide, { SlideProps } from '@mui/material/Slide';
 import axios from 'axios'
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
+// import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 
@@ -91,7 +91,7 @@ const Help = () => {
 
     return (
         <Box sx={{ padding: 2 }}>
-            <Card sx={{
+            {/* <Card sx={{
                 background: '#16161699',
                 p: 2
             }}>
@@ -230,7 +230,7 @@ const Help = () => {
                     )
                 }
 
-            </Snackbar>
+            </Snackbar> */}
         </Box >
     )
 }
