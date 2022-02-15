@@ -143,17 +143,19 @@ const Type = (type: any) => {
 }
 
 export default function UnstyledButtonCustom(props: any) {
-  return (
 
-    <SvgButton style={{ margin: 10 }}>
-      <div style={{ color: '#caa959' }}>
-        <div style={{ textAlign: 'center', fontSize: 32 }}>
-          {Type(props.type)}
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          {props.type}
-        </div>
-      </div >
-    </SvgButton >
+  return (
+    <a href={props.linkUrl} target="_blank">
+      <SvgButton style={{ margin: 10 }} >
+        <div style={{ color: '#caa959' }} >
+          <div style={{ textAlign: 'center', fontSize: 32 }}>
+            {Type(props.type)}
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            {props.type}
+          </div>
+        </div >
+      </SvgButton >
+    </a>
   );
 }

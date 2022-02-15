@@ -16,7 +16,16 @@ import { Menu, MenuItem } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 
-import { getBloodstoneBalance, getUnclaimedUSD, claimReward } from '../../hooks/contractFunction';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
+
+import { getBloodstoneBalance, getUnclaimedUSD, claimReward, getTaxLeftDays } from '../../hooks/contractFunction';
 import { useBloodstone, useWeb3, useRewardPool, useLegion } from '../../hooks/useContract';
 import { navConfig } from '../../config';
 import { injected } from '../../wallet';
@@ -32,6 +41,15 @@ import { setReloadStatus } from '../../actions/contractActions'
 declare const window: any;
 
 const pages = ['Products', 'Pricing', 'Blog'];
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const AppBarComponent = () => {
   const dispatch = useDispatch()
@@ -59,7 +77,9 @@ const AppBarComponent = () => {
   const [balance, setBalance] = React.useState('0');
   const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
   const [showMenu, setShowMenu] = React.useState<boolean>(false);
-  const [unClaimedUSD, setUnclaimedUSD] = React.useState(0)
+  const [unClaimedUSD, setUnclaimedUSD] = React.useState('0')
+  const [taxLeftDays, setTaxLeftDays] = React.useState('0')
+  const [dialogOpen, setDialogOpen] = React.useState(false)
 
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
@@ -78,6 +98,9 @@ const AppBarComponent = () => {
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
     setUnclaimedUSD(await getUnclaimedUSD(web3, rewardPoolContract, account));
+    setTaxLeftDays(await getTaxLeftDays(web3, legionContract, account))
+    // console.log(typeof await getUnclaimedUSD(web3, rewardPoolContract, account))
+    // console.log(typeof await getTaxLeftDays(web3, rewardPoolContract, account))
   }
 
   const handleOpenNavMenu = (event: any) => {
@@ -115,14 +138,8 @@ const AppBarComponent = () => {
     setShowMenu(open);
   };
 
-  const handleShowAnimation = () => {
-    if (showAnimation === '0') {
-      setShowAnimation('1');
-      localStorage.setItem('showAnimation', '1');
-    } else {
-      setShowAnimation('0');
-      localStorage.setItem('showAnimation', '0');
-    }
+  const handleDialogClose = () => {
+    setDialogOpen(false)
   }
 
   const handleClaimReward = async () => {
@@ -192,7 +209,7 @@ const AppBarComponent = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' } }}>
                 <CommonBtn
                   sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}
-                  onClick={() => handleClaimReward()}
+                  onClick={() => setDialogOpen(true)}
                 >
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
@@ -203,10 +220,10 @@ const AppBarComponent = () => {
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
                   <Box sx={{ ml: { xs: 1, md: 2 } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>{formatNumber(balance)}</Typography>
+                      <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>{formatNumber(parseFloat(balance).toFixed(2))}</Typography>
                       <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>$BLST</Typography>
                     </Box>
-                    <Button variant="contained" color='info' sx={{ fontWeight: 'bold', color: 'white' }}>
+                    <Button variant="contained" sx={{ fontWeight: 'bold', color: 'white', background: '#622f11' }}>
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
                         <BadgeIcon />
                       </IconButton>
@@ -253,6 +270,45 @@ const AppBarComponent = () => {
           </Box>
         </Toolbar>
       </Container>
+      <Dialog
+        open={dialogOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleDialogClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Claim {unClaimedUSD} $BLST</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {/* {console.log(typeof unClaimedUSD)} */}
+            {
+              taxLeftDays == '0' ? (
+                <>
+                  You are about to claim {unClaimedUSD} $BLST tax-free.
+                  <br />
+                  You will receive {unClaimedUSD} $BLST in your wallet.
+                  <br />
+                  Do you want to go ahead?
+                  <br />
+                </>
+              ) : (
+                <>
+                  You will pay {(2 * parseInt(taxLeftDays) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST, and receive only {((100 - 2 * parseInt(taxLeftDays)) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST in your wallet.
+                  <br />
+                  If you wait {taxLeftDays} days, then you will be albe to claim tax-free.
+                  <br />
+                  Are you sure you want to go ahead now?
+                  <br />
+                </>
+              )
+            }
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Button onClick={handleDialogClose} variant="contained" sx={{ color: 'white', fontWeight: 'bold' }}>Cancel</Button>
+          <Button onClick={handleClaimReward} variant="outlined" sx={{ fontWeight: 'bold' }}>{taxLeftDays == '0' ? 'Claim tax-free' : 'Claim and pay tax'}</Button>
+        </DialogActions>
+      </Dialog>
     </AppBar>
   );
 };

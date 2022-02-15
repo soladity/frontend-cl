@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { Grid, Card, Box, Button, Popover, Checkbox, Dialog, DialogTitle } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { formatNumber } from '../../utils/common';
 
 import { useWeb3React } from '@web3-react/core';
-import { getBeastBalance, getWarriorBalance, getUnclaimedUSD, getAvailableLegionsCount, getTaxLeftDays, getMaxAttackPower, getLegionTokenIds } from '../../hooks/contractFunction';
-import { useBeast, useWarrior, useLegion, useRewardPool, useWeb3 } from '../../hooks/useContract';
+import { getBloodstoneBalance, getBeastBalance, getWarriorBalance, getUnclaimedUSD, getAvailableLegionsCount, getTaxLeftDays, getMaxAttackPower, getLegionTokenIds } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useWarrior, useLegion, useRewardPool, useWeb3 } from '../../hooks/useContract';
 import { useSelector } from 'react-redux'
 import { getTranslation } from '../../utils/translation';
 
@@ -18,7 +19,7 @@ const YourInventory = () => {
     const [legionTokenIds, setLegionTokenIds] = React.useState([])
     const [taxLeftDays, setTaxLeftDays] = React.useState(0)
     const [maxAttackPower, setMaxAttackPower] = React.useState(0)
-
+    const [BLSTBalance, setBLSTBalance] = React.useState('0')
 
 
     //account
@@ -36,6 +37,9 @@ const YourInventory = () => {
 
     //RewardPool Contract
     const rewardPoolContract = useRewardPool()
+
+    //Bloodstone Contract
+    const bloodstoneContract = useBloodstone()
 
     //get all balances of your inventory
     const getBalance = async () => {
@@ -59,6 +63,9 @@ const YourInventory = () => {
 
         const maxAttackPower = await getMaxAttackPower(web3, legionContract, account)
         setMaxAttackPower(maxAttackPower)
+
+        const BLSTBalance = await getBloodstoneBalance(web3, bloodstoneContract, account)
+        setBLSTBalance(BLSTBalance)
     }
 
     React.useEffect(() => {
@@ -78,22 +85,25 @@ const YourInventory = () => {
                     {getTranslation('yourInventory')}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('beasts')} : {beastBalance}
+                    {getTranslation('beasts')}: {beastBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('warriors')} : {warriorBalance}
+                    {getTranslation('warriors')}: {warriorBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('availableLegions')} : {availableLegionCount} / {legionTokenIds.length}
+                    {getTranslation('availableLegions')}: {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('yourMaxAp')} : {maxAttackPower}
+                    {getTranslation('yourMaxAp')}: {maxAttackPower}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('unClaimed')} : {unclaimedBalance}
+                    {getTranslation('unClaimed')}: {unclaimedBalance}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('taxHuntsLeft')} : {taxLeftDays}
+                    {getTranslation('taxDaysLeft')}: {taxLeftDays}
+                </Typography>
+                <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
+                    {getTranslation('BLSTInYourWallet')}: {formatNumber(parseFloat(BLSTBalance).toFixed(2))}
                 </Typography>
             </Box>
         </Card>

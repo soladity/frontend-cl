@@ -15,6 +15,7 @@ import TakeAction from './TakeAction';
 import ToSocial from './ToSocial';
 import YourAchievements from './YourAchievements';
 import nicahBackground from '../../assets/images/nicah_background.jpg'
+import ReactPlayer from 'react-player/youtube'
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -45,13 +46,13 @@ const Home = () => {
             </Helmet>
             <Grid container spacing={2} sx={{ my: 4 }}>
                 <Grid item xs={12} md={4}>
-                    <NadodoWatch />
-                </Grid>
-                <Grid item xs={12} md={4}>
                     <YourInventory />
                 </Grid>
                 <Grid item xs={12} md={4}>
                     <TakeAction />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <NadodoWatch />
                 </Grid>
             </Grid>
             <ToSocial />
@@ -61,10 +62,15 @@ const Home = () => {
                         <Grid item md={3} sm={2} xs={1}>
                         </Grid>
                         <Grid item md={6} sm={8} xs={10}>
-                            <YouTube
-                                videoId="SA-PmNW7syw"
-                                opts={{ width: '100%', height: '100%' }}
-                            />
+                            <Box sx={{ width: '100%', paddingTop: '75%', position: 'relative' }}>
+                                <Box sx={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, display: 'flex', alignItems: 'center' }}>
+                                    <ReactPlayer
+                                        url="https://youtu.be/SA-PmNW7syw"
+                                        width="100%"
+                                        height="100%"
+                                    />
+                                </Box>
+                            </Box>
                         </Grid>
                         <Grid item md={3} sm={2} xs={1}>
                         </Grid>
