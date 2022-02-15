@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Button, Box, Card, Grid, Typography, TextField, MenuItem, styled, IconButton, Snackbar, Alert } from '@mui/material';
 import Slide, { SlideProps } from '@mui/material/Slide';
 import axios from 'axios'
-// import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 
@@ -16,7 +16,6 @@ type TransitionProps = Omit<SlideProps, 'direction'>;
 function TransitionUp(props: TransitionProps) {
     return <Slide {...props} direction="up" />;
 }
-
 
 const Help = () => {
     let fileInput = React.useRef<HTMLInputElement>(null);
@@ -32,7 +31,8 @@ const Help = () => {
     const [snackBarMessage, setSnackBarMessage] = React.useState('')
     const [snackbarType, setSnackbarType] = React.useState<string>('error')
 
-    const uploadSubtitle1 = async () => {
+    const uploadSubtitle1 = async (event: any) => {
+        event.preventDefault()
         var API_KEY = "jp0qrj5DTWcgBeg0L4FD";
         var FD_ENDPOINT = "cryptolegions";
         var PATH = "/api/v2/tickets";
@@ -91,7 +91,7 @@ const Help = () => {
 
     return (
         <Box sx={{ padding: 2 }}>
-            {/* <Card sx={{
+            <Card sx={{
                 background: '#16161699',
                 p: 2
             }}>
@@ -99,22 +99,23 @@ const Help = () => {
                     Need help from our team? Send us a messages with the form below, and we’ll get back to you within 24 hours if your request relates to a bug/issue in the game.
                 </Typography>
                 <Box sx={{ p: 4 }}>
-                    <ValidatorForm
-                        onSubmit={() => {
-                            uploadSubtitle1()
+                    <form
+                        onSubmit={(event: any) => {
+                            uploadSubtitle1(event)
                         }}
                     >
                         <Grid container spacing={2} sx={{ marginBottom: 4 }}>
                             <Grid item xs={6}>
-                                <TextValidator
+                                <TextField
                                     label="Email"
                                     placeholder='Your Email'
                                     onChange={(e: any) => setEmail(e.target.value)}
                                     name="email"
                                     value={email}
-                                    validators={['required', 'isEmail']}
-                                    errorMessages={['this field is required', 'Email is not valid']}
+                                    // validators={['required', 'isEmail']}
+                                    // errorMessages={['this field is required', 'Email is not valid']}
                                     sx={{ width: '100%' }}
+                                    type="email"
                                     id="outlined-required"
                                     required
                                 />
@@ -132,14 +133,14 @@ const Help = () => {
                         </Grid>
                         <Grid container spacing={2} sx={{ marginBottom: 4 }}>
                             <Grid item xs={12}>
-                                <TextValidator
+                                <TextField
                                     label="Title"
                                     placeholder='Title of your issue'
                                     onChange={(e: any) => setSubject(e.target.value)}
                                     name="subject"
                                     value={subject}
-                                    validators={['required']}
-                                    errorMessages={['this field is required']}
+                                    // validators={['required']}
+                                    // errorMessages={['this field is required']}
                                     sx={{ width: '100%' }}
                                     id="outlined-required"
                                     required
@@ -148,14 +149,14 @@ const Help = () => {
                         </Grid>
                         <Grid container spacing={2} sx={{ marginBottom: 4 }}>
                             <Grid item xs={12}>
-                                <TextValidator
+                                <TextField
                                     label="Description"
                                     placeholder='Please describe your issue with as many details as possible. '
                                     onChange={(e: any) => setDescription(e.target.value)}
                                     name="description"
                                     value={description}
-                                    validators={['required']}
-                                    errorMessages={['this field is required']}
+                                    // validators={['required']}
+                                    // errorMessages={['this field is required']}
                                     sx={{ width: '100%' }}
                                     id="outlined-required"
                                     required
@@ -203,7 +204,7 @@ const Help = () => {
                                 Create ticket
                             </Button>
                         </Box>
-                    </ValidatorForm>
+                    </form>
                 </Box>
             </Card>
             <Snackbar
@@ -230,7 +231,7 @@ const Help = () => {
                     )
                 }
 
-            </Snackbar> */}
+            </Snackbar>
         </Box >
     )
 }
