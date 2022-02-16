@@ -4,6 +4,7 @@ import { withStyles, createStyles } from "@mui/styles";
 const styles = () =>
   createStyles({
     root: {
+      backgroundColor: "#7c3c00 !important",
       "&$selected": {
         backgroundColor: "#9c5c00 !important",
         "&:hover": {

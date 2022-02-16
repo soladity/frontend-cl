@@ -1355,5 +1355,17 @@ export const translations = {
     de: 'Om te winnen moet je gelijk of minder gooien dan:',
     pl: 'Aby wygrać, musisz wyrzucić równą lub mniejszą niż:',
     ph: 'Upang manalo kailangan mong gumulong katumbas o mas mababa sa:'
+  },
+  'yourRollTitle': {
+    en: 'Your roll was',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: '',
   }
 }

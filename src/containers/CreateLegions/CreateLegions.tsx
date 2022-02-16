@@ -322,6 +322,9 @@ const CreateLegions: React.FC = () => {
   };
 
   const handleChangedName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 25) {
+      return;
+    }
     setLegionName(e.target.value);
     setIsWDropable(
       totalCP > 0 &&
@@ -354,7 +357,6 @@ const CreateLegions: React.FC = () => {
               className={classes.warning}
               sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
             >
-              <ErrorOutline color="error" fontSize="large" />
               <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
                 <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                   {getTranslation("createLegion")}

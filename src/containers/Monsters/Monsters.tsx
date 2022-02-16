@@ -127,6 +127,7 @@ const Monsters = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [huntedStatus, setHuntedStatus] = useState(0);
   const [continueLoading, setContinueLoading] = useState(false);
+  const [huntedRoll, setHuntedRoll] = useState(0);
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -246,7 +247,9 @@ const Monsters = () => {
         curLegion?.id,
         monsterTokenID
       );
-      setHuntedStatus(response ? 1 : 2);
+      console.log(response);
+      setHuntedRoll(response.roll);
+      setHuntedStatus(response.huntRetVal ? 1 : 2);
     } catch (e: any) {
       if (e.code === 4001) {
         setDialogVisible(false);
@@ -258,6 +261,7 @@ const Monsters = () => {
     setContinueLoading(true);
     await updateMonster();
     setDialogVisible(false);
+    setHuntedStatus(0);
     setContinueLoading(false);
   };
 
@@ -315,10 +319,7 @@ const Monsters = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={30} sm={15} md={8}>
-                <Typography
-                  variant="h5"
-                  sx={{ color: "#ae7c00", fontWeight: 1000 }}
-                >
+                <Typography variant="h5">
                   {curLegion?.attackPower} AP
                 </Typography>
               </Grid>
@@ -490,6 +491,9 @@ const Monsters = () => {
                   sx={{ position: "absolute", bottom: "15px", left: "5px" }}
                 >
                   <Typography>
+                    {getTranslation("yourRollTitle")} {huntedRoll}
+                  </Typography>
+                  <Typography>
                     {getTranslation("congSubtitle3")}{" "}
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
@@ -528,26 +532,31 @@ const Monsters = () => {
               </>
             </DialogTitle>
             <DialogContent>
-              <CardMedia
-                component="img"
-                image="/assets/images/loosing.gif"
-                alt="Monster Image"
-                loading="lazy"
-              />
-              <Box
-                component="div"
-                sx={{ position: "absolute", bottom: "15px", left: "5px" }}
-              >
-                <Typography>
-                  {getTranslation("defeatSubtitle2")}{" "}
-                  {parseInt(curMonster?.base as string) +
-                    ((curMonster?.ap as number) <
-                    (curLegion?.attackPower as number)
-                      ? ((curLegion?.attackPower as number) -
-                          (curMonster?.ap as number)) /
-                        2000
-                      : 0)}
-                </Typography>
+              <Box component="div" sx={{ position: "relative" }}>
+                <CardMedia
+                  component="img"
+                  image="/assets/images/loosing.gif"
+                  alt="Monster Image"
+                  loading="lazy"
+                />
+                <Box
+                  component="div"
+                  sx={{ position: "absolute", bottom: "15px", left: "5px" }}
+                >
+                  <Typography>
+                    {getTranslation("yourRollTitle")} {huntedRoll}
+                  </Typography>
+                  <Typography>
+                    {getTranslation("defeatSubtitle2")}{" "}
+                    {parseInt(curMonster?.base as string) +
+                      ((curMonster?.ap as number) <
+                      (curLegion?.attackPower as number)
+                        ? ((curLegion?.attackPower as number) -
+                            (curMonster?.ap as number)) /
+                          2000
+                        : 0)}
+                  </Typography>
+                </Box>
               </Box>
             </DialogContent>
             <DialogActions>
