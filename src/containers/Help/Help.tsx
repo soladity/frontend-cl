@@ -2,8 +2,6 @@ import * as React from 'react'
 import { Button, Box, Card, Grid, Typography, TextField, MenuItem, styled, IconButton, Snackbar, Alert } from '@mui/material';
 import Slide, { SlideProps } from '@mui/material/Slide';
 import axios from 'axios'
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import { makeStyles } from '@mui/styles';
 
@@ -78,7 +76,6 @@ const Help = () => {
         axios.post(URL, formInfo, {
             headers: headers
         }).then(res => {
-            console.log(res)
             axios.post(URL + '/' + res.data.id + '/reply', {
                 body: `<h2>Your support ticket ${res.data.id} has been submitted.</h2></br><p>Hi ${res.data.custom_fields.cf_discord}</p><p>The Support Team of Crypto Legions has received your ticket. We’ll get back to you within 24 hours if your request relates to a bug/issue in the game.</p><br /><p>If your request is not directly related to a bug/issue we should fix, for example a proposal or promotional message, then your ticket might be closed without a reply from us.
                 In some cases, your ticket might also be closed without a reply from us if the answer to your question can be easily found by reading the game instructions in our whitepaper: <a href="https://docs.cryptolegions.app" target="_blank">https://docs.cryptolegions.app</a></p><p>Please understand we need to give priority to players who have issues that should be fixed by our developers.</p><br /><p>Happy travels to Nicah to play Crypto Legions!</p><br /><p>All the best,</p><p>Crypto Legions Support Team
@@ -88,10 +85,8 @@ const Help = () => {
                     'Authorization': auth,
                     'Content-Type': 'application/json',
                 }
-            }).then(rrr => {
-                console.log(rrr)
+            }).then(r => {
             }).catch(err => {
-                console.log(err)
             })
             if (res.status === 201) {
                 setSnackbarType('success')
@@ -105,7 +100,6 @@ const Help = () => {
             setAttachmentFile(null)
             setPriority('1')
         }).catch(err => {
-            console.log(err)
         })
 
     }
@@ -146,8 +140,6 @@ const Help = () => {
                                     onChange={(e: any) => setEmail(e.target.value)}
                                     name="email"
                                     value={email}
-                                    // validators={['required', 'isEmail']}
-                                    // errorMessages={['this field is required', 'Email is not valid']}
                                     sx={{ width: '100%' }}
                                     type="email"
                                     id="outlined-required"
@@ -175,8 +167,6 @@ const Help = () => {
                                     onChange={(e: any) => setSubject(e.target.value)}
                                     name="subject"
                                     value={subject}
-                                    // validators={['required']}
-                                    // errorMessages={['this field is required']}
                                     sx={{ width: '100%' }}
                                     id="outlined-required"
                                     required
@@ -191,8 +181,6 @@ const Help = () => {
                                     onChange={(e: any) => setDescription(e.target.value)}
                                     name="description"
                                     value={description}
-                                    // validators={['required']}
-                                    // errorMessages={['this field is required']}
                                     sx={{ width: '100%' }}
                                     id="outlined-required"
                                     required
