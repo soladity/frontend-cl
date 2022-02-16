@@ -5,11 +5,11 @@ import axios from 'axios'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import { makeStyles } from '@mui/styles';
 
 const Input = styled('input')({
     display: 'none',
-});
-
+})
 
 type TransitionProps = Omit<SlideProps, 'direction'>;
 
@@ -17,7 +17,17 @@ function TransitionUp(props: TransitionProps) {
     return <Slide {...props} direction="up" />;
 }
 
+const useStyles = makeStyles({
+    textField: {
+        '& p': {
+            color: 'red'
+        }
+    }
+});
+
 const Help = () => {
+    const classes = useStyles();
+
     let fileInput = React.useRef<HTMLInputElement>(null);
 
     const [attachmentFile, setAttachmentFile] = React.useState(null)
@@ -30,9 +40,17 @@ const Help = () => {
     const [openSnackBar, setOpenSnackBar] = React.useState(false)
     const [snackBarMessage, setSnackBarMessage] = React.useState('')
     const [snackbarType, setSnackbarType] = React.useState<string>('error')
+    const [emailValidationText, setEmailValidationText] = React.useState('')
 
-    const uploadSubtitle1 = async (event: any) => {
+    const createTicket = async (event: any) => {
         event.preventDefault()
+        if (!email.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+            setEmailValidationText("invalidation email")
+            return
+        }
+
+        setEmailValidationText("")
+
         var API_KEY = "jp0qrj5DTWcgBeg0L4FD";
         var FD_ENDPOINT = "cryptolegions";
         var PATH = "/api/v2/tickets";
@@ -60,6 +78,21 @@ const Help = () => {
         axios.post(URL, formInfo, {
             headers: headers
         }).then(res => {
+            console.log(res)
+            axios.post(URL + '/' + res.data.id + '/reply', {
+                body: `<h2>Your support ticket ${res.data.id} has been submitted.</h2></br><p>Hi ${res.data.custom_fields.cf_discord}</p><p>The Support Team of Crypto Legions has received your ticket. We’ll get back to you within 24 hours if your request relates to a bug/issue in the game.</p><br /><p>If your request is not directly related to a bug/issue we should fix, for example a proposal or promotional message, then your ticket might be closed without a reply from us.
+                In some cases, your ticket might also be closed without a reply from us if the answer to your question can be easily found by reading the game instructions in our whitepaper: <a href="https://docs.cryptolegions.app" target="_blank">https://docs.cryptolegions.app</a></p><p>Please understand we need to give priority to players who have issues that should be fixed by our developers.</p><br /><p>Happy travels to Nicah to play Crypto Legions!</p><br /><p>All the best,</p><p>Crypto Legions Support Team
+                </p><p><a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p><p>support@cryptolegions.app</p>`,
+            }, {
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'application/json',
+                }
+            }).then(rrr => {
+                console.log(rrr)
+            }).catch(err => {
+                console.log(err)
+            })
             if (res.status === 201) {
                 setSnackbarType('success')
                 setSnackBarMessage('Created ticket successfully!')
@@ -102,7 +135,7 @@ const Help = () => {
                 <Box sx={{ p: 4 }}>
                     <form
                         onSubmit={(event: any) => {
-                            uploadSubtitle1(event)
+                            createTicket(event)
                         }}
                     >
                         <Grid container spacing={2} sx={{ marginBottom: 4 }}>
@@ -119,6 +152,8 @@ const Help = () => {
                                     type="email"
                                     id="outlined-required"
                                     required
+                                    helperText={emailValidationText}
+                                    className={classes.textField}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -167,7 +202,7 @@ const Help = () => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={2} sx={{ marginBottom: 4 }}>
-                            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
                                 <label htmlFor="contained-button-file">
                                     <Input accept="*" id="contained-button-file" multiple type="file" onChange={e => setFile(e)} />
                                     <IconButton color="primary" aria-label="upload picture" component="span">
@@ -178,7 +213,7 @@ const Help = () => {
                                     }
                                 </label>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item md={6}>
                                 <TextField
                                     id="outlined-select"
                                     select
