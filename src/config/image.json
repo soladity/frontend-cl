@@ -1,0 +1,66 @@
+{
+    "beasts": [
+        {
+            "name": "Centaur",
+            "gif": "QmYqrDk6qcvo3Kg15RuMcJsZhJ4JatAuyv8VAWvCojKeAZ",
+            "jpg": "QmTeRPz37nQyEHHhu2rpMBePXy5GLZidA6XMUprUCv1A1f"
+        },
+        {
+            "name": "Barghest",
+            "gif": "QmSgKKqAZex4qBjtHciSXwwxn8Cqn8CJY4UCdEww62fNWQ",
+            "jpg": "QmToLNrMr3Qb5PzdeRdDSfQDWDQyrwwzf8awbcQuN46TTi"
+        },
+        {
+            "name": "Pegasus",
+            "gif": "QmXJjCqKAuALekTM1MUGpQDi9GaGuC4U5o5fdbVmac1hSN",
+            "jpg": "QmRwqb5j7ux6wg7bqyHTvfD248PJDeaYEZaYDyJUK893C9"
+        },
+        {
+            "name": "Griffin",
+            "gif": "QmNatbVqKggWQQkoS8bxthU1YSe2TFNGCtuEmNCr8rVYDd",
+            "jpg": "QmduQCGnM1gxCt8wDNzfScFoKkUQXUXUqYWP4UCPhWxumf"
+        },
+        {
+            "name": "Dragon",
+            "gif": "QmNUQeLyZXdSjCQPJr83PTSWkwFbPXHGdF7pHwVUJcQSaj",
+            "jpg": "QmSwGmc4f7uckbE875qH3Pvz5V8tSDoYwNzdT16G7HQDqU"
+        },
+        {
+            "name": "Phoenix",
+            "gif": "QmNrqT2UXZ6vjAMN277fTo6TwV9Cg1dDop5QZg39Hbu3Tc",
+            "jpg": "QmbPKG9oTCeXwschSxCuvxRt5hsEaseDJqfaGRWUXHujvt"
+        }
+    ],
+    "warriors": [
+        {
+            "name": "Hobbit",
+            "gif": "QmT2kUH6H6vmNKrgGhcg34jaWY7RresHoyCocThZiA9Q5z",
+            "jpg": "QmbKNLr8qMK4MXbiC9E6hARQqn8HiAgGS4tZWgJ6fioMa9"
+        },
+        {
+            "name": "Gnome",
+            "gif": "QmcrAjTFb7RsCEiAkqcy3rcr9CUCNX17PG3QpVnkQMQ4vd",
+            "jpg": "QmcDqPWTMSdRbiaq4rJn6LRXE9V8gs9ehD18DSNgLoD4Uy"
+        },
+        {
+            "name": "Satyr",
+            "gif": "QmXJpBzqkR2BxRREGGcFPAuKvbuJwaLYWsSXDurKPZjF5p",
+            "jpg": "QmUH3zhaHuLFz3enF8A3yJjDbYZTLqVrz2KFU1VUgDoAdK"
+        },
+        {
+            "name": "Dwarf",
+            "gif": "QmRWs3ToWngasDdZD9kKDwYKcnpK5saGYK2bCCaniL4ZtV",
+            "jpg": "QmSyDogoc2bTHM8LfsFtz8BPfLHfUCx8fCxzBLpXpQtRYS"
+        },
+        {
+            "name": "Minotaur",
+            "gif": "QmPkQJkvoo4HRKniqwwNZynAs5wr381PUCdAWqjmKgZmPy",
+            "jpg": "QmYmMNhQnZvrCxddJnAyGGGDBvAdPFMAp66tLNSrCBiFUT"
+        },
+        {
+            "name": "Dragon",
+            "gif": "Qma4GioKvo7yEzyN8Mk5G5qGmQ4w7g7nrdXwiix8iugthK",
+            "jpg": "QmUnW39Amrd4irc7XkiPSjnzZDw9DyHY5L6zNgqnbSbaTj"
+        }
+    ]
+}
