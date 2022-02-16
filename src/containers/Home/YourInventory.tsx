@@ -18,7 +18,7 @@ const YourInventory = () => {
     const [availableLegionCount, setAvailableLegionCount] = React.useState(0)
     const [legionTokenIds, setLegionTokenIds] = React.useState([])
     const [taxLeftDays, setTaxLeftDays] = React.useState(0)
-    const [maxAttackPower, setMaxAttackPower] = React.useState(0)
+    const [maxAttackPower, setMaxAttackPower] = React.useState('0')
     const [BLSTBalance, setBLSTBalance] = React.useState('0')
 
 
@@ -62,6 +62,7 @@ const YourInventory = () => {
         setTaxLeftDays(taxLeftDays)
 
         const maxAttackPower = await getMaxAttackPower(web3, legionContract, account)
+        console.log(maxAttackPower, typeof maxAttackPower)
         setMaxAttackPower(maxAttackPower)
 
         const BLSTBalance = await getBloodstoneBalance(web3, bloodstoneContract, account)
@@ -94,7 +95,7 @@ const YourInventory = () => {
                     {getTranslation('availableLegions')}: {availableLegionCount} / {legionTokenIds.length}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
-                    {getTranslation('yourMaxAp')}: {maxAttackPower}
+                    {getTranslation('yourMaxAp')}: {formatNumber((parseFloat(maxAttackPower) / 100).toFixed(0))}
                 </Typography>
                 <Typography className='legionFontColor' variant='subtitle1' sx={{ fontWeight: 'bold' }}>
                     {getTranslation('unClaimed')}: {unclaimedBalance}

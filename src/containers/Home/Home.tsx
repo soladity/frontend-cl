@@ -62,7 +62,7 @@ const Home = () => {
                         <Grid item md={3} sm={2} xs={1}>
                         </Grid>
                         <Grid item md={6} sm={8} xs={10}>
-                            <Box sx={{ width: '100%', paddingTop: '75%', position: 'relative' }}>
+                            <Box sx={{ width: '100%', paddingTop: "56.25%", position: 'relative' }}>
                                 <Box sx={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, display: 'flex', alignItems: 'center' }}>
                                     <ReactPlayer
                                         url="https://youtu.be/SA-PmNW7syw"
