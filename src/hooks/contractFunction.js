@@ -166,7 +166,7 @@ export const getLegionToken = async (web3, contract, tokenId) => {
         beasts: response[1],
         warriors: response[2],
         supplies: response[3],
-        attackPower: parseInt(response[4]),
+        attackPower: parseInt(response[4]) / 100,
     }
     return legion;
 }
