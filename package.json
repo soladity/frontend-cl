@@ -49,7 +49,7 @@
     "node-sass": "^7.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3006 react-scripts start",
     "style": "node-sass --watch ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css",
     "build": "node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && react-scripts build",
     "test": "react-scripts test",

@@ -197,6 +197,12 @@ const CreateLegions: React.FC = () => {
     );
     tmpDropItemList.splice(indexOfRight, 1);
     setDropItemList(tmpDropItemList);
+    setIsWDropable(
+      totalCP > 0 &&
+        totalCP >= warriorDropBoxList.length &&
+        totalAP >= createlegions.main.minAvailableAP &&
+        legionName.length > 0
+    );
     setIndexForLeft(-1);
     getTotalAP_CP();
   }, [indexForLeft, w5bInDropList]);
@@ -214,9 +220,9 @@ const CreateLegions: React.FC = () => {
     setTotalAp(sum);
     setIsWDropable(
       cp > 0 &&
-      cp >= warriorDropBoxList.length &&
-      totalAP >= createlegions.main.minAvailableAP &&
-      legionName.length > 0
+        cp >= warriorDropBoxList.length &&
+        totalAP >= createlegions.main.minAvailableAP &&
+        legionName.length > 0
     );
   };
 
@@ -265,6 +271,8 @@ const CreateLegions: React.FC = () => {
   const moveToLeft = (index: number, w5b: boolean) => {
     setIndexForLeft(index);
     setW5bInDropList(w5b);
+    console.log(index, w5b);
+    console.log(beastDragBoxList, warriorDragBoxList);
   };
 
   const handleChangeAp = (
@@ -314,12 +322,15 @@ const CreateLegions: React.FC = () => {
   };
 
   const handleChangedName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 25) {
+      return;
+    }
     setLegionName(e.target.value);
     setIsWDropable(
       totalCP > 0 &&
-      totalCP >= warriorDropBoxList.length &&
-      totalAP >= createlegions.main.minAvailableAP &&
-      legionName.length > 0
+        totalCP >= warriorDropBoxList.length &&
+        totalAP >= createlegions.main.minAvailableAP &&
+        legionName.length > 0
     );
   };
 
@@ -346,7 +357,6 @@ const CreateLegions: React.FC = () => {
               className={classes.warning}
               sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
             >
-              <ErrorOutline color="error" fontSize="large" />
               <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
                 <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                   {getTranslation("createLegion")}
@@ -448,50 +458,57 @@ const CreateLegions: React.FC = () => {
                                 aria-label="outlined button group"
                               >
                                 <Button
-                                  variant={`${filter === "all" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "all" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("all")}
                                 >
                                   {getTranslation("all")}
                                 </Button>
                                 <Button
-                                  variant={`${filter === "1" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "1" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("1")}
                                 >
                                   1
                                 </Button>
                                 <Button
-                                  variant={`${filter === "2" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "2" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("2")}
                                 >
                                   2
                                 </Button>
                                 <Button
-                                  variant={`${filter === "3" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "3" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("3")}
                                 >
                                   3
                                 </Button>
                                 <Button
-                                  variant={`${filter === "4" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "4" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("4")}
                                 >
                                   4
                                 </Button>
                                 <Button
-                                  variant={`${filter === "5" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "5" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("5")}
                                 >
                                   5
                                 </Button>
                                 <Button
-                                  variant={`${filter === "20" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "20" ? "contained" : "outlined"
+                                  }`}
                                   onClick={() => setFilter("20")}
                                 >
                                   20
@@ -566,19 +583,22 @@ const CreateLegions: React.FC = () => {
                       <Grid item>
                         <CommonBtn
                           variant="contained"
+                          sx={{
+                            fontSize: 14,
+                            fontWeight: "bold",
+                            width: "100%",
+                            marginBottom: 1,
+                          }}
                           onClick={() => handleMint()}
-                          disabled={!isWDropable}
+                          disabled={!isWDropable || mintLoading}
                         >
                           {mintLoading ? (
                             <Spinner color="white" size={40} />
                           ) : (
-                            getTranslation("createLegion")
-                            + "" +
-                            (
-                              totalAP < createlegions.main.minAvailableAP
-                                ? " (min 2000 AP needed)"
-                                : " " + totalAP + " AP"
-                            )
+                            getTranslation("createLegion") +
+                            (totalAP < createlegions.main.minAvailableAP
+                              ? " (min 2000 AP needed)"
+                              : " " + totalAP + " AP")
                           )}
                         </CommonBtn>
                       </Grid>

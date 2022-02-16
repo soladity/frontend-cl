@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   Box,
   Grid,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
   SelectChangeEvent,
   Typography,
   Card,
@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogContent,
 } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
 import Helmet from "react-helmet";
 import {
@@ -43,6 +44,42 @@ import {
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
+import RedBGMenuItem from "./RedMenuItem";
+import GreenBGMenuItem from "./GreenMenuItem";
+import OrgBGMenuItem from "./OrgMenuItem";
+import { Spinner } from "../../component/Buttons/Spinner";
+
+const useStyles = makeStyles(() => ({
+  Card: {
+    position: "sticky",
+    zIndex: 100,
+    marginTop: "4px",
+    marginBottom: "4px",
+    paddingTop: "4px",
+    paddingBottom: "4px",
+    "@media(min-width: 0px)": {
+      top: "12%",
+    },
+    "@media(min-width: 763px)": {
+      top: "8%",
+    },
+  },
+  Grid: {
+    paddingTop: "2%",
+    "@media(min-width: 0px)": {
+      paddingTop: "14%",
+    },
+    "@media(min-width: 600px)": {
+      paddingTop: "20%",
+    },
+    "@media(min-width: 763px)": {
+      paddingTop: "6%",
+    },
+    "@media(min-width: 900px)": {
+      paddingTop: "2%",
+    },
+  },
+}));
 
 interface MonsterInterface {
   base: string;
@@ -64,6 +101,7 @@ interface LegionInterface {
 }
 
 const Monsters = () => {
+  const classes = useStyles();
   const { account } = useWeb3React();
   const web3 = useWeb3();
   const legionContract = useLegion();
@@ -88,6 +126,8 @@ const Monsters = () => {
   const [scrollMaxHeight, setScrollMaxHeight] = useState(0);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [huntedStatus, setHuntedStatus] = useState(0);
+  const [continueLoading, setContinueLoading] = useState(false);
+  const [huntedRoll, setHuntedRoll] = useState(0);
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -113,6 +153,31 @@ const Monsters = () => {
       monsterArraryTmp.push({ ...monsterTmp, id: i });
     }
     setMonsters(monsterArraryTmp);
+  };
+
+  const updateMonster = async () => {
+    const legionIDS = await getLegionTokenIds(web3, legionContract, account);
+    let legionTmp;
+    let legionStatus = "";
+    let legionArrayTmp = [];
+    for (let i = 0; i < legionIDS.length; i++) {
+      legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
+      legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
+      legionArrayTmp.push({
+        ...legionTmp,
+        id: legionIDS[i],
+        status: legionStatus,
+      });
+    }
+    setLegions(legionArrayTmp);
+    const tempLegionValue =
+      parseInt(curComboLegionValue) - 1 < 0
+        ? 0
+        : parseInt(curComboLegionValue) - 1;
+    setCurComboLegionValue(tempLegionValue + "");
+    setCurLegion(legionArrayTmp[tempLegionValue]);
+    setCurComboLegionValue(tempLegionValue + 1 + "");
+    setCurLegion(legionArrayTmp[tempLegionValue + 1]);
   };
 
   const initialize = async () => {
@@ -174,14 +239,30 @@ const Monsters = () => {
     setDialogVisible(true);
     setCurMonsterID(monsterTokenID);
     setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
-    let response = await hunt(
-      web3,
-      legionContract,
-      account,
-      curLegion?.id,
-      monsterTokenID
-    );
-    setHuntedStatus(response ? 1 : 2);
+    try {
+      let response = await hunt(
+        web3,
+        legionContract,
+        account,
+        curLegion?.id,
+        monsterTokenID
+      );
+      console.log(response);
+      setHuntedRoll(response.roll);
+      setHuntedStatus(response.huntRetVal ? 1 : 2);
+    } catch (e: any) {
+      if (e.code === 4001) {
+        setDialogVisible(false);
+      }
+    }
+  };
+
+  const handleContinue = async () => {
+    setContinueLoading(true);
+    await updateMonster();
+    setDialogVisible(false);
+    setHuntedStatus(0);
+    setContinueLoading(false);
   };
 
   return (
@@ -199,16 +280,15 @@ const Monsters = () => {
       </Helmet>
       {loading === false && legions.length > 0 && (
         <Box component="div" sx={{ position: "relative" }} ref={scrollArea}>
-          <Card
-            sx={{ position: "sticky", top: "10%", zIndex: 100, my: 2, py: 2 }}
-          >
+          <Card className={classes.Card}>
             <Grid
               container
               spacing={2}
-              sx={{ justifyContent: "space-evenly" }}
+              sx={{ justifyContent: "center" }}
               alignItems="center"
+              columns={60}
             >
-              <Grid item xs={12} sm={4} md={3}>
+              <Grid item xs={60} sm={60} md={28}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     {getTranslation("legions")}
@@ -220,48 +300,65 @@ const Monsters = () => {
                     label="Current Legion"
                     onChange={handleCurLegionValue}
                   >
-                    {legions.map((legion: any, index) => (
-                      <MenuItem
-                        value={index}
-                        key={index}
-                        sx={{
-                          background:
-                            legion.status === "1"
-                              ? "#18a601"
-                              : legion.status === "2"
-                              ? "#9c5c00"
-                              : "#47010b",
-                        }}
-                      >
-                        #{legion.id} {legion.name}
-                      </MenuItem>
-                    ))}
+                    {legions.map((legion: any, index) =>
+                      legion.status === "1" ? (
+                        <GreenBGMenuItem value={index} key={index}>
+                          #{legion.id} {legion.name}
+                        </GreenBGMenuItem>
+                      ) : legion.status === "2" ? (
+                        <OrgBGMenuItem value={index} key={index}>
+                          #{legion.id} {legion.name}
+                        </OrgBGMenuItem>
+                      ) : (
+                        <RedBGMenuItem value={index} key={index}>
+                          #{legion.id} {legion.name}
+                        </RedBGMenuItem>
+                      )
+                    )}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={2} md={3}>
+              <Grid item xs={30} sm={15} md={8}>
                 <Typography variant="h5">
                   {curLegion?.attackPower} AP
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={2} md={3}>
+              <Grid item xs={30} sm={15} md={8}>
                 <Typography variant="h5">
                   W {curLegion?.warriors.length}/
                   {warriors.length + mintedWarriorCnt}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={2} md={3}>
+              <Grid item xs={30} sm={15} md={8}>
                 <Typography variant="h5">
                   B {curLegion?.beasts.length}/
                   {createlegions.main.maxAvailableDragCount}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={2} md={3}>
-                <Typography variant="h5">{curLegion?.supplies} H</Typography>
+              <Grid item xs={30} sm={15} md={8}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color:
+                      curLegion?.status === "1"
+                        ? "#18e001"
+                        : curLegion?.status === "2"
+                        ? "#ae7c00"
+                        : "#50010b",
+                    fontWeight: 1000,
+                  }}
+                >
+                  {curLegion?.supplies} H
+                </Typography>
               </Grid>
             </Grid>
           </Card>
-          <Grid container justifyContent="center" alignItems="center">
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            className={classes.Grid}
+          >
             {monsters.map((monster: any | MonsterInterface, index) => (
               // <Box component='div' sx={{ width: '100%', my: 1 }} key={index}> xs={32} sm={30} md={20} lg={15} xl={12}
               <Grid
@@ -308,17 +405,27 @@ const Monsters = () => {
         </Box>
       )}
       {loading === false && legions.length === 0 && (
-        <Grid container justifyContent="center">
+        <Grid container justifyContent="center" sx={{ paddingTop: "20%" }}>
           <Grid item>
             <Typography variant="h4">
               {getTranslation("noMintedLegion")}
             </Typography>
           </Grid>
+          <Grid item xs={12}>
+            <NavLink to="/createlegions" className="non-style">
+              {getTranslation("createLegion")}
+            </NavLink>
+          </Grid>
         </Grid>
       )}
       {loading === true && (
         <>
-          <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+          <Grid
+            item
+            xs={12}
+            sx={{ p: 4, textAlign: "center", paddingTop: "20%" }}
+            className={classes.Grid}
+          >
             <Typography variant="h4">
               {getTranslation("loadingMonsters")}
             </Typography>
@@ -381,8 +488,11 @@ const Monsters = () => {
                 />
                 <Box
                   component="div"
-                  sx={{ position: "absolute", bottom: "15px" }}
+                  sx={{ position: "absolute", bottom: "15px", left: "5px" }}
                 >
+                  <Typography>
+                    {getTranslation("yourRollTitle")} {huntedRoll}
+                  </Typography>
                   <Typography>
                     {getTranslation("congSubtitle3")}{" "}
                     {parseInt(curMonster?.base as string) +
@@ -397,11 +507,18 @@ const Monsters = () => {
               </Box>
             </DialogContent>
             <DialogActions>
+              {continueLoading && (
+                <Typography> Wait a moment, loading...</Typography>
+              )}
               <CommonBtn
-                variant="outlined"
-                onClick={() => setDialogVisible(false)}
+                onClick={() => handleContinue()}
+                disabled={continueLoading}
               >
-                {getTranslation("continue")}
+                {continueLoading ? (
+                  <Spinner color="white" size={40} />
+                ) : (
+                  getTranslation("continue")
+                )}
               </CommonBtn>
             </DialogActions>
           </>
@@ -415,29 +532,46 @@ const Monsters = () => {
               </>
             </DialogTitle>
             <DialogContent>
-              <CardMedia
-                component="img"
-                image="/assets/images/loosing.gif"
-                alt="Monster Image"
-                loading="lazy"
-              />
-              <Typography>
-                {getTranslation("defeatSubtitle2")}{" "}
-                {parseInt(curMonster?.base as string) +
-                  ((curMonster?.ap as number) <
-                  (curLegion?.attackPower as number)
-                    ? ((curLegion?.attackPower as number) -
-                        (curMonster?.ap as number)) /
-                      2000
-                    : 0)}
-              </Typography>
+              <Box component="div" sx={{ position: "relative" }}>
+                <CardMedia
+                  component="img"
+                  image="/assets/images/loosing.gif"
+                  alt="Monster Image"
+                  loading="lazy"
+                />
+                <Box
+                  component="div"
+                  sx={{ position: "absolute", bottom: "15px", left: "5px" }}
+                >
+                  <Typography>
+                    {getTranslation("yourRollTitle")} {huntedRoll}
+                  </Typography>
+                  <Typography>
+                    {getTranslation("defeatSubtitle2")}{" "}
+                    {parseInt(curMonster?.base as string) +
+                      ((curMonster?.ap as number) <
+                      (curLegion?.attackPower as number)
+                        ? ((curLegion?.attackPower as number) -
+                            (curMonster?.ap as number)) /
+                          2000
+                        : 0)}
+                  </Typography>
+                </Box>
+              </Box>
             </DialogContent>
             <DialogActions>
+              {continueLoading && (
+                <Typography> Wait a moment, loading...</Typography>
+              )}
               <CommonBtn
-                variant="outlined"
-                onClick={() => setDialogVisible(false)}
+                onClick={() => handleContinue()}
+                disabled={continueLoading}
               >
-                {getTranslation("continue")}
+                {continueLoading ? (
+                  <Spinner color="white" size={40} />
+                ) : (
+                  getTranslation("continue")
+                )}
               </CommonBtn>
             </DialogActions>
           </>
