@@ -7,7 +7,6 @@ import Skeleton from "@mui/material/Skeleton";
 import Grid from "@mui/material/Grid";
 import { toCapitalize } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
-import CommonBtn from "../../component/Buttons/CommonBtn";
 
 type CardProps = {
   name: string;
@@ -37,8 +36,6 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
   const handleImageLoaded = () => {
     setLoaded(true);
   };
-
-  console.log(isHuntable);
 
   return (
     <Card sx={{ position: "relative", textAlign: "center" }}>
@@ -106,13 +103,14 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           </Typography>
         </Grid>
         <Grid item>
-          <CommonBtn
+          {/* c94f19 */}
+          <Button
             variant="outlined"
             disabled={!isHuntable}
             onClick={() => handleHunt(tokenID)}
           >
             {getTranslation("hunt")}
-          </CommonBtn>
+          </Button>
         </Grid>
       </Grid>
     </Card>

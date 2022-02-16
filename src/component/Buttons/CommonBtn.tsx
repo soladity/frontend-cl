@@ -15,6 +15,11 @@ const useStyles = makeStyles({
     color: "white !important",
     textShadow:
       "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+    "&[disabled]": {
+      background: "grey",
+      transition: ".4s all",
+      cursor: "default",
+    },
   },
 });
 
