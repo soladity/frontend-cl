@@ -249,13 +249,13 @@ export const getMaxAttackPower = async (web3, contract, account) => {
 };
 
 export const getLegionImage = async (web3, contract, ap) => {
-  const response = await contract.methods.getImage(ap).call();
-  const image = {
-    image: response[1],
-    animationImage: response[0],
-  };
-  return image;
-};
+    const response = await contract.methods.getImage(parseInt(ap).toString()).call();
+    const image = {
+        image: response[1],
+        animationImage: response[0]
+    }
+    return image;
+}
 
 export const getHuntStatus = async (web3, contract, id) => {
   const response = await contract.methods.canHuntMonster(id).call();
