@@ -227,7 +227,7 @@ const AppBarComponent = () => {
                       <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
                         <BadgeIcon />
                       </IconButton>
-                      <NavLink to='/profile' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
+                      <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
                         <Typography variant='subtitle1' sx={{ fontSize: { xs: '0.7rem', md: '1rem' } }}>
                           {account === undefined || account === null ? '...' : account.substr(0, 6) + '...' + account.substr(account.length - 4, 4)}</Typography>
                       </NavLink>
