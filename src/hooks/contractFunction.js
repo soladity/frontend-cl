@@ -204,17 +204,16 @@ export const getLegionTokenIds = async (web3, contract, account) => {
 };
 
 export const getLegionToken = async (web3, contract, tokenId) => {
-  const response = await contract.methods.getLegion(tokenId).call();
-  const legion = {
-    name: response[0],
-    beasts: response[1],
-    warriors: response[2],
-    supplies: response[3],
-    attackPower: parseInt(response[4]),
-  };
-  return legion;
-};
-
+    const response = await contract.methods.getLegion(tokenId).call();
+    const legion = {
+        name: response[0],
+        beasts: response[1],
+        warriors: response[2],
+        supplies: response[3],
+        attackPower: parseInt(response[4]) / 100,
+    }
+    return legion;
+}
 export const addSupply = async (web3, contract, account, tokenId, supply) => {
   const response = await contract.methods
     .addSupply(tokenId, supply, true)

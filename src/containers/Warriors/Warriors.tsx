@@ -9,12 +9,13 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, getBaseJpgURL, getBaseGifURL, sellToken, setMarketplaceApprove } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useMarketplace, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
+import Image from '../../config/image.json';
 
 const useStyles = makeStyles({
 	root: {
@@ -32,17 +33,23 @@ const useStyles = makeStyles({
 	}
 });
 
+type WarriorProps = {
+	id: string;
+	type: string;
+	power: string;
+	strength: string;
+};
+
 const Warriors = () => {
 	const {
 		account,
 	} = useWeb3React();
 
-	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
-	const [baseGifUrl, setBaseGifUrl] = React.useState('');
+	const [baseUrl, setBaseUrl] = React.useState('');
 	const [showMint, setShowMint] = React.useState(false);
-	const [balance, setBalance] = React.useState('0');
+	const [balance, setBalance] = React.useState(0);
 	const [maxPower, setMaxPower] = React.useState(0);
-	const [warriors, setWarriors] = React.useState(Array);
+	const [warriors, setWarriors] = React.useState<WarriorProps[]>(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [openSupply, setOpenSupply] = React.useState(false);
 	const [selectedWarrior, setSelectedWarrior] = React.useState(0);
@@ -77,6 +84,7 @@ const Warriors = () => {
 
 	const handleMint = async (amount: Number) => {
 		setMintLoading(true);
+		setLoading(false);
 		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
 		if (allowance === '0') {
 			await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
@@ -91,16 +99,23 @@ const Warriors = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseJpgUrl(await getBaseJpgURL(web3, warriorContract));
-		setBaseGifUrl(await getBaseGifURL(web3, warriorContract));
-		setBalance(await getWarriorBalance(web3, warriorContract, account));
+		setBaseUrl(await getBaseUrl());
+		setBalance(parseInt(await getWarriorBalance(web3, warriorContract, account)));
 		const ids = await getWarriorTokenIds(web3, warriorContract, account);
 		let amount = 0;
 		let warrior;
 		let tempWarriors = [];
+		let gif = '';
+		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			tempWarriors.push({ ...warrior, id: ids[i] });
+			for (let j = 0; j < Image.warriors.length; j++){
+				if (Image.warriors[j].name === warrior.type){
+					gif = Image.warriors[j].gif;
+					jpg = Image.warriors[j].jpg;
+				}
+			}
+			tempWarriors.push({ ...warrior, id: ids[i], gif: gif, jpg: jpg });
 			amount += parseInt(warrior.power);
 		}
 		setMaxPower(amount);
@@ -141,6 +156,14 @@ const Warriors = () => {
 		setOpenSupply(false);
 		await setMarketplaceApprove(web3, warriorContract, account, selectedWarrior);
 		await sellToken(web3, marketplaceContract, account, '2', selectedWarrior, price);
+		let power = 0;
+		let temp = warriors;
+		for (let i = 0; i < temp.length; i++) {
+			if (parseInt(temp[i]['id']) === selectedWarrior)
+				power = parseInt(temp[i]['power']);
+		}
+		setMaxPower(maxPower - power);
+		setBalance(balance - 1);
 		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior));
 	}
 
@@ -273,7 +296,7 @@ const Warriors = () => {
 					{
 						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} />
+								<WarriorCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} />
 							</Grid>
 						))
 					}

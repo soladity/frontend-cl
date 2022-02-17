@@ -9,11 +9,12 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseJpgURL, getBaseGifURL } from '../../hooks/contractFunction';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
+import Image from '../../config/image.json';
 
 const useStyles = makeStyles({
 	root: {
@@ -36,8 +37,7 @@ const Beasts = () => {
 		account,
 	} = useWeb3React();
 
-	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
-	const [baseGifUrl, setBaseGifUrl] = React.useState('');
+	const [baseUrl, setBaseUrl] = React.useState('');
 	const [showMint, setShowMint] = React.useState(false);
 	const [balance, setBalance] = React.useState('0');
 	const [maxWarrior, setMaxWarrior] = React.useState(0);
@@ -71,6 +71,7 @@ const Beasts = () => {
 
 	const handleMint = async (amount: Number) => {
 		setMintLoading(true);
+		setLoading(false);
 		const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
 		if (allowance === '0') {
 			await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
@@ -85,16 +86,23 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseJpgUrl(await getBaseJpgURL(web3, beastContract));
-		setBaseGifUrl(await getBaseGifURL(web3, beastContract));
+		setBaseUrl(await getBaseUrl());
 		setBalance(await getBeastBalance(web3, beastContract, account));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
 		let amount = 0;
 		let beast;
 		let tempBeasts = [];
+		let gif = '';
+		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
-			tempBeasts.push({ ...beast, id: ids[i] });
+			for (let j = 0; j < Image.beasts.length; j++){
+				if (Image.beasts[j].name === beast.type){
+					gif = Image.beasts[j].gif;
+					jpg = Image.beasts[j].jpg;
+				}
+			}
+			tempBeasts.push({ ...beast, id: ids[i], gif: gif, jpg: jpg });
 			amount += parseInt(beast.capacity);
 		}
 		setMaxWarrior(amount);
@@ -211,7 +219,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
 							</Grid>
 						))
 					}
