@@ -468,16 +468,16 @@ export const translations = {
     ph: 'Pangalanan ang Iyong Legion'
   },
   'loadingTitle': {
-    en: 'Loading Beasts & Warriors...',
-    es: 'Cargando Bestias y Guerreros...',
+    en: 'Loading Warriors & Beasts...',
+    es: 'Cargando Guerreros y Bestias...',
     cn: '加载野兽和战士...',
-    pt: 'Carregando Bestas e Guerreiros...',
+    pt: 'Carregando Guerreiros e Bestas ...',
     tr: 'Canavarlar ve Savaşçılar Yükleniyor...',
     ru: 'Загрузка зверей и воинов...',
     fr: 'Chargement des bêtes et des guerriers...',
-    de: 'Beasts & Warriors laden...',
-    pl: 'Ładowanie bestii i wojowników...',
-    ph: 'load ng mga Hayop at Mandirigma...'
+    de: 'Warriors & Beasts laden...',
+    pl: 'Ładowanie wojowników i bestii...',
+    ph: 'load ng mga Mandirigma at Hayop...'
   },
   'createLegionsBtn': {
     en: 'Create legion with ',
