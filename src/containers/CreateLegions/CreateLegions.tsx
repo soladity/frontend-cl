@@ -392,16 +392,6 @@ const CreateLegions: React.FC = () => {
                             <ButtonGroup variant="outlined" color="primary">
                               <Button
                                 variant={
-                                  !warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
-                              >
-                                {getTranslation("beasts")}
-                              </Button>
-                              <Button
-                                variant={
                                   warrior5beast ? "contained" : "outlined"
                                 }
                                 onClick={() => {
@@ -409,6 +399,16 @@ const CreateLegions: React.FC = () => {
                                 }}
                               >
                                 {getTranslation("warriors")}
+                              </Button>
+                              <Button
+                                variant={
+                                  !warrior5beast ? "contained" : "outlined"
+                                }
+                                onClick={() => {
+                                  setWarrior5beat(!warrior5beast);
+                                }}
+                              >
+                                {getTranslation("beasts")}
                               </Button>
                             </ButtonGroup>
                           </FormControl>

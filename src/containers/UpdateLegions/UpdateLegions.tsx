@@ -16,7 +16,7 @@ import {
   FormControl,
   FormLabel,
   ButtonGroup,
-  Button
+  Button,
 } from "@mui/material";
 import { ErrorOutline, ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
@@ -98,7 +98,7 @@ const UpdateLegions: React.FC = () => {
   const [filter, setFilter] = React.useState("all");
   const [droppedID, setDroppedID] = React.useState(-1);
   const [w5bInDropList, setW5bInDropList] = React.useState(Boolean);
-  const [indexForLeft, setIndexForLeft] = React.useState(Number);
+  const [indexForLeft, setIndexForLeft] = React.useState<Number>(-1);
   const [dropItemList, setDropItemList] = React.useState(Array);
   const [tempDroppedItem, setTempDroppedItem] = React.useState();
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
@@ -153,7 +153,7 @@ const UpdateLegions: React.FC = () => {
       setDropItemList((prevState) => [...prevState, tempDroppedItem]);
     }
     setDroppedID(-1);
-    getTotalAP_CP();
+    // getTotalAP_CP();
   }, [droppedID]);
 
   React.useEffect(() => {
@@ -167,7 +167,7 @@ const UpdateLegions: React.FC = () => {
       return;
     }
     let tmpInsertPos = -1;
-    let droppedNum = dropBoxList.splice(droppedIDIndex, 1)[0];
+    const droppedNum = dropBoxList.splice(droppedIDIndex, 1)[0];
     let tmpIndexValue = droppedNum as number;
     if (tmpIndexValue === 0) {
       tmpInsertPos = 0;
@@ -213,14 +213,13 @@ const UpdateLegions: React.FC = () => {
     tmpDropItemList.splice(indexOfRight, 1);
     setDropItemList(tmpDropItemList);
     setIndexForLeft(-1);
-    getTotalAP_CP();
+    // getTotalAP_CP();
   }, [indexForLeft, w5bInDropList]);
 
-  const getTotalAP_CP = () => {
+  React.useEffect(() => {
     let sum = 0;
     let cp = 0;
     warriorDropBoxList.forEach((index: any) => {
-      console.log(index, index !== -1, index != -1);
       if (index !== -1) {
         sum += parseInt((warriors[index] as any)["power"]);
       }
@@ -235,10 +234,9 @@ const UpdateLegions: React.FC = () => {
     setIsWDropable(
       cp > 0 &&
         cp >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
+        totalAP >= createlegions.main.minAvailableAP
     );
-  };
+  }, [warriorDropBoxList, beastDropBoxList]);
 
   const setDropBoxListbySelectedLegion = async () => {
     const curLegionTmp = await getLegionToken(
@@ -271,6 +269,7 @@ const UpdateLegions: React.FC = () => {
       // tempDropItemList.push({ ...warrior, id: curLegionTmp?.warriors[i], w5b: true, movable: false })
     }
     setWarriorDropBoxList(tempWarriors);
+    setLegionName(curLegionTmp?.name);
     setTempCP(tempCP);
     setTempAP(tempAP);
     setTotalCP(tempCP);
@@ -375,16 +374,6 @@ const UpdateLegions: React.FC = () => {
     navigate("/legions");
   };
 
-  const handleChangedName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLegionName(e.target.value);
-    setIsWDropable(
-      totalCP > 0 &&
-        totalCP >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
-    );
-  };
-
   return (
     <Box>
       <Helmet>
@@ -408,7 +397,6 @@ const UpdateLegions: React.FC = () => {
               className={classes.warning}
               sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
             >
-              <ErrorOutline color="error" fontSize="large" />
               <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
                 <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                   {getTranslation("updateLegion")}
@@ -450,16 +438,6 @@ const UpdateLegions: React.FC = () => {
                             <ButtonGroup variant="outlined" color="primary">
                               <Button
                                 variant={
-                                  !warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
-                              >
-                                {getTranslation("beasts")}
-                              </Button>
-                              <Button
-                                variant={
                                   warrior5beast ? "contained" : "outlined"
                                 }
                                 onClick={() => {
@@ -467,6 +445,16 @@ const UpdateLegions: React.FC = () => {
                                 }}
                               >
                                 {getTranslation("warriors")}
+                              </Button>
+                              <Button
+                                variant={
+                                  !warrior5beast ? "contained" : "outlined"
+                                }
+                                onClick={() => {
+                                  setWarrior5beat(!warrior5beast);
+                                }}
+                              >
+                                {getTranslation("beasts")}
                               </Button>
                             </ButtonGroup>
                           </FormControl>
@@ -631,11 +619,7 @@ const UpdateLegions: React.FC = () => {
                   <Grid item xs={12} sx={{ p: 4 }}>
                     <Grid container sx={{ justifyContent: "space-around" }}>
                       <Grid item>
-                        <Input
-                          placeholder={getTranslation("updateNamePlaceholder")}
-                          value={legionName}
-                          onChange={handleChangedName}
-                        />
+                        <Input readOnly value={legionName} />
                       </Grid>
                       <Grid item>
                         <CommonBtn
