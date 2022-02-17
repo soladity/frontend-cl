@@ -337,7 +337,7 @@ const AppBarComponent = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Button onClick={() => handleDialogClose('cancel')} variant="contained" sx={{ color: 'white', fontWeight: 'bold' }}>Cancel</Button>
+          <Button onClick={() => handleDialogClose('cancel')} disabled={loading} variant="contained" sx={{ color: 'white', fontWeight: 'bold' }}>Cancel</Button>
           <Button onClick={handleClaimReward} disabled={unClaimedUSD == 0} variant="outlined" sx={{ fontWeight: 'bold' }}>{taxLeftDays == '0' ? 'Claim tax-free' : 'Claim and pay tax'}</Button>
         </DialogActions>
       </Dialog>

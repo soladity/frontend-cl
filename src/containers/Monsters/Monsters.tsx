@@ -401,7 +401,8 @@ const Monsters = () => {
                   base={monster.base}
                   minAP={monster.ap}
                   bouns={
-                    monster.ap < (curLegion as LegionInterface).attackPower
+                    curLegion &&
+                      monster.ap < (curLegion as LegionInterface).attackPower
                       ? "" +
                       ((curLegion as LegionInterface).attackPower -
                         monster.ap) /
