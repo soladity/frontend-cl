@@ -264,9 +264,9 @@ const Monsters = () => {
         curLegion?.id,
         monsterTokenID
       );
-      console.log(response);
+      const result = response.events.Hunted.returnValues
       setHuntedRoll(response.roll);
-      setHuntedStatus(response.huntRetVal ? 1 : 2);
+      setHuntedStatus(response.success ? 1 : 2);
     } catch (e: any) {
       if (e.code === 4001) {
         setDialogVisible(false);
