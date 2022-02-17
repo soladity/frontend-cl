@@ -185,7 +185,7 @@ export const getMonsterInfo = async (web3, contract, monsterID) => {
     name: response[0],
     base: response[1],
     ap: parseInt(response[2]) / 100,
-    reward: response[3],
+    reward: response[3] / 10,
     // image: response[3],
     // imageAlt: response[4]
   };

@@ -77,7 +77,7 @@ const AppBarComponent = () => {
   const [balance, setBalance] = React.useState('0');
   const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
   const [showMenu, setShowMenu] = React.useState<boolean>(false);
-  const [unClaimedUSD, setUnclaimedUSD] = React.useState('0')
+  const [unClaimedUSD, setUnclaimedUSD] = React.useState(0)
   const [taxLeftDays, setTaxLeftDays] = React.useState('0')
   const [dialogOpen, setDialogOpen] = React.useState(false)
 
@@ -97,10 +97,12 @@ const AppBarComponent = () => {
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
-    setUnclaimedUSD(await getUnclaimedUSD(web3, rewardPoolContract, account));
-    setTaxLeftDays(await getTaxLeftDays(web3, legionContract, account))
-    // console.log(typeof await getUnclaimedUSD(web3, rewardPoolContract, account))
-    // console.log(typeof await getTaxLeftDays(web3, rewardPoolContract, account))
+    const unClaimedUSD = await getUnclaimedUSD(web3, rewardPoolContract, account);
+    setUnclaimedUSD(parseFloat(unClaimedUSD) / Math.pow(10, 18))
+    const taxLeftDays = await getTaxLeftDays(web3, legionContract, account)
+    setTaxLeftDays(taxLeftDays)
+    console.log(unClaimedUSD, typeof unClaimedUSD)
+    console.log(taxLeftDays, typeof taxLeftDays)
   }
 
   const handleOpenNavMenu = (event: any) => {
@@ -280,9 +282,14 @@ const AppBarComponent = () => {
         <DialogTitle>Claim {unClaimedUSD} $BLST</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {/* {console.log(typeof unClaimedUSD)} */}
             {
-              taxLeftDays == '0' ? (
+              unClaimedUSD == 0 ? (
+                <>
+                  There is no $BLST to claim.
+                  <br />
+                  Please hunt monsters to get $BLST.
+                </>
+              ) : taxLeftDays == '0' ? (
                 <>
                   You are about to claim {unClaimedUSD} $BLST tax-free.
                   <br />
@@ -293,7 +300,7 @@ const AppBarComponent = () => {
                 </>
               ) : (
                 <>
-                  You will pay {(2 * parseInt(taxLeftDays) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST, and receive only {((100 - 2 * parseInt(taxLeftDays)) * parseFloat(unClaimedUSD) / 100).toFixed(2)} $BLST in your wallet.
+                  You will pay {(2 * parseInt(taxLeftDays) * unClaimedUSD / 100).toFixed(2)} $BLST, and receive only {((100 - 2 * parseInt(taxLeftDays)) * unClaimedUSD / 100).toFixed(2)} $BLST in your wallet.
                   <br />
                   If you wait {taxLeftDays} days, then you will be albe to claim tax-free.
                   <br />
@@ -306,7 +313,7 @@ const AppBarComponent = () => {
         </DialogContent>
         <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Button onClick={handleDialogClose} variant="contained" sx={{ color: 'white', fontWeight: 'bold' }}>Cancel</Button>
-          <Button onClick={handleClaimReward} variant="outlined" sx={{ fontWeight: 'bold' }}>{taxLeftDays == '0' ? 'Claim tax-free' : 'Claim and pay tax'}</Button>
+          <Button onClick={handleClaimReward} disabled={unClaimedUSD == 0} variant="outlined" sx={{ fontWeight: 'bold' }}>{taxLeftDays == '0' ? 'Claim tax-free' : 'Claim and pay tax'}</Button>
         </DialogActions>
       </Dialog>
     </AppBar>

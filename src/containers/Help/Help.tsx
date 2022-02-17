@@ -40,6 +40,42 @@ const Help = () => {
     const [snackbarType, setSnackbarType] = React.useState<string>('error')
     const [emailValidationText, setEmailValidationText] = React.useState('')
 
+    const replyEmailForm = (id: any, discordId: any) => {
+        return (
+            '' +
+            `<h2>Your support ticket ${id} has been submitted.</h2>` +
+            '<br />' +
+            `<p>Hi ${discordID},</p>` +
+            '<br />' +
+            '<p>The Support Team of Crypto Legions has received your ticket. We’ll get back to you within 24 hours if your request relates to a bug/issue inside the game programming.</p>' +
+            '<br />' +
+            '<p>If your request is not directly related to a bug/issue we should fix, for example, a proposal or promotional message, then your ticket might be closed without a reply from us.</p>' +
+            '<p>In some cases, your ticket might also be closed without a reply from us if the answer to your question can be easily found by reading the game instructions in our whitepaper: <a href="https://docs.cryptolegions.app" target="_blank">https://docs.cryptolegions.app</a></p>' +
+            '<p>Please understand we need to give priority to players who have issues related to the game coding to be fixed by our developers.</p>' +
+            '<br />' +
+            '<p style="font-weight: bold">Useful links:</p>' +
+            '<p>- Simple video instructions on how to play Crypto Legions: <a href="https://docs.cryptolegions.app/how-to-get-started" target="_blank">https://docs.cryptolegions.app/how-to-get-started</a></p>' +
+            '<p>- If you are an influencer, please click on "I am an influencer" on our website: <a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p>' +
+            '<p>- If you want to be part of the beta-test of the game, apply to test here: <a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p>' +
+            '<p>- If you are already approved as a Tester, and you want to report a bug as part of our Testing Contest, please report your bug in the #report-bug channel on our Discord: <a href="https://discord.gg/6ddCCMAnbM" target="_blank">https://discord.gg/6ddCCMAnbM</a></p>' +
+            '<br />' +
+            '<p style="font-weight: bold">Make sure to connect with us on social media:</p>' +
+            '<p>- Discord: <a href="https://discord.gg/V4Z4JykfdH" target="_blank">https://discord.gg/V4Z4JykfdH</a></p>' +
+            '<p>- Telegram: <a href="https://t.me/CryptoLegionsCommunity" target="_blank">https://t.me/CryptoLegionsCommunity</a></p>' +
+            '<p>- Twitter: <a href="https://twitter.com/LegionsCrypto" target="_blank">https://twitter.com/LegionsCrypto</a></p>' +
+            '<p>- Youtube: <a href="https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA" target="_blank">https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA</a></p>' +
+            '<p>- Medium: <a href="http://cryptolegions.medium.com" target="_blank">http://cryptolegions.medium.com</a></p>' +
+            '<br />' +
+            '<p>Happy travels to Nicah to play Crypto Legions!</p>' +
+            '<br />' +
+            '<p>All the best,</p>' +
+            '<p>Crypto Legions Support Team</p>' +
+            '<p><a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p>' +
+            '<p>support@cryptolegions.app</p>'
+        )
+    }
+
+
     const createTicket = async (event: any) => {
         event.preventDefault()
         if (!email.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
@@ -77,16 +113,19 @@ const Help = () => {
             headers: headers
         }).then(res => {
             axios.post(URL + '/' + res.data.id + '/reply', {
-                body: `<h2>Your support ticket ${res.data.id} has been submitted.</h2></br><p>Hi ${res.data.custom_fields.cf_discord}</p><p>The Support Team of Crypto Legions has received your ticket. We’ll get back to you within 24 hours if your request relates to a bug/issue in the game.</p><br /><p>If your request is not directly related to a bug/issue we should fix, for example a proposal or promotional message, then your ticket might be closed without a reply from us.
-                In some cases, your ticket might also be closed without a reply from us if the answer to your question can be easily found by reading the game instructions in our whitepaper: <a href="https://docs.cryptolegions.app" target="_blank">https://docs.cryptolegions.app</a></p><p>Please understand we need to give priority to players who have issues that should be fixed by our developers.</p><br /><p>Happy travels to Nicah to play Crypto Legions!</p><br /><p>All the best,</p><p>Crypto Legions Support Team
-                </p><p><a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p><p>support@cryptolegions.app</p>`,
+                body: replyEmailForm(res.data.id, res.data.custom_fields.cf_discord)
+                // body: `<h2>Your support ticket ${res.data.id} has been submitted.</h2></br><p>Hi ${res.data.custom_fields.cf_discord}</p><p>The Support Team of Crypto Legions has received your ticket. We’ll get back to you within 24 hours if your request relates to a bug/issue in the game.</p><br /><p>If your request is not directly related to a bug/issue we should fix, for example a proposal or promotional message, then your ticket might be closed without a reply from us.
+                // In some cases, your ticket might also be closed without a reply from us if the answer to your question can be easily found by reading the game instructions in our whitepaper: <a href="https://docs.cryptolegions.app" target="_blank">https://docs.cryptolegions.app</a></p><p>Please understand we need to give priority to players who have issues that should be fixed by our developers.</p><br /><p>Happy travels to Nicah to play Crypto Legions!</p><br /><p>All the best,</p><p>Crypto Legions Support Team
+                // </p><p><a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p><p>support@cryptolegions.app</p>`,
             }, {
                 headers: {
                     'Authorization': auth,
                     'Content-Type': 'application/json',
                 }
             }).then(r => {
+                console.log(r)
             }).catch(err => {
+                console.log(err)
             })
             if (res.status === 201) {
                 setSnackbarType('success')
