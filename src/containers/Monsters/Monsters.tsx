@@ -493,9 +493,6 @@ const Monsters = () => {
                   {getTranslation("congSubtitle2").toUpperCase()}{" "}
                   {curMonster?.reward} $BLST
                 </Box>
-                <Typography>
-                  {getTranslation("yourRollTitle")} {huntedRoll}
-                </Typography>
               </>
             </DialogTitle>
             <DialogContent>
@@ -518,9 +515,9 @@ const Monsters = () => {
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
                         (curLegion?.attackPower as number)
-                        ? ((curLegion?.attackPower as number) -
+                        ? parseFloat((((curLegion?.attackPower as number) -
                           (curMonster?.ap as number)) /
-                        2000
+                          2000).toFixed(2))
                         : 0)}
                   </Typography>
                 </Box>
@@ -571,9 +568,9 @@ const Monsters = () => {
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
                         (curLegion?.attackPower as number)
-                        ? ((curLegion?.attackPower as number) -
+                        ? parseFloat((((curLegion?.attackPower as number) -
                           (curMonster?.ap as number)) /
-                        2000
+                          2000).toFixed(2))
                         : 0)}
                   </Typography>
                 </Box>

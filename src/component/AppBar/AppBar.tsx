@@ -24,6 +24,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import { Spinner } from "../Buttons/Spinner";
 
 import { getBloodstoneBalance, getUnclaimedUSD, claimReward, getTaxLeftDays } from '../../hooks/contractFunction';
 import { useBloodstone, useWeb3, useRewardPool, useLegion } from '../../hooks/useContract';
@@ -80,6 +81,7 @@ const AppBarComponent = () => {
   const [unClaimedUSD, setUnclaimedUSD] = React.useState(0)
   const [taxLeftDays, setTaxLeftDays] = React.useState('0')
   const [dialogOpen, setDialogOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
@@ -140,16 +142,21 @@ const AppBarComponent = () => {
     setShowMenu(open);
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
     setDialogOpen(false)
   }
 
   const handleClaimReward = async () => {
+    setLoading(true)
     const response = await claimReward(web3, legionContract, account)
-    console.log(response)
     dispatch(setReloadStatus({
       reloadContractStatus: new Date()
     }))
+    setLoading(false)
+    setDialogOpen(false)
   }
 
   return (
@@ -276,10 +283,11 @@ const AppBarComponent = () => {
         open={dialogOpen}
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleDialogClose}
+        disableEscapeKeyDown
+        onClose={(_, reason) => handleDialogClose(reason)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Claim {unClaimedUSD} $BLST</DialogTitle>
+        <DialogTitle>Claim {unClaimedUSD.toFixed(2)} $BLST</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {
@@ -291,28 +299,45 @@ const AppBarComponent = () => {
                 </>
               ) : taxLeftDays == '0' ? (
                 <>
-                  You are about to claim {unClaimedUSD} $BLST tax-free.
+                  You are about to claim {unClaimedUSD.toFixed(2)} $BLST tax-free.
                   <br />
-                  You will receive {unClaimedUSD} $BLST in your wallet.
+                  You will receive {unClaimedUSD.toFixed(2)} $BLST in your wallet.
                   <br />
                   Do you want to go ahead?
                   <br />
+                  {
+                    loading && (
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+                        <Spinner color="white" size={40} />
+                      </div>
+                    )
+                  }
+
                 </>
               ) : (
                 <>
+                  You are about to claim {unClaimedUSD.toFixed(2)} $BLST with {2 * parseInt(taxLeftDays)}% tax.
+                  <br />
                   You will pay {(2 * parseInt(taxLeftDays) * unClaimedUSD / 100).toFixed(2)} $BLST, and receive only {((100 - 2 * parseInt(taxLeftDays)) * unClaimedUSD / 100).toFixed(2)} $BLST in your wallet.
                   <br />
-                  If you wait {taxLeftDays} days, then you will be albe to claim tax-free.
+                  If you wait {taxLeftDays} days, then you will be able to claim tax-free.
                   <br />
                   Are you sure you want to go ahead now?
                   <br />
+                  {
+                    loading && (
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+                        <Spinner color="white" size={40} />
+                      </div>
+                    )
+                  }
                 </>
               )
             }
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Button onClick={handleDialogClose} variant="contained" sx={{ color: 'white', fontWeight: 'bold' }}>Cancel</Button>
+          <Button onClick={() => handleDialogClose('cancel')} variant="contained" sx={{ color: 'white', fontWeight: 'bold' }}>Cancel</Button>
           <Button onClick={handleClaimReward} disabled={unClaimedUSD == 0} variant="outlined" sx={{ fontWeight: 'bold' }}>{taxLeftDays == '0' ? 'Claim tax-free' : 'Claim and pay tax'}</Button>
         </DialogActions>
       </Dialog>

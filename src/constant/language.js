@@ -1285,16 +1285,16 @@ export const translations = {
     ph: 'Natalo mo ang halimaw na ito!'
   },
   'congSubtitle2': {
-    en: 'You have rewarded',
-    es: 'has recompensado',
-    cn: '你已经打赏了',
-    pt: 'Você recompensou',
-    tr: 'ödüllendirdin',
-    ru: 'Вы наградили',
-    fr: 'Vous avez récompensé',
-    de: 'Je hebt beloond',
-    pl: 'Nagrodziłeś',
-    ph: 'Nakaganti ka na'
+    en: 'You have been rewarded',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'congSubtitle3': {
     en: 'To win you need to roll equal or less than:',
