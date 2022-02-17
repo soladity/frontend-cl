@@ -391,10 +391,10 @@ const Monsters = () => {
                 key={index}
               >
                 <MonsterCard
-                  image={''
-                    // showAnimation === "0"
-                    //   ? baseJpgUrl + "/" + (index + 1) + ".jpg"
-                    //   : baseGifUrl + "/" + (index + 1) + ".gif"
+                  image={
+                    showAnimation === "0"
+                      ? baseJpgUrl + "/" + (index + 1) + ".jpg"
+                      : baseGifUrl + "/" + (index + 1) + ".gif"
                   }
                   name={monster.name}
                   tokenID={index + 1}
@@ -502,7 +502,7 @@ const Monsters = () => {
               <Box component="div" sx={{ position: "relative" }}>
                 <CardMedia
                   component="img"
-                  // image={baseGifUrl + "/" + curMonsterID + ".gif"}
+                  image={baseGifUrl + "/" + curMonsterID + ".gif"}
                   alt="Monster Image"
                   loading="lazy"
                 />
