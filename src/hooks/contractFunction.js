@@ -168,7 +168,10 @@ export const canHunt = async (web3, contract, tokenID) => {
 export const hunt = async (web3, contract, account, legionID, monsterID) => {
   const response = await contract.methods
     .hunt(legionID, monsterID)
-    .send({ from: account });
+    .send({ from: account })
+    .on("receipt", function (receipt) {
+      console.log(receipt.events);
+    });
   return response;
 };
 
