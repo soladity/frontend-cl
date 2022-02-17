@@ -493,6 +493,9 @@ const Monsters = () => {
                   {getTranslation("congSubtitle2").toUpperCase()}{" "}
                   {curMonster?.reward} $BLST
                 </Box>
+                <Typography>
+                  {getTranslation("yourRollTitle")} {huntedRoll}
+                </Typography>
               </>
             </DialogTitle>
             <DialogContent>

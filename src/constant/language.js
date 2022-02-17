@@ -1357,7 +1357,7 @@ export const translations = {
     ph: 'Upang manalo kailangan mong gumulong katumbas o mas mababa sa:'
   },
   'yourRollTitle': {
-    en: 'Your roll was',
+    en: 'Your roll is',
     es: '',
     cn: '',
     pt: '',

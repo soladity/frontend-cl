@@ -216,7 +216,7 @@ const AppBarComponent = () => {
                   <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
                     <AssistantDirectionIcon />
                   </IconButton>
-                  {getTranslation('claim')} {unClaimedUSD} ${getTranslation('bloodstone')}
+                  {getTranslation('claim')} {formatNumber(unClaimedUSD.toFixed(2))} ${getTranslation('bloodstone')}
                 </CommonBtn>
                 <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0 } }}>
                   <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
