@@ -181,7 +181,7 @@ export const getMonsterInfo = async (web3, contract, monsterID) => {
   const monster = {
     name: response[0],
     base: response[1],
-    ap: parseInt(response[2]),
+    ap: parseInt(response[2]) / 100,
     reward: response[3],
     // image: response[3],
     // imageAlt: response[4]
@@ -201,15 +201,15 @@ export const getLegionTokenIds = async (web3, contract, account) => {
 };
 
 export const getLegionToken = async (web3, contract, tokenId) => {
-    const response = await contract.methods.getLegion(tokenId).call();
-    const legion = {
-        name: response[0],
-        beasts: response[1],
-        warriors: response[2],
-        supplies: response[3],
-        attackPower: parseInt(response[4]) / 100,
-    }
-    return legion;
+  const response = await contract.methods.getLegion(tokenId).call();
+  const legion = {
+    name: response[0],
+    beasts: response[1],
+    warriors: response[2],
+    supplies: response[3],
+    attackPower: parseInt(response[4]) / 100,
+  }
+  return legion;
 }
 export const addSupply = async (web3, contract, account, tokenId, supply) => {
   const response = await contract.methods
@@ -249,12 +249,12 @@ export const getMaxAttackPower = async (web3, contract, account) => {
 };
 
 export const getLegionImage = async (web3, contract, ap) => {
-    const response = await contract.methods.getImage(parseInt(ap).toString()).call();
-    const image = {
-        image: response[1],
-        animationImage: response[0]
-    }
-    return image;
+  const response = await contract.methods.getImage(parseInt(ap).toString()).call();
+  const image = {
+    image: response[1],
+    animationImage: response[0]
+  }
+  return image;
 }
 
 export const getHuntStatus = async (web3, contract, id) => {
