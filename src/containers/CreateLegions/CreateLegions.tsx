@@ -86,11 +86,11 @@ const CreateLegions: React.FC = () => {
   const [filter, setFilter] = React.useState("all");
   const [droppedID, setDroppedID] = React.useState(-1);
   const [w5bInDropList, setW5bInDropList] = React.useState(Boolean);
-  const [indexForLeft, setIndexForLeft] = React.useState(Number);
+  const [indexForLeft, setIndexForLeft] = React.useState<Number>(-1);
   const [dropItemList, setDropItemList] = React.useState(Array);
   const [tempDroppedItem, setTempDroppedItem] = React.useState();
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
-  const [totalAP, setTotalAp] = React.useState(0);
+  const [totalAP, setTotalAP] = React.useState(0);
   const [totalCP, setTotalCP] = React.useState(0);
   const [legionName, setLegionName] = React.useState("");
   const [isWDropable, setIsWDropable] = React.useState(false);
@@ -137,8 +137,8 @@ const CreateLegions: React.FC = () => {
       }
       setDropItemList((prevState) => [...prevState, tempDroppedItem]);
     }
+    // getTotalAP_CP();
     setDroppedID(-1);
-    getTotalAP_CP();
   }, [droppedID]);
 
   React.useEffect(() => {
@@ -197,17 +197,11 @@ const CreateLegions: React.FC = () => {
     );
     tmpDropItemList.splice(indexOfRight, 1);
     setDropItemList(tmpDropItemList);
-    setIsWDropable(
-      totalCP > 0 &&
-        totalCP >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
-    );
     setIndexForLeft(-1);
-    getTotalAP_CP();
+    // getTotalAP_CP();
   }, [indexForLeft, w5bInDropList]);
 
-  const getTotalAP_CP = () => {
+  React.useEffect(() => {
     let sum = 0;
     let cp = 0;
     warriorDropBoxList.forEach((index: any) => {
@@ -217,14 +211,14 @@ const CreateLegions: React.FC = () => {
       cp += parseInt((beasts[index] as any)["capacity"]);
     });
     setTotalCP(cp);
-    setTotalAp(sum);
+    setTotalAP(sum);
     setIsWDropable(
       cp > 0 &&
         cp >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
+        sum >= createlegions.main.minAvailableAP &&
         legionName.length > 0
     );
-  };
+  }, [warriorDropBoxList, beastDropBoxList, legionName]);
 
   const getBalance = async () => {
     setLoading(true);
@@ -267,7 +261,7 @@ const CreateLegions: React.FC = () => {
   const moveToRight = (item: any) => {
     setTempDroppedItem(item);
   };
-
+  console.log(indexForLeft);
   const moveToLeft = (index: number, w5b: boolean) => {
     setIndexForLeft(index);
     setW5bInDropList(w5b);
