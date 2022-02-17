@@ -14,7 +14,7 @@ const YourInventory = () => {
 
     const [beastBalance, setBeastBalance] = React.useState(0)
     const [warriorBalance, setWarriorBalance] = React.useState(0)
-    const [unclaimedBalance, setUnclaimedBalance] = React.useState(0)
+    const [unclaimedBalance, setUnclaimedBalance] = React.useState('0')
     const [availableLegionCount, setAvailableLegionCount] = React.useState(0)
     const [legionTokenIds, setLegionTokenIds] = React.useState([])
     const [taxLeftDays, setTaxLeftDays] = React.useState(0)
@@ -50,7 +50,7 @@ const YourInventory = () => {
         setWarriorBalance(warriorBalance)
 
         const unclaimedBalance = await getUnclaimedUSD(web3, rewardPoolContract, account)
-        setUnclaimedBalance(unclaimedBalance)
+        setUnclaimedBalance((parseFloat(unclaimedBalance) / Math.pow(10, 18)).toFixed(2))
 
         const availableLegionCount = await getAvailableLegionsCount(web3, legionContract, account)
         setAvailableLegionCount(availableLegionCount)

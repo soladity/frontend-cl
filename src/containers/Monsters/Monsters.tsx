@@ -104,6 +104,7 @@ const Monsters = () => {
   const classes = useStyles();
   const { account } = useWeb3React();
   const web3 = useWeb3();
+
   const legionContract = useLegion();
   const beastContract = useBeast();
   const warriorContract = useWarrior();
@@ -145,6 +146,18 @@ const Monsters = () => {
     );
   }, []);
 
+  let options = {
+    address: ['0xc960D5645BD7Be251D3679C6e43993BAeEf99239'],
+    topics: []
+  }
+
+  let subscription = web3.eth.subscribe('logs', options, (err, event) => {
+    if (!err) {
+      console.log('event', event)
+    }
+  })
+
+
   const initMonster = async () => {
     let monsterTmp;
     let monsterArraryTmp = [];
@@ -152,6 +165,7 @@ const Monsters = () => {
       monsterTmp = await getMonsterInfo(web3, monsterContract, i);
       monsterArraryTmp.push({ ...monsterTmp, id: i });
     }
+    console.log('monsterArraryTmp', monsterArraryTmp)
     setMonsters(monsterArraryTmp);
   };
 
@@ -191,6 +205,7 @@ const Monsters = () => {
       // if (legionIDS[i] != 1) {
       legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
       legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
+      console.log(legionTmp, legionStatus)
       legionArrayTmp.push({
         ...legionTmp,
         id: legionIDS[i],
@@ -204,7 +219,9 @@ const Monsters = () => {
     setBaseGifUrl(await getBaseGifURL(web3, monsterContract));
     setBeasts(await getBeastBalance(web3, beastContract, account));
     setWarriors(await getWarriorBalance(web3, warriorContract, account));
+    console.log(await getWarriorBalance(web3, warriorContract, account))
     setLegionIDs(legionIDS);
+    console.log(legionArrayTmp)
     setLegions(legionArrayTmp);
     setMintedWarriorCnt(warriorCnt);
     setCurLegion(legionArrayTmp[0]);
@@ -247,9 +264,9 @@ const Monsters = () => {
         curLegion?.id,
         monsterTokenID
       );
-      console.log(response);
-      setHuntedRoll(response.roll);
-      setHuntedStatus(response.huntRetVal ? 1 : 2);
+      const result = response.events.Hunted.returnValues
+      setHuntedRoll(result.roll);
+      setHuntedStatus(result.success ? 1 : 2);
     } catch (e: any) {
       if (e.code === 4001) {
         setDialogVisible(false);
@@ -343,8 +360,8 @@ const Monsters = () => {
                       curLegion?.status === "1"
                         ? "#18e001"
                         : curLegion?.status === "2"
-                        ? "#ae7c00"
-                        : "#50010b",
+                          ? "#ae7c00"
+                          : "#50010b",
                     fontWeight: 1000,
                   }}
                 >
@@ -374,10 +391,10 @@ const Monsters = () => {
                 key={index}
               >
                 <MonsterCard
-                  image={
-                    showAnimation === "0"
-                      ? baseJpgUrl + "/" + (index + 1) + ".jpg"
-                      : baseGifUrl + "/" + (index + 1) + ".gif"
+                  image={''
+                    // showAnimation === "0"
+                    //   ? baseJpgUrl + "/" + (index + 1) + ".jpg"
+                    //   : baseGifUrl + "/" + (index + 1) + ".gif"
                   }
                   name={monster.name}
                   tokenID={index + 1}
@@ -386,9 +403,9 @@ const Monsters = () => {
                   bouns={
                     monster.ap < (curLegion as LegionInterface).attackPower
                       ? "" +
-                        ((curLegion as LegionInterface).attackPower -
-                          monster.ap) /
-                          2000
+                      ((curLegion as LegionInterface).attackPower -
+                        monster.ap) /
+                      2000
                       : "0"
                   }
                   price={monster.reward}
@@ -476,13 +493,16 @@ const Monsters = () => {
                   {getTranslation("congSubtitle2").toUpperCase()}{" "}
                   {curMonster?.reward} $BLST
                 </Box>
+                <Typography>
+                  {getTranslation("yourRollTitle")} {huntedRoll}
+                </Typography>
               </>
             </DialogTitle>
             <DialogContent>
               <Box component="div" sx={{ position: "relative" }}>
                 <CardMedia
                   component="img"
-                  image={baseGifUrl + "/" + curMonsterID + ".gif"}
+                  // image={baseGifUrl + "/" + curMonsterID + ".gif"}
                   alt="Monster Image"
                   loading="lazy"
                 />
@@ -497,10 +517,10 @@ const Monsters = () => {
                     {getTranslation("congSubtitle3")}{" "}
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
-                      (curLegion?.attackPower as number)
+                        (curLegion?.attackPower as number)
                         ? ((curLegion?.attackPower as number) -
-                            (curMonster?.ap as number)) /
-                          2000
+                          (curMonster?.ap as number)) /
+                        2000
                         : 0)}
                   </Typography>
                 </Box>
@@ -550,10 +570,10 @@ const Monsters = () => {
                     {getTranslation("defeatSubtitle2")}{" "}
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
-                      (curLegion?.attackPower as number)
+                        (curLegion?.attackPower as number)
                         ? ((curLegion?.attackPower as number) -
-                            (curMonster?.ap as number)) /
-                          2000
+                          (curMonster?.ap as number)) /
+                        2000
                         : 0)}
                   </Typography>
                 </Box>
