@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { formatNumber } from '../../utils/common';
 
 import { useWeb3React } from '@web3-react/core';
-import { getBloodstoneBalance, getBeastBalance, getWarriorBalance, getUnclaimedUSD, getAvailableLegionsCount, getTaxLeftDays, getMaxAttackPower, getLegionTokenIds } from '../../hooks/contractFunction';
+import { getBloodstoneBalance, getBeastBalance, getWarriorBalance, getUnclaimedUSD, getAvailableLegionsCount, getTaxLeftDays, getMaxAttackPower, getLegionTokenIds, getLegionLastHuntTime } from '../../hooks/contractFunction';
 import { useBloodstone, useBeast, useWarrior, useLegion, useRewardPool, useWeb3 } from '../../hooks/useContract';
 import { useSelector } from 'react-redux'
 import { getTranslation } from '../../utils/translation';
@@ -20,6 +20,7 @@ const YourInventory = () => {
     const [taxLeftDays, setTaxLeftDays] = React.useState(0)
     const [maxAttackPower, setMaxAttackPower] = React.useState('0')
     const [BLSTBalance, setBLSTBalance] = React.useState('0')
+    const [lastHuntTimes, setLastHuntTimes] = React.useState([])
 
 
     //account
@@ -57,6 +58,7 @@ const YourInventory = () => {
 
         const legionTokenIds = await getLegionTokenIds(web3, legionContract, account)
         setLegionTokenIds(legionTokenIds)
+        getLastHuntTimes(legionTokenIds)
 
         const taxLeftDays = await getTaxLeftDays(web3, legionContract, account)
         setTaxLeftDays(taxLeftDays)
@@ -67,6 +69,15 @@ const YourInventory = () => {
 
         const BLSTBalance = await getBloodstoneBalance(web3, bloodstoneContract, account)
         setBLSTBalance(BLSTBalance)
+
+
+    }
+
+    const getLastHuntTimes = async (legionTokenIds: any) => {
+        for (let i = 0; i < legionTokenIds.length; i++) {
+            let lastHuntTime = await getLegionLastHuntTime(web3, legionContract, legionTokenIds[i])
+            console.log(lastHuntTime)
+        }
     }
 
     React.useEffect(() => {

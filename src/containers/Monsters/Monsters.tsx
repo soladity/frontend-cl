@@ -57,15 +57,20 @@ const useStyles = makeStyles(() => ({
     zIndex: 99,
     marginTop: "24px",
     marginBottom: "4px",
-    paddingTop: "4px",
+    paddingTop: "10px",
     paddingBottom: "4px",
-    top: '80px'
-    // "@media(min-width: 0px)": {
-    //   top: "12%",
-    // },
-    // "@media(min-width: 763px)": {
-    //   top: "8%",
-    // },
+    "@media(min-width: 0px)": {
+      top: "115px",
+    },
+    "@media(min-width: 358px)": {
+      top: "66px",
+    },
+    "@media(min-width: 813px)": {
+      top: "15px",
+    },
+    "@media(min-width: 900px)": {
+      top: "49px",
+    },
   },
   Grid: {
     paddingTop: "2%",
@@ -315,7 +320,7 @@ const Monsters = () => {
               alignItems="center"
               columns={60}
             >
-              <Grid item xs={60} sm={60} md={28}>
+              <Grid item xs={60} sm={60} md={25}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     {getTranslation("legions")}
@@ -345,24 +350,24 @@ const Monsters = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
+              <Grid item xs={30} sm={12} md={7}>
                 <Typography variant="h5">
                   {curLegion?.attackPower} AP
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
+              <Grid item xs={30} sm={12} md={7}>
                 <Typography variant="h5">
                   W {curLegion?.warriors.length}/
                   {warriors.length + mintedWarriorCnt}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
+              <Grid item xs={30} sm={12} md={7}>
                 <Typography variant="h5">
                   B {curLegion?.beasts.length}/
                   {createlegions.main.maxAvailableDragCount}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
+              <Grid item xs={30} sm={12} md={7}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -376,6 +381,13 @@ const Monsters = () => {
                   }}
                 >
                   {curLegion?.supplies} H
+                </Typography>
+              </Grid>
+              <Grid item xs={30} sm={12} md={7}>
+                <Typography
+                  variant="h5"
+                >
+                  To Hunt: 10h
                 </Typography>
               </Grid>
             </Grid>
@@ -439,10 +451,12 @@ const Monsters = () => {
               {getTranslation("noMintedLegion")}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <NavLink to="/createlegions" className="non-style">
-              {getTranslation("createLegion")}
-            </NavLink>
+          <Grid item xs={12} sx={{ textAlign: 'center', marginTop: 2 }}>
+            <CommonBtn>
+              <NavLink to="/createlegions" className="non-style">
+                {getTranslation("createLegion")}
+              </NavLink>
+            </CommonBtn>
           </Grid>
         </Grid>
       )}
