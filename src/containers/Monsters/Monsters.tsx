@@ -54,7 +54,7 @@ import { setReloadStatus } from '../../actions/contractActions'
 const useStyles = makeStyles(() => ({
   Card: {
     position: "sticky",
-    zIndex: 100,
+    zIndex: 99,
     marginTop: "24px",
     marginBottom: "4px",
     paddingTop: "4px",
