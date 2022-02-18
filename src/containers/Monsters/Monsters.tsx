@@ -55,16 +55,16 @@ const useStyles = makeStyles(() => ({
   Card: {
     position: "sticky",
     zIndex: 100,
-    marginTop: "4px",
+    marginTop: "24px",
     marginBottom: "4px",
     paddingTop: "4px",
     paddingBottom: "4px",
-    "@media(min-width: 0px)": {
-      top: "12%",
-    },
-    "@media(min-width: 763px)": {
-      top: "8%",
-    },
+    // "@media(min-width: 0px)": {
+    //   top: "12%",
+    // },
+    // "@media(min-width: 763px)": {
+    //   top: "8%",
+    // },
   },
   Grid: {
     paddingTop: "2%",
