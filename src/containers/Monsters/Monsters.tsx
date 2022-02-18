@@ -48,6 +48,8 @@ import RedBGMenuItem from "./RedMenuItem";
 import GreenBGMenuItem from "./GreenMenuItem";
 import OrgBGMenuItem from "./OrgMenuItem";
 import { Spinner } from "../../component/Buttons/Spinner";
+import { useDispatch } from 'react-redux'
+import { setReloadStatus } from '../../actions/contractActions'
 
 const useStyles = makeStyles(() => ({
   Card: {
@@ -102,6 +104,7 @@ interface LegionInterface {
 
 const Monsters = () => {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const { account } = useWeb3React();
   const web3 = useWeb3();
 
@@ -267,6 +270,9 @@ const Monsters = () => {
       const result = response.events.Hunted.returnValues
       setHuntedRoll(result.roll);
       setHuntedStatus(result.success ? 1 : 2);
+      dispatch(setReloadStatus({
+        reloadContractStatus: new Date()
+      }))
     } catch (e: any) {
       if (e.code === 4001) {
         setDialogVisible(false);
@@ -280,6 +286,9 @@ const Monsters = () => {
     setDialogVisible(false);
     setHuntedStatus(0);
     setContinueLoading(false);
+    dispatch(setReloadStatus({
+      reloadContractStatus: new Date()
+    }))
   };
 
   return (

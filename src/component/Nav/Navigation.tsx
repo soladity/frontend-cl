@@ -8,7 +8,7 @@ import NavList from './NavList';
 
 const Navigation = (props: any) => {
     const { window } = props;
-    
+
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
@@ -16,11 +16,11 @@ const Navigation = (props: any) => {
             <Drawer
                 variant="permanent"
                 sx={{
-                    display: { xs: 'none', sm: 'block' },
+                    display: { xs: 'none', md: 'block' },
                     '& .MuiDrawer-paper': { boxSizing: 'border-box', width: navConfig.drawerWidth },
                 }}
                 open
-            >                
+            >
                 <NavList />
             </Drawer>
         </React.Fragment>
