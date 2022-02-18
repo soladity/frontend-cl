@@ -59,6 +59,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: "4px",
     paddingTop: "4px",
     paddingBottom: "4px",
+    top: '80px'
     // "@media(min-width: 0px)": {
     //   top: "12%",
     // },
@@ -68,18 +69,18 @@ const useStyles = makeStyles(() => ({
   },
   Grid: {
     paddingTop: "2%",
-    "@media(min-width: 0px)": {
-      paddingTop: "14%",
-    },
-    "@media(min-width: 600px)": {
-      paddingTop: "20%",
-    },
-    "@media(min-width: 763px)": {
-      paddingTop: "6%",
-    },
-    "@media(min-width: 900px)": {
-      paddingTop: "2%",
-    },
+    // "@media(min-width: 0px)": {
+    //   paddingTop: "14%",
+    // },
+    // "@media(min-width: 600px)": {
+    //   paddingTop: "20%",
+    // },
+    // "@media(min-width: 763px)": {
+    //   paddingTop: "6%",
+    // },
+    // "@media(min-width: 900px)": {
+    //   paddingTop: "2%",
+    // },
   },
 }));
 
