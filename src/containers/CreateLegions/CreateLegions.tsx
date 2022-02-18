@@ -17,7 +17,7 @@ import {
   ButtonGroup,
   Button,
 } from "@mui/material";
-import { ErrorOutline, ArrowBack } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 
@@ -44,7 +44,8 @@ import {
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
-import { DragBox } from "./DragBox";
+import { WarriorsDragBox } from "./WarriorsDragBox";
+import { BeastsDragBox } from "./BeastsDragBox";
 import { DropBox } from "./DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
@@ -524,7 +525,7 @@ const CreateLegions: React.FC = () => {
                             apValue[1] > parseInt(fitem.power)
                         )
                         .map((item: any, index) => (
-                          <DragBox
+                          <WarriorsDragBox
                             item={item}
                             showAnimation={showAnimation}
                             baseJpgUrl={baseWarriorJpgUrl}
@@ -532,7 +533,6 @@ const CreateLegions: React.FC = () => {
                             baseIndex={warriorDragBoxList[index] as number}
                             dropped={changeDroppedIndex}
                             curIndex={index}
-                            w5b={warrior5beast}
                             key={warriorDragBoxList[index] as number}
                           />
                         ))}
@@ -546,15 +546,14 @@ const CreateLegions: React.FC = () => {
                               : fitem.capacity === filter)
                         )
                         .map((item: any, index) => (
-                          <DragBox
+                          <BeastsDragBox
                             item={item}
                             showAnimation={showAnimation}
                             baseJpgUrl={baseBeastJpgUrl}
-                            baseGifUrl={baseWarriorGifUrl}
+                            baseGifUrl={baseBeastGifUrl}
                             baseIndex={beastDragBoxList[index] as number}
                             dropped={changeDroppedIndex}
                             curIndex={index}
-                            w5b={warrior5beast}
                             key={beastDragBoxList[index] as number}
                           />
                         ))}

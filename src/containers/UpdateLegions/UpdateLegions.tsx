@@ -18,7 +18,7 @@ import {
   ButtonGroup,
   Button,
 } from "@mui/material";
-import { ErrorOutline, ArrowBack } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 
@@ -378,15 +378,15 @@ const UpdateLegions: React.FC = () => {
     <Box>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{meta_constant.createlegions.title}</title>
+        <title>{meta_constant.updatelegions.title}</title>
         <meta
           name="description"
-          content={meta_constant.createlegions.description}
+          content={meta_constant.updatelegions.description}
         />
-        {meta_constant.createlegions.keywords && (
+        {meta_constant.updatelegions.keywords && (
           <meta
             name="keywords"
-            content={meta_constant.createlegions.keywords.join(",")}
+            content={meta_constant.updatelegions.keywords.join(",")}
           />
         )}
       </Helmet>
