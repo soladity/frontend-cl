@@ -169,7 +169,7 @@ const AppBarComponent = () => {
       }}>
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{ flexFlow: 'wrap' }}>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -195,87 +195,41 @@ const AppBarComponent = () => {
               </Box>
             </SwipeableDrawer>
           </Box>
+          <Box sx={{ marginLeft: { md: 0, xs: 'auto' } }}></Box>
           <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none', minWidth: '250px' }}>
             <img src='/assets/images/logo_dashboard.png' style={{ height: '55px' }} alt='logo' />
           </NavLink>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {/* <Button variant="contained" color='info' sx={{ fontWeight: 'bold', mr: 5, minWidth: '0px', padding: 1 }} onClick={handleShowAnimation}>
-              <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'white', marginRight: 0 }}>
-                {
-                  showAnimation === '0' ? (
-                    <PlayCircleIcon />
-                  ) : (
-                    <StopCircleIcon />
-                  )
-                }
-              </IconButton>
-            </Button> */}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            {
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' } }}>
-                <CommonBtn
-                  sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}
-                  onClick={() => setDialogOpen(true)}
-                >
-                  <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
-                    <AssistantDirectionIcon />
-                  </IconButton>
-                  {getTranslation('claim')} {formatNumber(unClaimedUSD.toFixed(2))} ${getTranslation('bloodstone')}
-                </CommonBtn>
-                <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0 } }}>
-                  <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
-                  <Box sx={{ ml: { xs: 1, md: 2 } }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>{formatNumber(parseFloat(balance).toFixed(2))}</Typography>
-                      <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>$BLST</Typography>
-                    </Box>
-                    <Button variant="contained" sx={{ fontWeight: 'bold', color: 'white', background: '#622f11' }}>
-                      <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
-                        <BadgeIcon />
-                      </IconButton>
-                      <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
-                        <Typography variant='subtitle1' sx={{ fontSize: { xs: '0.7rem', md: '1rem' } }}>
-                          {account === undefined || account === null ? '...' : account.substr(0, 6) + '...' + account.substr(account.length - 4, 4)}</Typography>
-                      </NavLink>
-                    </Button>
+          <Box sx={{ flexGrow: 0, marginLeft: { xs: 'auto' } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'inherit' } }}>
+              <CommonBtn
+                sx={{ fontWeight: 'bold', mr: { xs: 0, md: 5 }, fontSize: { xs: '0.7rem', md: '1rem' } }}
+                onClick={() => setDialogOpen(true)}
+              >
+                <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
+                  <AssistantDirectionIcon />
+                </IconButton>
+                {getTranslation('claim')} {formatNumber(unClaimedUSD.toFixed(2))} ${getTranslation('bloodstone')}
+              </CommonBtn>
+              <Box sx={{ display: 'flex', alignItems: 'center', ml: { xs: 2, md: 0 } }}>
+                <img src='/assets/images/bloodstone.png' style={{ height: '55px' }} />
+                <Box sx={{ ml: { xs: 1, md: 2 } }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>{formatNumber(parseFloat(balance).toFixed(2))}</Typography>
+                    <Typography variant='h6' sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>$BLST</Typography>
                   </Box>
-                </Box>
-                {/* <React.Fragment>
-                  <Tooltip title="Open settings" style={{ opacity: active ? '1' : '0' }}>
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Button variant="contained" sx={{ fontWeight: 'bold', color: 'white', background: '#622f11' }}>
+                    <IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1 }}>
+                      <BadgeIcon />
                     </IconButton>
-                  </Tooltip>
-                  <Menu
-                    sx={{ mt: '45px' }}
-                    id="menu-appbar"
-                    anchorEl={anchorElUser}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={Boolean(anchorElUser)}
-                    onClose={handleCloseUserMenu}
-                  >
-                    <MenuItem component={NavLink} to={'/profile'}>
-                      <Typography textAlign="center">Account</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={() => logout()}>
-                      <Typography textAlign="center">Logout</Typography>
-                    </MenuItem>
-                  </Menu>
-                </React.Fragment> */}
+                    <NavLink to='/' className='non-style' style={{ color: 'inherit', textDecoration: 'none' }}>
+                      <Typography variant='subtitle1' sx={{ fontSize: { xs: '0.7rem', md: '1rem' } }}>
+                        {account === undefined || account === null ? '...' : account.substr(0, 6) + '...' + account.substr(account.length - 4, 4)}</Typography>
+                    </NavLink>
+                  </Button>
+                </Box>
               </Box>
-            }
-
+            </Box>
           </Box>
         </Toolbar>
       </Container>

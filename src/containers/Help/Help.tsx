@@ -4,6 +4,10 @@ import Slide, { SlideProps } from '@mui/material/Slide';
 import axios from 'axios'
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import { makeStyles } from '@mui/styles';
+import Helmet from "react-helmet";
+import {
+    meta_constant,
+} from "../../config/meta.config";
 
 const Input = styled('input')({
     display: 'none',
@@ -25,8 +29,6 @@ const useStyles = makeStyles({
 
 const Help = () => {
     const classes = useStyles();
-
-    let fileInput = React.useRef<HTMLInputElement>(null);
 
     const [attachmentFile, setAttachmentFile] = React.useState(null)
     const [email, setEmail] = React.useState('')
@@ -60,11 +62,11 @@ const Help = () => {
             '<p>- If you are already approved as a Tester, and you want to report a bug as part of our Testing Contest, please report your bug in the #report-bug channel on our Discord: <a href="https://discord.gg/6ddCCMAnbM" target="_blank">https://discord.gg/6ddCCMAnbM</a></p>' +
             '<br />' +
             '<p style="font-weight: bold">Make sure to connect with us on social media:</p>' +
-            '<p>- Discord: <a href="https://discord.gg/V4Z4JykfdH" target="_blank">https://discord.gg/V4Z4JykfdH</a></p>' +
-            '<p>- Telegram: <a href="https://t.me/CryptoLegionsCommunity" target="_blank">https://t.me/CryptoLegionsCommunity</a></p>' +
-            '<p>- Twitter: <a href="https://twitter.com/LegionsCrypto" target="_blank">https://twitter.com/LegionsCrypto</a></p>' +
-            '<p>- Youtube: <a href="https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA" target="_blank">https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA</a></p>' +
-            '<p>- Medium: <a href="http://cryptolegions.medium.com" target="_blank">http://cryptolegions.medium.com</a></p>' +
+            '<p>- Discord: <a href="https://cryptolegions.app/d" target="_blank">https://cryptolegions.app/d</a></p>' +
+            '<p>- Telegram: <a href="https://cryptolegions.app/t" target="_blank">https://cryptolegions.app/t</a></p>' +
+            '<p>- Twitter: <a href="https://cryptolegions.app/tw" target="_blank">https://cryptolegions.app/tw</a></p>' +
+            '<p>- Youtube: <a href="https://cryptolegions.app/y" target="_blank">https://cryptolegions.app/y</a></p>' +
+            '<p>- Medium: <a href="https://cryptolegions.app/m" target="_blank">https://cryptolegions.app/m</a></p>' +
             '<br />' +
             '<p>Happy travels to Nicah to play Crypto Legions!</p>' +
             '<br />' +
@@ -114,9 +116,6 @@ const Help = () => {
         }).then(res => {
             axios.post(URL + '/' + res.data.id + '/reply', {
                 body: replyEmailForm(res.data.id, res.data.custom_fields.cf_discord)
-                // body: `<h2>Your support ticket ${res.data.id} has been submitted.</h2></br><p>Hi ${res.data.custom_fields.cf_discord}</p><p>The Support Team of Crypto Legions has received your ticket. We’ll get back to you within 24 hours if your request relates to a bug/issue in the game.</p><br /><p>If your request is not directly related to a bug/issue we should fix, for example a proposal or promotional message, then your ticket might be closed without a reply from us.
-                // In some cases, your ticket might also be closed without a reply from us if the answer to your question can be easily found by reading the game instructions in our whitepaper: <a href="https://docs.cryptolegions.app" target="_blank">https://docs.cryptolegions.app</a></p><p>Please understand we need to give priority to players who have issues that should be fixed by our developers.</p><br /><p>Happy travels to Nicah to play Crypto Legions!</p><br /><p>All the best,</p><p>Crypto Legions Support Team
-                // </p><p><a href="https://cryptolegions.app" target="_blank">https://cryptolegions.app</a></p><p>support@cryptolegions.app</p>`,
             }, {
                 headers: {
                     'Authorization': auth,
@@ -158,9 +157,21 @@ const Help = () => {
 
     return (
         <Box sx={{ padding: 2 }}>
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>{meta_constant.help.title}</title>
+                <meta name="description" content={meta_constant.help.description} />
+                {meta_constant.help.keywords && (
+                    <meta
+                        name="keywords"
+                        content={meta_constant.help.keywords.join(",")}
+                    />
+                )}
+            </Helmet>
             <Card sx={{
                 background: '#16161699',
-                p: 2
+                p: 2,
+                my: 4
             }}>
                 <Typography variant='h6' sx={{ fontWeight: 'bold', textAlign: 'center', borderBottom: '1px solid #fff', paddingBottom: 2 }}>
                     Need help from our team? Send us a messages with the form below, and we’ll get back to you within 24 hours if your request relates to a bug/issue in the game.
@@ -172,7 +183,7 @@ const Help = () => {
                         }}
                     >
                         <Grid container spacing={2} sx={{ marginBottom: 4 }}>
-                            <Grid item xs={6}>
+                            <Grid item md={6}>
                                 <TextField
                                     label="Email"
                                     placeholder='Your Email'
@@ -187,7 +198,7 @@ const Help = () => {
                                     className={classes.textField}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item md={6}>
                                 <TextField
                                     id="outlined-basic"
                                     label="DiscordID"

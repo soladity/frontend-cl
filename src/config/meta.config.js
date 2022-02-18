@@ -38,7 +38,12 @@ export const meta_constant = {
         title: 'Warriors',
         description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
         keywords: ['word1', 'word2', 'word3']
-    }
+    },
+    help: {
+        title: 'Help',
+        description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit.',
+        keywords: ['word1', 'word2', 'word3']
+    },
 }
 
 export const createlegions = {
