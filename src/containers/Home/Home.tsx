@@ -40,9 +40,9 @@ const Home = () => {
         <Box>
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>{meta_constant.beasts.title}</title>
-                <meta name="description" content={meta_constant.beasts.description} />
-                {meta_constant.beasts.keywords && <meta name="keywords" content={meta_constant.beasts.keywords.join(',')} />}
+                <title>{meta_constant.home.title}</title>
+                <meta name="description" content={meta_constant.home.description} />
+                {meta_constant.home.keywords && <meta name="keywords" content={meta_constant.home.keywords.join(',')} />}
             </Helmet>
             <Grid container spacing={2} sx={{ my: 4 }}>
                 <Grid item xs={12} md={4}>

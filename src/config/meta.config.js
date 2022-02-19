@@ -39,6 +39,11 @@ export const meta_constant = {
     description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
     keywords: ["word1", "word2", "word3"],
   },
+  help: {
+    title: "Help",
+    description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
+    keywords: ["word1", "word2", "word3"],
+  },
   updatelegions: {
     title: "UpdateLegions",
     description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
