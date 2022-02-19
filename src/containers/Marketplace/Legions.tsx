@@ -8,9 +8,9 @@ import { useDispatch } from 'react-redux';
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
-import { getOnMarketplace, getWarriorToken, getBaseJpgURL, getBaseGifURL, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
-import { useWarrior, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
-import WarriorMarketCard from '../../component/Cards/WarriorMarketCard';
+import { getOnMarketplace, getLegionToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { useLegion, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
+import LegionMarketCard from '../../component/Cards/LegionMarketCard';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 
@@ -30,35 +30,25 @@ const useStyles = makeStyles({
 	}
 });
 
-type WarriorProps = {
-	id: string;
-	type: string;
-	power: string;
-	strength: string;
-	owner: boolean;
-	price: string;
-};
-
-const Warriors = () => {
+const Legions = () => {
 	const {
 		account,
 	} = useWeb3React();
 
-	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
-	const [baseGifUrl, setBaseGifUrl] = React.useState('');
+	const [baseUrl, setBaseUrl] = React.useState("");
 	const [sortAp, setSortAp] = React.useState(false);
 	const [sortBlst, setSortBlst] = React.useState(false);
-	const [warriors, setWarriors] = React.useState(Array);
+	const [legions, setLegions] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
-	const [onlyMyWarrior, setOnlyMyWarrior] = React.useState(false);
+	const [onlyMyLegion, setOnlyMyLegion] = React.useState(false);
 	const [currentPage, setCurrentPage] = React.useState(1);
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
-	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
+	const [apValue, setApValue] = React.useState<number[]>([2000, 250000]);
 
 	const classes = useStyles();
-	const warriorContract = useWarrior();
+	const legionContract = useLegion();
 	const marketplaceContract = useMarketplace();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
@@ -73,19 +63,18 @@ const Warriors = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseJpgUrl(await getBaseJpgURL(web3, warriorContract));
-		setBaseGifUrl(await getBaseGifURL(web3, warriorContract));
+		setBaseUrl(await getBaseUrl());
 
-		const ids = await getOnMarketplace(web3, warriorContract);
-		let warrior;
+		const ids = await getOnMarketplace(web3, legionContract);
+		let legion;
 		let marketItem;
-		let tempWarriors = [];
+		let tempLegions = [];
 		for (let i = 0; i < ids.length; i++) {
-			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			marketItem = await getMarketItem(web3, marketplaceContract, '2', ids[i]);
-			tempWarriors.push({ ...warrior, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price });
+			legion = await getLegionToken(web3, legionContract, ids[i]);
+			marketItem = await getMarketItem(web3, marketplaceContract, '3', ids[i]);
+			tempLegions.push({ ...legion, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price });
 		}
-		setWarriors(tempWarriors);
+		setLegions(tempLegions);
 		setLoading(false);
 	}
 
@@ -108,7 +97,7 @@ const Warriors = () => {
 	const handleCancel = async (id: number) => {
 		setActionLoading(true);
 		await cancelMarketplace(web3, marketplaceContract, account, '2', id);
-		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
+		setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -122,7 +111,7 @@ const Warriors = () => {
 		dispatch(setReloadStatus({
 			reloadContractStatus: new Date()
 		}))
-		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
+		setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -137,7 +126,7 @@ const Warriors = () => {
 	}
 
 	const handleSort = (type: string) => {
-		let temp = warriors;
+		let temp = legions;
 		temp.sort((a: any, b: any) => {
 			if (type === 'ap') {
 				if (sortAp === true) {
@@ -174,7 +163,7 @@ const Warriors = () => {
 			}
 			return 0;
 		});
-		setWarriors(temp);
+		setLegions(temp);
 	}
 
 	const handlePage = (value: any) => {
@@ -184,9 +173,9 @@ const Warriors = () => {
 	return <Box>
 		<Helmet>
 			<meta charSet="utf-8" />
-			<title>{meta_constant.warriors.title}</title>
-			<meta name="description" content={meta_constant.warriors.description} />
-			{meta_constant.warriors.keywords && <meta name="keywords" content={meta_constant.warriors.keywords.join(',')} />}
+			<title>{meta_constant.legions.title}</title>
+			<meta name="description" content={meta_constant.legions.description} />
+			{meta_constant.legions.keywords && <meta name="keywords" content={meta_constant.legions.keywords.join(',')} />}
 		</Helmet>
 		<Grid container spacing={2} sx={{ my: 4 }}>
 			<Grid item xs={12}>
@@ -194,7 +183,7 @@ const Warriors = () => {
 					<Box className={classes.warning} sx={{ p: { xs: 1, md: 4 }, justifyContent: 'start', alignItems: 'center' }}>
 						<Box sx={{ display: 'flex', flexDirection: 'column', mx: { xs: 1, md: 4 } }}>
 							<Typography variant='h3' sx={{ fontWeight: 'bold' }}>
-								{getTranslation('warriors')} {getTranslation('marketplace')}
+								{getTranslation('legions')} {getTranslation('marketplace')}
 							</Typography>
 						</Box>
 					</Box>
@@ -205,7 +194,7 @@ const Warriors = () => {
 			(loading === false && actionLoading === false) &&
 			<div>
 				<Grid container spacing={2} sx={{ my: 3 }}>
-					<Grid item xs={12} md={6} lg={6} xl={3}>
+					<Grid item md={6} xs={12} lg={6} xl={3}>
 						<FormControl component="fieldset">
 							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterLevel')}:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
@@ -226,11 +215,11 @@ const Warriors = () => {
 								getAriaLabel={() => "Custom marks"}
 								// defaultValue={20}
 								value={apValue}
-								min={500}
-								max={6000}
+								min={2000}
+								max={250000}
 								marks={[
-									{ value: 500, label: '500' },
-									{ value: 6000, label: formatNumber('6K+') },
+									{ value: 2000, label: '2,000' },
+									{ value: 250000, label: formatNumber('250K+') },
 								]}
 								step={1}
 								valueLabelDisplay="auto"
@@ -271,13 +260,13 @@ const Warriors = () => {
 					>
 						<FormControl component="fieldset" sx={{ width: "90%" }}>
 							<FormLabel component="legend">
-								{getTranslation("showMyWarrior")}:
+								{getTranslation("showMyLegion")}:
 							</FormLabel>
 						</FormControl>
 						<Checkbox
-							checked={onlyMyWarrior}
+							checked={onlyMyLegion}
 							onChange={() => {
-								setOnlyMyWarrior(!onlyMyWarrior);
+								setOnlyMyLegion(!onlyMyLegion);
 							}}
 							inputProps={{ "aria-label": "controlled" }}
 						/>
@@ -285,16 +274,16 @@ const Warriors = () => {
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
-						warriors.length > 0 &&	warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).filter((item: any) => onlyMyWarrior === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
+						legions.length > 0 && legions.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] < parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] > parseInt(item.power))).filter((item: any) => onlyMyLegion === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorMarketCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
+								<LegionMarketCard image={baseUrl + item['image']} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} id={item['id']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
 							</Grid>
 						))
 					}
 				</Grid>
 				{
-					warriors.length > 0 &&
-					<Navigation totalCount={warriors.length} cPage={currentPage} handlePage={handlePage} perPage={20} />
+					legions.length > 0 &&
+					<Navigation totalCount={legions.length} cPage={currentPage} handlePage={handlePage} perPage={20} />
 				}
 			</div>
 		}
@@ -302,7 +291,7 @@ const Warriors = () => {
 			loading === true &&
 			<>
 				<Grid item xs={12} sx={{ p: 4, textAlign: 'center' }}>
-					<Typography variant='h4' >{getTranslation('loadingWarriors')}</Typography>
+					<Typography variant='h4' >{getTranslation('loadingLegions')}</Typography>
 				</Grid>
 				<Grid container sx={{ justifyContent: 'center' }}>
 					<Grid item xs={1}>
@@ -343,4 +332,4 @@ const Warriors = () => {
 	</Box>
 }
 
-export default Warriors
+export default Legions

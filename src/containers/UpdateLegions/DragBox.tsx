@@ -36,7 +36,6 @@ export const DragBox: FC<DragBoxProps> = function DragBox({
   const [{ isDragging }, drag] = useDrag(() => ({
     type: DragItemBox.Beasts,
     item: { item, id: baseIndex, w5b: w5b },
-
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>();
       if (!dropResult) {
@@ -52,7 +51,6 @@ export const DragBox: FC<DragBoxProps> = function DragBox({
     }),
   }));
   const opacity = isDragging ? 0.4 : 1;
-  const empty = () => {};
   return (
     <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>
       {!w5b && (
@@ -66,6 +64,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({
           capacity={item["capacity"]}
           strength={item["strength"]}
           id={item["id"]}
+          handleOpenSupply={Function}
         />
       )}
       {w5b && (
@@ -79,7 +78,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({
           power={item["power"]}
           strength={item["strength"]}
           id={item["id"]}
-          handleOpenSupply={empty}
+          handleOpenSupply={Function}
         />
       )}
     </Grid>

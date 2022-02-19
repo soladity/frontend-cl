@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl } from '../../hooks/contractFunction';
-import { useBloodstone, useBeast, useWeb3 } from '../../hooks/useContract';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useMarketplace, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
@@ -32,6 +32,15 @@ const useStyles = makeStyles({
 	}
 });
 
+type BeastProps = {
+	id: string;
+	type: string;
+	capacity: string;
+	strength: string;
+	gif: string;
+	jpg: string;
+};
+
 const Beasts = () => {
 	const {
 		account,
@@ -39,9 +48,12 @@ const Beasts = () => {
 
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [showMint, setShowMint] = React.useState(false);
-	const [balance, setBalance] = React.useState('0');
+	const [balance, setBalance] = React.useState(0);
 	const [maxWarrior, setMaxWarrior] = React.useState(0);
-	const [beasts, setBeasts] = React.useState(Array);
+	const [beasts, setBeasts] = React.useState<BeastProps[]>(Array);
+	const [openSupply, setOpenSupply] = React.useState(false);
+	const [selectedBeast, setSelectedBeast] = React.useState(0);
+	const [price, setPrice] = React.useState(0);
 	const [filter, setFilter] = React.useState('all');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
@@ -49,6 +61,7 @@ const Beasts = () => {
 
 	const classes = useStyles();
 	const beastContract = useBeast();
+	const marketplaceContract = useMarketplace();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 	const dispatch = useDispatch();
@@ -87,7 +100,7 @@ const Beasts = () => {
 	const getBalance = async () => {
 		setLoading(true);
 		setBaseUrl(await getBaseUrl());
-		setBalance(await getBeastBalance(web3, beastContract, account));
+		setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
 		let amount = 0;
 		let beast;
@@ -108,6 +121,34 @@ const Beasts = () => {
 		setMaxWarrior(amount);
 		setBeasts(tempBeasts);
 		setLoading(false);
+	}
+
+	const handleSupplyClose = () => {
+		setOpenSupply(false);
+	};
+
+	const handleOpenSupply = (id: number) => {
+		setSelectedBeast(id);
+		setOpenSupply(true);
+	}
+
+	const handlePrice = (e: any) => {
+		setPrice(e.target.value);
+	}
+
+	const handleSendToMarketplace = async () => {
+		setOpenSupply(false);
+		await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
+		await sellToken(web3, marketplaceContract, account, '1', selectedBeast, price);
+		let capacity = 0;
+		let temp = beasts;
+		for (let i = 0; i < temp.length; i++) {
+			if (parseInt(temp[i]['id']) === selectedBeast)
+				capacity = parseInt(temp[i]['capacity']);
+		}
+		setMaxWarrior(maxWarrior - capacity);
+		setBalance(balance - 1);
+		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
 	}
 
 	return <Box>
@@ -219,7 +260,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} />
 							</Grid>
 						))
 					}
@@ -266,6 +307,25 @@ const Beasts = () => {
 				</Grid>
 			</>
 		}
+		<Dialog onClose={handleSupplyClose} open={openSupply}>
+			<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
+			<DialogContent>
+				<TextField
+					autoFocus
+					margin="dense"
+					id="price"
+					label="Price"
+					type="number"
+					fullWidth
+					variant="standard"
+					value={price}
+					onChange={handlePrice}
+				/>
+			</DialogContent>
+			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
+				{getTranslation('confirm')}
+			</CommonBtn>
+		</Dialog>
 	</Box>
 }
 

@@ -61,6 +61,7 @@ export const BeastsDragBox: FC<DragBoxProps> = function DragBox({
         capacity={item["capacity"]}
         strength={item["strength"]}
         id={item["id"]}
+        handleOpenSupply={Function}
       />
     </Grid>
   );
