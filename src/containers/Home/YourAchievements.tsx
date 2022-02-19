@@ -155,11 +155,11 @@ const YourAchievements = () => {
                 anchorEl={anchorElYourAchievement}
                 anchorOrigin={{
                     vertical: "top",
-                    horizontal: "right",
+                    horizontal: "center",
                 }}
                 transformOrigin={{
                     vertical: "bottom",
-                    horizontal: "right",
+                    horizontal: "center",
                 }}
                 onClose={handlePopoverCloseYourAchievement}
                 disableRestoreFocus
