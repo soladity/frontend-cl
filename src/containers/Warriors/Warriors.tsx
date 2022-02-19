@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogActions, DialogContent, TextField } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';

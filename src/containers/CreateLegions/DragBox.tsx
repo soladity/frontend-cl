@@ -52,7 +52,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({ item, baseJpgUrl, ba
         <Grid item xs={3} ref={drag} style={{ ...style, opacity }}>
             {
                 !w5b &&
-                <BeastCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} />
+                <BeastCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={empty} />
             }
             {
                 w5b &&

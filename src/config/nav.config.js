@@ -6,6 +6,8 @@ import Beasts from "../containers/Beasts/Beasts";
 import Warriors from "../containers/Warriors/Warriors";
 import Legions from "../containers/Legions/Legions";
 import WarriorsMarketplace from "../containers/Marketplace/Warriors";
+import BeastsMarketplace from "../containers/Marketplace/Beasts";
+import LegionsMarketplace from "../containers/Marketplace/Legions";
 import CreateLegions from "../containers/CreateLegions/CreateLegions";
 import UpdateLegions from "../containers/UpdateLegions";
 import Profile from "../containers/Profile/Profile";
@@ -42,8 +44,16 @@ export const navConfig = {
       element: <Legions />,
     },
     {
-      path: "/marketplace/warriors",
+      path: "/warriorsMarketplace",
       element: <WarriorsMarketplace />,
+    },
+    {
+      path: "/beastsMarketplace",
+      element: <BeastsMarketplace />,
+    },
+    {
+      path: "/legionsMarketplace",
+      element: <LegionsMarketplace />,
     },
     {
       path: "/createlegions",
@@ -114,19 +124,19 @@ export const navConfig = {
         type: "navlink",
         title: "warriors",
         icon: "marketWarrior.png",
-        path: "/marketplace/warriors",
+        path: "/warriorsMarketplace",
       },
       {
         type: "navlink",
         title: "beasts",
         icon: "marketBeast.png",
-        path: "/marketplace/beasts",
+        path: "/beastsMarketplace",
       },
       {
         type: "navlink",
         title: "legions",
         icon: "marketLegion.png",
-        path: "/marketplace/legions",
+        path: "/legionsMarketplace",
       },
       {
         type: "divider",
@@ -157,31 +167,31 @@ export const navConfig = {
         type: "social",
         title: "twitter",
         icon: "/assets/images/twitter.png",
-        path: "https://twitter.com/LegionsCrypto",
+        path: "https://cryptolegions.app/tw",
       },
       {
         type: "social",
         title: "telegram",
         icon: "/assets/images/telegram.png",
-        path: "https://t.me/CryptoLegionsCommunity",
+        path: "https://cryptolegions.app/t",
       },
       {
         type: "social",
         title: "discord",
         icon: "/assets/images/discord.png",
-        path: "https://discord.gg/V4Z4JykfdH",
+        path: "https://cryptolegions.app/d",
       },
       {
         type: "social",
         title: "youtube",
         icon: "/assets/images/youtube.png",
-        path: "https://www.youtube.com/channel/UCc7HHfUUKV-DyB6xysp54EA",
+        path: "https://cryptolegions.app/y",
       },
       {
         type: "social",
         title: "medium",
         icon: "/assets/images/medium.png",
-        path: "http://cryptolegions.medium.com",
+        path: "https://cryptolegions.app/m",
       },
       {
         type: "privacy",
