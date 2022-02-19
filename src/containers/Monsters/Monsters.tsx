@@ -315,8 +315,8 @@ const Monsters = () => {
         var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
         console.log(totalSecs, "total");
         var hours = Math.floor(totalSecs / 3600).toFixed(0);
-        var mins = ((totalSecs % 3600) / 60).toFixed(0);
-        var secs = (totalSecs % 3600) % 60;
+        var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
+        var secs = Math.floor(totalSecs % 3600) % 60;
         if (parseInt(hours) > 0) {
           time = `${hours}h ${mins}m ${secs}s`;
         } else if (parseInt(mins) > 0) {
