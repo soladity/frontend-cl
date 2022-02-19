@@ -50,7 +50,7 @@ const View = () => {
             <Box
                 component="main"
                 className={classes.mainBox}
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${navConfig.drawerWidth}px)` }, paddingTop: { xs: 8, md: 4 } }}
+                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${navConfig.drawerWidth}px)` }, paddingTop: { xs: 8, md: 4, lg: 4 } }}
             >
                 <Toolbar />
                 <React.Suspense fallback={<h3>Loading</h3>}>

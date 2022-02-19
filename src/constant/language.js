@@ -780,6 +780,18 @@ export const translations = {
     pl: '',
     ph: ''
   },
+  'waitingTimeToHunt': {
+    en: 'Waiting time until next hunt',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
   'yourMaxAp': {
     en: 'AP of top legion',
     es: '',

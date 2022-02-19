@@ -211,9 +211,16 @@ export const getLegionToken = async (web3, contract, tokenId) => {
     warriors: response[2],
     supplies: response[3],
     attackPower: parseInt(response[4]) / 100,
+    lastHuntTime: response[5]
   }
   return legion;
 }
+
+export const getLegionLastHuntTime = async (web3, contract, tokenId) => {
+  const response = await contract.methods.lastHuntTime(tokenId).call();
+  return response
+}
+
 export const addSupply = async (web3, contract, account, tokenId, supply) => {
   const response = await contract.methods
     .addSupply(tokenId, supply, true)
