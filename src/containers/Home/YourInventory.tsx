@@ -156,7 +156,7 @@ const YourInventory = () => {
         time = "00s";
       } else {
         var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
-        var hours = (totalSecs / 3660).toFixed(0);
+        var hours = Math.floor(totalSecs / 3660).toFixed(0);
         var mins = ((totalSecs % 3600) / 60).toFixed(0);
         var secs = (totalSecs % 3600) % 60;
         if (parseInt(hours) > 0) {

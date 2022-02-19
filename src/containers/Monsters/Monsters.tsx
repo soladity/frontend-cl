@@ -310,8 +310,11 @@ const Monsters = () => {
       if (diff / 1000 / 3600 >= 24) {
         time = "00s";
       } else {
+        console.log(diff, "diff");
+        console.log(24 * 1000 * 3600);
         var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
-        var hours = (totalSecs / 3660).toFixed(0);
+        console.log(totalSecs, "total");
+        var hours = Math.floor(totalSecs / 3600).toFixed(0);
         var mins = ((totalSecs % 3600) / 60).toFixed(0);
         var secs = (totalSecs % 3600) % 60;
         if (parseInt(hours) > 0) {
@@ -576,7 +579,7 @@ const Monsters = () => {
                   alt="Monster Image"
                   loading="lazy"
                 />
-                <Box
+                {/* <Box
                   component="div"
                   sx={{ position: "absolute", bottom: "15px", left: "5px" }}
                 >
@@ -597,12 +600,39 @@ const Monsters = () => {
                           )
                         : 0)}
                   </Typography>
-                </Box>
+                </Box> */}
               </Box>
             </DialogContent>
-            <DialogActions>
-              {continueLoading && (
+            <DialogActions
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                px: 3,
+              }}
+            >
+              {continueLoading ? (
                 <Typography> Wait a moment, loading...</Typography>
+              ) : (
+                <Box component="div">
+                  <Typography>
+                    {getTranslation("yourRollTitle")} {huntedRoll}
+                  </Typography>
+                  <Typography>
+                    {getTranslation("congSubtitle3")}{" "}
+                    {parseInt(curMonster?.base as string) +
+                      ((curMonster?.ap as number) <
+                      (curLegion?.attackPower as number)
+                        ? parseFloat(
+                            (
+                              ((curLegion?.attackPower as number) -
+                                (curMonster?.ap as number)) /
+                              2000
+                            ).toFixed(2)
+                          )
+                        : 0)}
+                  </Typography>
+                </Box>
               )}
               <CommonBtn
                 onClick={() => handleContinue()}
