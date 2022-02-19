@@ -18,7 +18,7 @@ import {
   ButtonGroup,
   Button,
 } from "@mui/material";
-import { ErrorOutline, ArrowBack } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 
@@ -172,26 +172,24 @@ const UpdateLegions: React.FC = () => {
     if (tmpIndexValue === 0) {
       tmpInsertPos = 0;
     } else {
-      for (; tmpIndexValue > 0; tmpIndexValue--) {
-        tmpInsertPos = dragBoxList.findIndex(
-          (tmpIndex) => tmpIndex === tmpIndexValue
-        );
-        if (tmpInsertPos !== -1) {
+      let tmpDragBoxItem, tmpDragBoxItem1;
+      for (let i = 0; i < dragBoxList.length; i++) {
+        tmpDragBoxItem = dragBoxList[i] as number;
+        tmpDragBoxItem1 = dragBoxList[i + 1] as number;
+        if (tmpIndexValue < tmpDragBoxItem) {
+          tmpInsertPos = 0;
           break;
-        }
-      }
-      if (tmpInsertPos === -1) {
-        for (
-          tmpIndexValue = droppedNum as number;
-          tmpIndexValue < beasts.length;
-          tmpIndexValue++
+        } else if (
+          tmpDragBoxItem < tmpIndexValue &&
+          tmpIndexValue < tmpDragBoxItem1
         ) {
-          tmpInsertPos = dragBoxList.findIndex(
-            (tmpIndex) => tmpIndex === tmpIndexValue
-          );
-          if (tmpInsertPos !== -1) {
-            break;
-          }
+          tmpInsertPos = i + 1;
+          break;
+        } else if (
+          tmpIndexValue > (dragBoxList[dragBoxList.length - 1] as number)
+        ) {
+          tmpInsertPos = dragBoxList.length;
+          break;
         }
       }
     }
@@ -236,7 +234,12 @@ const UpdateLegions: React.FC = () => {
         cp >= warriorDropBoxList.length &&
         totalAP >= createlegions.main.minAvailableAP
     );
-  }, [warriorDropBoxList, beastDropBoxList]);
+  }, [
+    warriorDragBoxList,
+    beastDragBoxList,
+    warriorDropBoxList,
+    beastDropBoxList,
+  ]);
 
   const setDropBoxListbySelectedLegion = async () => {
     const curLegionTmp = await getLegionToken(
@@ -378,15 +381,15 @@ const UpdateLegions: React.FC = () => {
     <Box>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{meta_constant.createlegions.title}</title>
+        <title>{meta_constant.updatelegions.title}</title>
         <meta
           name="description"
-          content={meta_constant.createlegions.description}
+          content={meta_constant.updatelegions.description}
         />
-        {meta_constant.createlegions.keywords && (
+        {meta_constant.updatelegions.keywords && (
           <meta
             name="keywords"
-            content={meta_constant.createlegions.keywords.join(",")}
+            content={meta_constant.updatelegions.keywords.join(",")}
           />
         )}
       </Helmet>
