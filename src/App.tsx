@@ -21,7 +21,7 @@ function ResponsiveDrawer(props: any) {
     return str;
   }
   if (path.length != 1 && path[path.length - 1] === "/") {
-    location.href = window.location.origin + stringRemover(path);
+    window.location.href = window.location.origin + stringRemover(path);
   }
 
   React.useEffect(() => {
