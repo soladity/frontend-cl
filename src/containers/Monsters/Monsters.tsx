@@ -48,36 +48,44 @@ import RedBGMenuItem from "./RedMenuItem";
 import GreenBGMenuItem from "./GreenMenuItem";
 import OrgBGMenuItem from "./OrgMenuItem";
 import { Spinner } from "../../component/Buttons/Spinner";
+import { useDispatch } from "react-redux";
+import { setReloadStatus } from "../../actions/contractActions";
 
 const useStyles = makeStyles(() => ({
   Card: {
     position: "sticky",
-    zIndex: 100,
-    marginTop: "4px",
+    zIndex: 99,
+    marginTop: "24px",
     marginBottom: "4px",
-    paddingTop: "4px",
+    paddingTop: "10px",
     paddingBottom: "4px",
     "@media(min-width: 0px)": {
-      top: "12%",
+      top: "115px",
     },
-    "@media(min-width: 763px)": {
-      top: "8%",
+    "@media(min-width: 358px)": {
+      top: "66px",
+    },
+    "@media(min-width: 813px)": {
+      top: "15px",
+    },
+    "@media(min-width: 900px)": {
+      top: "49px",
     },
   },
   Grid: {
     paddingTop: "2%",
-    "@media(min-width: 0px)": {
-      paddingTop: "14%",
-    },
-    "@media(min-width: 600px)": {
-      paddingTop: "20%",
-    },
-    "@media(min-width: 763px)": {
-      paddingTop: "6%",
-    },
-    "@media(min-width: 900px)": {
-      paddingTop: "2%",
-    },
+    // "@media(min-width: 0px)": {
+    //   paddingTop: "14%",
+    // },
+    // "@media(min-width: 600px)": {
+    //   paddingTop: "20%",
+    // },
+    // "@media(min-width: 763px)": {
+    //   paddingTop: "6%",
+    // },
+    // "@media(min-width: 900px)": {
+    //   paddingTop: "2%",
+    // },
   },
 }));
 
@@ -98,12 +106,15 @@ interface LegionInterface {
   attackPower: number;
   id: number;
   status: string;
+  lastHuntTime: any;
 }
 
 const Monsters = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { account } = useWeb3React();
   const web3 = useWeb3();
+
   const legionContract = useLegion();
   const beastContract = useBeast();
   const warriorContract = useWarrior();
@@ -128,6 +139,8 @@ const Monsters = () => {
   const [huntedStatus, setHuntedStatus] = useState(0);
   const [continueLoading, setContinueLoading] = useState(false);
   const [huntedRoll, setHuntedRoll] = useState(0);
+  const [currentTime, setCurrentTime] = React.useState(new Date());
+
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -145,6 +158,17 @@ const Monsters = () => {
     );
   }, []);
 
+  let options = {
+    address: ["0xc960D5645BD7Be251D3679C6e43993BAeEf99239"],
+    topics: [],
+  };
+
+  let subscription = web3.eth.subscribe("logs", options, (err, event) => {
+    if (!err) {
+      console.log("event", event);
+    }
+  });
+
   const initMonster = async () => {
     let monsterTmp;
     let monsterArraryTmp = [];
@@ -152,6 +176,7 @@ const Monsters = () => {
       monsterTmp = await getMonsterInfo(web3, monsterContract, i);
       monsterArraryTmp.push({ ...monsterTmp, id: i });
     }
+    console.log("monsterArraryTmp", monsterArraryTmp);
     setMonsters(monsterArraryTmp);
   };
 
@@ -191,6 +216,7 @@ const Monsters = () => {
       // if (legionIDS[i] != 1) {
       legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
       legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
+      console.log(legionTmp, legionStatus);
       legionArrayTmp.push({
         ...legionTmp,
         id: legionIDS[i],
@@ -204,7 +230,9 @@ const Monsters = () => {
     setBaseGifUrl(await getBaseGifURL(web3, monsterContract));
     setBeasts(await getBeastBalance(web3, beastContract, account));
     setWarriors(await getWarriorBalance(web3, warriorContract, account));
+    console.log(await getWarriorBalance(web3, warriorContract, account));
     setLegionIDs(legionIDS);
+    console.log(legionArrayTmp);
     setLegions(legionArrayTmp);
     setMintedWarriorCnt(warriorCnt);
     setCurLegion(legionArrayTmp[0]);
@@ -247,9 +275,14 @@ const Monsters = () => {
         curLegion?.id,
         monsterTokenID
       );
-      console.log(response);
-      setHuntedRoll(response.roll);
-      setHuntedStatus(response.huntRetVal ? 1 : 2);
+      const result = response.events.Hunted.returnValues;
+      setHuntedRoll(result.roll);
+      setHuntedStatus(result.success ? 1 : 2);
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
     } catch (e: any) {
       if (e.code === 4001) {
         setDialogVisible(false);
@@ -263,7 +296,43 @@ const Monsters = () => {
     setDialogVisible(false);
     setHuntedStatus(0);
     setContinueLoading(false);
+    dispatch(
+      setReloadStatus({
+        reloadContractStatus: new Date(),
+      })
+    );
   };
+
+  const calcHuntTime = (huntTime: any) => {
+    var time = "~";
+    if (huntTime != 0) {
+      var diff = currentTime.getTime() - huntTime * 1000;
+      if (diff / 1000 / 3600 >= 24) {
+        time = "00s";
+      } else {
+        var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
+        var hours = (totalSecs / 3660).toFixed(0);
+        var mins = ((totalSecs % 3600) / 60).toFixed(0);
+        var secs = (totalSecs % 3600) % 60;
+        if (parseInt(hours) > 0) {
+          time = `${hours}h ${mins}m ${secs}s`;
+        } else if (parseInt(mins) > 0) {
+          time = `${mins}m ${secs}s`;
+        } else {
+          time = `${secs}s`;
+        }
+      }
+    } else if (curLegion?.supplies != "0") {
+      var time = "00s";
+    }
+    return time;
+  };
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+  }, [currentTime]);
 
   return (
     <Box>
@@ -288,7 +357,7 @@ const Monsters = () => {
               alignItems="center"
               columns={60}
             >
-              <Grid item xs={60} sm={60} md={28}>
+              <Grid item xs={60} sm={60} md={20}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     {getTranslation("legions")}
@@ -318,24 +387,33 @@ const Monsters = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
-                <Typography variant="h5">
-                  {curLegion?.attackPower} AP
+              <Grid item xs={30} sm={12} md={9}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontSize: { xs: 14, sm: 16, md: 20 } }}
+                >
+                  {curLegion?.attackPower.toFixed(0)} AP
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
-                <Typography variant="h5">
+              <Grid item xs={30} sm={12} md={7}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontSize: { xs: 14, sm: 16, md: 20 } }}
+                >
                   W {curLegion?.warriors.length}/
                   {warriors.length + mintedWarriorCnt}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
-                <Typography variant="h5">
+              <Grid item xs={30} sm={12} md={7}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontSize: { xs: 14, sm: 16, md: 20 } }}
+                >
                   B {curLegion?.beasts.length}/
                   {createlegions.main.maxAvailableDragCount}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={15} md={8}>
+              <Grid item xs={30} sm={12} md={7}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -346,9 +424,18 @@ const Monsters = () => {
                         ? "#ae7c00"
                         : "#50010b",
                     fontWeight: 1000,
+                    fontSize: { xs: 14, sm: 16, md: 20 },
                   }}
                 >
-                  {curLegion?.supplies} H
+                  {curLegion?.supplies}H
+                </Typography>
+              </Grid>
+              <Grid item xs={30} sm={12} md={10}>
+                <Typography
+                  variant="h5"
+                  sx={{ fontSize: { xs: 14, sm: 16, md: 20 } }}
+                >
+                  {calcHuntTime(curLegion?.lastHuntTime)}
                 </Typography>
               </Grid>
             </Grid>
@@ -384,6 +471,7 @@ const Monsters = () => {
                   base={monster.base}
                   minAP={monster.ap}
                   bouns={
+                    curLegion &&
                     monster.ap < (curLegion as LegionInterface).attackPower
                       ? "" +
                         ((curLegion as LegionInterface).attackPower -
@@ -411,10 +499,12 @@ const Monsters = () => {
               {getTranslation("noMintedLegion")}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <NavLink to="/createlegions" className="non-style">
-              {getTranslation("createLegion")}
-            </NavLink>
+          <Grid item xs={12} sx={{ textAlign: "center", marginTop: 2 }}>
+            <CommonBtn>
+              <NavLink to="/createlegions" className="non-style">
+                {getTranslation("createLegion")}
+              </NavLink>
+            </CommonBtn>
           </Grid>
         </Grid>
       )}
@@ -498,9 +588,13 @@ const Monsters = () => {
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
                       (curLegion?.attackPower as number)
-                        ? ((curLegion?.attackPower as number) -
-                            (curMonster?.ap as number)) /
-                          2000
+                        ? parseFloat(
+                            (
+                              ((curLegion?.attackPower as number) -
+                                (curMonster?.ap as number)) /
+                              2000
+                            ).toFixed(2)
+                          )
                         : 0)}
                   </Typography>
                 </Box>
@@ -551,9 +645,13 @@ const Monsters = () => {
                     {parseInt(curMonster?.base as string) +
                       ((curMonster?.ap as number) <
                       (curLegion?.attackPower as number)
-                        ? ((curLegion?.attackPower as number) -
-                            (curMonster?.ap as number)) /
-                          2000
+                        ? parseFloat(
+                            (
+                              ((curLegion?.attackPower as number) -
+                                (curMonster?.ap as number)) /
+                              2000
+                            ).toFixed(2)
+                          )
                         : 0)}
                   </Typography>
                 </Box>

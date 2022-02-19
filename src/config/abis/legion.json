@@ -1,6 +1,10 @@
 {
   "abi": [
-    { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
     {
       "anonymous": false,
       "inputs": [
@@ -57,17 +61,17 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "roll",
           "type": "uint256"
         },
         {
           "indexed": false,
-          "internalType": "uint256",
-          "name": "monsterId",
-          "type": "uint256"
+          "internalType": "bool",
+          "name": "success",
+          "type": "bool"
         }
       ],
-      "name": "Hunt",
+      "name": "Hunted",
       "type": "event"
     },
     {
@@ -117,14 +121,28 @@
     {
       "inputs": [],
       "name": "_baseURL",
-      "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-        { "internalType": "uint256[]", "name": "beastIds", "type": "uint256[]" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "beastIds",
+          "type": "uint256[]"
+        }
       ],
       "name": "addBeasts",
       "outputs": [],
@@ -133,9 +151,21 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-        { "internalType": "uint256", "name": "supply", "type": "uint256" },
-        { "internalType": "bool", "name": "fromWallet", "type": "bool" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "supply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "fromWallet",
+          "type": "bool"
+        }
       ],
       "name": "addSupply",
       "outputs": [],
@@ -144,7 +174,11 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
         {
           "internalType": "uint256[]",
           "name": "warriorIds",
@@ -158,8 +192,16 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "to", "type": "address" },
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "approve",
       "outputs": [],
@@ -168,10 +210,20 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "owner", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
       ],
       "name": "balanceOf",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -179,7 +231,11 @@
       "inputs": [],
       "name": "beast",
       "outputs": [
-        { "internalType": "contract IBeastNFT", "name": "", "type": "address" }
+        {
+          "internalType": "contract IBeastNFT",
+          "name": "",
+          "type": "address"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
@@ -188,17 +244,31 @@
       "inputs": [],
       "name": "bloodstone",
       "outputs": [
-        { "internalType": "contract IERC20", "name": "", "type": "address" }
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "canHuntMonster",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -212,14 +282,28 @@
     {
       "inputs": [],
       "name": "denominator",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
-        { "internalType": "bool", "name": "isbeast", "type": "bool" }
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isbeast",
+          "type": "bool"
+        }
       ],
       "name": "execute",
       "outputs": [],
@@ -230,44 +314,84 @@
       "inputs": [],
       "name": "feehandler",
       "outputs": [
-        { "internalType": "contract FeeHandler", "name": "", "type": "address" }
+        {
+          "internalType": "contract FeeHandler",
+          "name": "",
+          "type": "address"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "getApproved",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_address", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
       ],
       "name": "getAvailableLegionsCount",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "ap", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "ap",
+          "type": "uint256"
+        }
       ],
       "name": "getImage",
       "outputs": [
-        { "internalType": "string", "name": "", "type": "string" },
-        { "internalType": "string", "name": "", "type": "string" }
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "getLegion",
       "outputs": [
@@ -295,6 +419,11 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -302,60 +431,143 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_address", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
       ],
       "name": "getMaxAttackPower",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_address", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
       ],
       "name": "getTaxLeftDays",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_address", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
       ],
       "name": "getTokenIds",
       "outputs": [
-        { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-        { "internalType": "uint8", "name": "monsterId", "type": "uint8" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "monsterId",
+          "type": "uint8"
+        }
       ],
       "name": "hunt",
       "outputs": [
-        { "internalType": "bool", "name": "", "type": "bool" },
-        { "internalType": "uint256", "name": "", "type": "uint256" }
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
       ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "owner", "type": "address" },
-        { "internalType": "address", "name": "operator", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
       ],
       "name": "isApprovedForAll",
-      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "itemPrice",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "lastHuntTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -374,7 +586,11 @@
     },
     {
       "inputs": [
-        { "internalType": "string", "name": "name", "type": "string" },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
         {
           "internalType": "uint256[]",
           "name": "beastIds",
@@ -395,7 +611,11 @@
       "inputs": [],
       "name": "monster",
       "outputs": [
-        { "internalType": "contract Monster", "name": "", "type": "address" }
+        {
+          "internalType": "contract Monster",
+          "name": "",
+          "type": "address"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
@@ -403,23 +623,45 @@
     {
       "inputs": [],
       "name": "name",
-      "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "owner",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "ownerOf",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -433,7 +675,13 @@
     {
       "inputs": [],
       "name": "rewardPoolAddr",
-      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -441,16 +689,32 @@
       "inputs": [],
       "name": "rewardpool",
       "outputs": [
-        { "internalType": "contract RewardPool", "name": "", "type": "address" }
+        {
+          "internalType": "contract RewardPool",
+          "name": "",
+          "type": "address"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "from", "type": "address" },
-        { "internalType": "address", "name": "to", "type": "address" },
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "safeTransferFrom",
       "outputs": [],
@@ -459,10 +723,26 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "from", "type": "address" },
-        { "internalType": "address", "name": "to", "type": "address" },
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-        { "internalType": "bytes", "name": "_data", "type": "bytes" }
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
       ],
       "name": "safeTransferFrom",
       "outputs": [],
@@ -471,8 +751,16 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "operator", "type": "address" },
-        { "internalType": "bool", "name": "approved", "type": "bool" }
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
       ],
       "name": "setApprovalForAll",
       "outputs": [],
@@ -481,8 +769,16 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "_fee", "type": "uint256" },
-        { "internalType": "uint8", "name": "_index", "type": "uint8" }
+        {
+          "internalType": "uint256",
+          "name": "_fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_index",
+          "type": "uint8"
+        }
       ],
       "name": "setFee",
       "outputs": [],
@@ -491,8 +787,16 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "_itemPrice", "type": "uint256" },
-        { "internalType": "uint256", "name": "_denominator", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "_itemPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_denominator",
+          "type": "uint256"
+        }
       ],
       "name": "setItemPrice",
       "outputs": [],
@@ -501,7 +805,11 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "_maxNum", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "_maxNum",
+          "type": "uint256"
+        }
       ],
       "name": "setMaxBeastNumber",
       "outputs": [],
@@ -510,7 +818,11 @@
     },
     {
       "inputs": [
-        { "internalType": "uint256", "name": "_price", "type": "uint256" }
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        }
       ],
       "name": "setSupplyPrice",
       "outputs": [],
@@ -520,38 +832,78 @@
     {
       "inputs": [],
       "name": "supplyPrice",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
       ],
       "name": "supportsInterface",
-      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "symbol",
-      "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "totalSupply",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "from", "type": "address" },
-        { "internalType": "address", "name": "to", "type": "address" },
-        { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
       ],
       "name": "transferFrom",
       "outputs": [],
@@ -560,7 +912,11 @@
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "newOwner", "type": "address" }
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
       ],
       "name": "transferOwnership",
       "outputs": [],

@@ -468,16 +468,16 @@ export const translations = {
     ph: 'Pangalanan ang Iyong Legion'
   },
   'loadingTitle': {
-    en: 'Loading Beasts & Warriors...',
-    es: 'Cargando Bestias y Guerreros...',
+    en: 'Loading Warriors & Beasts...',
+    es: 'Cargando Guerreros y Bestias...',
     cn: '加载野兽和战士...',
-    pt: 'Carregando Bestas e Guerreiros...',
+    pt: 'Carregando Guerreiros e Bestas ...',
     tr: 'Canavarlar ve Savaşçılar Yükleniyor...',
     ru: 'Загрузка зверей и воинов...',
     fr: 'Chargement des bêtes et des guerriers...',
-    de: 'Beasts & Warriors laden...',
-    pl: 'Ładowanie bestii i wojowników...',
-    ph: 'load ng mga Hayop at Mandirigma...'
+    de: 'Warriors & Beasts laden...',
+    pl: 'Ładowanie wojowników i bestii...',
+    ph: 'load ng mga Mandirigma at Hayop...'
   },
   'createLegionsBtn': {
     en: 'Create legion with ',
@@ -770,6 +770,18 @@ export const translations = {
   },
   'availableLegions': {
     en: 'Available legions to hunt',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
+  },
+  'waitingTimeToHunt': {
+    en: 'Waiting time until next hunt',
     es: '',
     cn: '',
     pt: '',
@@ -1285,16 +1297,16 @@ export const translations = {
     ph: 'Natalo mo ang halimaw na ito!'
   },
   'congSubtitle2': {
-    en: 'You have rewarded',
-    es: 'has recompensado',
-    cn: '你已经打赏了',
-    pt: 'Você recompensou',
-    tr: 'ödüllendirdin',
-    ru: 'Вы наградили',
-    fr: 'Vous avez récompensé',
-    de: 'Je hebt beloond',
-    pl: 'Nagrodziłeś',
-    ph: 'Nakaganti ka na'
+    en: 'You have been rewarded',
+    es: '',
+    cn: '',
+    pt: '',
+    tr: '',
+    ru: '',
+    fr: '',
+    de: '',
+    pl: '',
+    ph: ''
   },
   'congSubtitle3': {
     en: 'To win you need to roll equal or less than:',
@@ -1357,7 +1369,7 @@ export const translations = {
     ph: 'Upang manalo kailangan mong gumulong katumbas o mas mababa sa:'
   },
   'yourRollTitle': {
-    en: 'Your roll was',
+    en: 'Your roll is',
     es: '',
     cn: '',
     pt: '',

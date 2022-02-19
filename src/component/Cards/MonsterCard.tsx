@@ -47,7 +47,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
         alignItems="center"
       >
         <Grid item xs={12}>
-          <Typography variant="h4" sx={{ fontWeight: "1200", color: "white" }}>
+          <Typography variant="h4" sx={{ fontWeight: "bold", color: "white" }}>
             #{tokenID} {toCapitalize(name)}
           </Typography>
         </Grid>
@@ -93,12 +93,12 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
         alignItems="center"
       >
         <Grid item>
-          <Typography variant="h5" sx={{ fontWeight: "1200" }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
             {Math.round(parseInt(base) + parseFloat(bouns))}% to win
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h6" sx={{ fontWeight: "1200" }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             {price} $BLST
           </Typography>
         </Grid>

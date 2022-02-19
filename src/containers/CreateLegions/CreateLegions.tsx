@@ -17,7 +17,7 @@ import {
   ButtonGroup,
   Button,
 } from "@mui/material";
-import { ErrorOutline, ArrowBack } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 
@@ -44,7 +44,8 @@ import {
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
-import { DragBox } from "./DragBox";
+import { WarriorsDragBox } from "./WarriorsDragBox";
+import { BeastsDragBox } from "./BeastsDragBox";
 import { DropBox } from "./DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
@@ -157,30 +158,27 @@ const CreateLegions: React.FC = () => {
     if (tmpIndexValue === 0) {
       tmpInsertPos = 0;
     } else {
-      for (; tmpIndexValue > 0; tmpIndexValue--) {
-        tmpInsertPos = dragBoxList.findIndex(
-          (tmpIndex) => tmpIndex === tmpIndexValue
-        );
-        if (tmpInsertPos !== -1) {
+      let tmpDragBoxItem, tmpDragBoxItem1;
+      for (let i = 0; i < dragBoxList.length; i++) {
+        tmpDragBoxItem = dragBoxList[i] as number;
+        tmpDragBoxItem1 = dragBoxList[i + 1] as number;
+        if (tmpIndexValue < tmpDragBoxItem) {
+          tmpInsertPos = 0;
+          break;
+        } else if (
+          tmpDragBoxItem < tmpIndexValue &&
+          tmpIndexValue < tmpDragBoxItem1
+        ) {
+          tmpInsertPos = i + 1;
+          break;
+        } else if (
+          tmpIndexValue > (dragBoxList[dragBoxList.length - 1] as number)
+        ) {
+          tmpInsertPos = dragBoxList.length;
           break;
         }
       }
-      if (tmpInsertPos === -1) {
-        for (
-          tmpIndexValue = droppedNum as number;
-          tmpIndexValue < beasts.length;
-          tmpIndexValue++
-        ) {
-          tmpInsertPos = dragBoxList.findIndex(
-            (tmpIndex) => tmpIndex === tmpIndexValue
-          );
-          if (tmpInsertPos !== -1) {
-            break;
-          }
-        }
-      }
     }
-    tmpInsertPos = tmpInsertPos === 0 ? 0 : tmpInsertPos + 1;
     dragBoxList.splice(tmpInsertPos, 0, droppedNum);
     dragBoxList = [...dragBoxList];
 
@@ -218,7 +216,13 @@ const CreateLegions: React.FC = () => {
         sum >= createlegions.main.minAvailableAP &&
         legionName.length > 0
     );
-  }, [warriorDropBoxList, beastDropBoxList, legionName]);
+  }, [
+    warriorDragBoxList,
+    beastDragBoxList,
+    warriorDropBoxList,
+    beastDropBoxList,
+    legionName,
+  ]);
 
   const getBalance = async () => {
     setLoading(true);
@@ -392,16 +396,6 @@ const CreateLegions: React.FC = () => {
                             <ButtonGroup variant="outlined" color="primary">
                               <Button
                                 variant={
-                                  !warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
-                              >
-                                {getTranslation("beasts")}
-                              </Button>
-                              <Button
-                                variant={
                                   warrior5beast ? "contained" : "outlined"
                                 }
                                 onClick={() => {
@@ -409,6 +403,16 @@ const CreateLegions: React.FC = () => {
                                 }}
                               >
                                 {getTranslation("warriors")}
+                              </Button>
+                              <Button
+                                variant={
+                                  !warrior5beast ? "contained" : "outlined"
+                                }
+                                onClick={() => {
+                                  setWarrior5beat(!warrior5beast);
+                                }}
+                              >
+                                {getTranslation("beasts")}
                               </Button>
                             </ButtonGroup>
                           </FormControl>
@@ -524,7 +528,7 @@ const CreateLegions: React.FC = () => {
                             apValue[1] > parseInt(fitem.power)
                         )
                         .map((item: any, index) => (
-                          <DragBox
+                          <WarriorsDragBox
                             item={item}
                             showAnimation={showAnimation}
                             baseJpgUrl={baseWarriorJpgUrl}
@@ -532,7 +536,6 @@ const CreateLegions: React.FC = () => {
                             baseIndex={warriorDragBoxList[index] as number}
                             dropped={changeDroppedIndex}
                             curIndex={index}
-                            w5b={warrior5beast}
                             key={warriorDragBoxList[index] as number}
                           />
                         ))}
@@ -546,15 +549,14 @@ const CreateLegions: React.FC = () => {
                               : fitem.capacity === filter)
                         )
                         .map((item: any, index) => (
-                          <DragBox
+                          <BeastsDragBox
                             item={item}
                             showAnimation={showAnimation}
                             baseJpgUrl={baseBeastJpgUrl}
-                            baseGifUrl={baseWarriorGifUrl}
+                            baseGifUrl={baseBeastGifUrl}
                             baseIndex={beastDragBoxList[index] as number}
                             dropped={changeDroppedIndex}
                             curIndex={index}
-                            w5b={warrior5beast}
                             key={beastDragBoxList[index] as number}
                           />
                         ))}
