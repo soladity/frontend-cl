@@ -57,8 +57,8 @@ const useStyles = makeStyles(() => ({
     zIndex: 99,
     marginTop: "24px",
     marginBottom: "4px",
-    paddingTop: "10px",
-    paddingBottom: "4px",
+    padding: 10,
+    paddingTop: "20px",
     "@media(min-width: 0px)": {
       top: "115px",
     },
@@ -433,7 +433,7 @@ const Monsters = () => {
                   {curLegion?.supplies}H
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={12} md={10}>
+              <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
                 <Typography
                   variant="h5"
                   sx={{ fontSize: { xs: 14, sm: 16, md: 20 } }}
