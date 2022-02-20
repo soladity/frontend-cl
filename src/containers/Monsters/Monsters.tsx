@@ -655,7 +655,7 @@ const Monsters = () => {
                                 <CardMedia
                                     component="img"
                                     image={
-                                        "/assets/defeat/m" +
+                                        "/assets/images/defeat/m" +
                                         curMonsterID +
                                         ".gif"
                                     }
