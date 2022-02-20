@@ -678,7 +678,7 @@ const Monsters = () => {
                                     Wait a moment, loading...
                                 </Typography>
                             ) : (
-                                <Box component="div">
+                                <Box component="div" sx={{ marginRight: 1 }}>
                                     <Typography>
                                         {getTranslation("yourRollTitle")}{" "}
                                         {huntedRoll}
@@ -702,6 +702,7 @@ const Monsters = () => {
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
+                                sx={{ paddingX: 3 }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -730,14 +731,23 @@ const Monsters = () => {
                                     alt="Monster Image"
                                     loading="lazy"
                                 />
-                                <Box
-                                    component="div"
-                                    sx={{
-                                        position: "absolute",
-                                        bottom: "15px",
-                                        left: "5px",
-                                    }}
-                                >
+                            </Box>
+                        </DialogContent>
+                        <DialogActions
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                px: 3,
+                            }}
+                        >
+                            {continueLoading ? (
+                                <Typography>
+                                    {" "}
+                                    Wait a moment, loading...
+                                </Typography>
+                            ) : (
+                                <Box component="div" sx={{ marginRight: 1 }}>
                                     <Typography>
                                         {getTranslation("yourRollTitle")}{" "}
                                         {huntedRoll}
@@ -757,18 +767,11 @@ const Monsters = () => {
                                                 : 0)}
                                     </Typography>
                                 </Box>
-                            </Box>
-                        </DialogContent>
-                        <DialogActions>
-                            {continueLoading && (
-                                <Typography>
-                                    {" "}
-                                    Wait a moment, loading...
-                                </Typography>
                             )}
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
+                                sx={{ paddingX: 3 }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
