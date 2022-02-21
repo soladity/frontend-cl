@@ -23,42 +23,17 @@ const style: CSSProperties = {
 
 interface DropBoxProps {
   showAnim: string | null;
-  baseBeastJpgUrl: string;
-  baseWarriorJpgUrl: string;
-  baseBeastGifUrl: string;
-  baseWarriorGifUrl: string;
+  baseUrl: string;
   items: Array<any>;
   moveToLeft: (index: number, w5b: boolean) => void;
 }
 
 export const DropBox: FC<DropBoxProps> = function DropBox({
   showAnim,
-  baseBeastJpgUrl,
-  baseWarriorJpgUrl,
-  baseBeastGifUrl,
-  baseWarriorGifUrl,
+  baseUrl,
   items,
   moveToLeft,
 }) {
-  // const [{ canDropFlag, isOverFlag }, drop] = useDrop(() => ({
-  //   accept: DragItemBox.Beasts,
-  //   drop: (item, monitor) => {
-  //     moveToRight(item);
-  //     return item;
-  //   },
-  //   collect: (monitor) => ({
-  //     isOverFlag: monitor.isOver(),
-  //     canDropFlag: monitor.canDrop(),
-  //   }),
-  // }));
-  // const isActive = canDropFlag && isOverFlag;
-  // let backgroundColor = "transparent";
-  // if (isActive) {
-  //   backgroundColor = "darkgreen";
-  // } else if (canDropFlag) {
-  //   backgroundColor = "darkkhaki";
-  // }
-
   return (
     <Box sx={{ p: 4 }}>
       <Droppable droppableId="right">
@@ -99,21 +74,8 @@ export const DropBox: FC<DropBoxProps> = function DropBox({
                       baseIndex={index}
                       image={
                         showAnim === "0"
-                          ? element.w5b
-                            ? baseWarriorJpgUrl +
-                              "/" +
-                              element["strength"] +
-                              ".jpg"
-                            : baseBeastJpgUrl +
-                              "/" +
-                              element["strength"] +
-                              ".jpg"
-                          : element.w5b
-                          ? baseWarriorGifUrl +
-                            "/" +
-                            element["strength"] +
-                            ".gif"
-                          : baseBeastGifUrl + "/" + element["strength"] + ".gif"
+                          ? baseUrl + element["jpg"]
+                          : baseUrl + element["gif"]
                       }
                       type={element["type"]}
                       capacity={element["capacity"]}

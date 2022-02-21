@@ -38,8 +38,7 @@ import {
   mintLegion,
   getBeastTokenIds,
   getBeastToken,
-  getBaseJpgURL,
-  getBaseGifURL,
+  getBaseUrl,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -54,6 +53,7 @@ import { DropBox } from "./DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
 import DraggableCard from "./DraggableCard";
+import Image from "../../config/image.json";
 
 const useStyles = makeStyles({
   root: {
@@ -79,6 +79,8 @@ interface IItem {
   strength: string;
   capacity: string | null;
   power: string | null;
+  jpg: string;
+  gif: string;
   id: string;
 }
 
@@ -91,10 +93,7 @@ const CreateLegions: React.FC = () => {
   const { account } = useWeb3React();
 
   const [loading, setLoading] = React.useState(true);
-  const [baseBeastJpgUrl, setBaseBeastJpgUrl] = React.useState("");
-  const [baseBeastGifUrl, setBaseBeastGifUrl] = React.useState("");
-  const [baseWarriorJpgUrl, setBaseWarriorJpgUrl] = React.useState("");
-  const [baseWarriorGifUrl, setBaseWarriorGifUrl] = React.useState("");
+  const [baseUrl, setBaseUrl] = React.useState("");
   const [apValue, setApValue] = React.useState<number[]>([500, 60000]);
   const [warrior5beast, setWarrior5beat] = React.useState(false);
   const [beasts, setBeasts] = React.useState<IItem[]>(Array);
@@ -149,17 +148,21 @@ const CreateLegions: React.FC = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    setBaseBeastJpgUrl(await getBaseJpgURL(web3, beastContract));
-    setBaseBeastGifUrl(await getBaseGifURL(web3, beastContract));
-    setBaseWarriorJpgUrl(await getBaseJpgURL(web3, warriorContract));
-    setBaseWarriorGifUrl(await getBaseGifURL(web3, warriorContract));
+    setBaseUrl(await getBaseUrl());
     const beastIds = await getBeastTokenIds(web3, beastContract, account);
     const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
     let beast;
     let tempBeasts: IItem[] = [];
-    let tempBeastsIndexS = [];
+    let gif = "";
+    let jpg = "";
     for (let i = 0; i < beastIds.length; i++) {
       beast = await getBeastToken(web3, beastContract, beastIds[i]);
+      for (let j = 0; j < Image.beasts.length; j++) {
+        if (Image.beasts[j].name === beast.type) {
+          gif = Image.beasts[j].gif;
+          jpg = Image.beasts[j].jpg;
+        }
+      }
       tempBeasts.push({
         id: beastIds[i],
         type: beast.type,
@@ -167,14 +170,20 @@ const CreateLegions: React.FC = () => {
         capacity: beast.capacity,
         power: null,
         w5b: false,
+        jpg: jpg,
+        gif: gif,
       });
-      tempBeastsIndexS.push(i as number);
     }
     let warrior;
     let tempWarriors: IItem[] = [];
-    let tempWarriorsIndexS = [];
     for (let i = 0; i < warriorIds.length; i++) {
       warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
+      for (let j = 0; j < Image.warriors.length; j++) {
+        if (Image.warriors[j].name === warrior.type) {
+          gif = Image.warriors[j].gif;
+          jpg = Image.warriors[j].jpg;
+        }
+      }
       tempWarriors.push({
         id: warriorIds[i],
         type: warrior.type,
@@ -182,8 +191,9 @@ const CreateLegions: React.FC = () => {
         capacity: null,
         power: warrior.power,
         w5b: true,
+        jpg: jpg,
+        gif: gif,
       });
-      tempWarriorsIndexS.push(i as number);
     }
     setBeasts(tempBeasts);
     setWarriors(tempWarriors);
@@ -499,15 +509,18 @@ const CreateLegions: React.FC = () => {
                         {warrior5beast &&
                           warriors
                             .filter(
-                              (fitem: any, findex) =>
+                              (fitem: any) =>
                                 apValue[0] < parseInt(fitem.power) &&
                                 apValue[1] > parseInt(fitem.power)
                             )
                             .map((item: any, index) => (
                               <DraggableCard
-                                showAnimation={showAnimation}
-                                baseJpgUrl={baseWarriorJpgUrl}
-                                baseGifUrl={baseWarriorGifUrl}
+                                w5b={true}
+                                image={
+                                  showAnimation === "0"
+                                    ? baseUrl + item["jpg"]
+                                    : baseUrl + item["gif"]
+                                }
                                 item={item}
                                 key={10000 + item.id}
                                 draggableId={item.id}
@@ -516,16 +529,19 @@ const CreateLegions: React.FC = () => {
                             ))}
                         {!warrior5beast &&
                           beasts
-                            .filter((fitem: any, findex) =>
+                            .filter((fitem: any) =>
                               filter === "all"
                                 ? parseInt(fitem.capacity) >= 0
                                 : fitem.capacity === filter
                             )
                             .map((item: any, index) => (
                               <DraggableCard
-                                showAnimation={showAnimation}
-                                baseJpgUrl={baseBeastJpgUrl}
-                                baseGifUrl={baseBeastGifUrl}
+                                w5b={false}
+                                image={
+                                  showAnimation === "0"
+                                    ? baseUrl + item["jpg"]
+                                    : baseUrl + item["gif"]
+                                }
                                 item={item}
                                 key={item.id}
                                 draggableId={item.id}
@@ -609,10 +625,7 @@ const CreateLegions: React.FC = () => {
                   </Grid>
                   <DropBox
                     showAnim={showAnimation}
-                    baseBeastJpgUrl={baseBeastJpgUrl}
-                    baseBeastGifUrl={baseBeastGifUrl}
-                    baseWarriorJpgUrl={baseWarriorJpgUrl}
-                    baseWarriorGifUrl={baseWarriorGifUrl}
+                    baseUrl={baseUrl}
                     items={dropItemList}
                     moveToLeft={moveToLeft}
                   />
