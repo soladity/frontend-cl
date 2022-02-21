@@ -8,10 +8,11 @@ import { useDispatch } from 'react-redux';
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
-import { getOnMarketplace, getBeastToken, getBaseJpgURL, getBaseGifURL, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { getOnMarketplace, getBeastToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
 import { useBeast, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
 import BeastMarketCard from '../../component/Cards/BeastMarketCard';
 import { getTranslation } from '../../utils/translation';
+import Image from '../../config/image.json';
 
 const useStyles = makeStyles({
 	root: {
@@ -43,8 +44,7 @@ const Beasts = () => {
 		account,
 	} = useWeb3React();
 
-	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
-	const [baseGifUrl, setBaseGifUrl] = React.useState('');
+	const [baseUrl, setBaseUrl] = React.useState('');
 	const [sortBlst, setSortBlst] = React.useState(false);
 	const [beasts, setBeasts] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
@@ -70,17 +70,24 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseJpgUrl(await getBaseJpgURL(web3, beastContract));
-		setBaseGifUrl(await getBaseGifURL(web3, beastContract));
+		setBaseUrl(await getBaseUrl());
 
 		const ids = await getOnMarketplace(web3, beastContract);
 		let beast;
 		let marketItem;
 		let tempBeasts = [];
+		let gif = '';
+		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
+			for (let j = 0; j < Image.beasts.length; j++) {
+				if (Image.beasts[j].name === beast.type) {
+					gif = Image.beasts[j].gif;
+					jpg = Image.beasts[j].jpg;
+				}
+			}
 			marketItem = await getMarketItem(web3, marketplaceContract, '1', ids[i]);
-			tempBeasts.push({ ...beast, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price });
+			tempBeasts.push({ ...beast, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price, gif: gif, jpg: jpg });
 		}
 		setBeasts(tempBeasts);
 		setLoading(false);
@@ -214,7 +221,7 @@ const Beasts = () => {
 					{
 						beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).filter((item: any) => onlyMyBeast === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastMarketCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
+								<BeastMarketCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
 							</Grid>
 						))
 					}

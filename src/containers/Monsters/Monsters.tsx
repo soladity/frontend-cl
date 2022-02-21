@@ -176,7 +176,6 @@ const Monsters = () => {
       monsterTmp = await getMonsterInfo(web3, monsterContract, i);
       monsterArraryTmp.push({ ...monsterTmp, id: i });
     }
-    console.log("monsterArraryTmp", monsterArraryTmp);
     setMonsters(monsterArraryTmp);
   };
 
@@ -216,7 +215,6 @@ const Monsters = () => {
       // if (legionIDS[i] != 1) {
       legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
       legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
-      console.log(legionTmp, legionStatus);
       legionArrayTmp.push({
         ...legionTmp,
         id: legionIDS[i],
@@ -230,9 +228,7 @@ const Monsters = () => {
     setBaseGifUrl(await getBaseGifURL(web3, monsterContract));
     setBeasts(await getBeastBalance(web3, beastContract, account));
     setWarriors(await getWarriorBalance(web3, warriorContract, account));
-    console.log(await getWarriorBalance(web3, warriorContract, account));
     setLegionIDs(legionIDS);
-    console.log(legionArrayTmp);
     setLegions(legionArrayTmp);
     setMintedWarriorCnt(warriorCnt);
     setCurLegion(legionArrayTmp[0]);

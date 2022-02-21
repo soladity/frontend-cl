@@ -78,7 +78,6 @@ const Legions = () => {
 			huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
 			tempLegions.push({ ...legion, id: ids[i], ...image, owner: marketItem.owner === account ? true : false, price: marketItem.price, huntStatus: huntStatus });
 		}
-		console.log(tempLegions)
 		setLegions(tempLegions);
 		setLoading(false);
 	}

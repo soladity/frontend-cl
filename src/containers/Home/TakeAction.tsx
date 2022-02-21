@@ -105,12 +105,8 @@ const TakeAction = () => {
 
     //Mint Beast with quantity
     const handleBeastMint = async (amount: Number, Transition: React.ComponentType<TransitionProps>) => {
-
-        console.log(amount, Transition)
-
         handlePopoverCloseSummonBeast()
         const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
-        console.log('allowance --- ', allowance)
         if (allowance === '0') {
             await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
         }
