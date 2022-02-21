@@ -116,8 +116,6 @@ const AppBarComponent = () => {
     setUnclaimedUSD(parseFloat(unClaimedUSD) / Math.pow(10, 18));
     const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
     setTaxLeftDays(taxLeftDays);
-    console.log(unClaimedUSD, typeof unClaimedUSD);
-    console.log(taxLeftDays, typeof taxLeftDays);
   };
 
   const handleOpenNavMenu = (event: any) => {
@@ -137,7 +135,7 @@ const AppBarComponent = () => {
   };
 
   const showProfile = () => {
-    console.log(account);
+    // console.log(account);
   };
 
   const logout = () => {

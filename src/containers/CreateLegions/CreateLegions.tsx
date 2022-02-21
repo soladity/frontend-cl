@@ -265,12 +265,9 @@ const CreateLegions: React.FC = () => {
   const moveToRight = (item: any) => {
     setTempDroppedItem(item);
   };
-  console.log(indexForLeft);
   const moveToLeft = (index: number, w5b: boolean) => {
     setIndexForLeft(index);
     setW5bInDropList(w5b);
-    console.log(index, w5b);
-    console.log(beastDragBoxList, warriorDragBoxList);
   };
 
   const handleChangeAp = (
@@ -424,7 +421,7 @@ const CreateLegions: React.FC = () => {
                               sx={{ width: "100%", minWidth: "250px" }}
                             >
                               <FormLabel component="legend">
-                                {getTranslation("filterAP")}:
+                                {getTranslation("filterByAp")}:
                               </FormLabel>
                               <Slider
                                 getAriaLabel={() => "Custom marks"}
