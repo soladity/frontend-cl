@@ -1,8 +1,14 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Helmet from "react-helmet";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import {
+  DragDropContext,
+  Droppable,
+  DroppableProvided,
+  DraggableLocation,
+  DropResult,
+  DroppableStateSnapshot,
+} from "react-beautiful-dnd";
 import {
   Box,
   Typography,
@@ -44,11 +50,10 @@ import {
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
-import { WarriorsDragBox } from "./WarriorsDragBox";
-import { BeastsDragBox } from "./BeastsDragBox";
 import { DropBox } from "./DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
+import DraggableCard from "./DraggableCard";
 
 const useStyles = makeStyles({
   root: {
@@ -68,6 +73,20 @@ const useStyles = makeStyles({
   },
 });
 
+interface IItem {
+  w5b: boolean;
+  type: string;
+  strength: string;
+  capacity: string | null;
+  power: string | null;
+  id: string;
+}
+
+interface IMoveResult {
+  left: IItem[];
+  right: IItem[];
+}
+
 const CreateLegions: React.FC = () => {
   const { account } = useWeb3React();
 
@@ -78,18 +97,10 @@ const CreateLegions: React.FC = () => {
   const [baseWarriorGifUrl, setBaseWarriorGifUrl] = React.useState("");
   const [apValue, setApValue] = React.useState<number[]>([500, 60000]);
   const [warrior5beast, setWarrior5beat] = React.useState(false);
-  const [warriorDropBoxList, setWarriorDropBoxList] = React.useState(Array);
-  const [beastDropBoxList, setBeastDropBoxList] = React.useState(Array);
-  const [warriorDragBoxList, setWarriorDragBoxList] = React.useState(Array);
-  const [beastDragBoxList, setBeastDragBoxList] = React.useState(Array);
-  const [beasts, setBeasts] = React.useState(Array);
-  const [warriors, setWarriors] = React.useState(Array);
+  const [beasts, setBeasts] = React.useState<IItem[]>(Array);
+  const [warriors, setWarriors] = React.useState<IItem[]>(Array);
   const [filter, setFilter] = React.useState("all");
-  const [droppedID, setDroppedID] = React.useState(-1);
-  const [w5bInDropList, setW5bInDropList] = React.useState(Boolean);
-  const [indexForLeft, setIndexForLeft] = React.useState<Number>(-1);
-  const [dropItemList, setDropItemList] = React.useState(Array);
-  const [tempDroppedItem, setTempDroppedItem] = React.useState();
+  const [dropItemList, setDropItemList] = React.useState<IItem[]>(Array);
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
   const [totalAP, setTotalAP] = React.useState(0);
   const [totalCP, setTotalCP] = React.useState(0);
@@ -117,112 +128,24 @@ const CreateLegions: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    if (
-      beastDropBoxList.length < createlegions.main.maxAvailableDragCount &&
-      droppedID > -1
-    ) {
-      let dragBoxList = warrior5beast ? warriorDragBoxList : beastDragBoxList;
-      let dropBoxList = warrior5beast ? warriorDropBoxList : beastDropBoxList;
-      const droppedIDIndex = dragBoxList.indexOf(droppedID);
-      if (droppedIDIndex <= -1) {
-        return;
-      }
-      let droppedNum = dragBoxList.splice(droppedIDIndex, 1)[0];
-      dropBoxList = [...dropBoxList, droppedNum];
-      if (warrior5beast) {
-        setWarriorDropBoxList(dropBoxList);
-        setWarriorDragBoxList(dragBoxList);
-      } else {
-        setBeastDropBoxList(dropBoxList);
-        setBeastDragBoxList(dragBoxList);
-      }
-      setDropItemList((prevState) => [...prevState, tempDroppedItem]);
-    }
-    // getTotalAP_CP();
-    setDroppedID(-1);
-  }, [droppedID]);
-
-  React.useEffect(() => {
-    if (indexForLeft === -1) {
-      return;
-    }
-    let dragBoxList = w5bInDropList ? warriorDragBoxList : beastDragBoxList;
-    let dropBoxList = w5bInDropList ? warriorDropBoxList : beastDropBoxList;
-    const droppedIDIndex = dropBoxList.indexOf(indexForLeft);
-    if (droppedIDIndex <= -1) {
-      return;
-    }
-    let tmpInsertPos = -1;
-    let droppedNum = dropBoxList.splice(droppedIDIndex, 1)[0];
-    let tmpIndexValue = droppedNum as number;
-    if (tmpIndexValue === 0) {
-      tmpInsertPos = 0;
-    } else {
-      let tmpDragBoxItem, tmpDragBoxItem1;
-      for (let i = 0; i < dragBoxList.length; i++) {
-        tmpDragBoxItem = dragBoxList[i] as number;
-        tmpDragBoxItem1 = dragBoxList[i + 1] as number;
-        if (tmpIndexValue < tmpDragBoxItem) {
-          tmpInsertPos = 0;
-          break;
-        } else if (
-          tmpDragBoxItem < tmpIndexValue &&
-          tmpIndexValue < tmpDragBoxItem1
-        ) {
-          tmpInsertPos = i + 1;
-          break;
-        } else if (
-          tmpIndexValue > (dragBoxList[dragBoxList.length - 1] as number)
-        ) {
-          tmpInsertPos = dragBoxList.length;
-          break;
-        }
-      }
-    }
-    dragBoxList.splice(tmpInsertPos, 0, droppedNum);
-    dragBoxList = [...dragBoxList];
-
-    if (warrior5beast) {
-      setWarriorDropBoxList(dropBoxList);
-      setWarriorDragBoxList(dragBoxList);
-    } else {
-      setBeastDropBoxList(dropBoxList);
-      setBeastDragBoxList(dragBoxList);
-    }
-    let tmpDropItemList = dropItemList;
-    const indexOfRight = tmpDropItemList.findIndex(
-      (item: any) => item.w5b === w5bInDropList && item.id === indexForLeft
-    );
-    tmpDropItemList.splice(indexOfRight, 1);
-    setDropItemList(tmpDropItemList);
-    setIndexForLeft(-1);
-    // getTotalAP_CP();
-  }, [indexForLeft, w5bInDropList]);
-
-  React.useEffect(() => {
     let sum = 0;
     let cp = 0;
-    warriorDropBoxList.forEach((index: any) => {
-      sum += parseInt((warriors[index] as any)["power"]);
-    });
-    beastDropBoxList.forEach((index: any) => {
-      cp += parseInt((beasts[index] as any)["capacity"]);
+    dropItemList.forEach((item: IItem) => {
+      if (item.w5b) {
+        sum += parseInt(item.power as string);
+      } else {
+        cp += parseInt(item.capacity as string);
+      }
     });
     setTotalCP(cp);
     setTotalAP(sum);
     setIsWDropable(
       cp > 0 &&
-        cp >= warriorDropBoxList.length &&
+        cp >= dropItemList.filter((item) => item.w5b).length &&
         sum >= createlegions.main.minAvailableAP &&
         legionName.length > 0
     );
-  }, [
-    warriorDragBoxList,
-    beastDragBoxList,
-    warriorDropBoxList,
-    beastDropBoxList,
-    legionName,
-  ]);
+  }, [beasts, warriors, dropItemList, legionName]);
 
   const getBalance = async () => {
     setLoading(true);
@@ -232,42 +155,52 @@ const CreateLegions: React.FC = () => {
     setBaseWarriorGifUrl(await getBaseGifURL(web3, warriorContract));
     const beastIds = await getBeastTokenIds(web3, beastContract, account);
     const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
-    let amount = 0;
     let beast;
-    let tempBeasts = [];
+    let tempBeasts: IItem[] = [];
     let tempBeastsIndexS = [];
     for (let i = 0; i < beastIds.length; i++) {
       beast = await getBeastToken(web3, beastContract, beastIds[i]);
-      tempBeasts.push({ ...beast, id: beastIds[i] });
+      tempBeasts.push({
+        id: beastIds[i],
+        type: beast.type,
+        strength: beast.strength,
+        capacity: beast.capacity,
+        power: null,
+        w5b: false,
+      });
       tempBeastsIndexS.push(i as number);
-      amount += parseInt(beast.capacity);
     }
     let warrior;
-    let tempWarriors = [];
+    let tempWarriors: IItem[] = [];
     let tempWarriorsIndexS = [];
     for (let i = 0; i < warriorIds.length; i++) {
       warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
-      tempWarriors.push({ ...warrior, id: warriorIds[i] });
+      tempWarriors.push({
+        id: warriorIds[i],
+        type: warrior.type,
+        strength: warrior.strength,
+        capacity: null,
+        power: warrior.power,
+        w5b: true,
+      });
       tempWarriorsIndexS.push(i as number);
-      amount += parseInt(warrior.power);
     }
     setBeasts(tempBeasts);
     setWarriors(tempWarriors);
-    setBeastDragBoxList(tempBeastsIndexS);
-    setWarriorDragBoxList(tempWarriorsIndexS);
     setLoading(false);
   };
 
-  const changeDroppedIndex = (index: number) => {
-    setDroppedID(index);
-  };
-
-  const moveToRight = (item: any) => {
-    setTempDroppedItem(item);
-  };
   const moveToLeft = (index: number, w5b: boolean) => {
-    setIndexForLeft(index);
-    setW5bInDropList(w5b);
+    const dropItemClone = [...dropItemList];
+    const srcClone = w5b ? [...warriors] : [...beasts];
+    const [removed] = dropItemClone.splice(index, 1);
+    srcClone.splice(srcClone.length, 0, removed);
+    setDropItemList(dropItemClone);
+    if (w5b) {
+      setWarriors(srcClone);
+    } else {
+      setBeasts(srcClone);
+    }
   };
 
   const handleChangeAp = (
@@ -301,15 +234,15 @@ const CreateLegions: React.FC = () => {
       legionContract,
       account,
       legionName,
-      beasts
-        .filter((b, index) => beastDropBoxList.includes(index))
-        .map((beast: any) => {
-          return parseInt(beast["id"]);
+      dropItemList
+        .filter((item) => item.w5b === false)
+        .map((fitem: any) => {
+          return parseInt(fitem["id"]);
         }),
-      warriors
-        .filter((w, index) => warriorDropBoxList.includes(index))
-        .map((warrior: any) => {
-          return parseInt(warrior["id"]);
+      dropItemList
+        .filter((item) => item.w5b === true)
+        .map((fitem: any) => {
+          return parseInt(fitem["id"]);
         })
     );
     setMintLoading(false);
@@ -321,14 +254,50 @@ const CreateLegions: React.FC = () => {
       return;
     }
     setLegionName(e.target.value);
-    setIsWDropable(
-      totalCP > 0 &&
-        totalCP >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
-    );
   };
 
+  const move = (
+    src: IItem[],
+    des: IItem[],
+    droppableSrc: DraggableLocation,
+    droppableDes: DraggableLocation
+  ): IMoveResult | any => {
+    const srcClone = [...src];
+    const desClone = [...des];
+    const [removed] = srcClone.splice(droppableSrc.index, 1);
+    desClone.splice(droppableDes.index, 0, removed);
+
+    const result = {} as { [index: string]: any };
+    result[droppableSrc.droppableId] = srcClone;
+    result[droppableDes.droppableId] = desClone;
+    return result;
+  };
+
+  const handleDragEnd = (res: DropResult) => {
+    const { source, destination } = res;
+    if (!destination) {
+      return;
+    }
+
+    if (source.droppableId !== destination.droppableId) {
+      const src = warrior5beast ? warriors : beasts;
+      const resultFromMove: IMoveResult = move(
+        src,
+        dropItemList,
+        source,
+        destination
+      );
+      if (warrior5beast) {
+        setWarriors(resultFromMove.left);
+      } else {
+        setBeasts(resultFromMove.left);
+      }
+      setDropItemList(resultFromMove.right);
+    }
+    console.log(source, destination);
+  };
+
+  console.log(beasts, warriors);
   return (
     <Box>
       <Helmet>
@@ -375,7 +344,7 @@ const CreateLegions: React.FC = () => {
           </CommonBtn>
         </Grid>
         {!loading && (
-          <DndProvider backend={HTML5Backend}>
+          <DragDropContext onDragEnd={handleDragEnd}>
             <Grid
               container
               spacing={2}
@@ -515,49 +484,58 @@ const CreateLegions: React.FC = () => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2} sx={{ p: 4 }}>
-                    {warrior5beast &&
-                      warriors
-                        .filter(
-                          (fitem: any, findex) =>
-                            warriorDragBoxList.includes(findex) &&
-                            apValue[0] < parseInt(fitem.power) &&
-                            apValue[1] > parseInt(fitem.power)
-                        )
-                        .map((item: any, index) => (
-                          <WarriorsDragBox
-                            item={item}
-                            showAnimation={showAnimation}
-                            baseJpgUrl={baseWarriorJpgUrl}
-                            baseGifUrl={baseWarriorGifUrl}
-                            baseIndex={warriorDragBoxList[index] as number}
-                            dropped={changeDroppedIndex}
-                            curIndex={index}
-                            key={warriorDragBoxList[index] as number}
-                          />
-                        ))}
-                    {!warrior5beast &&
-                      beasts
-                        .filter(
-                          (fitem: any, findex) =>
-                            beastDragBoxList.includes(findex) &&
-                            (filter === "all"
-                              ? parseInt(fitem.capacity) >= 0
-                              : fitem.capacity === filter)
-                        )
-                        .map((item: any, index) => (
-                          <BeastsDragBox
-                            item={item}
-                            showAnimation={showAnimation}
-                            baseJpgUrl={baseBeastJpgUrl}
-                            baseGifUrl={baseBeastGifUrl}
-                            baseIndex={beastDragBoxList[index] as number}
-                            dropped={changeDroppedIndex}
-                            curIndex={index}
-                            key={beastDragBoxList[index] as number}
-                          />
-                        ))}
-                  </Grid>
+                  <Droppable droppableId="left" isDropDisabled={true}>
+                    {(
+                      provided: DroppableProvided,
+                      snapshot: DroppableStateSnapshot
+                    ) => (
+                      <Grid
+                        container
+                        spacing={2}
+                        sx={{ p: 4 }}
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {warrior5beast &&
+                          warriors
+                            .filter(
+                              (fitem: any, findex) =>
+                                apValue[0] < parseInt(fitem.power) &&
+                                apValue[1] > parseInt(fitem.power)
+                            )
+                            .map((item: any, index) => (
+                              <DraggableCard
+                                showAnimation={showAnimation}
+                                baseJpgUrl={baseWarriorJpgUrl}
+                                baseGifUrl={baseWarriorGifUrl}
+                                item={item}
+                                key={10000 + item.id}
+                                draggableId={item.id}
+                                index={index}
+                              />
+                            ))}
+                        {!warrior5beast &&
+                          beasts
+                            .filter((fitem: any, findex) =>
+                              filter === "all"
+                                ? parseInt(fitem.capacity) >= 0
+                                : fitem.capacity === filter
+                            )
+                            .map((item: any, index) => (
+                              <DraggableCard
+                                showAnimation={showAnimation}
+                                baseJpgUrl={baseBeastJpgUrl}
+                                baseGifUrl={baseBeastGifUrl}
+                                item={item}
+                                key={item.id}
+                                draggableId={item.id}
+                                index={index}
+                              />
+                            ))}
+                        {provided.placeholder}
+                      </Grid>
+                    )}
+                  </Droppable>
                 </Card>
               </Grid>
 
@@ -609,14 +587,22 @@ const CreateLegions: React.FC = () => {
                     >
                       <Grid item>
                         <Typography>
-                          {getTranslation("beasts")}: {beastDropBoxList.length}/
-                          {createlegions.main.maxAvailableDragCount}
+                          {getTranslation("beasts")}:{" "}
+                          {
+                            dropItemList.filter((item) => item.w5b === false)
+                              .length
+                          }
+                          /{createlegions.main.maxAvailableDragCount}
                         </Typography>
                       </Grid>
                       <Grid item>
                         <Typography>
                           {getTranslation("warriors")}:{" "}
-                          {warriorDropBoxList.length}/{formatNumber(totalCP)}
+                          {
+                            dropItemList.filter((item) => item.w5b === true)
+                              .length
+                          }
+                          /{formatNumber(totalCP)}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -628,13 +614,12 @@ const CreateLegions: React.FC = () => {
                     baseWarriorJpgUrl={baseWarriorJpgUrl}
                     baseWarriorGifUrl={baseWarriorGifUrl}
                     items={dropItemList}
-                    toLeft={moveToLeft}
-                    moveToRight={moveToRight}
+                    moveToLeft={moveToLeft}
                   />
                 </Card>
               </Grid>
             </Grid>
-          </DndProvider>
+          </DragDropContext>
         )}
         {loading && (
           <>
