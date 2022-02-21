@@ -106,7 +106,6 @@ const YourAchievements = () => {
         console.log(ids);
         for (let i = 0; i < ids.length; i++) {
             const beast = await getBeastToken(web3, beastContract, ids[i]);
-            console.log(beast.capacity);
             if (beast.capacity === "4") {
                 setOwnBeastWith20(true);
                 return;
@@ -116,14 +115,12 @@ const YourAchievements = () => {
 
     const getWarriorStatus = async () => {
         const ids = await getWarriorTokenIds(web3, warriorContract, account);
-        console.log(ids);
         for (let i = 0; i < ids.length; i++) {
             const warrior = await getWarriorToken(
                 web3,
                 warriorContract,
                 ids[i]
             );
-            console.log(warrior);
             if (warrior.strength === "6") {
                 setOwnWarriorWith6(true);
                 return;

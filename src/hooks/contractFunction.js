@@ -210,7 +210,7 @@ export const getLegionToken = async (web3, contract, tokenId) => {
     beasts: response[1],
     warriors: response[2],
     supplies: response[3],
-    attackPower: parseInt(response[4]) / 100,
+    attackPower: Math.floor(parseInt(response[4]) / 100),
     lastHuntTime: response[5]
   }
   return legion;
@@ -235,7 +235,7 @@ export const getLegionDetails = async (web3, contract, tokenID) => {
     beastIDs: response[2],
     warriorIDs: response[3],
     supplies: response[4],
-    ap: response[5],
+    ap: Math.floor(parseInt(response[5]) / 100),
     onMarket: response[6],
   };
   return legion;

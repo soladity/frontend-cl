@@ -115,7 +115,6 @@ const YourInventory = () => {
       legionContract,
       account
     );
-    console.log(maxAttackPower, typeof maxAttackPower);
     setMaxAttackPower(maxAttackPower);
 
     const BLSTBalance = await getBloodstoneBalance(
@@ -134,10 +133,8 @@ const YourInventory = () => {
         legionContract,
         legionTokenIds[i]
       );
-      console.log(legion);
       if (legion.lastHuntTime != "0" && legion.supplies > 0) {
         remainTimes.push(parseInt(legion.lastHuntTime));
-        console.log(new Date(parseInt(legion.lastHuntTime) * 1000));
       }
     }
     if (remainTimes.length > 0) {

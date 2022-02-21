@@ -8,10 +8,11 @@ import { useDispatch } from 'react-redux';
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
-import { getOnMarketplace, getBeastToken, getBaseJpgURL, getBaseGifURL, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { getOnMarketplace, getBeastToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
 import { useBeast, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
 import BeastMarketCard from '../../component/Cards/BeastMarketCard';
 import { getTranslation } from '../../utils/translation';
+import Image from '../../config/image.json';
 
 const useStyles = makeStyles({
 	root: {
@@ -43,9 +44,7 @@ const Beasts = () => {
 		account,
 	} = useWeb3React();
 
-	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
-	const [baseGifUrl, setBaseGifUrl] = React.useState('');
-	const [sortAp, setSortAp] = React.useState(false);
+	const [baseUrl, setBaseUrl] = React.useState('');
 	const [sortBlst, setSortBlst] = React.useState(false);
 	const [beasts, setBeasts] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
@@ -71,17 +70,24 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
-		setBaseJpgUrl(await getBaseJpgURL(web3, beastContract));
-		setBaseGifUrl(await getBaseGifURL(web3, beastContract));
+		setBaseUrl(await getBaseUrl());
 
 		const ids = await getOnMarketplace(web3, beastContract);
 		let beast;
 		let marketItem;
 		let tempBeasts = [];
+		let gif = '';
+		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
+			for (let j = 0; j < Image.beasts.length; j++) {
+				if (Image.beasts[j].name === beast.type) {
+					gif = Image.beasts[j].gif;
+					jpg = Image.beasts[j].jpg;
+				}
+			}
 			marketItem = await getMarketItem(web3, marketplaceContract, '1', ids[i]);
-			tempBeasts.push({ ...beast, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price });
+			tempBeasts.push({ ...beast, id: ids[i], owner: marketItem.owner === account ? true : false, price: marketItem.price, gif: gif, jpg: jpg });
 		}
 		setBeasts(tempBeasts);
 		setLoading(false);
@@ -89,7 +95,11 @@ const Beasts = () => {
 
 	const handleCancel = async (id: number) => {
 		setActionLoading(true);
-		await cancelMarketplace(web3, marketplaceContract, account, '1', id);
+		try {
+			await cancelMarketplace(web3, marketplaceContract, account, '1', id);
+		} catch (e){
+			console.log(e);
+		}
 		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
@@ -97,20 +107,19 @@ const Beasts = () => {
 	const handleBuy = async (id: number) => {
 		setActionLoading(true);
 		const allowance = await getMarketplaceBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0') {
-			await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
+		try {
+			if (allowance === '0') {
+				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
+			}
+			await buyToken(web3, marketplaceContract, account, '1', id);
+		} catch (e){
+			console.log(e);
 		}
-		await buyToken(web3, marketplaceContract, account, '1', id);
 		dispatch(setReloadStatus({
 			reloadContractStatus: new Date()
 		}))
 		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
-	}
-
-	const handleSortAp = (value: boolean) => {
-		setSortAp(value);
-		handleSort('capacity');
 	}
 
 	const handleSortBlst = (value: boolean) => {
@@ -121,38 +130,11 @@ const Beasts = () => {
 	const handleSort = (type: string) => {
 		let temp = beasts;
 		temp.sort((a: any, b: any) => {
-			if (type === 'capacity') {
-				if (sortAp === true) {
-					if (parseInt(a.capacity) > parseInt(b.capacity)) {
-						return 1;
-					}
-					if (parseInt(a.capacity) < parseInt(b.capacity)) {
-						return -1;
-					}
-				} else {
-					if (parseInt(a.capacity) > parseInt(b.capacity)) {
-						return -1;
-					}
-					if (parseInt(a.capacity) < parseInt(b.capacity)) {
-						return 1;
-					}
-				}
-			} else {
-				if (sortBlst === true) {
-					if (parseInt(a.price) > parseInt(b.price)) {
-						return 1;
-					}
-					if (parseInt(a.price) < parseInt(b.price)) {
-						return -1;
-					}
-				} else {
-					if (parseInt(a.price) > parseInt(b.price)) {
-						return -1;
-					}
-					if (parseInt(a.price) < parseInt(b.price)) {
-						return 1;
-					}
-				}
+			if (parseInt(a.price) > parseInt(b.price)) {
+				return 1;
+			}
+			if (parseInt(a.price) < parseInt(b.price)) {
+				return -1;
 			}
 			return 0;
 		});
@@ -187,9 +169,9 @@ const Beasts = () => {
 			(loading === false && actionLoading === false) &&
 			<div>
 				<Grid container spacing={2} sx={{ my: 3 }}>
-					<Grid item xs={12} md={6} xl={3}>
+					<Grid item xs={12} md={6} xl={4}>
 						<FormControl component="fieldset">
-							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterLevel')}:</FormLabel>
+							<FormLabel component="legend" style={{ marginBottom: 12 }}>{getTranslation('filterCapacity')}:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" aria-label="outlined button group">
 								<Button variant={`${filter === 'all' ? 'contained' : 'outlined'}`} onClick={() => setFilter('all')}>{getTranslation('all')}</Button>
 								<Button variant={`${filter === '1' ? 'contained' : 'outlined'}`} onClick={() => setFilter('1')}>1</Button>
@@ -197,20 +179,11 @@ const Beasts = () => {
 								<Button variant={`${filter === '3' ? 'contained' : 'outlined'}`} onClick={() => setFilter('3')}>3</Button>
 								<Button variant={`${filter === '4' ? 'contained' : 'outlined'}`} onClick={() => setFilter('4')}>4</Button>
 								<Button variant={`${filter === '5' ? 'contained' : 'outlined'}`} onClick={() => setFilter('5')}>5</Button>
-								<Button variant={`${filter === '6' ? 'contained' : 'outlined'}`} onClick={() => setFilter('6')}>6</Button>
+								<Button variant={`${filter === '20' ? 'contained' : 'outlined'}`} onClick={() => setFilter('20')}>20</Button>
 							</ButtonGroup>
 						</FormControl>
 					</Grid>
-					<Grid item xs={12} md={6} xl={3}>
-						<FormControl component="fieldset" sx={{ width: '90%' }}>
-							<FormLabel component="legend">{getTranslation('sortByAp')}:</FormLabel>
-							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
-								<Button variant={!sortAp ? "contained" : "outlined"} onClick={() => { handleSortAp(!sortAp) }}>{getTranslation('lowest')}</Button>
-								<Button variant={sortAp ? "contained" : "outlined"} onClick={() => { handleSortAp(!sortAp) }}>{getTranslation('highest')}</Button>
-							</ButtonGroup>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} md={6} xl={3}>
+					<Grid item xs={12} md={6} xl={4}>
 						<FormControl component="fieldset" sx={{ width: '90%' }}>
 							<FormLabel component="legend">{getTranslation('sortBy')} $:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
@@ -223,7 +196,7 @@ const Beasts = () => {
 						item
 						xs={12}
 						md={6}
-						xl={3}
+						xl={4}
 						sx={{
 							display: "flex",
 							flexDirection: "column",
@@ -246,9 +219,9 @@ const Beasts = () => {
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
-						beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => onlyMyBeast === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
+						beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).filter((item: any) => onlyMyBeast === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastMarketCard image={(showAnimation === '0' ? baseJpgUrl + '/' + item['strength'] + '.jpg' : baseGifUrl + '/' + item['strength'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
+								<BeastMarketCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
 							</Grid>
 						))
 					}
