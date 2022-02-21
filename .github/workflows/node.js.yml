@@ -1,28 +1,54 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+name: Deploy
 
-name: Node.js CI
+env:
+    NODE_VERSION: 16.x
 
 on:
-  push:
-    branches: [ main ]
+    push:
+        branches:
+            - main
+            - staging
+            - development
 
 jobs:
-  build:
-    runs-on: self-hosted
+    build_and_deploy:
+        runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        steps:
+            - uses: actions/checkout@v2
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm i
-    - run: npm run build --if-present
-    - run: npm test
+            - name: Set NODE_ENV
+              run: |
+                  echo "NODE_ENV=${GITHUB_REF/refs\/heads\//}" >> $GITHUB_ENV
+
+            - name: Set env variables for secrets
+              run: |
+                  echo "AWS_ACCESS_KEY_ID=${NODE_ENV}_AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+                  echo "AWS_SECRET_ACCESS_KEY=${NODE_ENV}_AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+                  echo "AWS_S3_BUCKET=${NODE_ENV}_AWS_S3_BUCKET" >> $GITHUB_ENV
+                  echo "DISTRIBUTION_ID=${NODE_ENV}_DISTRIBUTION_ID" >> $GITHUB_ENV
+
+            - name: Install Node.js ${{ env.NODE_VERSION }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: "npm"
+
+            - run: npm i -g yarn
+            - run: yarn install
+            - run: npm run build
+            # - run: npm test
+
+            - name: Deploy
+              uses: Reggionick/s3-deploy@v3.1.1
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID] }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
+              with:
+                  folder: build
+                  bucket: ${{ secrets[env.AWS_S3_BUCKET] }}
+                  bucket-region: us-east-1
+                  dist-id: ${{ secrets[env.DISTRIBUTION_ID] }}
+                  private: true
+                  invalidation: "/*"
+                  delete-removed: true
