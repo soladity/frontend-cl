@@ -51,7 +51,7 @@
   "scripts": {
     "start": "react-scripts start",
     "style": "node-sass --watch ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css",
-    "build": "node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && react-scripts build",
+    "build": "CI=false && node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
