@@ -58,6 +58,7 @@ const Beasts = () => {
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [mintLoading, setMintLoading] = React.useState(false);
+	const [actionLoading, setActionLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const beastContract = useBeast();
@@ -86,10 +87,14 @@ const Beasts = () => {
 		setMintLoading(true);
 		setLoading(false);
 		const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0') {
-			await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
+		try {
+			if (allowance === '0') {
+				await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
+			}
+			await mintBeast(web3, beastContract, account, amount);
+		} catch (e){
+			console.log(e);
 		}
-		await mintBeast(web3, beastContract, account, amount);
 		dispatch(setReloadStatus({
 			reloadContractStatus: new Date()
 		}));
@@ -109,8 +114,8 @@ const Beasts = () => {
 		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
-			for (let j = 0; j < Image.beasts.length; j++){
-				if (Image.beasts[j].name === beast.type){
+			for (let j = 0; j < Image.beasts.length; j++) {
+				if (Image.beasts[j].name === beast.type) {
 					gif = Image.beasts[j].gif;
 					jpg = Image.beasts[j].jpg;
 				}
@@ -137,9 +142,14 @@ const Beasts = () => {
 	}
 
 	const handleSendToMarketplace = async () => {
+		setActionLoading(true);
 		setOpenSupply(false);
-		await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
-		await sellToken(web3, marketplaceContract, account, '1', selectedBeast, price);
+		try {
+			await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
+			await sellToken(web3, marketplaceContract, account, '1', selectedBeast, price);
+		} catch (e) {
+			console.log(e);
+		}
 		let capacity = 0;
 		let temp = beasts;
 		for (let i = 0; i < temp.length; i++) {
@@ -149,6 +159,7 @@ const Beasts = () => {
 		setMaxWarrior(maxWarrior - capacity);
 		setBalance(balance - 1);
 		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
+		setActionLoading(false);
 	}
 
 	return <Box>
@@ -238,7 +249,7 @@ const Beasts = () => {
 			</Grid>
 		</Grid>
 		{
-			(loading === false && mintLoading === false) &&
+			(loading === false && mintLoading === false && actionLoading === false) &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
 					<Grid item md={12}>
@@ -307,6 +318,28 @@ const Beasts = () => {
 				</Grid>
 			</>
 		}
+		{
+			actionLoading === true && (
+				<>
+					<Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+						<Typography variant="h4">
+							{getTranslation("pleaseWait")}
+						</Typography>
+					</Grid>
+					<Grid container sx={{ justifyContent: "center" }}>
+						<Grid item xs={1}>
+							<Card>
+								<CardMedia
+									component="img"
+									image="/assets/images/loading.gif"
+									alt="Loading"
+									loading="lazy"
+								/>
+							</Card>
+						</Grid>
+					</Grid>
+				</>
+			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
 			<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
 			<DialogContent>

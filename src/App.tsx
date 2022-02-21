@@ -13,14 +13,13 @@ function ResponsiveDrawer(props: any) {
     activate: activateNetwork,
   } = useWeb3React();
   const path = window.location.pathname;
-  console.log(path);
   function stringRemover(str: string): string {
     if (str[str.length - 1] === "/") {
       return stringRemover(str.slice(0, str.length - 1));
     }
     return str;
   }
-  if (path.length != 1 && path[path.length - 1] === "/") {
+  if (path.length !== 1 && path[path.length - 1] === "/") {
     window.location.href = window.location.origin + stringRemover(path);
   }
 
