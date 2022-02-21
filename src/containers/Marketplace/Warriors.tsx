@@ -46,8 +46,7 @@ const Warriors = () => {
 
 	const [baseJpgUrl, setBaseJpgUrl] = React.useState('');
 	const [baseGifUrl, setBaseGifUrl] = React.useState('');
-	const [sortAp, setSortAp] = React.useState(false);
-	const [sortBlst, setSortBlst] = React.useState(false);
+	const [sort, setSort] = React.useState('0');
 	const [warriors, setWarriors] = React.useState(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [onlyMyWarrior, setOnlyMyWarrior] = React.useState(false);
@@ -107,7 +106,11 @@ const Warriors = () => {
 
 	const handleCancel = async (id: number) => {
 		setActionLoading(true);
-		await cancelMarketplace(web3, marketplaceContract, account, '2', id);
+		try {
+			await cancelMarketplace(web3, marketplaceContract, account, '2', id);
+		} catch (e){
+			console.log(e);
+		}
 		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
@@ -115,10 +118,14 @@ const Warriors = () => {
 	const handleBuy = async (id: number) => {
 		setActionLoading(true);
 		const allowance = await getMarketplaceBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0') {
-			await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
+		try {
+			if (allowance === '0') {
+				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
+			}
+			await buyToken(web3, marketplaceContract, account, '2', id);
+		} catch (e){
+			console.log(e);
 		}
-		await buyToken(web3, marketplaceContract, account, '2', id);
 		dispatch(setReloadStatus({
 			reloadContractStatus: new Date()
 		}))
@@ -126,21 +133,16 @@ const Warriors = () => {
 		setActionLoading(false);
 	}
 
-	const handleSortAp = (value: boolean) => {
-		setSortAp(value);
-		handleSort('ap');
+	const handleSort = (value: string) => {
+		setSort(value);
+		handleSortValue(value);
 	}
 
-	const handleSortBlst = (value: boolean) => {
-		setSortBlst(value);
-		handleSort('blst');
-	}
-
-	const handleSort = (type: string) => {
+	const handleSortValue = (value: string) => {
 		let temp = warriors;
 		temp.sort((a: any, b: any) => {
-			if (type === 'ap') {
-				if (sortAp === true) {
+			if (value === '1' || value === '2') {
+				if (value === '2') {
 					if (parseInt(a.power) > parseInt(b.power)) {
 						return 1;
 					}
@@ -156,7 +158,7 @@ const Warriors = () => {
 					}
 				}
 			} else {
-				if (sortBlst === true) {
+				if (value === '4') {
 					if (parseInt(a.price) > parseInt(b.price)) {
 						return 1;
 					}
@@ -239,21 +241,14 @@ const Warriors = () => {
 							/>
 						</FormControl>
 					</Grid>
-					<Grid item xs={12} md={6} lg={4} xl={2}>
+					<Grid item xs={12} md={6} lg={4} xl={4}>
 						<FormControl component="fieldset" sx={{ width: '90%' }}>
-							<FormLabel component="legend">{getTranslation('sortByAp')}:</FormLabel>
+							<FormLabel component="legend">{getTranslation('sortBy')}:</FormLabel>
 							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
-								<Button variant={!sortAp ? "contained" : "outlined"} onClick={() => { handleSortAp(!sortAp) }}>{getTranslation('lowest')}</Button>
-								<Button variant={sortAp ? "contained" : "outlined"} onClick={() => { handleSortAp(!sortAp) }}>{getTranslation('highest')}</Button>
-							</ButtonGroup>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12} md={6} lg={4} xl={2}>
-						<FormControl component="fieldset" sx={{ width: '90%' }}>
-							<FormLabel component="legend">{getTranslation('sortBy')} $:</FormLabel>
-							<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
-								<Button variant={!sortBlst ? "contained" : "outlined"} onClick={() => { handleSortBlst(!sortBlst) }}>{getTranslation('lowest')}</Button>
-								<Button variant={sortBlst ? "contained" : "outlined"} onClick={() => { handleSortBlst(!sortBlst) }}>{getTranslation('highest')}</Button>
+								<Button variant={sort === '1' ? "contained" : "outlined"} onClick={() => { handleSort('1') }}>{getTranslation('lowest')} AP</Button>
+								<Button variant={sort === '2' ? "contained" : "outlined"} onClick={() => { handleSort('2') }}>{getTranslation('highest')} AP</Button>
+								<Button variant={sort === '3' ? "contained" : "outlined"} onClick={() => { handleSort('3') }}>{getTranslation('lowest')} $</Button>
+								<Button variant={sort === '4' ? "contained" : "outlined"} onClick={() => { handleSort('4') }}>{getTranslation('highest')} $</Button>
 							</ButtonGroup>
 						</FormControl>
 					</Grid>

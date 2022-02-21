@@ -58,6 +58,7 @@ const Warriors = () => {
 	const [loading, setLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
 	const [mintLoading, setMintLoading] = React.useState(false);
+	const [actionLoading, setActionLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const warriorContract = useWarrior();
@@ -86,10 +87,14 @@ const Warriors = () => {
 		setMintLoading(true);
 		setLoading(false);
 		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
-		if (allowance === '0') {
-			await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
+		try {
+			if (allowance === '0') {
+				await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
+			}
+			await mintWarrior(web3, warriorContract, account, amount);
+		} catch (e) {
+			console.log(e);
 		}
-		await mintWarrior(web3, warriorContract, account, amount);
 		dispatch(setReloadStatus({
 			reloadContractStatus: new Date()
 		}));
@@ -109,8 +114,8 @@ const Warriors = () => {
 		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			for (let j = 0; j < Image.warriors.length; j++){
-				if (Image.warriors[j].name === warrior.type){
+			for (let j = 0; j < Image.warriors.length; j++) {
+				if (Image.warriors[j].name === warrior.type) {
 					gif = Image.warriors[j].gif;
 					jpg = Image.warriors[j].jpg;
 				}
@@ -153,9 +158,14 @@ const Warriors = () => {
 	}
 
 	const handleSendToMarketplace = async () => {
+		setActionLoading(true);
 		setOpenSupply(false);
-		await setMarketplaceApprove(web3, warriorContract, account, selectedWarrior);
-		await sellToken(web3, marketplaceContract, account, '2', selectedWarrior, price);
+		try {
+			await setMarketplaceApprove(web3, warriorContract, account, selectedWarrior);
+			await sellToken(web3, marketplaceContract, account, '2', selectedWarrior, price);
+		} catch (e) {
+			console.log(e)
+		}
 		let power = 0;
 		let temp = warriors;
 		for (let i = 0; i < temp.length; i++) {
@@ -165,6 +175,7 @@ const Warriors = () => {
 		setMaxPower(maxPower - power);
 		setBalance(balance - 1);
 		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior));
+		setActionLoading(false);
 	}
 
 	return <Box>
@@ -254,7 +265,7 @@ const Warriors = () => {
 			</Grid>
 		</Grid>
 		{
-			(loading === false && mintLoading === false) &&
+			(loading === false && mintLoading === false && actionLoading === false) &&
 			<React.Fragment>
 				<Grid container spacing={2} sx={{ my: 3 }}>
 					<Grid item md={4} xs={12}>
@@ -343,6 +354,28 @@ const Warriors = () => {
 				</Grid>
 			</>
 		}
+		{
+			actionLoading === true && (
+				<>
+					<Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+						<Typography variant="h4">
+							{getTranslation("pleaseWait")}
+						</Typography>
+					</Grid>
+					<Grid container sx={{ justifyContent: "center" }}>
+						<Grid item xs={1}>
+							<Card>
+								<CardMedia
+									component="img"
+									image="/assets/images/loading.gif"
+									alt="Loading"
+									loading="lazy"
+								/>
+							</Card>
+						</Grid>
+					</Grid>
+				</>
+			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
 			<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
 			<DialogContent>

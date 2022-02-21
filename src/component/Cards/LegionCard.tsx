@@ -317,7 +317,7 @@ export default function LegionCard(props: CardProps) {
         sx={{
           display: "flex",
           position: "absolute",
-          bottom: "55px",
+          bottom: "calc(50% - 10px)",
           left: "20px",
           cursor: "pointer",
         }}

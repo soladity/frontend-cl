@@ -95,6 +95,7 @@ const Legions = () => {
 	const [loading, setLoading] = React.useState(false);
 	const [supplyLoading, setSupplyLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
+	const [actionLoading, setActionLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const legionContract = useLegion();
@@ -169,13 +170,17 @@ const Legions = () => {
 	const handleSupplyClick = async (value: string) => {
 		setSupplyLoading(true);
 		setOpenSupply(false);
-		await addSupply(
-			web3,
-			legionContract,
-			account,
-			selectedLegion,
-			parseInt(value)
-		);
+		try {
+			await addSupply(
+				web3,
+				legionContract,
+				account,
+				selectedLegion,
+				parseInt(value)
+			);
+		} catch (e) {
+			console.log(e);
+		}
 		setSupplyLoading(false);
 		getBalance();
 	};
@@ -203,9 +208,14 @@ const Legions = () => {
 	}
 
 	const handleSendToMarketplace = async () => {
+		setActionLoading(true);
 		setOpenShopping(false);
-		await setMarketplaceApprove(web3, legionContract, account, selectedLegion);
-		await sellToken(web3, marketplaceContract, account, '3', selectedLegion, price);
+		try {
+			await setMarketplaceApprove(web3, legionContract, account, selectedLegion);
+			await sellToken(web3, marketplaceContract, account, '3', selectedLegion, price);
+		} catch (e) {
+			console.log(e);
+		}
 		let power = 0;
 		let temp = legions;
 		for (let i = 0; i < temp.length; i++) {
@@ -214,6 +224,7 @@ const Legions = () => {
 		}
 		setTotalPower(totalPower - power);
 		setLegions(legions.filter((item: any) => parseInt(item.id) !== selectedLegion));
+		setActionLoading(false);
 	}
 
 	return (
@@ -350,7 +361,7 @@ const Legions = () => {
 					</Card>
 				</Grid>
 			</Grid>
-			{loading === false && supplyLoading === false && (
+			{loading === false && supplyLoading === false && actionLoading === false && (
 				<div>
 					<Grid container spacing={2} sx={{ my: 3 }}>
 						<Grid item xs={12} md={6} lg={3}>
@@ -543,6 +554,28 @@ const Legions = () => {
 					</Grid>
 				</>
 			)}
+			{
+				actionLoading === true && (
+					<>
+						<Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+							<Typography variant="h4">
+								{getTranslation("pleaseWait")}
+							</Typography>
+						</Grid>
+						<Grid container sx={{ justifyContent: "center" }}>
+							<Grid item xs={1}>
+								<Card>
+									<CardMedia
+										component="img"
+										image="/assets/images/loading.gif"
+										alt="Loading"
+										loading="lazy"
+									/>
+								</Card>
+							</Grid>
+						</Grid>
+					</>
+				)}
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
 				<DialogTitle>{getTranslation("buySupply")}</DialogTitle>
 				<List sx={{ pt: 0 }}>

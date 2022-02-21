@@ -469,7 +469,7 @@ const UpdateLegions: React.FC = () => {
                               sx={{ width: "100%", minWidth: "250px" }}
                             >
                               <FormLabel component="legend">
-                                {getTranslation("filterAP")}:
+                                {getTranslation("filterByAp")}:
                               </FormLabel>
                               <Slider
                                 getAriaLabel={() => "Custom marks"}
