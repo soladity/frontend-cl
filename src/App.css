@@ -1,6 +1,9 @@
 .legionFontColor {
-    color: #e89f38;
+  color: #e89f38;
 }
 .legionBtn {
-    background: "radial-gradient(#dfd80d, #fb9300)" !important
+  background: "radial-gradient(#dfd80d, #fb9300)" !important;
+}
+a {
+  text-decoration: none;
 }
