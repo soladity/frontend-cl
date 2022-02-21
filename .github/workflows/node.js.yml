@@ -37,7 +37,7 @@ jobs:
     - run: npm i -g yarn
     - run: yarn install
     - run: npm run build
-    - run: npm test
+#    - run: npm test
 
     - name: Deploy
       uses: Reggionick/s3-deploy@v3.1.1
