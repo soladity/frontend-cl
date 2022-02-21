@@ -51,6 +51,7 @@ import { Spinner } from "../../component/Buttons/Spinner";
 import { useDispatch } from "react-redux";
 import { setReloadStatus } from "../../actions/contractActions";
 import imageUrls from "../../constant/images";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
     Card: {
@@ -348,6 +349,9 @@ const Monsters = () => {
         }
         return time;
     };
+    const navigate = useNavigate();
+
+    const toHighestMonster = (legionAP: any) => {};
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -376,6 +380,7 @@ const Monsters = () => {
                     component="div"
                     sx={{ position: "relative" }}
                     ref={scrollArea}
+                    id="monsters"
                 >
                     <Card className={classes.Card}>
                         <Grid
@@ -429,7 +434,12 @@ const Monsters = () => {
                                     variant="h5"
                                     sx={{
                                         fontSize: { xs: 14, sm: 16, md: 20 },
+                                        cursor: "pointer",
+                                        fontWeight: "bold",
                                     }}
+                                    // onClick={ () =>
+                                    //     toHighestMonster(curLegion?.attackPower)
+                                    // }
                                 >
                                     {curLegion?.attackPower.toFixed(0)} AP
                                 </Typography>
