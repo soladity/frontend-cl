@@ -50,6 +50,7 @@ import OrgBGMenuItem from "./OrgMenuItem";
 import { Spinner } from "../../component/Buttons/Spinner";
 import { useDispatch } from "react-redux";
 import { setReloadStatus } from "../../actions/contractActions";
+import imageUrls from "../../constant/images";
 
 const useStyles = makeStyles(() => ({
     Card: {
@@ -514,14 +515,10 @@ const Monsters = () => {
                                     <MonsterCard
                                         image={
                                             showAnimation === "0"
-                                                ? baseJpgUrl +
-                                                  "/" +
-                                                  (index + 1) +
-                                                  ".jpg"
-                                                : baseGifUrl +
-                                                  "/" +
-                                                  (index + 1) +
-                                                  ".gif"
+                                                ? imageUrls.baseUrl +
+                                                  imageUrls.monsters[index].jpg
+                                                : imageUrls.baseUrl +
+                                                  imageUrls.monsters[index].gif
                                         }
                                         name={monster.name}
                                         tokenID={index + 1}

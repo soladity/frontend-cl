@@ -126,9 +126,13 @@ const Home = () => {
                             READ INSTRUCTIONS IN WHITEPAPER
                         </Typography>
                     </a>
-                    <Box sx={{ marginTop: 1 }}>
-                        <YourAchievements />
-                    </Box>
+                    <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                        <Grid item xs={12} md={4}></Grid>
+                        <Grid item xs={12} md={4}>
+                            <YourAchievements />
+                        </Grid>
+                        <Grid item xs={12} md={4}></Grid>
+                    </Grid>
                 </Box>
             </Box>
         </Box>

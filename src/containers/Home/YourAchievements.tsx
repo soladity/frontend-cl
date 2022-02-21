@@ -137,48 +137,66 @@ const YourAchievements = () => {
     }, [reloadContractStatus]);
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Typography
-                className={classes.achievementBtn}
-                aria-owns={
-                    openYourAchievement ? "your-achievement-popover" : undefined
-                }
-                aria-haspopup="true"
-                onClick={handlePopoverOpenYourAchievement}
-                sx={{ fontWeight: "bold", fontSize: 12, width: "max-content" }}
+        <Card
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                minHeight: "180px",
+                height: "100%",
+                background: "#16161699",
+            }}
+        >
+            <Box
+                sx={{ p: 4, justifyContent: "center" }}
+                className="legionFontColor"
             >
-                {getTranslation("yourAchievements")}
-            </Typography>
-            <Popover
-                id="your-achievement-popover"
-                open={openYourAchievement}
-                anchorEl={anchorElYourAchievement}
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                }}
-                transformOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                }}
-                onClose={handlePopoverCloseYourAchievement}
-                disableRestoreFocus
-            >
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={ownBeastWith20} /> Own a beast with 20
-                    capacity.
+                <Typography
+                    sx={{
+                        p: 1,
+                        fontSize: 18,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                    }}
+                >
+                    {getTranslation("yourAchievements")}
                 </Typography>
                 <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} /> Own a level 6 warrior.
+                    <Checkbox checked={false} />
+                    <span style={{ fontWeight: "bold", fontSize: 16 }}>
+                        {getTranslation("warriorMaster")}
+                    </span>{" "}
+                    ({getTranslation("warriorMasterEx")})
                 </Typography>
                 <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} /> Own 10 legions of 30K+ AP.
+                    <Checkbox checked={ownBeastWith20} />{" "}
+                    <span style={{ fontWeight: "bold", fontSize: 16 }}>
+                        {getTranslation("beastMaster")}
+                    </span>{" "}
+                    ({getTranslation("beastMasterEx")})
                 </Typography>
                 <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} /> Hunt monster 22 successfully.
+                    <Checkbox checked={false} />
+                    <span style={{ fontWeight: "bold", fontSize: 16 }}>
+                        {getTranslation("legionMaster")}
+                    </span>{" "}
+                    ({getTranslation("legionMasterEx")})
                 </Typography>
-            </Popover>
-        </Box>
+                <Typography sx={{ p: 1 }}>
+                    <Checkbox checked={false} />
+                    <span style={{ fontWeight: "bold", fontSize: 16 }}>
+                        {getTranslation("monsterConqueror")}
+                    </span>{" "}
+                    ({getTranslation("monsterConquerorEx")})
+                </Typography>
+                <Typography sx={{ p: 1 }}>
+                    <Checkbox checked={false} />
+                    <span style={{ fontWeight: "bold", fontSize: 16 }}>
+                        {getTranslation("King/Queen")}
+                    </span>{" "}
+                    ({getTranslation("King/QueenEx")})
+                </Typography>
+            </Box>
+        </Card>
     );
 };
 
