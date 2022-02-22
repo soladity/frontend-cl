@@ -35,7 +35,7 @@ export const DropBox: FC<DropBoxProps> = function DropBox({
   moveToLeft,
 }) {
   return (
-    <Box sx={{ p: 4 }}>
+    <>
       <Droppable droppableId="right">
         {(
           providedDroppable2: DroppableProvided,
@@ -63,7 +63,9 @@ export const DropBox: FC<DropBoxProps> = function DropBox({
                 ) => (
                   <Grid
                     item
-                    xs={3}
+                    sm={12}
+                    md={6}
+                    lg={3}
                     ref={providedDraggable.innerRef}
                     {...providedDraggable.draggableProps}
                     {...providedDraggable.dragHandleProps}
@@ -92,6 +94,6 @@ export const DropBox: FC<DropBoxProps> = function DropBox({
       <Typography variant="h6" sx={{ fontWeight: "bold", textAlign: "center" }}>
         {true ? "Release to drop" : "Drag a box here"}
       </Typography>
-    </Box>
+    </>
   );
 };

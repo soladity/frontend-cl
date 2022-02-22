@@ -362,12 +362,12 @@ const CreateLegions: React.FC = () => {
               wrap="wrap-reverse"
               sx={{ my: 2 }}
             >
-              <Grid item xs={12} sm={12} md={6}>
+              <Grid item xs={6}>
                 <Card>
-                  <Grid container spacing={2} sx={{ p: 4 }}>
+                  <Grid container spacing={2} sx={{ pt: 4, px: 4 }}>
                     <Grid item xs={12}>
                       <Grid container sx={{ justifyContent: "space-between" }}>
-                        <Grid item>
+                        <Grid item sx={{ mb: 4 }}>
                           <FormControl component="fieldset">
                             <ButtonGroup variant="outlined" color="primary">
                               <Button
@@ -556,11 +556,18 @@ const CreateLegions: React.FC = () => {
               </Grid>
 
               {/* Right Panel */}
-              <Grid item xs={12} sm={12} md={6}>
+              <Grid item xs={6}>
                 <Card sx={{ height: "100%" }}>
-                  <Grid item xs={12} sx={{ p: 4 }}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      pt: 4,
+                      px: 4,
+                    }}
+                  >
                     <Grid container sx={{ justifyContent: "space-around" }}>
-                      <Grid item>
+                      <Grid item sx={{ mb: 4 }}>
                         <Input
                           placeholder={getTranslation("nameLegion")}
                           value={legionName}

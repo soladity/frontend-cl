@@ -25,7 +25,9 @@ const DraggableCard: React.FC<{
       ) => (
         <Grid
           item
-          xs={3}
+          sm={12}
+          md={6}
+          lg={3}
           ref={providedDraggable.innerRef}
           {...providedDraggable.draggableProps}
           {...providedDraggable.dragHandleProps}
