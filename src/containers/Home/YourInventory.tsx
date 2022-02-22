@@ -1,267 +1,304 @@
 import * as React from "react";
 import {
-  Grid,
-  Card,
-  Box,
-  Button,
-  Popover,
-  Checkbox,
-  Dialog,
-  DialogTitle,
+    Grid,
+    Card,
+    Box,
+    Button,
+    Popover,
+    Checkbox,
+    Dialog,
+    DialogTitle,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { formatNumber } from "../../utils/common";
 
 import { useWeb3React } from "@web3-react/core";
 import {
-  getBloodstoneBalance,
-  getBeastBalance,
-  getWarriorBalance,
-  getUnclaimedUSD,
-  getAvailableLegionsCount,
-  getTaxLeftDays,
-  getMaxAttackPower,
-  getLegionTokenIds,
-  getLegionToken,
-  getLegionLastHuntTime,
+    getBloodstoneBalance,
+    getBeastBalance,
+    getWarriorBalance,
+    getUnclaimedUSD,
+    getAvailableLegionsCount,
+    getTaxLeftDays,
+    getMaxAttackPower,
+    getLegionTokenIds,
+    getLegionToken,
+    getLegionLastHuntTime,
 } from "../../hooks/contractFunction";
 import {
-  useBloodstone,
-  useBeast,
-  useWarrior,
-  useLegion,
-  useRewardPool,
-  useWeb3,
+    useBloodstone,
+    useBeast,
+    useWarrior,
+    useLegion,
+    useRewardPool,
+    useWeb3,
 } from "../../hooks/useContract";
 import { useSelector } from "react-redux";
 import { getTranslation } from "../../utils/translation";
 
 const YourInventory = () => {
-  const { reloadContractStatus } = useSelector(
-    (state: any) => state.contractReducer
-  );
-
-  const [beastBalance, setBeastBalance] = React.useState(0);
-  const [warriorBalance, setWarriorBalance] = React.useState(0);
-  const [unclaimedBalance, setUnclaimedBalance] = React.useState("0");
-  const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
-  const [legionTokenIds, setLegionTokenIds] = React.useState([]);
-  const [taxLeftDays, setTaxLeftDays] = React.useState(0);
-  const [maxAttackPower, setMaxAttackPower] = React.useState("0");
-  const [BLSTBalance, setBLSTBalance] = React.useState("0");
-  const [firstHuntTime, setFirstHuntTime] = React.useState(0);
-  const [currentTime, setCurrentTime] = React.useState(new Date());
-
-  //account
-  const { account } = useWeb3React();
-  const web3 = useWeb3();
-
-  //Legion Contract
-  const legionContract = useLegion();
-
-  //Beast Contract
-  const beastContract = useBeast();
-
-  //Warrior Contract
-  const warriorContract = useWarrior();
-
-  //RewardPool Contract
-  const rewardPoolContract = useRewardPool();
-
-  //Bloodstone Contract
-  const bloodstoneContract = useBloodstone();
-
-  //get all balances of your inventory
-  const getBalance = async () => {
-    const beastBalance = await getBeastBalance(web3, beastContract, account);
-    setBeastBalance(beastBalance);
-
-    const warriorBalance = await getWarriorBalance(
-      web3,
-      warriorContract,
-      account
-    );
-    setWarriorBalance(warriorBalance);
-
-    const unclaimedBalance = await getUnclaimedUSD(
-      web3,
-      rewardPoolContract,
-      account
-    );
-    setUnclaimedBalance(
-      (parseFloat(unclaimedBalance) / Math.pow(10, 18)).toFixed(2)
+    const { reloadContractStatus } = useSelector(
+        (state: any) => state.contractReducer
     );
 
-    const availableLegionCount = await getAvailableLegionsCount(
-      web3,
-      legionContract,
-      account
-    );
-    setAvailableLegionCount(availableLegionCount);
+    const [beastBalance, setBeastBalance] = React.useState(0);
+    const [warriorBalance, setWarriorBalance] = React.useState(0);
+    const [unclaimedBalance, setUnclaimedBalance] = React.useState("0");
+    const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
+    const [legionTokenIds, setLegionTokenIds] = React.useState([]);
+    const [taxLeftDays, setTaxLeftDays] = React.useState(0);
+    const [maxAttackPower, setMaxAttackPower] = React.useState("0");
+    const [BLSTBalance, setBLSTBalance] = React.useState("0");
+    const [firstHuntTime, setFirstHuntTime] = React.useState(0);
+    const [currentTime, setCurrentTime] = React.useState(new Date());
 
-    const legionTokenIds = await getLegionTokenIds(
-      web3,
-      legionContract,
-      account
-    );
-    setLegionTokenIds(legionTokenIds);
-    getLastHuntTimes(legionTokenIds);
+    //account
+    const { account } = useWeb3React();
+    const web3 = useWeb3();
 
-    const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
-    setTaxLeftDays(taxLeftDays);
+    //Legion Contract
+    const legionContract = useLegion();
 
-    const maxAttackPower = await getMaxAttackPower(
-      web3,
-      legionContract,
-      account
-    );
-    setMaxAttackPower(maxAttackPower);
+    //Beast Contract
+    const beastContract = useBeast();
 
-    const BLSTBalance = await getBloodstoneBalance(
-      web3,
-      bloodstoneContract,
-      account
-    );
-    setBLSTBalance(BLSTBalance);
-  };
+    //Warrior Contract
+    const warriorContract = useWarrior();
 
-  const getLastHuntTimes = async (legionTokenIds: any) => {
-    var remainTimes = [];
-    for (let i = 0; i < legionTokenIds.length; i++) {
-      let legion = await getLegionToken(
-        web3,
-        legionContract,
-        legionTokenIds[i]
-      );
-      if (legion.lastHuntTime != "0" && legion.supplies > 0) {
-        remainTimes.push(parseInt(legion.lastHuntTime));
-      }
-    }
-    if (remainTimes.length > 0) {
-      var first = Math.min(...remainTimes);
-      setFirstHuntTime(first);
-    } else {
-      setFirstHuntTime(0);
-    }
-  };
+    //RewardPool Contract
+    const rewardPoolContract = useRewardPool();
 
-  const calcHuntTime = (firstHuntTime: any) => {
-    var time = "~";
-    if (firstHuntTime != 0) {
-      var diff = currentTime.getTime() - firstHuntTime * 1000;
-      if (diff / 1000 / 3600 >= 24) {
-        time = "00s";
-      } else {
-        var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
-        var hours = Math.floor(totalSecs / 3660).toFixed(0);
-        var mins = ((totalSecs % 3600) / 60).toFixed(0);
-        var secs = (totalSecs % 3600) % 60;
-        if (parseInt(hours) > 0) {
-          time = `${hours}h ${mins}m ${secs}s`;
-        } else if (parseInt(mins) > 0) {
-          time = `${mins}m ${secs}s`;
-        } else {
-          time = `${secs}s`;
+    //Bloodstone Contract
+    const bloodstoneContract = useBloodstone();
+
+    //get all balances of your inventory
+    const getBalance = async () => {
+        const beastBalance = await getBeastBalance(
+            web3,
+            beastContract,
+            account
+        );
+        setBeastBalance(beastBalance);
+
+        const warriorBalance = await getWarriorBalance(
+            web3,
+            warriorContract,
+            account
+        );
+        setWarriorBalance(warriorBalance);
+
+        const unclaimedBalance = await getUnclaimedUSD(
+            web3,
+            rewardPoolContract,
+            account
+        );
+        setUnclaimedBalance(
+            (parseFloat(unclaimedBalance) / Math.pow(10, 18)).toFixed(2)
+        );
+
+        const availableLegionCount = await getAvailableLegionsCount(
+            web3,
+            legionContract,
+            account
+        );
+        setAvailableLegionCount(availableLegionCount);
+
+        const legionTokenIds = await getLegionTokenIds(
+            web3,
+            legionContract,
+            account
+        );
+        setLegionTokenIds(legionTokenIds);
+        getLastHuntTimes(legionTokenIds);
+
+        const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
+        setTaxLeftDays(parseInt(taxLeftDays));
+
+        const maxAttackPower = await getMaxAttackPower(
+            web3,
+            legionContract,
+            account
+        );
+        setMaxAttackPower(maxAttackPower);
+
+        const BLSTBalance = await getBloodstoneBalance(
+            web3,
+            bloodstoneContract,
+            account
+        );
+        setBLSTBalance(BLSTBalance);
+    };
+
+    const getLastHuntTimes = async (legionTokenIds: any) => {
+        var remainTimes = [];
+        for (let i = 0; i < legionTokenIds.length; i++) {
+            let legion = await getLegionToken(
+                web3,
+                legionContract,
+                legionTokenIds[i]
+            );
+            if (legion.lastHuntTime != "0" && legion.supplies > 0) {
+                remainTimes.push(parseInt(legion.lastHuntTime));
+            }
         }
-      }
-    }
-    return time;
-  };
+        if (remainTimes.length > 0) {
+            var first = Math.min(...remainTimes);
+            setFirstHuntTime(first);
+        } else {
+            setFirstHuntTime(0);
+        }
+    };
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-  }, [currentTime]);
+    const calcHuntTime = (firstHuntTime: any) => {
+        var time = "~";
+        if (firstHuntTime != 0) {
+            var diff = currentTime.getTime() - firstHuntTime * 1000;
+            if (diff / 1000 / 3600 >= 24) {
+                time = "00s";
+            } else {
+                var totalSecs = parseInt(
+                    ((24 * 1000 * 3600 - diff) / 1000).toFixed(2)
+                );
+                var hours = Math.floor(totalSecs / 3660).toFixed(0);
+                var mins = ((totalSecs % 3600) / 60).toFixed(0);
+                var secs = (totalSecs % 3600) % 60;
+                if (parseInt(hours) > 0) {
+                    time = `${hours}h ${mins}m ${secs}s`;
+                } else if (parseInt(mins) > 0) {
+                    time = `${mins}m ${secs}s`;
+                } else {
+                    time = `${secs}s`;
+                }
+            }
+        }
+        return time;
+    };
 
-  React.useEffect(() => {
-    getBalance();
-  }, [reloadContractStatus]);
+    React.useEffect(() => {
+        setTimeout(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+    }, [currentTime]);
 
-  return (
-    <Card
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "180px",
-        height: "100%",
-        background: "#16161699",
-      }}
-    >
-      <Box sx={{ p: 4, justifyContent: "center" }}>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            textAlign: "center",
-            borderBottom: "1px solid #fff",
-            marginBottom: 3,
-          }}
+    React.useEffect(() => {
+        getBalance();
+    }, [reloadContractStatus]);
+
+    return (
+        <Card
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                minHeight: "180px",
+                height: "100%",
+                background: "#16161699",
+            }}
         >
-          {getTranslation("yourInventory")}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("beasts")}: {beastBalance}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("warriors")}: {warriorBalance}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("availableLegions")}: {availableLegionCount} /{" "}
-          {legionTokenIds.length}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("waitingTimeToHunt")}: {calcHuntTime(firstHuntTime)}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("yourMaxAp")}:{" "}
-          {formatNumber((parseFloat(maxAttackPower) / 100).toFixed(0))}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("unClaimed")}: {unclaimedBalance}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("taxDaysLeft")}: {taxLeftDays}
-        </Typography>
-        <Typography
-          className="legionFontColor"
-          variant="subtitle1"
-          sx={{ fontWeight: "bold" }}
-        >
-          {getTranslation("BLSTInYourWallet")}:{" "}
-          {formatNumber(parseFloat(BLSTBalance).toFixed(2))}
-        </Typography>
-      </Box>
-    </Card>
-  );
+            <Box sx={{ p: 4, justifyContent: "center" }}>
+                <Typography
+                    variant="h6"
+                    sx={{
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        borderBottom: "1px solid #fff",
+                        marginBottom: 3,
+                    }}
+                >
+                    {getTranslation("yourInventory")}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("beasts")}: {beastBalance}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("warriors")}: {warriorBalance}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("availableLegions")}: {availableLegionCount}{" "}
+                    / {legionTokenIds.length}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("waitingTimeToHunt")}:{" "}
+                    {calcHuntTime(firstHuntTime)}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("yourMaxAp")}:{" "}
+                    {formatNumber(
+                        (parseFloat(maxAttackPower) / 100).toFixed(0)
+                    )}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("unClaimed")}: {unclaimedBalance}
+                </Typography>
+                {parseInt(unclaimedBalance) > 0 && (
+                    <Typography
+                        className="legionFontColor"
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
+                    >
+                        {getTranslation("claimTax")}:{" "}
+                        {(
+                            (taxLeftDays * 2 * parseInt(unclaimedBalance)) /
+                            100
+                        ).toFixed(2)}{" "}
+                        {getTranslation("claimTaxVal")}
+                    </Typography>
+                )}
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("taxDaysLeft")}: {taxLeftDays}
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    {getTranslation("BLSTInYourWallet")}:{" "}
+                    {formatNumber(parseFloat(BLSTBalance).toFixed(2))} = xx USD
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    1 USD = xx $BLST
+                </Typography>
+                <Typography
+                    className="legionFontColor"
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold" }}
+                >
+                    1 BLST = xx USD
+                </Typography>
+            </Box>
+        </Card>
+    );
 };
 
 export default YourInventory;
