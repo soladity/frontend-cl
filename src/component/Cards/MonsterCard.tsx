@@ -38,10 +38,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
     };
 
     return (
-        <Card
-            sx={{ position: "relative", textAlign: "center" }}
-            id={"monster" + tokenID}
-        >
+        <Card sx={{ position: "relative", textAlign: "center" }}>
             <Grid
                 container
                 direction="column"
