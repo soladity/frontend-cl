@@ -65,6 +65,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({
           strength={item["strength"]}
           id={item["id"]}
           handleOpenSupply={Function}
+          handleExecute={Function}
         />
       )}
       {w5b && (
@@ -79,6 +80,7 @@ export const DragBox: FC<DragBoxProps> = function DragBox({
           strength={item["strength"]}
           id={item["id"]}
           handleOpenSupply={Function}
+          handleExecute={Function}
         />
       )}
     </Grid>

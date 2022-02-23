@@ -62,6 +62,7 @@ export const WarriorsDragBox: FC<DragBoxProps> = function DragBox({
         strength={item["strength"]}
         id={item["id"]}
         handleOpenSupply={Function}
+        handleExecute={Function}
       />
     </Grid>
   );
