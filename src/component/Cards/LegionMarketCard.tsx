@@ -11,12 +11,10 @@ import {
 	IconButton,
 	Skeleton,
 } from "@mui/material";
-import CachedIcon from "@mui/icons-material/Cached";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import {
-	useBloodstone,
 	useBeast,
 	useWarrior,
 	useWeb3,

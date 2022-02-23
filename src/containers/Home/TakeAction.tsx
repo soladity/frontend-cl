@@ -297,7 +297,7 @@ const TakeAction = () => {
                                     </CommonBtn>
                                     <CommonBtn sx={{ fontWeight: 'bold', fontSize: 14, width: '100%' }}>
                                         <NavLink to='/hunt' className='non-style'>
-                                            {getTranslation('takeActionHunt')}
+                                            {getTranslation('hunt')}
                                         </NavLink>
                                     </CommonBtn>
                                 </Box>

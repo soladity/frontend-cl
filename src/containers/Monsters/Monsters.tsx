@@ -51,6 +51,9 @@ import { Spinner } from "../../component/Buttons/Spinner";
 import { useDispatch } from "react-redux";
 import { setReloadStatus } from "../../actions/contractActions";
 import imageUrls from "../../constant/images";
+import { useNavigate } from "react-router-dom";
+import ScrollToButton from "../../component/Scroll/ScrollToButton";
+import ScrollSection from "../../component/Scroll/Section";
 
 const useStyles = makeStyles(() => ({
     Card: {
@@ -91,6 +94,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface MonsterInterface {
+    id: number;
     base: string;
     ap: number;
     reward: string;
@@ -115,6 +119,8 @@ const Monsters = () => {
     const dispatch = useDispatch();
     const { account } = useWeb3React();
     const web3 = useWeb3();
+
+    const monsterRef = React.useRef(null);
 
     const legionContract = useLegion();
     const beastContract = useBeast();
@@ -141,6 +147,8 @@ const Monsters = () => {
     const [continueLoading, setContinueLoading] = useState(false);
     const [huntedRoll, setHuntedRoll] = useState(0);
     const [currentTime, setCurrentTime] = React.useState(new Date());
+    const [strongestMonsterToHunt, setStrongestMonsterToHunt] =
+        React.useState(0);
 
     const scrollArea = useCallback((node) => {
         if (node != null) {
@@ -266,18 +274,19 @@ const Monsters = () => {
     const handleCurLegionValue = (e: SelectChangeEvent) => {
         const selectedIndex = parseInt(e.target.value);
         const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface;
-        let indexOfCurMonster = 0;
-        for (let i = 0; i < allConstants.listOfMonsterAP.length; i++) {
-            if (
-                allConstants.listOfMonsterAP[i] < curLegionTmp.attackPower &&
-                curLegionTmp.attackPower < allConstants.listOfMonsterAP[i + 1]
-            )
-                indexOfCurMonster = i;
+        var strongestMonsterToHuntId: number;
+        for (let i = 0; i < monsters.length; i++) {
+            const monster: any = monsters[i];
+            if (parseInt(monster?.ap) <= curLegionTmp.attackPower) {
+                setStrongestMonsterToHunt(i);
+                // strongestMonsterToHuntId = i;
+            } else {
+                break;
+            }
         }
-        const scrollPosition = (scrollMaxHeight / 22) * indexOfCurMonster;
         setCurComboLegionValue(e.target.value as string);
         setCurLegion(curLegionTmp);
-        window.scrollTo({ top: scrollPosition, left: 0, behavior: "smooth" });
+        // setStrongestMonsterToHunt(strongestMonsterToHuntId);
     };
 
     const handleHunt = async (monsterTokenID: number) => {
@@ -326,12 +335,9 @@ const Monsters = () => {
             if (diff / 1000 / 3600 >= 24) {
                 time = "00s";
             } else {
-                console.log(diff, "diff");
-                console.log(24 * 1000 * 3600);
                 var totalSecs = parseInt(
                     ((24 * 1000 * 3600 - diff) / 1000).toFixed(2)
                 );
-                console.log(totalSecs, "total");
                 var hours = Math.floor(totalSecs / 3600).toFixed(0);
                 var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
                 var secs = Math.floor(totalSecs % 3600) % 60;
@@ -348,6 +354,9 @@ const Monsters = () => {
         }
         return time;
     };
+    const navigate = useNavigate();
+
+    const toHighestMonster = (legionAP: any) => {};
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -376,6 +385,7 @@ const Monsters = () => {
                     component="div"
                     sx={{ position: "relative" }}
                     ref={scrollArea}
+                    id="monsters"
                 >
                     <Card className={classes.Card}>
                         <Grid
@@ -425,14 +435,28 @@ const Monsters = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={30} sm={12} md={9}>
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        fontSize: { xs: 14, sm: 16, md: 20 },
-                                    }}
+                                <ScrollToButton
+                                    toId={"monster" + strongestMonsterToHunt}
+                                    duration={1000}
                                 >
-                                    {curLegion?.attackPower.toFixed(0)} AP
-                                </Typography>
+                                    <Typography
+                                        variant="h5"
+                                        sx={{
+                                            fontSize: {
+                                                xs: 14,
+                                                sm: 16,
+                                                md: 20,
+                                            },
+                                            cursor: "pointer",
+                                            fontWeight: "bold",
+                                        }}
+                                        // onClick={ () =>
+                                        //     toHighestMonster(curLegion?.attackPower)
+                                        // }
+                                    >
+                                        {curLegion?.attackPower.toFixed(0)} AP
+                                    </Typography>
+                                </ScrollToButton>
                             </Grid>
                             <Grid item xs={30} sm={12} md={7}>
                                 <Typography
@@ -512,40 +536,46 @@ const Monsters = () => {
                                     }}
                                     key={index}
                                 >
-                                    <MonsterCard
-                                        image={
-                                            showAnimation === "0"
-                                                ? imageUrls.baseUrl +
-                                                  imageUrls.monsters[index].jpg
-                                                : imageUrls.baseUrl +
-                                                  imageUrls.monsters[index].gif
-                                        }
-                                        name={monster.name}
-                                        tokenID={index + 1}
-                                        base={monster.base}
-                                        minAP={monster.ap}
-                                        bouns={
-                                            curLegion &&
-                                            monster.ap <
-                                                (curLegion as LegionInterface)
-                                                    .attackPower
-                                                ? "" +
-                                                  ((
-                                                      curLegion as LegionInterface
-                                                  ).attackPower -
-                                                      monster.ap) /
-                                                      2000
-                                                : "0"
-                                        }
-                                        price={monster.reward}
-                                        isHuntable={
-                                            curLegion?.status === "1" &&
-                                            monster.ap <=
-                                                (curLegion as LegionInterface)
-                                                    .attackPower
-                                        }
-                                        handleHunt={handleHunt}
-                                    />
+                                    <ScrollSection id={"monster" + index}>
+                                        <MonsterCard
+                                            image={
+                                                showAnimation === "0"
+                                                    ? imageUrls.baseUrl +
+                                                      imageUrls.monsters[index]
+                                                          .jpg
+                                                    : imageUrls.baseUrl +
+                                                      imageUrls.monsters[index]
+                                                          .gif
+                                            }
+                                            name={monster.name}
+                                            tokenID={index + 1}
+                                            base={monster.base}
+                                            minAP={monster.ap}
+                                            bouns={
+                                                curLegion &&
+                                                monster.ap <
+                                                    (
+                                                        curLegion as LegionInterface
+                                                    ).attackPower
+                                                    ? "" +
+                                                      ((
+                                                          curLegion as LegionInterface
+                                                      ).attackPower -
+                                                          monster.ap) /
+                                                          2000
+                                                    : "0"
+                                            }
+                                            price={monster.reward}
+                                            isHuntable={
+                                                curLegion?.status === "1" &&
+                                                monster.ap <=
+                                                    (
+                                                        curLegion as LegionInterface
+                                                    ).attackPower
+                                            }
+                                            handleHunt={handleHunt}
+                                        />
+                                    </ScrollSection>
                                 </Grid>
                                 // </Box>
                             )

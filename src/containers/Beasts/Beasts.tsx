@@ -367,7 +367,7 @@ const Beasts = () => {
 					onChange={handlePrice}
 				/>
 				<Typography variant='subtitle1'>
-					(= 0USD)
+					(= XXX USD)
 				</Typography>
 				<Typography variant='subtitle1'>
 					{getTranslation('sellContent')}

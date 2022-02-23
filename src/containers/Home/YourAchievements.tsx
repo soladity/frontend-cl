@@ -162,35 +162,45 @@ const YourAchievements = () => {
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("warriorMaster")}
                     </span>{" "}
-                    ({getTranslation("warriorMasterEx")})
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("warriorMasterEx")})
+                    </span>
                 </Typography>
                 <Typography sx={{ p: 1 }}>
                     <Checkbox checked={ownBeastWith20} />{" "}
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("beastMaster")}
                     </span>{" "}
-                    ({getTranslation("beastMasterEx")})
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("beastMasterEx")})
+                    </span>
                 </Typography>
                 <Typography sx={{ p: 1 }}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("legionMaster")}
                     </span>{" "}
-                    ({getTranslation("legionMasterEx")})
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("legionMasterEx")})
+                    </span>
                 </Typography>
                 <Typography sx={{ p: 1 }}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("monsterConqueror")}
                     </span>{" "}
-                    ({getTranslation("monsterConquerorEx")})
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("monsterConquerorEx")})
+                    </span>
                 </Typography>
                 <Typography sx={{ p: 1 }}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("King/Queen")}
                     </span>{" "}
-                    ({getTranslation("King/QueenEx")})
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("King/QueenEx")})
+                    </span>
                 </Typography>
             </Box>
         </Card>

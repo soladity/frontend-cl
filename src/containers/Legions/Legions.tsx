@@ -603,30 +603,30 @@ const Legions = () => {
 				</List>
 			</Dialog>
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
-			<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
-			<DialogContent>
-				<TextField
-					autoFocus
-					margin="dense"
-					id="price"
-					label="Price in $BLST"
-					type="number"
-					fullWidth
-					variant="standard"
-					value={price}
-					onChange={handlePrice}
-				/>
-				<Typography variant='subtitle1'>
-					(= 0USD)
-				</Typography>
-				<Typography variant='subtitle1'>
-					{getTranslation('sellContent')}
-				</Typography>
-			</DialogContent>
-			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-				{getTranslation('sell')}
-			</CommonBtn>
-		</Dialog>
+				<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
+				<DialogContent>
+					<TextField
+						autoFocus
+						margin="dense"
+						id="price"
+						label="Price in $BLST"
+						type="number"
+						fullWidth
+						variant="standard"
+						value={price}
+						onChange={handlePrice}
+					/>
+					<Typography variant='subtitle1'>
+						(= XXX USD)
+					</Typography>
+					<Typography variant='subtitle1'>
+						{getTranslation('sellContent')}
+					</Typography>
+				</DialogContent>
+				<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
+					{getTranslation('sell')}
+				</CommonBtn>
+			</Dialog>
 		</Box>
 	);
 };
