@@ -52,10 +52,10 @@ import {
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
-import { DropBox } from "./DropBox";
+import { DropBox } from "../../component/Cards/DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
-import DraggableCard from "./DraggableCard";
+import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
 
 const useStyles = makeStyles({
@@ -123,6 +123,7 @@ const UpdateLegions: React.FC = () => {
   const [tempAP, setTempAP] = React.useState(0);
   const [tempBeastsCnt, setTempBeastsCnt] = React.useState(0);
   const [tempWarriorsCnt, setTempWarriorsCnt] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState(0);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -157,11 +158,18 @@ const UpdateLegions: React.FC = () => {
     });
     setTotalCP(cp + tempCP);
     setTotalAP(sum + tempAP);
+    debugger;
     setIsWDropable(
-      cp > 0 &&
-        cp >= dropItemList.filter((item) => item.w5b).length &&
-        sum >= createlegions.main.minAvailableAP &&
+      dropItemList.length > 0 &&
+        createlegions.main.maxAvailableDragCount >=
+          dropItemList.filter((item) => !item.w5b).length &&
+        cp + tempCP >=
+          dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
+        sum + tempAP >= createlegions.main.minAvailableAP &&
         legionName.length > 0
+    );
+    setMintFee(
+      0.5 * dropItemList.length + parseInt(curLegion?.supplies as string)
     );
   }, [beasts, warriors, dropItemList, legionName]);
 
@@ -301,28 +309,32 @@ const UpdateLegions: React.FC = () => {
     if (allowance === "0") {
       await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
     }
-    await addBeasts(
-      web3,
-      legionContract,
-      account,
-      curLegionID,
-      dropItemList
-        .filter((item) => item.w5b === false)
-        .map((fitem: any) => {
-          return parseInt(fitem["id"]);
-        })
-    );
-    await addWarriors(
-      web3,
-      legionContract,
-      account,
-      curLegionID,
-      dropItemList
-        .filter((item) => item.w5b === true)
-        .map((fitem: any) => {
-          return parseInt(fitem["id"]);
-        })
-    );
+    if (dropItemList.filter((item) => item.w5b === false).length > 0) {
+      await addBeasts(
+        web3,
+        legionContract,
+        account,
+        curLegionID,
+        dropItemList
+          .filter((item) => item.w5b === false)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          })
+      );
+    }
+    if (dropItemList.filter((item) => item.w5b === true).length > 0) {
+      await addWarriors(
+        web3,
+        legionContract,
+        account,
+        curLegionID,
+        dropItemList
+          .filter((item) => item.w5b === true)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          })
+      );
+    }
     setMintLoading(false);
     navigate("/legions");
   };
@@ -467,12 +479,12 @@ const UpdateLegions: React.FC = () => {
                                 // defaultValue={20}
                                 value={apValue}
                                 min={500}
-                                max={60000}
+                                max={6000}
                                 marks={[
                                   { value: 500, label: "500" },
                                   {
-                                    value: 60000,
-                                    label: formatNumber("60000"),
+                                    value: 6000,
+                                    label: formatNumber("6000+"),
                                   },
                                 ]}
                                 step={1}
@@ -620,14 +632,18 @@ const UpdateLegions: React.FC = () => {
                 <Card sx={{ height: "100%" }}>
                   <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
                     <Typography variant="h6">
-                      Your existing legion has {tempAP} AP
+                      Your existing legion has {tempAP} AP - Fee to update{" "}
+                      {mintFee} $BLST
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} 
+                  <Grid
+                    item
+                    xs={12}
                     sx={{
                       pt: 4,
                       px: 4,
-                    }}>
+                    }}
+                  >
                     <Grid container sx={{ justifyContent: "space-around" }}>
                       <Grid item sx={{ mb: 4 }}>
                         <Input readOnly value={legionName} />
@@ -648,7 +664,7 @@ const UpdateLegions: React.FC = () => {
                             <Spinner color="white" size={40} />
                           ) : (
                             getTranslation("updateLegion") +
-                            "to" +
+                            " to " +
                             totalAP +
                             "AP"
                           )}

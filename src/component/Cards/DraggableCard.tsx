@@ -6,8 +6,8 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 
-import BeastCard from "../../component/Cards/BeastCard";
-import WarriorCard from "../../component/Cards/WarriorCard";
+import BeastCard from "./BeastCard";
+import WarriorCard from "./WarriorCard";
 
 const DraggableCard: React.FC<{
   w5b: boolean;

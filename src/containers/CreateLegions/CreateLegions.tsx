@@ -49,10 +49,10 @@ import {
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
-import { DropBox } from "./DropBox";
+import { DropBox } from "../../component/Cards/DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
-import DraggableCard from "./DraggableCard";
+import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
 
 const useStyles = makeStyles({
@@ -106,6 +106,7 @@ const CreateLegions: React.FC = () => {
   const [legionName, setLegionName] = React.useState("");
   const [isWDropable, setIsWDropable] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
+  const [mintFee, setMintFee] = React.useState(0);
 
   const navigate = useNavigate();
   const classes = useStyles();
@@ -140,10 +141,13 @@ const CreateLegions: React.FC = () => {
     setTotalAP(sum);
     setIsWDropable(
       cp > 0 &&
+        createlegions.main.maxAvailableDragCount >=
+          dropItemList.filter((item) => !item.w5b).length &&
         cp >= dropItemList.filter((item) => item.w5b).length &&
         sum >= createlegions.main.minAvailableAP &&
         legionName.length > 0
     );
+    setMintFee(0.5 * dropItemList.length);
   }, [beasts, warriors, dropItemList, legionName]);
 
   const getBalance = async () => {
@@ -407,12 +411,12 @@ const CreateLegions: React.FC = () => {
                                 // defaultValue={20}
                                 value={apValue}
                                 min={500}
-                                max={60000}
+                                max={6000}
                                 marks={[
                                   { value: 500, label: "500" },
                                   {
-                                    value: 60000,
-                                    label: formatNumber("60000"),
+                                    value: 6000,
+                                    label: formatNumber("6000+"),
                                   },
                                 ]}
                                 step={1}
@@ -588,6 +592,13 @@ const CreateLegions: React.FC = () => {
                         >
                           {mintLoading ? (
                             <Spinner color="white" size={40} />
+                          ) : totalCP <
+                            dropItemList.filter((item) => item.w5b).length ? (
+                            getTranslation("createLegion") +
+                            " " +
+                            totalAP +
+                            " AP" +
+                            " (Not enough beasts)"
                           ) : (
                             getTranslation("createLegion") +
                             (totalAP < createlegions.main.minAvailableAP
@@ -597,6 +608,9 @@ const CreateLegions: React.FC = () => {
                         </CommonBtn>
                       </Grid>
                     </Grid>
+                  </Grid>
+                  <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+                    Fee to create your legion is {mintFee} $BLST
                   </Grid>
                   <Grid item xs={12} sx={{ p: 4 }}>
                     <Grid
