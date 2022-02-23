@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogContent, TextField, Popover } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -9,13 +9,14 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl, execute } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl, execute, getBloodstoneAmountToMintWarrior } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useMarketplace, useLegion, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import Image from '../../config/image.json';
+import { FaTimes } from "react-icons/fa";
 
 const useStyles = makeStyles({
 	root: {
@@ -60,6 +61,29 @@ const Warriors = () => {
 	const [mintLoading, setMintLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
 
+	const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
+		b1: {
+			amount: 0,
+			per: "0",
+		},
+		b5: {
+			amount: 0,
+			per: "0",
+		},
+		b10: {
+			amount: 0,
+			per: "0",
+		},
+		b20: {
+			amount: 0,
+			per: "0",
+		},
+		b100: {
+			amount: 0,
+			per: "0",
+		},
+	});
+
 	const classes = useStyles();
 	const warriorContract = useWarrior();
 	const legionContract = useLegion();
@@ -68,9 +92,109 @@ const Warriors = () => {
 	const web3 = useWeb3();
 	const dispatch = useDispatch();
 
+	//Popover for Summon Warrior
+	const [anchorElSummonWarrior, setAnchorElSummonWarrior] =
+		React.useState<HTMLElement | null>(null);
+	const handlePopoverOpenSummonWarrior = (
+		event: React.MouseEvent<HTMLElement>
+	) => {
+		setAnchorElSummonWarrior(event.currentTarget);
+	};
+	const handlePopoverCloseSummonWarrior = () => {
+		setAnchorElSummonWarrior(null);
+	};
+	const openSummonWarrior = Boolean(anchorElSummonWarrior);
+
+	const getBlstAmountToMintWarrior = async () => {
+		var BLST_amount_1 = 0;
+		var BLST_amount_5 = 0;
+		var BLST_amount_10 = 0;
+		var BLST_amount_20 = 0;
+		var BLST_amount_100 = 0;
+
+		var BLST_per_1 = "0";
+		var BLST_per_5 = "0";
+		var BLST_per_10 = "0";
+		var BLST_per_20 = "0";
+		var BLST_per_100 = "0";
+
+		try {
+			BLST_amount_1 = await getBloodstoneAmountToMintWarrior(
+				web3,
+				warriorContract,
+				1
+			);
+			BLST_amount_5 = await getBloodstoneAmountToMintWarrior(
+				web3,
+				warriorContract,
+				5
+			);
+			BLST_amount_10 = await getBloodstoneAmountToMintWarrior(
+				web3,
+				warriorContract,
+				10
+			);
+			BLST_amount_20 = await getBloodstoneAmountToMintWarrior(
+				web3,
+				warriorContract,
+				20
+			);
+			BLST_amount_100 = await getBloodstoneAmountToMintWarrior(
+				web3,
+				warriorContract,
+				100
+			);
+			BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
+			BLST_per_5 = (
+				(1 - BLST_amount_5 / (BLST_amount_1 * 5)) *
+				100
+			).toFixed(0);
+			BLST_per_10 = (
+				(1 - BLST_amount_10 / (BLST_amount_1 * 10)) *
+				100
+			).toFixed(0);
+			BLST_per_20 = (
+				(1 - BLST_amount_20 / (BLST_amount_1 * 20)) *
+				100
+			).toFixed(0);
+			BLST_per_100 = (
+				(1 - BLST_amount_100 / (BLST_amount_1 * 100)) *
+				100
+			).toFixed(0);
+			var amount_per = {
+				b1: {
+					amount: BLST_amount_1,
+					per: BLST_per_1,
+				},
+				b5: {
+					amount: BLST_amount_5,
+					per: BLST_per_5,
+				},
+				b10: {
+					amount: BLST_amount_10,
+					per: BLST_per_10,
+				},
+				b20: {
+					amount: BLST_amount_20,
+					per: BLST_per_20,
+				},
+				b100: {
+					amount: BLST_amount_100,
+					per: BLST_per_100,
+				},
+			};
+			setWarriorBlstAmountPer(amount_per);
+		} catch (error) {
+			console.log(error);
+		}
+
+		return BLST_amount_1;
+	};
+
 	React.useEffect(() => {
 		if (account) {
 			getBalance();
+			getBlstAmountToMintWarrior()
 		}
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
@@ -85,6 +209,7 @@ const Warriors = () => {
 	};
 
 	const handleMint = async (amount: Number) => {
+		handlePopoverCloseSummonWarrior()
 		setMintLoading(true);
 		setLoading(false);
 		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
@@ -216,32 +341,163 @@ const Warriors = () => {
 							{getTranslation('summonWarrior')}
 						</Typography>
 						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
-							<CommonBtn sx={{ fontWeight: 'bold' }}>
+							<CommonBtn
+								aria-describedby={"summon-warrior-id"}
+								onClick={handlePopoverOpenSummonWarrior}
+								sx={{ fontWeight: 'bold' }}
+							>
 								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
 									<HorizontalSplitIcon />
 								</IconButton>
 								{getTranslation('summonQuantity')}
 							</CommonBtn>
-							{
-								showMint &&
-								<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
-									<CommonBtn onClick={() => handleMint(1)}>
-										1
+							<Popover
+								id={"summon-warrior-id"}
+								open={openSummonWarrior}
+								anchorEl={anchorElSummonWarrior}
+								onClose={
+									handlePopoverCloseSummonWarrior
+								}
+								anchorOrigin={{
+									vertical: "center",
+									horizontal: "right",
+								}}
+								transformOrigin={{
+									vertical: "center",
+									horizontal: "left",
+								}}
+							>
+								<Box sx={{ display: "flex" }}>
+									<Box
+										sx={{
+											marginLeft: "auto",
+											cursor: "pointer",
+											marginRight: 1,
+											marginTop: 1,
+										}}
+									>
+										<FaTimes
+											onClick={
+												handlePopoverCloseSummonWarrior
+											}
+										/>
+									</Box>
+								</Box>
+								<DialogTitle>
+									{getTranslation(
+										"takeActionSummonWarriorQuantity"
+									)}
+								</DialogTitle>
+								<Box
+									sx={{
+										padding: 3,
+										display: "flex",
+										flexDirection: "column",
+									}}
+								>
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												1,
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										1 (
+										{warriorBlstAmountPer.b1?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(5)}>
-										5
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												5,
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										5 (
+										{"-" +
+											warriorBlstAmountPer.b5.per +
+											"%" +
+											" | " +
+											warriorBlstAmountPer.b5
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(10)}>
-										10
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												10,
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										10 (
+										{"-" +
+											warriorBlstAmountPer.b10.per +
+											"%" +
+											" | " +
+											warriorBlstAmountPer.b10
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(20)}>
-										20
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												20,
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										20 (
+										{"-" +
+											warriorBlstAmountPer.b20.per +
+											"%" +
+											" | " +
+											warriorBlstAmountPer.b20
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(100)}>
-										100
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												100,
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										100 (
+										{"-" +
+											warriorBlstAmountPer.b100
+												.per +
+											"%" +
+											" | " +
+											warriorBlstAmountPer.b100
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
 								</Box>
-							}
+							</Popover>
 						</Box>
 					</Box>
 				</Card>
