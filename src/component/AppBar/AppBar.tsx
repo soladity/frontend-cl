@@ -7,12 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import AssistantDirectionIcon from "@mui/icons-material/AssistantDirection";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
 import BadgeIcon from "@mui/icons-material/Badge";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import { Menu, MenuItem } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 
@@ -38,18 +35,12 @@ import {
     useLegion,
 } from "../../hooks/useContract";
 import { navConfig } from "../../config";
-import { injected } from "../../wallet";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
-import { AnyAaaaRecord } from "dns";
 import NavList from "../Nav/NavList";
 import { useSelector, useDispatch } from "react-redux";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { setReloadStatus } from "../../actions/contractActions";
-
-declare const window: any;
-
-const pages = ["Products", "Pricing", "Blog"];
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -63,27 +54,13 @@ const Transition = React.forwardRef(function Transition(
 const AppBarComponent = () => {
     const dispatch = useDispatch();
 
-    const { activate, account, deactivate, connector } = useWeb3React();
+    const { account } = useWeb3React();
 
     const { reloadContractStatus } = useSelector(
         (state: any) => state.contractReducer
     );
 
-    async function connect() {
-        try {
-            await activate(injected);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [isActive, setIsActive] = React.useState(false);
     const [balance, setBalance] = React.useState("0");
-    const [showAnimation, setShowAnimation] = React.useState<string | null>(
-        "0"
-    );
     const [showMenu, setShowMenu] = React.useState<boolean>(false);
     const [unClaimedUSD, setUnclaimedUSD] = React.useState(0);
     const [taxLeftDays, setTaxLeftDays] = React.useState("0");
@@ -97,15 +74,9 @@ const AppBarComponent = () => {
     const web3 = useWeb3();
 
     React.useEffect(() => {
-        setIsActive(window.ethereum.selectedAddress);
         if (account) {
             getBalance();
         }
-        setShowAnimation(
-            localStorage.getItem("showAnimation")
-                ? localStorage.getItem("showAnimation")
-                : "0"
-        );
     }, [reloadContractStatus]);
 
     const getBalance = async () => {
@@ -120,30 +91,6 @@ const AppBarComponent = () => {
         setUnclaimedUSD(parseFloat(unClaimedUSD) / Math.pow(10, 18));
         const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
         setTaxLeftDays(taxLeftDays);
-    };
-
-    const handleOpenNavMenu = (event: any) => {
-        setAnchorElNav(event.currentTarget);
-    };
-
-    const handleOpenUserMenu = (event: any) => {
-        setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
-
-    const showProfile = () => {
-        // console.log(account);
-    };
-
-    const logout = () => {
-        deactivate();
     };
 
     const toggleDrawer = (open: boolean) => (event: any) => {
@@ -167,7 +114,7 @@ const AppBarComponent = () => {
     const handleClaimReward = async () => {
         setLoading(true);
         try {
-            const response = await claimReward(web3, legionContract, account);
+            await claimReward(web3, legionContract, account);
             dispatch(
                 setReloadStatus({
                     reloadContractStatus: new Date(),
@@ -271,6 +218,7 @@ const AppBarComponent = () => {
                                 <img
                                     src="/assets/images/bloodstone.png"
                                     style={{ height: "55px" }}
+																		alt='bloodstone'
                                 />
                                 <Box sx={{ ml: { xs: 1, md: 2 } }}>
                                     <Box
@@ -369,13 +317,13 @@ const AppBarComponent = () => {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        {unClaimedUSD == 0 ? (
+                        {unClaimedUSD === 0 ? (
                             <>
                                 There is no $BLST to claim.
                                 <br />
                                 Please hunt monsters to get $BLST.
                             </>
-                        ) : taxLeftDays == "0" ? (
+                        ) : taxLeftDays === "0" ? (
                             <>
                                 You are about to claim {unClaimedUSD.toFixed(2)}{" "}
                                 $BLST tax-free.
@@ -452,11 +400,11 @@ const AppBarComponent = () => {
                     </Button>
                     <Button
                         onClick={handleClaimReward}
-                        disabled={unClaimedUSD == 0 || loading === true}
+                        disabled={unClaimedUSD === 0 || loading === true}
                         variant="outlined"
                         sx={{ fontWeight: "bold" }}
                     >
-                        {taxLeftDays == "0"
+                        {taxLeftDays === "0"
                             ? "Claim tax-free"
                             : "Claim and pay tax"}
                     </Button>

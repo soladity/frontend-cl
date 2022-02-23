@@ -40,6 +40,7 @@ const DraggableCard: React.FC<{
               strength={item["strength"]}
               id={item["id"]}
               handleOpenSupply={Function}
+              handleExecute={Function}
             />
           )}
           {w5b && (
@@ -50,6 +51,7 @@ const DraggableCard: React.FC<{
               strength={item["strength"]}
               id={item["id"]}
               handleOpenSupply={Function}
+              handleExecute={Function}
             />
           )}
         </Grid>

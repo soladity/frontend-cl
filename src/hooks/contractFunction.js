@@ -380,3 +380,10 @@ export const getMarketplaceBloodstoneAllowance = async (
     .call();
   return web3.utils.fromWei(response, "ether").toString();
 };
+
+export const execute = async (web3, contract, account, type, id) => {
+  const response = await contract.methods
+    .execute(id, type)
+    .send({ from: account });
+  return response;
+};

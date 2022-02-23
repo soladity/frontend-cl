@@ -480,10 +480,10 @@ const Legions = () => {
 						{legions
 							.filter(
 								(item: any) =>
-									apValue[0] < parseInt(item.attackPower) &&
+									apValue[0] <= parseInt(item.attackPower) &&
 									(apValue[1] === 250000
 										? true
-										: apValue[1] > parseInt(item.attackPower))
+										: apValue[1] >= parseInt(item.attackPower))
 							)
 							.filter((item: any) =>
 								hideWeak === true ? item.attackPower >= 2000 : true
@@ -602,23 +602,29 @@ const Legions = () => {
 					</ListItem>
 				</List>
 			</Dialog>
-			<Dialog onClose={handleShoppingClose} open={openShopping}>
-				<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
+			<Dialog onClose={handleSupplyClose} open={openSupply}>
+				<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
 				<DialogContent>
 					<TextField
 						autoFocus
 						margin="dense"
 						id="price"
-						label="Price"
+						label="Price in $BLST"
 						type="number"
 						fullWidth
 						variant="standard"
 						value={price}
 						onChange={handlePrice}
 					/>
+					<Typography variant='subtitle1'>
+						(= XXX USD)
+					</Typography>
+					<Typography variant='subtitle1'>
+						{getTranslation('sellContent')}
+					</Typography>
 				</DialogContent>
 				<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-					{getTranslation('confirm')}
+					{getTranslation('sell')}
 				</CommonBtn>
 			</Dialog>
 		</Box>

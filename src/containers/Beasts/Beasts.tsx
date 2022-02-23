@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken } from '../../hooks/contractFunction';
-import { useBloodstone, useBeast, useMarketplace, useWeb3 } from '../../hooks/useContract';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken, execute } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useMarketplace, useLegion, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
@@ -62,6 +62,7 @@ const Beasts = () => {
 
 	const classes = useStyles();
 	const beastContract = useBeast();
+	const legionContract = useLegion();
 	const marketplaceContract = useMarketplace();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
@@ -159,6 +160,17 @@ const Beasts = () => {
 		setMaxWarrior(maxWarrior - capacity);
 		setBalance(balance - 1);
 		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
+		setActionLoading(false);
+	}
+
+	const handleExecute = async (id: number) => {
+		setActionLoading(true);
+		try {
+			await execute(web3, legionContract, account, true, id);
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+		} catch (e) {
+			console.log(e);
+		}
 		setActionLoading(false);
 	}
 
@@ -271,7 +283,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} />
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
 					}
@@ -341,22 +353,28 @@ const Beasts = () => {
 				</>
 			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
-			<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
+			<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
 			<DialogContent>
 				<TextField
 					autoFocus
 					margin="dense"
 					id="price"
-					label="Price"
+					label="Price in $BLST"
 					type="number"
 					fullWidth
 					variant="standard"
 					value={price}
 					onChange={handlePrice}
 				/>
+				<Typography variant='subtitle1'>
+					(= XXX USD)
+				</Typography>
+				<Typography variant='subtitle1'>
+					{getTranslation('sellContent')}
+				</Typography>
 			</DialogContent>
 			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-				{getTranslation('confirm')}
+				{getTranslation('sell')}
 			</CommonBtn>
 		</Dialog>
 	</Box>
