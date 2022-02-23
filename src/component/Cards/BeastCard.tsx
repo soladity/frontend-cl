@@ -1,9 +1,9 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Skeleton from '@mui/material/Skeleton';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Skeleton from "@mui/material/Skeleton";
 
 type CardProps = {
 	id: string;
@@ -25,15 +25,15 @@ export default function BeastCard(props: CardProps) {
 		handleExecute
 	} = props;
 
-	const [loaded, setLoaded] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
 
-	const handleImageLoaded = () => {
-		setLoaded(true);
-	}
+  const handleImageLoaded = () => {
+    setLoaded(true);
+  };
 
-	const open = (id: string) => {
-		handleOpenSupply(parseInt(id));
-	}
+  const open = (id: string) => {
+    handleOpenSupply(parseInt(id));
+  };
 
 	const execute = (id: string) => {
 		handleExecute(parseInt(id));

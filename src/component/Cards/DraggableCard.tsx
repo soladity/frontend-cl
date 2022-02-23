@@ -6,8 +6,8 @@ import {
   DraggableStateSnapshot,
 } from "react-beautiful-dnd";
 
-import BeastCard from "../../component/Cards/BeastCard";
-import WarriorCard from "../../component/Cards/WarriorCard";
+import BeastCard from "./BeastCard";
+import WarriorCard from "./WarriorCard";
 
 const DraggableCard: React.FC<{
   w5b: boolean;
@@ -25,7 +25,9 @@ const DraggableCard: React.FC<{
       ) => (
         <Grid
           item
-          xs={3}
+          sm={12}
+          md={6}
+          lg={3}
           ref={providedDraggable.innerRef}
           {...providedDraggable.draggableProps}
           {...providedDraggable.dragHandleProps}
