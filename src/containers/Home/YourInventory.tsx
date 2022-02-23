@@ -280,7 +280,7 @@ const YourInventory = () => {
                     sx={{ fontWeight: "bold" }}
                 >
                     {getTranslation("BLSTInYourWallet")}:{" "}
-                    {formatNumber(parseFloat(BLSTBalance).toFixed(2))} = xx USD
+                    {formatNumber(parseFloat(BLSTBalance).toFixed(2))}( = xx USD )
                 </Typography>
                 <Typography
                     className="legionFontColor"
