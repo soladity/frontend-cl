@@ -132,9 +132,11 @@ const YourAchievements = () => {
     const getInvitationLink = () => {
         Axios.get('http://www.cryptolegions.link/api/get-roles/warrior_master/12', {
             headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET",
-                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+                "Access-Control-Allow-Origin": "origin-list",
+                "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
         }).then(res => {
             console.log(res)
