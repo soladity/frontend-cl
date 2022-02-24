@@ -220,12 +220,12 @@ const Warriors = () => {
 				await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await mintWarrior(web3, warriorContract, account, amount);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}));
 		getBalance();
 		setMintLoading(false);
 	}
@@ -312,6 +312,9 @@ const Warriors = () => {
 		try {
 			await execute(web3, legionContract, account, false, id);
 			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}

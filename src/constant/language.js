@@ -1597,7 +1597,7 @@ export const translations = {
     ph: "Ibenta",
   },
   "noBeastFilter": {
-    en: "No beasts with this capacity. Summon some more! + Summon button",
+    en: "No beasts with this capacity. Summon some more!",
     es: "",
     cn: "",
     pt: "",
@@ -1609,7 +1609,7 @@ export const translations = {
     ph: "",
   },
   "noWarriorFilter": {
-    en: "No warriors with this level/AP. Summon some more! + Summon button",
+    en: "No warriors with this level/AP. Summon some more!",
     es: "",
     cn: "",
     pt: "",

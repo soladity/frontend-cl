@@ -33,3 +33,7 @@
 .non-style {
   color: inherit;
   text-decoration: none; }
+
+.action{
+  color: #f66810;
+}
