@@ -413,14 +413,14 @@ const Monsters = () => {
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </GreenBGMenuItem>
                                             ) : legion.status === "2" ? (
                                                 <OrgBGMenuItem
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </OrgBGMenuItem>
                                             ) : (
                                                 <RedBGMenuItem
