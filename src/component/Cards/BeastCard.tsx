@@ -14,11 +14,13 @@ type CardProps = {
   type: string;
   capacity: string;
   strength?: string;
+  isMobile?: boolean;
   handleOpenSupply: Function;
 };
 
 export default function BeastCard(props: CardProps) {
-  const { id, image, type, capacity, strength, handleOpenSupply } = props;
+  const { id, image, type, capacity, strength, handleOpenSupply, isMobile } =
+    props;
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -76,48 +78,52 @@ export default function BeastCard(props: CardProps) {
           {capacity}
         </Typography>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          position: "absolute",
-          bottom: "15px",
-          right: "20px",
-          cursor: "pointer",
-        }}
-        onClick={() => open(id)}
-      >
-        <img
-          src="/assets/images/shopping.png"
-          style={{ height: "20px" }}
-          alt="Shopping"
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          position: "absolute",
-          bottom: "40px",
-          left: "20px",
-          cursor: "pointer",
-        }}
-      >
-        <img
-          src="/assets/images/execute.png"
-          style={{ height: "20px" }}
-          alt="Execute"
-        />
-      </Box>
-      <Typography
-        variant="subtitle2"
-        sx={{
-          position: "absolute",
-          bottom: "15px",
-          left: "20px",
-          color: "darkgrey",
-        }}
-      >
-        #{id}
-      </Typography>
+      {isMobile === false && (
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              bottom: "15px",
+              right: "20px",
+              cursor: "pointer",
+            }}
+            onClick={() => open(id)}
+          >
+            <img
+              src="/assets/images/shopping.png"
+              style={{ height: "20px" }}
+              alt="Shopping"
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              bottom: "40px",
+              left: "20px",
+              cursor: "pointer",
+            }}
+          >
+            <img
+              src="/assets/images/execute.png"
+              style={{ height: "20px" }}
+              alt="Execute"
+            />
+          </Box>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              position: "absolute",
+              bottom: "15px",
+              left: "20px",
+              color: "darkgrey",
+            }}
+          >
+            #{id}
+          </Typography>
+        </>
+      )}
     </Card>
   );
 }
