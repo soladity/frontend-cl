@@ -141,7 +141,7 @@ const YourAchievements = () => {
     // }
 
     const getInvitationLink = () => {
-        Axios.get('http://www.cryptolegions.link/api/get-roles/warrior_master/12').then(res => {
+        Axios.get('http://www.cryptolegions.link/api/get-roles/warrior_master/12/').then(res => {
             console.log(res)
         }).catch(err => {
             console.log(err)
