@@ -582,6 +582,20 @@ const Warriors = () => {
 							</Grid>
 						))
 					}
+					{
+						(warriors.length > 0 && warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] <= parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))).length === 0) &&
+						<Grid item xs={12}>
+							<Card>
+								<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+									<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+										<Typography variant='h6'>
+											{getTranslation('noWarriorFilter')}
+										</Typography>
+									</Box>
+								</Box>
+							</Card>
+						</Grid>
+					}
 				</Grid>
 			</React.Fragment>
 		}

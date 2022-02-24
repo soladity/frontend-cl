@@ -1595,6 +1595,30 @@ export const translations = {
     de: "Verkopen",
     pl: "Sprzedać",
     ph: "Ibenta",
+  },
+  "noBeastFilter": {
+    en: "No beasts with this capacity. Summon some more! + Summon button",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
+  "noWarriorFilter": {
+    en: "No warriors with this level/AP. Summon some more! + Summon button",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
   }
 }
 

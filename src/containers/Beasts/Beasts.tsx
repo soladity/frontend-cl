@@ -545,6 +545,20 @@ const Beasts = () => {
 							</Grid>
 						))
 					}
+					{
+						(beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).length === 0) &&
+						<Grid item xs={12}>
+							<Card>
+								<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+									<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+										<Typography variant='h6'>
+											{getTranslation('noBeastFilter')}
+										</Typography>
+									</Box>
+								</Box>
+							</Card>
+						</Grid>
+					}
 				</Grid>
 			</React.Fragment>
 		}
