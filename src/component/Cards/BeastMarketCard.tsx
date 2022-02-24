@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 
 import CommonBtn from '../../component/Buttons/CommonBtn';
-import { formatNumber } from '../../utils/common';
 
 type CardProps = {
 	id: string;
@@ -26,7 +25,6 @@ export default function BeastMarketCard(props: CardProps) {
 		image,
 		type,
 		capacity,
-		strength,
 		owner,
 		price,
 		handleCancel,
@@ -49,7 +47,7 @@ export default function BeastMarketCard(props: CardProps) {
 
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-			<Card sx={{ position: 'relative' }}>
+			<Card sx={{ position: 'relative', width: '100%' }}>
 				<CardMedia
 					component="img"
 					image={image}

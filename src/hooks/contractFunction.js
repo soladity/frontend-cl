@@ -51,6 +51,15 @@ export const mintBeast = async (web3, contract, account, amount) => {
   return response;
 };
 
+export const getBloodstoneAmountToMintBeast = async (
+  web3,
+  contract,
+  amount
+) => {
+  const response = await contract.methods.getBloodstoneAmount(amount).call();
+  return response;
+};
+
 export const getBeastBalance = async (web3, contract, account) => {
   const response = await contract.methods.balanceOf(account).call();
   return response;
@@ -100,6 +109,15 @@ export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
 
 export const mintWarrior = async (web3, contract, account, amount) => {
   const response = await contract.methods.mint(amount).send({ from: account });
+  return response;
+};
+
+export const getBloodstoneAmountToMintWarrior = async (
+  web3,
+  contract,
+  amount
+) => {
+  const response = await contract.methods.getBloodstoneAmount(amount).call();
   return response;
 };
 
@@ -379,4 +397,16 @@ export const getMarketplaceBloodstoneAllowance = async (
     .allowance(account, getMarketplaceAddress())
     .call();
   return web3.utils.fromWei(response, "ether").toString();
+};
+
+export const execute = async (web3, contract, account, type, id) => {
+  const response = await contract.methods
+    .execute(id, type)
+    .send({ from: account });
+  return response;
+};
+
+export const getFee = async (contract, index) => {
+  const response = await contract.methods.getFee(index).call();
+  return response;
 };

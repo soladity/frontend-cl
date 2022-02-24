@@ -92,7 +92,7 @@ const imageUrls = {
         {
             name: "Great Ogre",
             gif: "QmU5yjhoUZXBZq3zrqk97Bg4G3zvqtdPywm8FXWy2PoRne",
-            jpg: "QmPJQ4wqHm68nURYJRPopug6ZyEgNroRp2dAtgo3h8FGKG",
+            jpg: "QmVcka2zcxGteZaFC8HLDHyAxHRdCThJoW2QeanRcPoyfY",
         },
         {
             name: "Werewolf",

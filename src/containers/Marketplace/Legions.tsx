@@ -118,10 +118,10 @@ const Legions = () => {
 		setActionLoading(true);
 		try {
 			await cancelMarketplace(web3, marketplaceContract, account, '3', id);
+			setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e) {
 			console.log(e);
 		}
-		setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -133,13 +133,13 @@ const Legions = () => {
 				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await buyToken(web3, marketplaceContract, account, '3', id);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}))
+			setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}))
-		setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -298,11 +298,11 @@ const Legions = () => {
 					{
 						legions.length > 0 && legions.filter(
 							(item: any) =>
-								apValue[0] < parseInt(item.attackPower) &&
+								apValue[0] <= parseInt(item.attackPower) &&
 								(apValue[1] === 250000
 									? true
-									: apValue[1] > parseInt(item.attackPower))
-						).filter((item: any) => huntsValue[0] < parseInt(item.supplies) && (huntsValue[1] === 28 ? true : huntsValue[1] > parseInt(item.supplies))).filter((item: any) => onlyMyLegion === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
+									: apValue[1] >= parseInt(item.attackPower))
+						).filter((item: any) => huntsValue[0] <= parseInt(item.supplies) && (huntsValue[1] === 28 ? true : huntsValue[1] >= parseInt(item.supplies))).filter((item: any) => onlyMyLegion === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
 								<LegionMarketCard image={baseUrl + item['image']} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} id={item['id']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
 							</Grid>

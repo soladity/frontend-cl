@@ -43,6 +43,7 @@ const DraggableCard: React.FC<{
               id={item["id"]}
               handleOpenSupply={Function}
               isMobile={isSmallThanSM}
+              handleExecute={Function}
             />
           )}
           {w5b && (
@@ -54,6 +55,7 @@ const DraggableCard: React.FC<{
               id={item["id"]}
               handleOpenSupply={Function}
               isMobile={isSmallThanSM}
+              handleExecute={Function}
             />
           )}
         </Grid>

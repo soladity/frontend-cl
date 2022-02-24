@@ -1,10 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 
@@ -16,11 +13,20 @@ type CardProps = {
   strength?: string;
   isMobile?: boolean;
   handleOpenSupply: Function;
+  handleExecute: Function;
 };
 
 export default function BeastCard(props: CardProps) {
-  const { id, image, type, capacity, strength, handleOpenSupply, isMobile } =
-    props;
+  const {
+    id,
+    image,
+    type,
+    capacity,
+    strength,
+    handleOpenSupply,
+    handleExecute,
+    isMobile,
+  } = props;
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -30,6 +36,10 @@ export default function BeastCard(props: CardProps) {
 
   const open = (id: string) => {
     handleOpenSupply(parseInt(id));
+  };
+
+  const execute = (id: string) => {
+    handleExecute(parseInt(id));
   };
 
   return (
@@ -104,6 +114,7 @@ export default function BeastCard(props: CardProps) {
               left: "20px",
               cursor: "pointer",
             }}
+            onClick={() => execute(id)}
           >
             <img
               src="/assets/images/execute.png"

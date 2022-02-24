@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, IconButton, FormLabel, FormControl, Dialog, DialogTitle, DialogContent, TextField, Popover } from '@mui/material';
 import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -9,12 +9,13 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken } from '../../hooks/contractFunction';
-import { useBloodstone, useBeast, useMarketplace, useWeb3 } from '../../hooks/useContract';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken, execute, getBloodstoneAmountToMintBeast, getFee } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useMarketplace, useLegion, useFeeHandler, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import Image from '../../config/image.json';
+import { FaTimes } from "react-icons/fa";
 
 const useStyles = makeStyles({
 	root: {
@@ -55,21 +56,148 @@ const Beasts = () => {
 	const [selectedBeast, setSelectedBeast] = React.useState(0);
 	const [price, setPrice] = React.useState(0);
 	const [filter, setFilter] = React.useState('all');
+	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [mintLoading, setMintLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
 
+	const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
+		b1: {
+			amount: 0,
+			per: "0",
+		},
+		b5: {
+			amount: 0,
+			per: "0",
+		},
+		b10: {
+			amount: 0,
+			per: "0",
+		},
+		b20: {
+			amount: 0,
+			per: "0",
+		},
+		b100: {
+			amount: 0,
+			per: "0",
+		},
+	});
+
+
 	const classes = useStyles();
 	const beastContract = useBeast();
+	const legionContract = useLegion();
 	const marketplaceContract = useMarketplace();
+	const feeHandlerContract = useFeeHandler();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 	const dispatch = useDispatch();
 
+	//Popover for Summon Beast
+	const [anchorElSummonBeast, setAnchorElSummonBeast] =
+		React.useState<HTMLElement | null>(null);
+	const handlePopoverOpenSummonBeast = (
+		event: React.MouseEvent<HTMLElement>
+	) => {
+		setAnchorElSummonBeast(event.currentTarget);
+	};
+	const handlePopoverCloseSummonBeast = () => {
+		setAnchorElSummonBeast(null);
+	};
+	const openSummonBeast = Boolean(anchorElSummonBeast);
+
+	const getBlstAmountToMintBeast = async () => {
+		var BLST_amount_1 = 0;
+		var BLST_amount_5 = 0;
+		var BLST_amount_10 = 0;
+		var BLST_amount_20 = 0;
+		var BLST_amount_100 = 0;
+
+		var BLST_per_1 = "0";
+		var BLST_per_5 = "0";
+		var BLST_per_10 = "0";
+		var BLST_per_20 = "0";
+		var BLST_per_100 = "0";
+
+		try {
+			BLST_amount_1 = await getBloodstoneAmountToMintBeast(
+				web3,
+				beastContract,
+				1
+			);
+			BLST_amount_5 = await getBloodstoneAmountToMintBeast(
+				web3,
+				beastContract,
+				5
+			);
+			BLST_amount_10 = await getBloodstoneAmountToMintBeast(
+				web3,
+				beastContract,
+				10
+			);
+			BLST_amount_20 = await getBloodstoneAmountToMintBeast(
+				web3,
+				beastContract,
+				20
+			);
+			BLST_amount_100 = await getBloodstoneAmountToMintBeast(
+				web3,
+				beastContract,
+				100
+			);
+			BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
+			BLST_per_5 = (
+				(1 - BLST_amount_5 / (BLST_amount_1 * 5)) *
+				100
+			).toFixed(0);
+			BLST_per_10 = (
+				(1 - BLST_amount_10 / (BLST_amount_1 * 10)) *
+				100
+			).toFixed(0);
+			BLST_per_20 = (
+				(1 - BLST_amount_20 / (BLST_amount_1 * 20)) *
+				100
+			).toFixed(0);
+			BLST_per_100 = (
+				(1 - BLST_amount_100 / (BLST_amount_1 * 100)) *
+				100
+			).toFixed(0);
+			var amount_per = {
+				b1: {
+					amount: BLST_amount_1,
+					per: BLST_per_1,
+				},
+				b5: {
+					amount: BLST_amount_5,
+					per: BLST_per_5,
+				},
+				b10: {
+					amount: BLST_amount_10,
+					per: BLST_per_10,
+				},
+				b20: {
+					amount: BLST_amount_20,
+					per: BLST_per_20,
+				},
+				b100: {
+					amount: BLST_amount_100,
+					per: BLST_per_100,
+				},
+			};
+			setBeastBlstAmountPer(amount_per);
+		} catch (error) {
+			console.log(error);
+		}
+
+		return BLST_amount_1;
+	};
+
 	React.useEffect(() => {
 		if (account) {
 			getBalance();
+			getBlstAmountToMintBeast();
 		}
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
@@ -84,6 +212,7 @@ const Beasts = () => {
 	};
 
 	const handleMint = async (amount: Number) => {
+		handlePopoverCloseSummonBeast();
 		setMintLoading(true);
 		setLoading(false);
 		const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
@@ -92,7 +221,7 @@ const Beasts = () => {
 				await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await mintBeast(web3, beastContract, account, amount);
-		} catch (e){
+		} catch (e) {
 			console.log(e);
 		}
 		dispatch(setReloadStatus({
@@ -104,6 +233,7 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
+		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
 		setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
@@ -147,18 +277,29 @@ const Beasts = () => {
 		try {
 			await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
 			await sellToken(web3, marketplaceContract, account, '1', selectedBeast, price);
+			let capacity = 0;
+			let temp = beasts;
+			for (let i = 0; i < temp.length; i++) {
+				if (parseInt(temp[i]['id']) === selectedBeast)
+					capacity = parseInt(temp[i]['capacity']);
+			}
+			setMaxWarrior(maxWarrior - capacity);
+			setBalance(balance - 1);
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
 		} catch (e) {
 			console.log(e);
 		}
-		let capacity = 0;
-		let temp = beasts;
-		for (let i = 0; i < temp.length; i++) {
-			if (parseInt(temp[i]['id']) === selectedBeast)
-				capacity = parseInt(temp[i]['capacity']);
+		setActionLoading(false);
+	}
+
+	const handleExecute = async (id: number) => {
+		setActionLoading(true);
+		try {
+			await execute(web3, legionContract, account, true, id);
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+		} catch (e) {
+			console.log(e);
 		}
-		setMaxWarrior(maxWarrior - capacity);
-		setBalance(balance - 1);
-		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
 		setActionLoading(false);
 	}
 
@@ -188,32 +329,161 @@ const Beasts = () => {
 							{getTranslation('summonBeast')}
 						</Typography>
 						<Box onMouseOver={handleOpenMint} onMouseLeave={handleCloseMint} sx={{ pt: 1 }}>
-							<CommonBtn sx={{ fontWeight: 'bold' }}>
+							<CommonBtn
+								sx={{ fontWeight: 'bold' }}
+								onClick={handlePopoverOpenSummonBeast}
+								aria-describedby={"summon-beast-id"}
+							>
 								<IconButton aria-label="claim" component="span" sx={{ p: 0, mr: 1, color: 'black' }}>
 									<HorizontalSplitIcon />
 								</IconButton>
 								{getTranslation('summonQuantity')}
 							</CommonBtn>
-							{
-								showMint &&
-								<Box className={classes.root} sx={{ pt: 2, '& button': { fontWeight: 'bold', mb: 1 } }}>
-									<CommonBtn onClick={() => handleMint(1)}>
-										1
+							<Popover
+								id={"summon-beast-id"}
+								open={openSummonBeast}
+								anchorEl={anchorElSummonBeast}
+								onClose={handlePopoverCloseSummonBeast}
+								anchorOrigin={{
+									vertical: "center",
+									horizontal: "right",
+								}}
+								transformOrigin={{
+									vertical: "center",
+									horizontal: "left",
+								}}
+							>
+								<Box sx={{ display: "flex" }}>
+									<Box
+										sx={{
+											marginLeft: "auto",
+											cursor: "pointer",
+											marginRight: 1,
+											marginTop: 1,
+										}}
+									>
+										<FaTimes
+											onClick={
+												handlePopoverCloseSummonBeast
+											}
+										/>
+									</Box>
+								</Box>
+								<DialogTitle>
+									{getTranslation(
+										"takeActionSummonBeastQuantity"
+									)}
+								</DialogTitle>
+								<Box
+									sx={{
+										padding: 3,
+										display: "flex",
+										flexDirection: "column",
+									}}
+								>
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												1
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										1 (
+										{beastBlstAmountPer.b1?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(5)}>
-										5
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												5
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										5 (
+										{"-" +
+											beastBlstAmountPer.b5.per +
+											"%" +
+											" | " +
+											beastBlstAmountPer.b5
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(10)}>
-										10
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												10
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										10 (
+										{"-" +
+											beastBlstAmountPer.b10.per +
+											"%" +
+											" | " +
+											beastBlstAmountPer.b10
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(20)}>
-										20
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												20
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										20 (
+										{"-" +
+											beastBlstAmountPer.b20.per +
+											"%" +
+											" | " +
+											beastBlstAmountPer.b20
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
-									<CommonBtn onClick={() => handleMint(100)}>
-										100
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												100
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										100 (
+										{"-" +
+											beastBlstAmountPer.b100
+												.per +
+											"%" +
+											" | " +
+											beastBlstAmountPer.b100
+												?.amount}{" "}
+										$BLST)
 									</CommonBtn>
 								</Box>
-							}
+							</Popover>
 						</Box>
 					</Box>
 				</Card>
@@ -271,9 +541,23 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} />
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
+					}
+					{
+						(beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).length === 0) &&
+						<Grid item xs={12}>
+							<Card>
+								<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+									<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+										<Typography variant='h6'>
+											{getTranslation('noBeastFilter')}
+										</Typography>
+									</Box>
+								</Box>
+							</Card>
+						</Grid>
 					}
 				</Grid>
 			</React.Fragment>
@@ -341,22 +625,28 @@ const Beasts = () => {
 				</>
 			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
-			<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
+			<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
 			<DialogContent>
 				<TextField
 					autoFocus
 					margin="dense"
 					id="price"
-					label="Price"
+					label="Price in $BLST"
 					type="number"
 					fullWidth
 					variant="standard"
 					value={price}
 					onChange={handlePrice}
 				/>
+				<Typography variant='subtitle1'>
+					(= XXX USD)
+				</Typography>
+				<Typography variant='subtitle1'>
+					If sold, you will pay {marketplaceTax}% marketplace tax.
+				</Typography>
 			</DialogContent>
 			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-				{getTranslation('confirm')}
+				{getTranslation('sell')}
 			</CommonBtn>
 		</Dialog>
 	</Box>

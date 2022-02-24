@@ -15,11 +15,20 @@ type CardProps = {
   strength?: string;
   isMobile?: boolean;
   handleOpenSupply: Function;
+  handleExecute: Function;
 };
 
 export default function WarriorCard(props: CardProps) {
-  const { id, image, type, power, strength, isMobile, handleOpenSupply } =
-    props;
+  const {
+    id,
+    image,
+    type,
+    power,
+    strength,
+    isMobile,
+    handleOpenSupply,
+    handleExecute,
+  } = props;
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -41,6 +50,10 @@ export default function WarriorCard(props: CardProps) {
 
   const open = (id: string) => {
     handleOpenSupply(parseInt(id));
+  };
+
+  const execute = (id: string) => {
+    handleExecute(parseInt(id));
   };
 
   return (
@@ -134,6 +147,7 @@ export default function WarriorCard(props: CardProps) {
               left: "20px",
               cursor: "pointer",
             }}
+            onClick={() => execute(id)}
           >
             <img
               src="/assets/images/execute.png"
