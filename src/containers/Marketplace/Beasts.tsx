@@ -97,10 +97,10 @@ const Beasts = () => {
 		setActionLoading(true);
 		try {
 			await cancelMarketplace(web3, marketplaceContract, account, '1', id);
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e){
 			console.log(e);
 		}
-		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -112,13 +112,13 @@ const Beasts = () => {
 				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await buyToken(web3, marketplaceContract, account, '1', id);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}))
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e){
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}))
-		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 

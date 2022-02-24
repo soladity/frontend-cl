@@ -115,10 +115,10 @@ const Warriors = () => {
 		setActionLoading(true);
 		try {
 			await cancelMarketplace(web3, marketplaceContract, account, '2', id);
+			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e){
 			console.log(e);
 		}
-		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -130,13 +130,13 @@ const Warriors = () => {
 				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await buyToken(web3, marketplaceContract, account, '2', id);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}))
+			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e){
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}))
-		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 

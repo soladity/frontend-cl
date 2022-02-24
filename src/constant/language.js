@@ -1595,18 +1595,6 @@ export const translations = {
     de: "Verkopen",
     pl: "Sprzedać",
     ph: "Ibenta",
-  },
-  "sellContent": {
-    en: "If sold, you will pay 15% marketplace tax.",
-    es: "Si se vende, pagará un impuesto de mercado del 15 %.",
-    cn: "如果出售，您将支付 15% 的市场税.",
-    pt: "Se vendido, você pagará 15% de imposto de mercado.",
-    tr: "Satılırsa, %15 pazar vergisi ödersiniz.",
-    ru: "В случае продажи вы заплатите 15% рыночного налога.",
-    fr: "En cas de vente, vous paierez une taxe de marché de 15 %.",
-    de: "Bij verkoop betaal je 15% marktplaatsbelasting.",
-    pl: "W przypadku sprzedaży zapłacisz 15% podatku od targowiska.",
-    ph: "Kung naibenta, magbabayad ka ng 15% marketplace tax.",
-  },
+  }
 }
 

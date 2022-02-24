@@ -30,6 +30,7 @@ import {
 	useWarrior,
 	useLegion,
 	useMarketplace,
+	useFeeHandler,
 	useWeb3,
 } from "../../hooks/useContract";
 import {
@@ -42,7 +43,8 @@ import {
 	getLegionImage,
 	getHuntStatus,
 	setMarketplaceApprove,
-	sellToken
+	sellToken,
+	getFee
 } from "../../hooks/contractFunction";
 import { meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
@@ -92,6 +94,7 @@ const Legions = () => {
 	const [selectedLegion, setSelectedLegion] = React.useState(0);
 	const [openShopping, setOpenShopping] = React.useState(false);
 	const [price, setPrice] = React.useState(0);
+	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
 	const [loading, setLoading] = React.useState(false);
 	const [supplyLoading, setSupplyLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
@@ -102,6 +105,7 @@ const Legions = () => {
 	const beastContract = useBeast();
 	const warriorContract = useWarrior();
 	const marketplaceContract = useMarketplace();
+	const feeHandlerContract = useFeeHandler();
 	const web3 = useWeb3();
 
 	React.useEffect(() => {
@@ -112,6 +116,7 @@ const Legions = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
+		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
 		setBeastBalance(await getBeastBalance(web3, beastContract, account));
 		setWarriorBalance(await getWarriorBalance(web3, warriorContract, account));
@@ -213,17 +218,17 @@ const Legions = () => {
 		try {
 			await setMarketplaceApprove(web3, legionContract, account, selectedLegion);
 			await sellToken(web3, marketplaceContract, account, '3', selectedLegion, price);
+			let power = 0;
+			let temp = legions;
+			for (let i = 0; i < temp.length; i++) {
+				if (parseInt(temp[i]['id']) === selectedLegion)
+					power = temp[i]['attackPower'];
+			}
+			setTotalPower(totalPower - power);
+			setLegions(legions.filter((item: any) => parseInt(item.id) !== selectedLegion));
 		} catch (e) {
 			console.log(e);
 		}
-		let power = 0;
-		let temp = legions;
-		for (let i = 0; i < temp.length; i++) {
-			if (parseInt(temp[i]['id']) === selectedLegion)
-				power = temp[i]['attackPower'];
-		}
-		setTotalPower(totalPower - power);
-		setLegions(legions.filter((item: any) => parseInt(item.id) !== selectedLegion));
 		setActionLoading(false);
 	}
 
@@ -602,7 +607,7 @@ const Legions = () => {
 					</ListItem>
 				</List>
 			</Dialog>
-			<Dialog onClose={handleSupplyClose} open={openSupply}>
+			<Dialog onClose={handleShoppingClose} open={openShopping}>
 				<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
 				<DialogContent>
 					<TextField
@@ -620,7 +625,7 @@ const Legions = () => {
 						(= XXX USD)
 					</Typography>
 					<Typography variant='subtitle1'>
-						{getTranslation('sellContent')}
+					If sold, you will pay {marketplaceTax}% marketplace tax.
 					</Typography>
 				</DialogContent>
 				<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>

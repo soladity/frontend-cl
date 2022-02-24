@@ -118,10 +118,10 @@ const Legions = () => {
 		setActionLoading(true);
 		try {
 			await cancelMarketplace(web3, marketplaceContract, account, '3', id);
+			setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e) {
 			console.log(e);
 		}
-		setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -133,13 +133,13 @@ const Legions = () => {
 				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await buyToken(web3, marketplaceContract, account, '3', id);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}))
+			setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}))
-		setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
