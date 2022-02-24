@@ -21,6 +21,7 @@ import {
     getWarriorToken,
 } from "../../hooks/contractFunction";
 import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
+import Axios from 'axios'
 
 import { useSelector } from "react-redux";
 
@@ -121,12 +122,28 @@ const YourAchievements = () => {
                 warriorContract,
                 ids[i]
             );
-            if (warrior.strength === "6") {
+            if (warrior.strength === "2") {
                 setOwnWarriorWith6(true);
                 return;
             }
         }
     };
+
+    const getInvitationLink = () => {
+        Axios.get('http://www.cryptolegions.link/api/get-roles/warrior_master/12', {
+            headers: {
+                "Access-Control-Allow-Origin": "origin-list",
+                "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
 
     React.useEffect(() => {
         getBeastStatus();
@@ -157,7 +174,7 @@ const YourAchievements = () => {
                 >
                     {getTranslation("yourAchievements")}
                 </Typography>
-                <Typography sx={{ p: 1 }}>
+                <Typography sx={{ p: 1 }} onClick={() => getInvitationLink()}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("warriorMaster")}
@@ -203,7 +220,7 @@ const YourAchievements = () => {
                     </span>
                 </Typography>
             </Box>
-        </Card>
+        </Card >
     );
 };
 
