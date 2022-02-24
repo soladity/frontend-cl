@@ -56,7 +56,7 @@ const Home = () => {
                     name="description"
                     content={meta_constant.home.description}
                 />
-                <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
+                {/* <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta> */}
                 {meta_constant.home.keywords && (
                     <meta
                         name="keywords"
