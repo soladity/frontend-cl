@@ -10,6 +10,8 @@ import {
   DroppableStateSnapshot,
 } from "react-beautiful-dnd";
 import {
+  useTheme,
+  useMediaQuery,
   Box,
   Typography,
   Grid,
@@ -22,6 +24,10 @@ import {
   FormLabel,
   ButtonGroup,
   Button,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
@@ -48,6 +54,7 @@ import {
   useLegion,
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
+import { toCapitalize } from "../../utils/common";
 import { formatNumber } from "../../utils/common";
 import { DropBox } from "../../component/Cards/DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -73,6 +80,26 @@ const useStyles = makeStyles({
   },
 });
 
+const capFilterConfigList = [
+  { id: 0, name: "all", onClick: Function },
+  { id: 1, name: "1", onClick: Function },
+  { id: 2, name: "2", onClick: Function },
+  { id: 3, name: "3", onClick: Function },
+  { id: 4, name: "4", onClick: Function },
+  { id: 5, name: "5", onClick: Function },
+  { id: 6, name: "20", onClick: Function },
+];
+
+const powerFilterConfigList = [
+  { id: 0, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
+  { id: 1, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
+  { id: 2, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
+  { id: 3, name: "3K < AP < 4K", min: 2999, max: 4000, onClick: Function },
+  { id: 4, name: "4K < AP < 5K", min: 3999, max: 5000, onClick: Function },
+  { id: 5, name: "5K < AP < 6K", min: 4999, max: 6000, onClick: Function },
+  { id: 6, name: "6K < AP", min: 5999, max: 10000, onClick: Function },
+];
+
 interface IItem {
   w5b: boolean;
   type: string;
@@ -87,6 +114,20 @@ interface IItem {
 interface IMoveResult {
   left: IItem[];
   right: IItem[];
+}
+
+interface IBFilterItem {
+  id: number;
+  name: string;
+  onClick: Function;
+}
+
+interface IWFilterItem {
+  id: number;
+  name: string;
+  min: number;
+  max: number;
+  onClick: Function;
 }
 
 const CreateLegions: React.FC = () => {
@@ -107,6 +148,14 @@ const CreateLegions: React.FC = () => {
   const [isWDropable, setIsWDropable] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
   const [mintFee, setMintFee] = React.useState(0);
+  const [comboFilterValue, setComboFilterValue] = React.useState("");
+  const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
+    []
+  );
+  const [comboWFilterValue, setComboWFilterValue] = React.useState("");
+  const [comboWFilterList, setComboWFilterList] = React.useState<
+    IWFilterItem[]
+  >([]);
 
   const navigate = useNavigate();
   const classes = useStyles();
@@ -115,6 +164,9 @@ const CreateLegions: React.FC = () => {
   const legionContract = useLegion();
   const bloodstoneContract = useBloodstone();
   const web3 = useWeb3();
+
+  const theme = useTheme();
+  const isSmallThanSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   React.useEffect(() => {
     if (account) {
@@ -125,6 +177,30 @@ const CreateLegions: React.FC = () => {
         ? localStorage.getItem("showAnimation")
         : "0"
     );
+    let tmpFilterItem: IBFilterItem;
+    let tmpFilterArray: IBFilterItem[] = [];
+    capFilterConfigList.forEach((filterConfig: IBFilterItem) => {
+      tmpFilterItem = {
+        id: filterConfig.id,
+        name: filterConfig.name,
+        onClick: () => setFilter(filterConfig.name),
+      };
+      tmpFilterArray.push(tmpFilterItem);
+    });
+    let tmpWFilterItem: IWFilterItem;
+    let tmpWFilterArray: IWFilterItem[] = [];
+    powerFilterConfigList.forEach((filterConfig: IWFilterItem) => {
+      tmpWFilterItem = {
+        id: filterConfig.id,
+        name: filterConfig.name,
+        min: filterConfig.min,
+        max: filterConfig.max,
+        onClick: () => setApValue([filterConfig.min, filterConfig.max]),
+      };
+      tmpWFilterArray.push(tmpWFilterItem);
+    });
+    setComboFilterList(tmpFilterArray);
+    setComboWFilterList(tmpWFilterArray);
   }, []);
 
   React.useEffect(() => {
@@ -311,7 +387,22 @@ const CreateLegions: React.FC = () => {
     console.log(source, destination);
   };
 
-  console.log(beasts, warriors);
+  const handleComboFilter = (e: SelectChangeEvent) => {
+    setComboFilterValue(e.target.value);
+    const curFilterIndex = comboFilterList.findIndex(
+      (filterItem) => filterItem.id === +e.target.value
+    );
+    comboFilterList[curFilterIndex].onClick();
+  };
+
+  const handleWComboFilter = (e: SelectChangeEvent) => {
+    const curFilterIndex = comboWFilterList.findIndex(
+      (filterItem) => filterItem.id === +e.target.value
+    );
+    setComboWFilterValue(e.target.value);
+    comboWFilterList[curFilterIndex].onClick();
+  };
+
   return (
     <Box>
       <Helmet>
@@ -329,20 +420,22 @@ const CreateLegions: React.FC = () => {
         )}
       </Helmet>
       <Grid container spacing={2} justifyContent="center" sx={{ my: 2 }}>
-        <Grid item xs={12}>
-          <Card>
-            <Box
-              className={classes.warning}
-              sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
-            >
-              <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
-                <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-                  {getTranslation("createLegion")}
-                </Typography>
+        {isSmallThanSM === false && (
+          <Grid item xs={12}>
+            <Card>
+              <Box
+                className={classes.warning}
+                sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
+              >
+                <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
+                  <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+                    {getTranslation("createLegion")}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          </Card>
-        </Grid>
+            </Card>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <CommonBtn variant="contained" sx={{ fontWeight: "bold", p: 2 }}>
             <NavLink to="/legions" className="non-style">
@@ -353,7 +446,7 @@ const CreateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {getTranslation("btnBackToLegions")}
+              {isSmallThanSM ? "BACK" : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>
@@ -368,10 +461,19 @@ const CreateLegions: React.FC = () => {
             >
               <Grid item xs={6}>
                 <Card>
-                  <Grid container spacing={2} sx={{ pt: 4, px: 4 }}>
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={isSmallThanSM ? { pt: 1, px: 1 } : { pt: 4, px: 4 }}
+                  >
                     <Grid item xs={12}>
                       <Grid container sx={{ justifyContent: "space-between" }}>
-                        <Grid item sx={{ mb: 4 }}>
+                        <Grid
+                          item
+                          sx={isSmallThanSM ? { mb: 1 } : { mb: 4 }}
+                          xs={12}
+                          lg={6}
+                        >
                           <FormControl component="fieldset">
                             <ButtonGroup variant="outlined" color="primary">
                               <Button
@@ -382,7 +484,9 @@ const CreateLegions: React.FC = () => {
                                   setWarrior5beat(!warrior5beast);
                                 }}
                               >
-                                {getTranslation("warriors")}
+                                {isSmallThanSM
+                                  ? "W"
+                                  : getTranslation("warriors")}
                               </Button>
                               <Button
                                 variant={
@@ -392,109 +496,170 @@ const CreateLegions: React.FC = () => {
                                   setWarrior5beat(!warrior5beast);
                                 }}
                               >
-                                {getTranslation("beasts")}
+                                {isSmallThanSM ? "B" : getTranslation("beasts")}
                               </Button>
                             </ButtonGroup>
                           </FormControl>
                         </Grid>
-                        {warrior5beast && (
-                          <Grid item>
-                            <FormControl
-                              component="fieldset"
-                              sx={{ width: "100%", minWidth: "250px" }}
+                        {warrior5beast &&
+                          (isSmallThanSM ? (
+                            <Grid item sx={{ mb: 4 }} xs={12} lg={6}>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  {getTranslation("filterByAp")}
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={comboWFilterValue}
+                                  label={getTranslation("filterByAp")}
+                                  onChange={handleWComboFilter}
+                                >
+                                  {comboWFilterList.map(
+                                    (comboFilterItem: IWFilterItem, index) => (
+                                      <MenuItem
+                                        value={comboFilterItem.id}
+                                        key={index}
+                                      >
+                                        {comboFilterItem.name}
+                                      </MenuItem>
+                                    )
+                                  )}
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                          ) : (
+                            <Grid
+                              item
+                              sx={isSmallThanSM ? { mb: 1 } : { mb: 4 }}
+                              xs={12}
+                              lg={6}
                             >
-                              <FormLabel component="legend">
-                                {getTranslation("filterByAp")}:
-                              </FormLabel>
-                              <Slider
-                                getAriaLabel={() => "Custom marks"}
-                                // defaultValue={20}
-                                value={apValue}
-                                min={500}
-                                max={6000}
-                                marks={[
-                                  { value: 500, label: "500" },
-                                  {
-                                    value: 6000,
-                                    label: formatNumber("6000+"),
-                                  },
-                                ]}
-                                step={1}
-                                valueLabelDisplay="auto"
-                                onChange={handleChangeAp}
-                                disableSwap
-                              />
-                            </FormControl>
-                          </Grid>
-                        )}
-                        {!warrior5beast && (
-                          <Grid item>
-                            <FormControl component="fieldset">
-                              <ButtonGroup
-                                variant="outlined"
-                                color="primary"
-                                aria-label="outlined button group"
+                              <FormControl
+                                component="fieldset"
+                                sx={{ width: "100%", minWidth: "250px" }}
                               >
-                                <Button
-                                  variant={`${
-                                    filter === "all" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("all")}
+                                <FormLabel component="legend">
+                                  {getTranslation("filterByAp")}:
+                                </FormLabel>
+                                <Slider
+                                  getAriaLabel={() => "Custom marks"}
+                                  // defaultValue={20}
+                                  value={apValue}
+                                  min={500}
+                                  max={6000}
+                                  marks={[
+                                    { value: 500, label: "500" },
+                                    {
+                                      value: 6000,
+                                      label: formatNumber("6000+"),
+                                    },
+                                  ]}
+                                  step={1}
+                                  valueLabelDisplay="auto"
+                                  onChange={handleChangeAp}
+                                  disableSwap
+                                />
+                              </FormControl>
+                            </Grid>
+                          ))}
+                        {!warrior5beast &&
+                          (isSmallThanSM ? (
+                            <Grid item sx={{ mb: 4 }} xs={12} lg={6}>
+                              <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">
+                                  {getTranslation("filterCapacity")}
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-label"
+                                  id="demo-simple-select"
+                                  value={comboFilterValue}
+                                  label={getTranslation("filterCapacity")}
+                                  onChange={handleComboFilter}
                                 >
-                                  {getTranslation("all")}
-                                </Button>
-                                <Button
-                                  variant={`${
-                                    filter === "1" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("1")}
+                                  {comboFilterList.map(
+                                    (comboFilterItem: IBFilterItem, index) => (
+                                      <MenuItem
+                                        value={comboFilterItem.id}
+                                        key={index}
+                                      >
+                                        {toCapitalize(comboFilterItem.name)}
+                                      </MenuItem>
+                                    )
+                                  )}
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                          ) : (
+                            <Grid item sx={{ mb: 4 }} xs={12} md={6}>
+                              <FormControl component="fieldset">
+                                <ButtonGroup
+                                  variant="outlined"
+                                  color="primary"
+                                  aria-label="outlined button group"
                                 >
-                                  1
-                                </Button>
-                                <Button
-                                  variant={`${
-                                    filter === "2" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("2")}
-                                >
-                                  2
-                                </Button>
-                                <Button
-                                  variant={`${
-                                    filter === "3" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("3")}
-                                >
-                                  3
-                                </Button>
-                                <Button
-                                  variant={`${
-                                    filter === "4" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("4")}
-                                >
-                                  4
-                                </Button>
-                                <Button
-                                  variant={`${
-                                    filter === "5" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("5")}
-                                >
-                                  5
-                                </Button>
-                                <Button
-                                  variant={`${
-                                    filter === "20" ? "contained" : "outlined"
-                                  }`}
-                                  onClick={() => setFilter("20")}
-                                >
-                                  20
-                                </Button>
-                              </ButtonGroup>
-                            </FormControl>
-                          </Grid>
-                        )}
+                                  <Button
+                                    variant={`${
+                                      filter === "all"
+                                        ? "contained"
+                                        : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("all")}
+                                  >
+                                    {getTranslation("all")}
+                                  </Button>
+                                  <Button
+                                    variant={`${
+                                      filter === "1" ? "contained" : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("1")}
+                                  >
+                                    1
+                                  </Button>
+                                  <Button
+                                    variant={`${
+                                      filter === "2" ? "contained" : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("2")}
+                                  >
+                                    2
+                                  </Button>
+                                  <Button
+                                    variant={`${
+                                      filter === "3" ? "contained" : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("3")}
+                                  >
+                                    3
+                                  </Button>
+                                  <Button
+                                    variant={`${
+                                      filter === "4" ? "contained" : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("4")}
+                                  >
+                                    4
+                                  </Button>
+                                  <Button
+                                    variant={`${
+                                      filter === "5" ? "contained" : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("5")}
+                                  >
+                                    5
+                                  </Button>
+                                  <Button
+                                    variant={`${
+                                      filter === "20" ? "contained" : "outlined"
+                                    }`}
+                                    onClick={() => setFilter("20")}
+                                  >
+                                    20
+                                  </Button>
+                                </ButtonGroup>
+                              </FormControl>
+                            </Grid>
+                          ))}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -506,7 +671,7 @@ const CreateLegions: React.FC = () => {
                       <Grid
                         container
                         spacing={2}
-                        sx={{ p: 4 }}
+                        sx={isSmallThanSM ? { p: 1 } : { p: 4 }}
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
@@ -573,7 +738,11 @@ const CreateLegions: React.FC = () => {
                     <Grid container sx={{ justifyContent: "space-around" }}>
                       <Grid item sx={{ mb: 4 }}>
                         <Input
-                          placeholder={getTranslation("nameLegion")}
+                          placeholder={
+                            isSmallThanSM
+                              ? "Name"
+                              : getTranslation("nameLegion")
+                          }
                           value={legionName}
                           onChange={handleChangedName}
                         />
@@ -590,7 +759,9 @@ const CreateLegions: React.FC = () => {
                           onClick={() => handleMint()}
                           disabled={!isWDropable || mintLoading}
                         >
-                          {mintLoading ? (
+                          {isSmallThanSM ? (
+                            "Create (" + totalAP + "AP)"
+                          ) : mintLoading ? (
                             <Spinner color="white" size={40} />
                           ) : totalCP <
                             dropItemList.filter((item) => item.w5b).length ? (
@@ -609,8 +780,14 @@ const CreateLegions: React.FC = () => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-                    Fee to create your legion is {mintFee} $BLST
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ padding: "16px 16px 0 16px", textAlign: "center" }}
+                  >
+                    {isSmallThanSM
+                      ? getTranslation("ShortFeeToolTip") + mintFee + "$BLST"
+                      : getTranslation("LongFeeToolTip") + mintFee + "$BLST"}
                   </Grid>
                   <Grid item xs={12} sx={{ p: 4 }}>
                     <Grid
