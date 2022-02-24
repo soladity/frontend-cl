@@ -16,7 +16,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import {
-  useBloodstone,
   useBeast,
   useWarrior,
   useWeb3,
@@ -256,7 +255,7 @@ export default function LegionCard(props: CardProps) {
           position: "absolute",
           alignItems: "center",
           bottom: "40px",
-          left: "calc(50% - 40px)",
+          left: "calc(50% - 60px)",
           fontWeight: "bold",
         }}
       >
@@ -271,6 +270,37 @@ export default function LegionCard(props: CardProps) {
         >
           W/{warriors.length} B/{beasts.length}
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            cursor: "pointer",
+            ml: 2
+          }}
+        >
+          {show === false ? (
+            <IconButton
+              aria-label="claim"
+              component="span"
+              sx={{ padding: 0 }}
+              onClick={() => {
+                setShow(!show);
+              }}
+            >
+              <VisibilityIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              aria-label="claim"
+              component="span"
+              sx={{ padding: 0 }}
+              onClick={() => {
+                setShow(!show);
+              }}
+            >
+              <VisibilityOffIcon />
+            </IconButton>
+          )}
+        </Box>
       </Box>
       <Box
         sx={{
@@ -295,7 +325,7 @@ export default function LegionCard(props: CardProps) {
         </Typography>
       </Box>
       {
-        (attackPower >= 2000 && huntStatus === 'green') &&
+        (attackPower >= 2000 && huntStatus !== 'orange') &&
         <Box
           sx={{
             display: "flex",
@@ -313,39 +343,6 @@ export default function LegionCard(props: CardProps) {
           />
         </Box>
       }
-      <Box
-        sx={{
-          display: "flex",
-          position: "absolute",
-          bottom: "55px",
-          left: "20px",
-          cursor: "pointer",
-        }}
-      >
-        {show === false ? (
-          <IconButton
-            aria-label="claim"
-            component="span"
-            sx={{ padding: 0 }}
-            onClick={() => {
-              setShow(!show);
-            }}
-          >
-            <VisibilityIcon />
-          </IconButton>
-        ) : (
-          <IconButton
-            aria-label="claim"
-            component="span"
-            sx={{ padding: 0 }}
-            onClick={() => {
-              setShow(!show);
-            }}
-          >
-            <VisibilityOffIcon />
-          </IconButton>
-        )}
-      </Box>
       <Box
         sx={{
           display: "flex",

@@ -51,6 +51,15 @@ export const mintBeast = async (web3, contract, account, amount) => {
   return response;
 };
 
+export const getBloodstoneAmountToMintBeast = async (
+  web3,
+  contract,
+  amount
+) => {
+  const response = await contract.methods.getBloodstoneAmount(amount).call();
+  return response;
+};
+
 export const getBeastBalance = async (web3, contract, account) => {
   const response = await contract.methods.balanceOf(account).call();
   return response;
@@ -100,6 +109,15 @@ export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
 
 export const mintWarrior = async (web3, contract, account, amount) => {
   const response = await contract.methods.mint(amount).send({ from: account });
+  return response;
+};
+
+export const getBloodstoneAmountToMintWarrior = async (
+  web3,
+  contract,
+  amount
+) => {
+  const response = await contract.methods.getBloodstoneAmount(amount).call();
   return response;
 };
 
@@ -210,7 +228,7 @@ export const getLegionToken = async (web3, contract, tokenId) => {
     beasts: response[1],
     warriors: response[2],
     supplies: response[3],
-    attackPower: parseInt(response[4]) / 100,
+    attackPower: Math.floor(parseInt(response[4]) / 100),
     lastHuntTime: response[5]
   }
   return legion;
@@ -235,7 +253,7 @@ export const getLegionDetails = async (web3, contract, tokenID) => {
     beastIDs: response[2],
     warriorIDs: response[3],
     supplies: response[4],
-    ap: response[5],
+    ap: Math.floor(parseInt(response[5]) / 100),
     onMarket: response[6],
   };
   return legion;
@@ -379,4 +397,16 @@ export const getMarketplaceBloodstoneAllowance = async (
     .allowance(account, getMarketplaceAddress())
     .call();
   return web3.utils.fromWei(response, "ether").toString();
+};
+
+export const execute = async (web3, contract, account, type, id) => {
+  const response = await contract.methods
+    .execute(id, type)
+    .send({ from: account });
+  return response;
+};
+
+export const getFee = async (contract, index) => {
+  const response = await contract.methods.getFee(index).call();
+  return response;
 };

@@ -1,11 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { ReadableByteStreamController } from 'stream/web';
 import { Box, Container, Snackbar, Grid, Alert } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../wallet';
@@ -81,12 +74,6 @@ const image = {
     LOGO: '/assets/images/logo.png'
 };
 
-const content = {
-    FAILED: 'Ahh! Seems like connection failed',
-    INIT: 'No Wallet found',
-    LOADING: 'Trying to connect!'
-}
-
 type TransitionProps = Omit<SlideProps, 'direction'>;
 
 function TransitionUp(props: TransitionProps) {
@@ -96,25 +83,18 @@ function TransitionUp(props: TransitionProps) {
 const AskMetaLogin = () => {
     const {
         activate,
-        account,
         active,
-        deactivate,
-        connector,
-        library,
-        setError,
-        error,
-        chainId
+        error
     } = useWeb3React();
 
     const classes = useStyles()
 
     const [loading, setLoading] = React.useState(false);
-    const [failed, setFailed] = React.useState(false);
     const [openSnackBar, setOpenSnackBar] = React.useState(false)
 
     const [mouseOver, setMouseOver] = React.useState(false)
 
-    const [logoImage, setLogoImage] = React.useState(image.LOGO);
+    const [logoImage] = React.useState(image.LOGO);
 
     const [errorMsg, setErrorMsg] = React.useState('')
 
@@ -135,11 +115,6 @@ const AskMetaLogin = () => {
             }
         }
         setLoading(false);
-        if (active) {
-        }
-        if (error) {
-            setFailed(true);
-        }
     }, [active, error])
 
     return (
@@ -150,6 +125,7 @@ const AskMetaLogin = () => {
                         src={logoImage}
                         style={{ width: '60%' }}
                         className={classes.logo}
+                        alt='logo'
                     />
                 </Box>
                 <Grid container spacing={2}>
@@ -180,11 +156,13 @@ const AskMetaLogin = () => {
                                                 src={image.DRAGON_HOVER}
                                                 style={{ width: '100%' }}
                                                 hidden={!(loading || mouseOver)}
+                                                alt='dragon'
                                             />
                                             <img
                                                 src={image.DRAGON_INIT}
                                                 style={{ width: '100%' }}
                                                 hidden={loading || mouseOver}
+                                                alt='dragon'
                                             />
                                         </Box>
                                     }

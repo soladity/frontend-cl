@@ -30,6 +30,7 @@ import {
 	useWarrior,
 	useLegion,
 	useMarketplace,
+	useFeeHandler,
 	useWeb3,
 } from "../../hooks/useContract";
 import {
@@ -42,7 +43,8 @@ import {
 	getLegionImage,
 	getHuntStatus,
 	setMarketplaceApprove,
-	sellToken
+	sellToken,
+	getFee
 } from "../../hooks/contractFunction";
 import { meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
@@ -92,15 +94,18 @@ const Legions = () => {
 	const [selectedLegion, setSelectedLegion] = React.useState(0);
 	const [openShopping, setOpenShopping] = React.useState(false);
 	const [price, setPrice] = React.useState(0);
+	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
 	const [loading, setLoading] = React.useState(false);
 	const [supplyLoading, setSupplyLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
+	const [actionLoading, setActionLoading] = React.useState(false);
 
 	const classes = useStyles();
 	const legionContract = useLegion();
 	const beastContract = useBeast();
 	const warriorContract = useWarrior();
 	const marketplaceContract = useMarketplace();
+	const feeHandlerContract = useFeeHandler();
 	const web3 = useWeb3();
 
 	React.useEffect(() => {
@@ -111,6 +116,7 @@ const Legions = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
+		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
 		setBeastBalance(await getBeastBalance(web3, beastContract, account));
 		setWarriorBalance(await getWarriorBalance(web3, warriorContract, account));
@@ -169,13 +175,17 @@ const Legions = () => {
 	const handleSupplyClick = async (value: string) => {
 		setSupplyLoading(true);
 		setOpenSupply(false);
-		await addSupply(
-			web3,
-			legionContract,
-			account,
-			selectedLegion,
-			parseInt(value)
-		);
+		try {
+			await addSupply(
+				web3,
+				legionContract,
+				account,
+				selectedLegion,
+				parseInt(value)
+			);
+		} catch (e) {
+			console.log(e);
+		}
 		setSupplyLoading(false);
 		getBalance();
 	};
@@ -203,17 +213,23 @@ const Legions = () => {
 	}
 
 	const handleSendToMarketplace = async () => {
+		setActionLoading(true);
 		setOpenShopping(false);
-		await setMarketplaceApprove(web3, legionContract, account, selectedLegion);
-		await sellToken(web3, marketplaceContract, account, '3', selectedLegion, price);
-		let power = 0;
-		let temp = legions;
-		for (let i = 0; i < temp.length; i++) {
-			if (parseInt(temp[i]['id']) === selectedLegion)
-				power = temp[i]['attackPower'];
+		try {
+			await setMarketplaceApprove(web3, legionContract, account, selectedLegion);
+			await sellToken(web3, marketplaceContract, account, '3', selectedLegion, price);
+			let power = 0;
+			let temp = legions;
+			for (let i = 0; i < temp.length; i++) {
+				if (parseInt(temp[i]['id']) === selectedLegion)
+					power = temp[i]['attackPower'];
+			}
+			setTotalPower(totalPower - power);
+			setLegions(legions.filter((item: any) => parseInt(item.id) !== selectedLegion));
+		} catch (e) {
+			console.log(e);
 		}
-		setTotalPower(totalPower - power);
-		setLegions(legions.filter((item: any) => parseInt(item.id) !== selectedLegion));
+		setActionLoading(false);
 	}
 
 	return (
@@ -350,7 +366,7 @@ const Legions = () => {
 					</Card>
 				</Grid>
 			</Grid>
-			{loading === false && supplyLoading === false && (
+			{loading === false && supplyLoading === false && actionLoading === false && (
 				<div>
 					<Grid container spacing={2} sx={{ my: 3 }}>
 						<Grid item xs={12} md={6} lg={3}>
@@ -469,10 +485,10 @@ const Legions = () => {
 						{legions
 							.filter(
 								(item: any) =>
-									apValue[0] < parseInt(item.attackPower) &&
+									apValue[0] <= parseInt(item.attackPower) &&
 									(apValue[1] === 250000
 										? true
-										: apValue[1] > parseInt(item.attackPower))
+										: apValue[1] >= parseInt(item.attackPower))
 							)
 							.filter((item: any) =>
 								hideWeak === true ? item.attackPower >= 2000 : true
@@ -543,6 +559,28 @@ const Legions = () => {
 					</Grid>
 				</>
 			)}
+			{
+				actionLoading === true && (
+					<>
+						<Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+							<Typography variant="h4">
+								{getTranslation("pleaseWait")}
+							</Typography>
+						</Grid>
+						<Grid container sx={{ justifyContent: "center" }}>
+							<Grid item xs={1}>
+								<Card>
+									<CardMedia
+										component="img"
+										image="/assets/images/loading.gif"
+										alt="Loading"
+										loading="lazy"
+									/>
+								</Card>
+							</Grid>
+						</Grid>
+					</>
+				)}
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
 				<DialogTitle>{getTranslation("buySupply")}</DialogTitle>
 				<List sx={{ pt: 0 }}>
@@ -570,22 +608,28 @@ const Legions = () => {
 				</List>
 			</Dialog>
 			<Dialog onClose={handleShoppingClose} open={openShopping}>
-				<DialogTitle>{getTranslation('sendToMarketplace')}</DialogTitle>
+				<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
 				<DialogContent>
 					<TextField
 						autoFocus
 						margin="dense"
 						id="price"
-						label="Price"
+						label="Price in $BLST"
 						type="number"
 						fullWidth
 						variant="standard"
 						value={price}
 						onChange={handlePrice}
 					/>
+					<Typography variant='subtitle1'>
+						(= XXX USD)
+					</Typography>
+					<Typography variant='subtitle1'>
+					If sold, you will pay {marketplaceTax}% marketplace tax.
+					</Typography>
 				</DialogContent>
 				<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-					{getTranslation('confirm')}
+					{getTranslation('sell')}
 				</CommonBtn>
 			</Dialog>
 		</Box>
