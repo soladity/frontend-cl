@@ -25,7 +25,7 @@ export default function BeastCard(props: CardProps) {
     strength,
     handleOpenSupply,
     handleExecute,
-    isMobile,
+    isMobile = false,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
