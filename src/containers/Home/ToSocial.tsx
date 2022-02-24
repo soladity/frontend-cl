@@ -16,12 +16,12 @@ const ToSocial = () => {
                 linkUrl="https://cryptolegions.app/d"
             />
             <ToSocialBtn
-                type="Twitter"
-                linkUrl="https://cryptolegions.app/tw"
-            />
-            <ToSocialBtn
                 type="Telegram"
                 linkUrl="https://cryptolegions.app/t"
+            />
+            <ToSocialBtn
+                type="Twitter"
+                linkUrl="https://cryptolegions.app/tw"
             />
             <ToSocialBtn
                 type="Youtube"
