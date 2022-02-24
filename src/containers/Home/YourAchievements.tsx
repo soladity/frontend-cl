@@ -129,16 +129,19 @@ const YourAchievements = () => {
         }
     };
 
+
+    // {
+    //     headers: {
+    //         "Access-Control-Allow-Origin": "origin-list",
+    //         "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
+    //         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    //         "Content-Type": "application/json",
+    //         "Accept": "application/json"
+    //     }
+    // }
+
     const getInvitationLink = () => {
-        Axios.get('http://www.cryptolegions.link/api/get-roles/warrior_master/12', {
-            headers: {
-                "Access-Control-Allow-Origin": "origin-list",
-                "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
-                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        }).then(res => {
+        Axios.get('http://www.cryptolegions.link/api/get-roles/warrior_master/12').then(res => {
             console.log(res)
         }).catch(err => {
             console.log(err)
