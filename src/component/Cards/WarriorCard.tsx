@@ -25,7 +25,7 @@ export default function WarriorCard(props: CardProps) {
     type,
     power,
     strength,
-    isMobile,
+    isMobile = false,
     handleOpenSupply,
     handleExecute,
   } = props;
