@@ -125,7 +125,7 @@ const AskMetaLogin = () => {
                         src={logoImage}
                         style={{ width: '60%' }}
                         className={classes.logo}
-												alt='logo'
+                        alt='logo'
                     />
                 </Box>
                 <Grid container spacing={2}>
@@ -156,13 +156,13 @@ const AskMetaLogin = () => {
                                                 src={image.DRAGON_HOVER}
                                                 style={{ width: '100%' }}
                                                 hidden={!(loading || mouseOver)}
-																								alt='dragon'
+                                                alt='dragon'
                                             />
                                             <img
                                                 src={image.DRAGON_INIT}
                                                 style={{ width: '100%' }}
                                                 hidden={loading || mouseOver}
-																								alt='dragon'
+                                                alt='dragon'
                                             />
                                         </Box>
                                     }
