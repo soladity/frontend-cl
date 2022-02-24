@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken, execute, getBloodstoneAmountToMintBeast } from '../../hooks/contractFunction';
-import { useBloodstone, useBeast, useMarketplace, useLegion, useWeb3 } from '../../hooks/useContract';
+import { getBeastBloodstoneAllowance, setBeastBloodstoneApprove, mintBeast, getBeastBalance, getBeastTokenIds, getBeastToken, getBaseUrl, setMarketplaceApprove, sellToken, execute, getBloodstoneAmountToMintBeast, getFee } from '../../hooks/contractFunction';
+import { useBloodstone, useBeast, useMarketplace, useLegion, useFeeHandler, useWeb3 } from '../../hooks/useContract';
 import BeastCard from '../../component/Cards/BeastCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
@@ -56,6 +56,7 @@ const Beasts = () => {
 	const [selectedBeast, setSelectedBeast] = React.useState(0);
 	const [price, setPrice] = React.useState(0);
 	const [filter, setFilter] = React.useState('all');
+	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [mintLoading, setMintLoading] = React.useState(false);
@@ -89,6 +90,7 @@ const Beasts = () => {
 	const beastContract = useBeast();
 	const legionContract = useLegion();
 	const marketplaceContract = useMarketplace();
+	const feeHandlerContract = useFeeHandler();
 	const bloodstoneContract = useBloodstone();
 	const web3 = useWeb3();
 	const dispatch = useDispatch();
@@ -231,6 +233,7 @@ const Beasts = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
+		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
 		setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
 		const ids = await getBeastTokenIds(web3, beastContract, account);
@@ -274,18 +277,18 @@ const Beasts = () => {
 		try {
 			await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
 			await sellToken(web3, marketplaceContract, account, '1', selectedBeast, price);
+			let capacity = 0;
+			let temp = beasts;
+			for (let i = 0; i < temp.length; i++) {
+				if (parseInt(temp[i]['id']) === selectedBeast)
+					capacity = parseInt(temp[i]['capacity']);
+			}
+			setMaxWarrior(maxWarrior - capacity);
+			setBalance(balance - 1);
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
 		} catch (e) {
 			console.log(e);
 		}
-		let capacity = 0;
-		let temp = beasts;
-		for (let i = 0; i < temp.length; i++) {
-			if (parseInt(temp[i]['id']) === selectedBeast)
-				capacity = parseInt(temp[i]['capacity']);
-		}
-		setMaxWarrior(maxWarrior - capacity);
-		setBalance(balance - 1);
-		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== selectedBeast));
 		setActionLoading(false);
 	}
 
@@ -542,6 +545,20 @@ const Beasts = () => {
 							</Grid>
 						))
 					}
+					{
+						(beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).length === 0) &&
+						<Grid item xs={12}>
+							<Card>
+								<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+									<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+										<Typography variant='h6'>
+											{getTranslation('noBeastFilter')}
+										</Typography>
+									</Box>
+								</Box>
+							</Card>
+						</Grid>
+					}
 				</Grid>
 			</React.Fragment>
 		}
@@ -625,7 +642,7 @@ const Beasts = () => {
 					(= XXX USD)
 				</Typography>
 				<Typography variant='subtitle1'>
-					{getTranslation('sellContent')}
+					If sold, you will pay {marketplaceTax}% marketplace tax.
 				</Typography>
 			</DialogContent>
 			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>

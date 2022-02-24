@@ -325,7 +325,7 @@ export default function LegionCard(props: CardProps) {
         </Typography>
       </Box>
       {
-        (attackPower >= 2000) &&
+        (attackPower >= 2000 && huntStatus !== 'orange') &&
         <Box
           sx={{
             display: "flex",

@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl, execute, getBloodstoneAmountToMintWarrior } from '../../hooks/contractFunction';
-import { useBloodstone, useWarrior, useMarketplace, useLegion, useWeb3 } from '../../hooks/useContract';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl, execute, getBloodstoneAmountToMintWarrior, getFee } from '../../hooks/contractFunction';
+import { useBloodstone, useWarrior, useMarketplace, useLegion, useFeeHandler, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
@@ -55,6 +55,7 @@ const Warriors = () => {
 	const [openSupply, setOpenSupply] = React.useState(false);
 	const [selectedWarrior, setSelectedWarrior] = React.useState(0);
 	const [price, setPrice] = React.useState(0);
+	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
@@ -89,6 +90,7 @@ const Warriors = () => {
 	const legionContract = useLegion();
 	const bloodstoneContract = useBloodstone();
 	const marketplaceContract = useMarketplace();
+	const feeHandlerContract = useFeeHandler();
 	const web3 = useWeb3();
 	const dispatch = useDispatch();
 
@@ -230,6 +232,7 @@ const Warriors = () => {
 
 	const getBalance = async () => {
 		setLoading(true);
+		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
 		setBalance(parseInt(await getWarriorBalance(web3, warriorContract, account)));
 		const ids = await getWarriorTokenIds(web3, warriorContract, account);
@@ -289,18 +292,18 @@ const Warriors = () => {
 		try {
 			await setMarketplaceApprove(web3, warriorContract, account, selectedWarrior);
 			await sellToken(web3, marketplaceContract, account, '2', selectedWarrior, price);
+			let power = 0;
+			let temp = warriors;
+			for (let i = 0; i < temp.length; i++) {
+				if (parseInt(temp[i]['id']) === selectedWarrior)
+					power = parseInt(temp[i]['power']);
+			}
+			setMaxPower(maxPower - power);
+			setBalance(balance - 1);
+			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior));
 		} catch (e) {
 			console.log(e)
 		}
-		let power = 0;
-		let temp = warriors;
-		for (let i = 0; i < temp.length; i++) {
-			if (parseInt(temp[i]['id']) === selectedWarrior)
-				power = parseInt(temp[i]['power']);
-		}
-		setMaxPower(maxPower - power);
-		setBalance(balance - 1);
-		setWarriors(warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior));
 		setActionLoading(false);
 	}
 
@@ -579,6 +582,20 @@ const Warriors = () => {
 							</Grid>
 						))
 					}
+					{
+						(warriors.length > 0 && warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] <= parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))).length === 0) &&
+						<Grid item xs={12}>
+							<Card>
+								<Box className={classes.warning} sx={{ p: 4, justifyContent: 'start', alignItems: 'center' }}>
+									<Box sx={{ display: 'flex', flexDirection: 'column', mx: 4 }}>
+										<Typography variant='h6'>
+											{getTranslation('noWarriorFilter')}
+										</Typography>
+									</Box>
+								</Box>
+							</Card>
+						</Grid>
+					}
 				</Grid>
 			</React.Fragment>
 		}
@@ -662,7 +679,7 @@ const Warriors = () => {
 					(= XXX USD)
 				</Typography>
 				<Typography variant='subtitle1'>
-					{getTranslation('sellContent')}
+					If sold, you will pay {marketplaceTax}% marketplace tax.
 				</Typography>
 			</DialogContent>
 			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>

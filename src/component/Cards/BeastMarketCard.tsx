@@ -47,7 +47,7 @@ export default function BeastMarketCard(props: CardProps) {
 
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-			<Card sx={{ position: 'relative' }}>
+			<Card sx={{ position: 'relative', width: '100%' }}>
 				<CardMedia
 					component="img"
 					image={image}
