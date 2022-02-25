@@ -1,9 +1,36 @@
 .legionFontColor {
-  color: #e89f38;
+    color: #e89f38;
 }
 .legionBtn {
-  background: "radial-gradient(#dfd80d, #fb9300)" !important;
+    background: "radial-gradient(#dfd80d, #fb9300)" !important;
 }
 a {
-  text-decoration: none;
+    text-decoration: none;
+}
+#navbar .css-djfivm-MuiButtonBase-root-MuiListItemButton-root {
+    color: white !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #121212 !important;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #444 !important;
+    border-radius: 10px !important;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #333 !important;
+}
+.MuiButton-root a {
+    color: white;
 }
