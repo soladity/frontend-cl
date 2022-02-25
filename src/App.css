@@ -7,10 +7,29 @@
 a {
     text-decoration: none;
 }
-#navbar .css-djfivm-MuiButtonBase-root-MuiListItemButton-root {
-    color: white !important;
+.nav-bar-container {
+    display: block;
 }
 
+.nav-bar-item {
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+.nav-bar-item.active {
+    background: #1f2a37;
+    background-image: "/assets/images/fireMenu.png";
+}
+
+.nav-bar-nostyle {
+    color: inherit;
+    text-decoration: none;
+}
+
+.non-style {
+    color: inherit;
+    text-decoration: none;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 6px !important;
