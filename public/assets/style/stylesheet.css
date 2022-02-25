@@ -7,7 +7,7 @@
   text-decoration: none; }
   .nav-bar-item.active {
     background: #1f2a37;
-    background-image: '/assets/images/fireMenu.png'; }
+    background-image: url('/assets/images/fireMenu.png'); }
 
 .nav-bar-nostyle {
   color: inherit;
