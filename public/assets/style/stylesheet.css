@@ -1,35 +1,23 @@
 .nav-bar-container {
-  display: block; }
+    display: block;
+}
 
 .nav-bar-item {
-  display: block;
-  color: white;
-  text-decoration: none; }
-  .nav-bar-item.active {
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+.nav-bar-item.active {
     background: #1f2a37;
-    background-image: '/assets/images/fireMenu.png'; }
+    background-image: "/assets/images/fireMenu.png";
+}
 
 .nav-bar-nostyle {
-  color: inherit;
-  text-decoration: none; }
-
-/* width */
-::-webkit-scrollbar {
-  width: 6px; }
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #121212; }
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 10px; }
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #333; }
+    color: inherit;
+    text-decoration: none;
+}
 
 .non-style {
-  color: inherit;
-  text-decoration: none; }
+    color: inherit;
+    text-decoration: none;
+}
