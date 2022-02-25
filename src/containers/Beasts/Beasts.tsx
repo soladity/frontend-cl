@@ -221,12 +221,12 @@ const Beasts = () => {
 				await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await mintBeast(web3, beastContract, account, amount);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}));
 		getBalance();
 		setMintLoading(false);
 	}
@@ -297,6 +297,9 @@ const Beasts = () => {
 		try {
 			await execute(web3, legionContract, account, true, id);
 			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
@@ -540,8 +543,8 @@ const Beasts = () => {
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
-							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
+							<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} isMobile={false} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
 					}
