@@ -25,6 +25,8 @@ const Policy = () => {
 									view = <Divider sx={{ marginBottom: 2, marginTop: 2 }} />
 								} else if (content.type === 'space') {
 									view = <br />
+								} else if (content.type === 'table') {
+									view = <Box dangerouslySetInnerHTML={{ __html: content.text }}></Box>
 								}
 								return <Box key={'INDEX_CONTENT_POLICY_' + index}>{view}</Box>
 							})

@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@mui/material";
+import { Grid, useTheme, useMediaQuery } from "@mui/material";
 import {
   Draggable,
   DraggableProvided,
@@ -17,6 +17,8 @@ const DraggableCard: React.FC<{
   index: number;
   item: any;
 }> = ({ w5b, image, draggableId, index, item }) => {
+  const theme = useTheme();
+  const isSmallThanSM = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Draggable draggableId={draggableId} index={index}>
       {(
@@ -25,7 +27,7 @@ const DraggableCard: React.FC<{
       ) => (
         <Grid
           item
-          sm={12}
+          xs={12}
           md={6}
           lg={3}
           ref={providedDraggable.innerRef}
@@ -40,6 +42,7 @@ const DraggableCard: React.FC<{
               strength={item["strength"]}
               id={item["id"]}
               handleOpenSupply={Function}
+              isMobile={isSmallThanSM}
               handleExecute={Function}
             />
           )}
@@ -51,6 +54,7 @@ const DraggableCard: React.FC<{
               strength={item["strength"]}
               id={item["id"]}
               handleOpenSupply={Function}
+              isMobile={isSmallThanSM}
               handleExecute={Function}
             />
           )}

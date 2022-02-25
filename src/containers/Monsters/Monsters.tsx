@@ -356,7 +356,7 @@ const Monsters = () => {
     };
     const navigate = useNavigate();
 
-    const toHighestMonster = (legionAP: any) => {};
+    const toHighestMonster = (legionAP: any) => { };
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -413,21 +413,21 @@ const Monsters = () => {
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </GreenBGMenuItem>
                                             ) : legion.status === "2" ? (
                                                 <OrgBGMenuItem
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </OrgBGMenuItem>
                                             ) : (
                                                 <RedBGMenuItem
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </RedBGMenuItem>
                                             )
                                         )}
@@ -450,9 +450,9 @@ const Monsters = () => {
                                             cursor: "pointer",
                                             fontWeight: "bold",
                                         }}
-                                        // onClick={ () =>
-                                        //     toHighestMonster(curLegion?.attackPower)
-                                        // }
+                                    // onClick={ () =>
+                                    //     toHighestMonster(curLegion?.attackPower)
+                                    // }
                                     >
                                         {curLegion?.attackPower.toFixed(0)} AP
                                     </Typography>
@@ -488,8 +488,8 @@ const Monsters = () => {
                                             curLegion?.status === "1"
                                                 ? "#18e001"
                                                 : curLegion?.status === "2"
-                                                ? "#ae7c00"
-                                                : "#50010b",
+                                                    ? "#ae7c00"
+                                                    : "#fd3742",
                                         fontWeight: 1000,
                                         fontSize: { xs: 14, sm: 16, md: 20 },
                                     }}
@@ -541,11 +541,11 @@ const Monsters = () => {
                                             image={
                                                 showAnimation === "0"
                                                     ? imageUrls.baseUrl +
-                                                      imageUrls.monsters[index]
-                                                          .jpg
+                                                    imageUrls.monsters[index]
+                                                        .jpg
                                                     : imageUrls.baseUrl +
-                                                      imageUrls.monsters[index]
-                                                          .gif
+                                                    imageUrls.monsters[index]
+                                                        .gif
                                             }
                                             name={monster.name}
                                             tokenID={index + 1}
@@ -553,25 +553,25 @@ const Monsters = () => {
                                             minAP={monster.ap}
                                             bouns={
                                                 curLegion &&
-                                                monster.ap <
+                                                    monster.ap <
                                                     (
                                                         curLegion as LegionInterface
                                                     ).attackPower
                                                     ? "" +
-                                                      ((
-                                                          curLegion as LegionInterface
-                                                      ).attackPower -
-                                                          monster.ap) /
-                                                          2000
+                                                    ((
+                                                        curLegion as LegionInterface
+                                                    ).attackPower -
+                                                        monster.ap) /
+                                                    2000
                                                     : "0"
                                             }
                                             price={monster.reward}
                                             isHuntable={
                                                 curLegion?.status === "1" &&
                                                 monster.ap <=
-                                                    (
-                                                        curLegion as LegionInterface
-                                                    ).attackPower
+                                                (
+                                                    curLegion as LegionInterface
+                                                ).attackPower
                                             }
                                             handleHunt={handleHunt}
                                         />
@@ -714,14 +714,14 @@ const Monsters = () => {
                                         {getTranslation("congSubtitle3")}{" "}
                                         {parseInt(curMonster?.base as string) +
                                             ((curMonster?.ap as number) <
-                                            (curLegion?.attackPower as number)
+                                                (curLegion?.attackPower as number)
                                                 ? parseFloat(
-                                                      (
-                                                          ((curLegion?.attackPower as number) -
-                                                              (curMonster?.ap as number)) /
-                                                          2000
-                                                      ).toFixed(2)
-                                                  )
+                                                    (
+                                                        ((curLegion?.attackPower as number) -
+                                                            (curMonster?.ap as number)) /
+                                                        2000
+                                                    ).toFixed(2)
+                                                )
                                                 : 0)}
                                     </Typography>
                                 </Box>
@@ -783,14 +783,14 @@ const Monsters = () => {
                                         {getTranslation("defeatSubtitle2")}{" "}
                                         {parseInt(curMonster?.base as string) +
                                             ((curMonster?.ap as number) <
-                                            (curLegion?.attackPower as number)
+                                                (curLegion?.attackPower as number)
                                                 ? parseFloat(
-                                                      (
-                                                          ((curLegion?.attackPower as number) -
-                                                              (curMonster?.ap as number)) /
-                                                          2000
-                                                      ).toFixed(2)
-                                                  )
+                                                    (
+                                                        ((curLegion?.attackPower as number) -
+                                                            (curMonster?.ap as number)) /
+                                                        2000
+                                                    ).toFixed(2)
+                                                )
                                                 : 0)}
                                     </Typography>
                                 </Box>
