@@ -122,6 +122,10 @@ const Home = () => {
                                 fontWeight: "bold",
                                 textAlign: "center",
                                 marginTop: 2,
+                                '&:hover': {
+                                    color: '#f66810',
+                                    transition: '.4s all'
+                                }
                             }}
                         >
                             READ INSTRUCTIONS IN WHITEPAPER

@@ -823,20 +823,20 @@ const TakeAction = () => {
                                             )}
                                         </NavLink>
                                     </CommonBtn>
-                                    <CommonBtn
-                                        sx={{
-                                            fontWeight: "bold",
-                                            fontSize: 14,
-                                            width: "100%",
-                                        }}
+                                    <NavLink
+                                        to="/hunt"
+                                        className="non-style"
                                     >
-                                        <NavLink
-                                            to="/hunt"
-                                            className="non-style"
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                fontSize: 14,
+                                                width: "100%",
+                                            }}
                                         >
                                             {getTranslation("hunt")}
-                                        </NavLink>
-                                    </CommonBtn>
+                                        </CommonBtn>
+                                    </NavLink>
                                 </Box>
                             </Box>
                         </Grid>
@@ -852,47 +852,64 @@ const TakeAction = () => {
                                 <Box
                                     sx={{ textAlign: "center", width: "100%" }}
                                 >
-                                    <CommonBtn
-                                        sx={{
-                                            fontWeight: "bold",
-                                            fontSize: 14,
-                                            width: "100%",
-                                            marginBottom: 1,
-                                        }}
+                                    <NavLink
+                                        to="/beastsMarketplace"
+                                        className="non-style"
                                     >
-                                        {getTranslation("takeActionBuyBeasts")}
-                                    </CommonBtn>
-                                    <CommonBtn
-                                        sx={{
-                                            fontWeight: "bold",
-                                            fontSize: 14,
-                                            width: "100%",
-                                            marginBottom: 1,
-                                        }}
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                fontSize: 14,
+                                                width: "100%",
+                                                marginBottom: 1,
+                                            }}
+                                        >
+                                            {getTranslation("takeActionBuyBeasts")}
+                                        </CommonBtn>
+                                    </NavLink>
+                                    <NavLink
+                                        to="/warriorsMarketplace"
+                                        className="non-style"
                                     >
-                                        {getTranslation(
-                                            "takeActionBuyWarriors"
-                                        )}
-                                    </CommonBtn>
-                                    <CommonBtn
-                                        sx={{
-                                            fontWeight: "bold",
-                                            fontSize: 14,
-                                            width: "100%",
-                                            marginBottom: 1,
-                                        }}
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                fontSize: 14,
+                                                width: "100%",
+                                                marginBottom: 1,
+                                            }}
+                                        >
+                                            {getTranslation(
+                                                "takeActionBuyWarriors"
+                                            )}
+                                        </CommonBtn>
+                                    </NavLink>
+                                    <NavLink
+                                        to="/legionsMarketplace"
+                                        className="non-style"
                                     >
-                                        {getTranslation("takeActionBuyLegions")}
-                                    </CommonBtn>
-                                    <CommonBtn
-                                        sx={{
-                                            fontWeight: "bold",
-                                            fontSize: 14,
-                                            width: "100%",
-                                        }}
-                                    >
-                                        {getTranslation("takeActionBuyBlst")}
-                                    </CommonBtn>
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                fontSize: 14,
+                                                width: "100%",
+                                                marginBottom: 1,
+                                            }}
+                                        >
+                                            {getTranslation("takeActionBuyLegions")}
+                                        </CommonBtn>
+                                    </NavLink>
+                                    <a href="https://pancakeswap.com" target='_blank'>
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                fontSize: 14,
+                                                width: "100%",
+                                            }}
+                                        >
+                                            {getTranslation("takeActionBuyBlst")}
+                                        </CommonBtn>
+                                    </a>
                                 </Box>
                             </Box>
                         </Grid>
