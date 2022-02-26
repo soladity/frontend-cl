@@ -99,8 +99,11 @@ const YourAchievements = () => {
     const warriorContract = useWarrior();
     const web3 = useWeb3();
 
-    const [ownBeastWith20, setOwnBeastWith20] = React.useState(false);
-    const [ownWarriorWith6, setOwnWarriorWith6] = React.useState(false);
+    const [beastMaster, setBeastMaster] = React.useState(false);
+    const [warriorMaster, setWarriorMaster] = React.useState(false);
+    const [legionMaster, setLegionMaster] = React.useState(false);
+    const [monsterConqueror, setMonsterConqueror] = React.useState(true);
+    const [kingOfNicah, setKingOfNicah] = React.useState(true);
 
     const getBeastStatus = async () => {
         const ids = await getBeastTokenIds(web3, beastContract, account);
@@ -108,7 +111,7 @@ const YourAchievements = () => {
         for (let i = 0; i < ids.length; i++) {
             const beast = await getBeastToken(web3, beastContract, ids[i]);
             if (beast.capacity === "4") {
-                setOwnBeastWith20(true);
+                setBeastMaster(true);
                 return;
             }
         }
@@ -123,37 +126,31 @@ const YourAchievements = () => {
                 ids[i]
             );
             if (warrior.strength === "2") {
-                setOwnWarriorWith6(true);
+                setWarriorMaster(true);
                 return;
             }
         }
     };
 
-
-    // {
-    //     headers: {
-    //         "Access-Control-Allow-Origin": "origin-list",
-    //         "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
-    //         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-    //         "Content-Type": "application/json",
-    //         "Accept": "application/json"
-    //     }
-    // }
-
-    const getInvitationLink = () => {
-        Axios.get('https://www.cryptolegions.link/api/get-roles/warrior_master/12', {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, OPTIONS, POST",
-                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        }).then(res => {
-            console.log(res)
-        }).catch(err => {
-            console.log(err)
-        })
+    const getInvitationLink = (role: string, status: boolean) => {
+        if (status) {
+            const baseInviteUrl = "https://www.cryptolegions.link/users/invite/"
+            Axios.get(`https://www.cryptolegions.link/api/get-roles/check/${role}/${account}`).then(res => {
+                if (res.data.hasAlready) {
+                    console.log('already-----', res)
+                    window.open(baseInviteUrl + res.data.hasAlready.random_string, '_blank')
+                } else {
+                    Axios.get(`https://www.cryptolegions.link/api/get-roles/${role}/12/${account}`).then(res => {
+                        console.log('new-----', res)
+                        window.open(res.data.link, '_blank')
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        }
     }
 
     React.useEffect(() => {
@@ -185,8 +182,8 @@ const YourAchievements = () => {
                 >
                     {getTranslation("yourAchievements")}
                 </Typography>
-                <Typography sx={{ p: 1 }} onClick={() => getInvitationLink()}>
-                    <Checkbox checked={false} />
+                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('warrior_master', warriorMaster)}>
+                    <Checkbox checked={warriorMaster} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("warriorMaster")}
                     </span>{" "}
@@ -194,8 +191,8 @@ const YourAchievements = () => {
                         ({getTranslation("warriorMasterEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={ownBeastWith20} />{" "}
+                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('beast_master', beastMaster)}>
+                    <Checkbox checked={beastMaster} />{" "}
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("beastMaster")}
                     </span>{" "}
@@ -203,7 +200,7 @@ const YourAchievements = () => {
                         ({getTranslation("beastMasterEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('legion_master', legionMaster)}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("legionMaster")}
@@ -212,7 +209,7 @@ const YourAchievements = () => {
                         ({getTranslation("legionMasterEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('monster_conqueror', monsterConqueror)}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("monsterConqueror")}
@@ -221,7 +218,7 @@ const YourAchievements = () => {
                         ({getTranslation("monsterConquerorEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('king_of_nicah', kingOfNicah)}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("King/Queen")}
