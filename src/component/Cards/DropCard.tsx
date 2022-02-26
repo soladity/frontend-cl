@@ -30,7 +30,7 @@ interface DropCardProps {
   power?: string;
   baseIndex: number;
   w5b: boolean;
-  toLeft: (index: number, w5b: boolean) => void;
+  isMobile?: boolean;
 }
 
 export const DropCard: React.FC<DropCardProps> = function DropCard({
@@ -42,7 +42,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
   power,
   baseIndex,
   w5b,
-  toLeft,
+  isMobile,
 }) {
   const [loaded, setLoaded] = React.useState(false);
 
@@ -50,7 +50,9 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
     setLoaded(true);
   };
   return (
-    <Card sx={{ position: "relative" }}>
+    <Card
+      sx={{ position: "relative", width: "100%", fontSize: isMobile ? 10 : 14 }}
+    >
       {loaded === false && (
         <React.Fragment>
           <Skeleton variant="rectangular" width="100%" height="200px" />
@@ -68,8 +70,8 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             onLoad={handleImageLoaded}
           />
           <Typography
-            variant="h6"
             sx={{
+              fontSize: isMobile ? 10 : 14,
               position: "absolute",
               top: "15px",
               left: "20px",
@@ -87,13 +89,15 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
               fontWeight: "bold",
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            <Typography
+              sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+            >
               {formatNumber(power)}
             </Typography>
           </Box>
           <Typography
-            variant="subtitle2"
             sx={{
+              fontSize: isMobile ? 10 : 14,
               position: "absolute",
               bottom: "15px",
               left: "20px",
@@ -102,19 +106,6 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
           >
             #{id}
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              position: "absolute",
-              bottom: "15px",
-              right: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Button color="error" onClick={() => toLeft(baseIndex, w5b)}>
-              X
-            </Button>
-          </Box>
         </>
       ) : (
         <>
@@ -126,8 +117,8 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             onLoad={handleImageLoaded}
           />
           <Typography
-            variant="h6"
             sx={{
+              fontSize: isMobile ? 10 : 14,
               position: "absolute",
               top: "15px",
               left: "20px",
@@ -150,13 +141,15 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
               style={{ height: "25px", marginRight: "10px" }}
               alt="Sword"
             />
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            <Typography
+              sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+            >
               {capacity}
             </Typography>
           </Box>
           <Typography
-            variant="subtitle2"
             sx={{
+              fontSize: isMobile ? 10 : 14,
               position: "absolute",
               bottom: "15px",
               left: "20px",
@@ -165,19 +158,6 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
           >
             #{id}
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              position: "absolute",
-              bottom: "15px",
-              right: "20px",
-              cursor: "pointer",
-            }}
-          >
-            <Button color="error" onClick={() => toLeft(baseIndex, w5b)}>
-              X
-            </Button>
-          </Box>
         </>
       )}
     </Card>
