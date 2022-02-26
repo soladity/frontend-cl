@@ -16,6 +16,7 @@ type CardProps = {
   isMobile?: boolean;
   handleOpenSupply: Function;
   handleExecute: Function;
+  needButton?: boolean;
 };
 
 export default function WarriorCard(props: CardProps) {
@@ -28,6 +29,7 @@ export default function WarriorCard(props: CardProps) {
     isMobile,
     handleOpenSupply,
     handleExecute,
+    needButton,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -57,7 +59,13 @@ export default function WarriorCard(props: CardProps) {
   };
 
   return (
-    <Card sx={{ position: "relative" }}>
+    <Card
+      sx={{
+        position: "relative",
+        width: "100%",
+        fontSize: isMobile ? 10 : 14,
+      }}
+    >
       <CardMedia
         component="img"
         image={image}
@@ -73,8 +81,8 @@ export default function WarriorCard(props: CardProps) {
         </React.Fragment>
       )}
       <Typography
-        variant="h6"
         sx={{
+          fontSize: isMobile ? 10 : 14,
           position: "absolute",
           top: "15px",
           left: "20px",
@@ -110,10 +118,9 @@ export default function WarriorCard(props: CardProps) {
         }}
       >
         <Typography
-          variant="h6"
           sx={{
+            fontSize: isMobile ? 10 : 14,
             fontWeight: "bold",
-            fontSize: "1.4rem",
             textShadow:
               "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
           }}
@@ -121,7 +128,7 @@ export default function WarriorCard(props: CardProps) {
           {formatNumber(power)}
         </Typography>
       </Box>
-      {isMobile === false && (
+      {(isMobile === false || needButton === true) && (
         <>
           <Box
             sx={{
@@ -155,19 +162,19 @@ export default function WarriorCard(props: CardProps) {
               alt="Execute"
             />
           </Box>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              position: "absolute",
-              bottom: "15px",
-              left: "20px",
-              color: "darkgrey",
-            }}
-          >
-            #{id}
-          </Typography>
         </>
       )}
+      <Typography
+        sx={{
+          fontSize: isMobile ? 10 : 14,
+          position: "absolute",
+          bottom: "15px",
+          left: "20px",
+          color: "darkgrey",
+        }}
+      >
+        #{id}
+      </Typography>
     </Card>
   );
 }

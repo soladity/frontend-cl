@@ -14,6 +14,7 @@ type CardProps = {
   isMobile?: boolean;
   handleOpenSupply: Function;
   handleExecute: Function;
+  needButton?: boolean;
 };
 
 export default function BeastCard(props: CardProps) {
@@ -26,6 +27,7 @@ export default function BeastCard(props: CardProps) {
     handleOpenSupply,
     handleExecute,
     isMobile,
+    needButton,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -43,7 +45,13 @@ export default function BeastCard(props: CardProps) {
   };
 
   return (
-    <Card sx={{ position: "relative" }}>
+    <Card
+      sx={{
+        position: "relative",
+        width: "100%",
+        fontSize: isMobile ? 10 : 14,
+      }}
+    >
       <CardMedia
         component="img"
         image={image}
@@ -59,8 +67,8 @@ export default function BeastCard(props: CardProps) {
         </React.Fragment>
       )}
       <Typography
-        variant="h6"
         sx={{
+          fontSize: isMobile ? 10 : 14,
           position: "absolute",
           top: "15px",
           left: "20px",
@@ -84,11 +92,11 @@ export default function BeastCard(props: CardProps) {
           style={{ height: "20px", marginRight: "10px" }}
           alt="Sword"
         />
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        <Typography sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}>
           {capacity}
         </Typography>
       </Box>
-      {isMobile === false && (
+      {(isMobile === false || needButton === true) && (
         <>
           <Box
             sx={{
@@ -123,8 +131,8 @@ export default function BeastCard(props: CardProps) {
             />
           </Box>
           <Typography
-            variant="subtitle2"
             sx={{
+              fontSize: isMobile ? 10 : 14,
               position: "absolute",
               bottom: "15px",
               left: "20px",
