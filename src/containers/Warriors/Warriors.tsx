@@ -220,12 +220,12 @@ const Warriors = () => {
 				await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await mintWarrior(web3, warriorContract, account, amount);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}));
 		getBalance();
 		setMintLoading(false);
 	}
@@ -312,6 +312,9 @@ const Warriors = () => {
 		try {
 			await execute(web3, legionContract, account, false, id);
 			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
@@ -577,8 +580,8 @@ const Warriors = () => {
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
 						warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] <= parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))).map((item: any, index) => (
-							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
+							<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+								<WarriorCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} isMobile={false} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
 					}

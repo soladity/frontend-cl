@@ -325,7 +325,7 @@ export default function LegionCard(props: CardProps) {
         </Typography>
       </Box>
       {
-        (attackPower >= 2000 && huntStatus !== 'orange') &&
+        attackPower >= 2000 &&
         <Box
           sx={{
             display: "flex",
@@ -334,13 +334,23 @@ export default function LegionCard(props: CardProps) {
             right: "20px",
             cursor: "pointer",
           }}
-          onClick={() => openShopping(id)}
+          onClick={() => huntStatus !== 'orange' && openShopping(id)}
         >
-          <img
-            src="/assets/images/shopping.png"
-            style={{ height: "20px" }}
-            alt="Shopping"
-          />
+          {
+            huntStatus !== 'orange' ? (
+              <img
+                src="/assets/images/shopping.png"
+                style={{ height: "20px" }}
+                alt="Shopping"
+              />
+            ) : (
+              <img
+                src="/assets/images/shoppingRed.png"
+                style={{ height: "20px" }}
+                alt="Shopping"
+              />
+            )
+          }
         </Box>
       }
       <Box
