@@ -80,56 +80,56 @@ const NadodoWatch = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("marketplaceTax")}: {marketplaceTax}%
+                    {getTranslation("marketplaceTax")}:<span className="legionOrangeColor"> {marketplaceTax}</span>%
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("huntTax")}: {huntTax}%
+                    {getTranslation("huntTax")}:<span className="legionOrangeColor"> {huntTax}</span>%
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("buyTax")}: {buyTax}%
+                    {getTranslation("buyTax")}:<span className="legionOrangeColor"> {buyTax}</span>%
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("sellTax")}: {sellTax}%
+                    {getTranslation("sellTax")}:<span className="legionOrangeColor"> {sellTax}</span>%
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("legionDamagePerHunt")}: {damageReduction}%
+                    {getTranslation("legionDamagePerHunt")}:<span className="legionOrangeColor"> {damageReduction}</span>%
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("summoningFee")}: {summonFee}$
+                    {getTranslation("summoningFee")}:<span className="legionOrangeColor"> {summonFee}</span>$
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("SuppliesFee14Hunts")}: {suppliesFee14}$
+                    {getTranslation("SuppliesFee14Hunts")}:<span className="legionOrangeColor"> {suppliesFee14}</span>$
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("SuppliesFee28Hunts")}: {suppliesFee28}$
+                    {getTranslation("SuppliesFee28Hunts")}:<span className="legionOrangeColor"> {suppliesFee28}</span>$
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -140,9 +140,9 @@ const NadodoWatch = () => {
                         alignItems: "center",
                     }}
                 >
-                    <span>{getTranslation("RewardPool")}:&nbsp;</span>
+                    {getTranslation("RewardPool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    <span>&nbsp;Healthy</span>
+                    &nbsp;Healthy
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -153,9 +153,9 @@ const NadodoWatch = () => {
                         alignItems: "center",
                     }}
                 >
-                    <span>{getTranslation("ReservePool")}:&nbsp;</span>
+                    {getTranslation("ReservePool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    <span>&nbsp;Healthy</span>
+                    &nbsp;Healthy
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -166,9 +166,9 @@ const NadodoWatch = () => {
                         alignItems: "center",
                     }}
                 >
-                    <span>{getTranslation("LiquidityPool")}:&nbsp;</span>
+                    {getTranslation("LiquidityPool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    <span>&nbsp;Healthy</span>
+                    &nbsp;Healthy
                 </Typography>
             </Box>
         </Card>
