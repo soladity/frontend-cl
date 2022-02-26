@@ -125,7 +125,7 @@ const YourAchievements = () => {
                 warriorContract,
                 ids[i]
             );
-            if (warrior.strength === "2") {
+            if (warrior.strength === "3") {
                 setWarriorMaster(true);
                 return;
             }
