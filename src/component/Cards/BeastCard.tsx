@@ -96,7 +96,7 @@ export default function BeastCard(props: CardProps) {
           {capacity}
         </Typography>
       </Box>
-      {(isMobile === false || needButton === true) && (
+      {needButton && (
         <>
           <Box
             sx={{
