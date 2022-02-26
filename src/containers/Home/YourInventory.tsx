@@ -263,8 +263,8 @@ const YourInventory = () => {
                             {(
                                 (taxLeftDays * 2 * parseInt(unclaimedBalance)) /
                                 100
-                            ).toFixed(2)}{" "}</span>
-                        {getTranslation("claimTaxVal")}
+                            ).toFixed(2)}{" "}
+                            {getTranslation("claimTaxVal")}</span>
                     </Typography>
                 )}
                 <Typography
@@ -280,7 +280,7 @@ const YourInventory = () => {
                     sx={{ fontWeight: "bold" }}
                 >
                     {getTranslation("BLSTInYourWallet")}:<span className="legionOrangeColor">{" "}
-                        {formatNumber(parseFloat(BLSTBalance).toFixed(2))}</span> ( = xx USD )
+                        {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( = xx USD )</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"

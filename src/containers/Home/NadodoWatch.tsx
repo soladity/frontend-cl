@@ -80,56 +80,56 @@ const NadodoWatch = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("marketplaceTax")}:<span className="legionOrangeColor"> {marketplaceTax}</span>%
+                    {getTranslation("marketplaceTax")}:<span className="legionOrangeColor"> {marketplaceTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("huntTax")}:<span className="legionOrangeColor"> {huntTax}</span>%
+                    {getTranslation("huntTax")}:<span className="legionOrangeColor"> {huntTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("buyTax")}:<span className="legionOrangeColor"> {buyTax}</span>%
+                    {getTranslation("buyTax")}:<span className="legionOrangeColor"> {buyTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("sellTax")}:<span className="legionOrangeColor"> {sellTax}</span>%
+                    {getTranslation("sellTax")}:<span className="legionOrangeColor"> {sellTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("legionDamagePerHunt")}:<span className="legionOrangeColor"> {damageReduction}</span>%
+                    {getTranslation("legionDamagePerHunt")}:<span className="legionOrangeColor"> {damageReduction}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("summoningFee")}:<span className="legionOrangeColor"> {summonFee}</span>$
+                    {getTranslation("summoningFee")}:<span className="legionOrangeColor"> {summonFee}$</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("SuppliesFee14Hunts")}:<span className="legionOrangeColor"> {suppliesFee14}</span>$
+                    {getTranslation("SuppliesFee14Hunts")}:<span className="legionOrangeColor"> {suppliesFee14}$</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("SuppliesFee28Hunts")}:<span className="legionOrangeColor"> {suppliesFee28}</span>$
+                    {getTranslation("SuppliesFee28Hunts")}:<span className="legionOrangeColor"> {suppliesFee28}$</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -142,7 +142,7 @@ const NadodoWatch = () => {
                 >
                     {getTranslation("RewardPool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    &nbsp;Healthy
+                    &nbsp;<span className="legionOrangeColor">Healthy</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -155,7 +155,7 @@ const NadodoWatch = () => {
                 >
                     {getTranslation("ReservePool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    &nbsp;Healthy
+                    &nbsp;<span className="legionOrangeColor">Healthy</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -168,7 +168,7 @@ const NadodoWatch = () => {
                 >
                     {getTranslation("LiquidityPool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    &nbsp;Healthy
+                    &nbsp;<span className="legionOrangeColor">Healthy</span>
                 </Typography>
             </Box>
         </Card>
