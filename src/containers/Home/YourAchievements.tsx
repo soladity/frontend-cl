@@ -102,8 +102,8 @@ const YourAchievements = () => {
     const [beastMaster, setBeastMaster] = React.useState(false);
     const [warriorMaster, setWarriorMaster] = React.useState(false);
     const [legionMaster, setLegionMaster] = React.useState(false);
-    const [monsterConqueror, setMonsterConqueror] = React.useState(true);
-    const [kingOfNicah, setKingOfNicah] = React.useState(true);
+    const [monsterConqueror, setMonsterConqueror] = React.useState(false);
+    const [kingOfNicah, setKingOfNicah] = React.useState(false);
 
     const getBeastStatus = async () => {
         const ids = await getBeastTokenIds(web3, beastContract, account);
@@ -125,7 +125,7 @@ const YourAchievements = () => {
                 warriorContract,
                 ids[i]
             );
-            if (warrior.strength === "2") {
+            if (warrior.strength === "3") {
                 setWarriorMaster(true);
                 return;
             }
