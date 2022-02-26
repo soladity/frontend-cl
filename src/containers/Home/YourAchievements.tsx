@@ -24,6 +24,7 @@ import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
 import Axios from 'axios'
 
 import { useSelector } from "react-redux";
+import classnames from 'classnames'
 
 const useStyles = makeStyles({
     root: {
@@ -182,7 +183,7 @@ const YourAchievements = () => {
                 >
                     {getTranslation("yourAchievements")}
                 </Typography>
-                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('warrior_master', warriorMaster)}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} className={classnames({ 'legionHoverOrangeColor': warriorMaster })} onClick={() => getInvitationLink('warrior_master', warriorMaster)}>
                     <Checkbox checked={warriorMaster} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("warriorMaster")}
@@ -191,7 +192,7 @@ const YourAchievements = () => {
                         ({getTranslation("warriorMasterEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('beast_master', beastMaster)}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} className={classnames({ 'legionHoverOrangeColor': warriorMaster })} onClick={() => getInvitationLink('beast_master', beastMaster)}>
                     <Checkbox checked={beastMaster} />{" "}
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("beastMaster")}
@@ -200,7 +201,7 @@ const YourAchievements = () => {
                         ({getTranslation("beastMasterEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('legion_master', legionMaster)}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} className={classnames({ 'legionHoverOrangeColor': warriorMaster })} onClick={() => getInvitationLink('legion_master', legionMaster)}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("legionMaster")}
@@ -209,7 +210,7 @@ const YourAchievements = () => {
                         ({getTranslation("legionMasterEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('monster_conqueror', monsterConqueror)}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} className={classnames({ 'legionHoverOrangeColor': warriorMaster })} onClick={() => getInvitationLink('monster_conqueror', monsterConqueror)}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("monsterConqueror")}
@@ -218,7 +219,7 @@ const YourAchievements = () => {
                         ({getTranslation("monsterConquerorEx")})
                     </span>
                 </Typography>
-                <Typography sx={{ p: 1, cursor: 'pointer' }} onClick={() => getInvitationLink('king_of_nicah', kingOfNicah)}>
+                <Typography sx={{ p: 1, cursor: 'pointer' }} className={classnames({ 'legionHoverOrangeColor': warriorMaster })} onClick={() => getInvitationLink('king_of_nicah', kingOfNicah)}>
                     <Checkbox checked={false} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("King/Queen")}

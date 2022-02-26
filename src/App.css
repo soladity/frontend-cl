@@ -1,6 +1,15 @@
 .legionFontColor {
     color: #e89f38;
 }
+.legionOrangeColor {
+    color: #f66810;
+}
+.legionHoverOrangeColor {
+    color: #e89f38;
+}
+.legionHoverOrangeColor:hover {
+    color: #f66810;
+}
 .legionBtn {
     background: "radial-gradient(#dfd80d, #fb9300)" !important;
 }
