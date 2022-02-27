@@ -26,7 +26,7 @@ export default function WarriorCard(props: CardProps) {
     type,
     power,
     strength,
-    isMobile = false,
+    isMobile,
     handleOpenSupply,
     handleExecute,
     needButton,
@@ -128,7 +128,7 @@ export default function WarriorCard(props: CardProps) {
           {formatNumber(power)}
         </Typography>
       </Box>
-      {(isMobile === false || needButton === true) && (
+      {needButton && (
         <>
           <Box
             sx={{

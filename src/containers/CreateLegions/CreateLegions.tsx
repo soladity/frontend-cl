@@ -83,6 +83,7 @@ const capFilterConfigList = [
 ];
 
 const powerFilterConfigList = [
+  { id: 0, name: "ALL", min: 0, max: 10000, onClick: Function },
   { id: 0, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
   { id: 1, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
   { id: 2, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
@@ -391,9 +392,14 @@ const CreateLegions: React.FC = () => {
     comboWFilterList[curFilterIndex].onClick();
   };
 
+  const tokenID2Index = (w5b: boolean, tokenID: number): number => {
+    const tmpSrc = w5b ? warriors : beasts;
+    return tmpSrc.findIndex((item) => +item.id === tokenID);
+  };
+
   const handleCardClick = (from: number, to: number, where: boolean) => {
     const fromItem: IClickedItem = {
-      index: from,
+      index: tokenID2Index(warrior5beast, from),
       clickedItem: where ? "left" : "right",
     };
     const toItem: IClickedItem = {
@@ -700,8 +706,7 @@ const CreateLegions: React.FC = () => {
                           }
                           item={item}
                           key={10000 + item.id}
-                          draggableId={item.id}
-                          index={index}
+                          index={+item.id}
                           handleClick={handleCardClick}
                         />
                       ))}
@@ -722,8 +727,7 @@ const CreateLegions: React.FC = () => {
                           }
                           item={item}
                           key={item.id}
-                          draggableId={item.id}
-                          index={index}
+                          index={+item.id}
                           handleClick={handleCardClick}
                         />
                       ))}
@@ -744,12 +748,7 @@ const CreateLegions: React.FC = () => {
                   xs={12}
                   sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
                 >
-                  <Grid
-                    container
-                    sx={{
-                      justifyContent: "space-around",
-                    }}
-                  >
+                  <Grid container sx={{ justifyContent: "space-around" }}>
                     <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
                       <Input
                         style={{

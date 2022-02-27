@@ -8,11 +8,10 @@ const DraggableCard: React.FC<{
   w5b: boolean;
   image: string;
   key: number;
-  draggableId: string;
   index: number;
   item: any;
   handleClick: Function;
-}> = ({ w5b, image, draggableId, index, item, handleClick }) => {
+}> = ({ w5b, image, index, item, handleClick }) => {
   const theme = useTheme();
   const isSmallThanSM = useMediaQuery(theme.breakpoints.down("sm"));
   const handleBtnClick = () => {
