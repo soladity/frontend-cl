@@ -29,7 +29,7 @@ export default function WarriorCard(props: CardProps) {
     isMobile,
     handleOpenSupply,
     handleExecute,
-    needButton,
+    needButton = true,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -91,7 +91,7 @@ export default function WarriorCard(props: CardProps) {
       >
         {type}
       </Typography>
-      {isMobile === false && (
+      {needButton && (
         <>
           <Box
             sx={{
@@ -162,19 +162,19 @@ export default function WarriorCard(props: CardProps) {
               alt="Execute"
             />
           </Box>
+          <Typography
+            sx={{
+              fontSize: isMobile ? 10 : 14,
+              position: "absolute",
+              bottom: "15px",
+              left: "20px",
+              color: "darkgrey",
+            }}
+          >
+            #{id}
+          </Typography>
         </>
       )}
-      <Typography
-        sx={{
-          fontSize: isMobile ? 10 : 14,
-          position: "absolute",
-          bottom: "15px",
-          left: "20px",
-          color: "darkgrey",
-        }}
-      >
-        #{id}
-      </Typography>
     </Card>
   );
 }

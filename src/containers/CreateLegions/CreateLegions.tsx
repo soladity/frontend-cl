@@ -84,13 +84,13 @@ const capFilterConfigList = [
 
 const powerFilterConfigList = [
   { id: 0, name: "ALL", min: 0, max: 10000, onClick: Function },
-  { id: 0, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
-  { id: 1, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
-  { id: 2, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
-  { id: 3, name: "3K < AP < 4K", min: 2999, max: 4000, onClick: Function },
-  { id: 4, name: "4K < AP < 5K", min: 3999, max: 5000, onClick: Function },
-  { id: 5, name: "5K < AP < 6K", min: 4999, max: 6000, onClick: Function },
-  { id: 6, name: "6K < AP", min: 5999, max: 10000, onClick: Function },
+  { id: 1, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
+  { id: 2, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
+  { id: 3, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
+  { id: 4, name: "3K < AP < 4K", min: 2999, max: 4000, onClick: Function },
+  { id: 5, name: "4K < AP < 5K", min: 3999, max: 5000, onClick: Function },
+  { id: 6, name: "5K < AP < 6K", min: 4999, max: 6000, onClick: Function },
+  { id: 7, name: "6K < AP", min: 5999, max: 10000, onClick: Function },
 ];
 
 interface IItem {
@@ -187,16 +187,18 @@ const CreateLegions: React.FC = () => {
     });
     let tmpWFilterItem: IWFilterItem;
     let tmpWFilterArray: IWFilterItem[] = [];
-    powerFilterConfigList.forEach((filterConfig: IWFilterItem) => {
-      tmpWFilterItem = {
-        id: filterConfig.id,
-        name: filterConfig.name,
-        min: filterConfig.min,
-        max: filterConfig.max,
-        onClick: () => setApValue([filterConfig.min, filterConfig.max]),
-      };
-      tmpWFilterArray.push(tmpWFilterItem);
-    });
+    powerFilterConfigList.forEach(
+      (filterConfig: IWFilterItem, index: number) => {
+        tmpWFilterItem = {
+          id: index,
+          name: filterConfig.name,
+          min: filterConfig.min,
+          max: filterConfig.max,
+          onClick: () => setApValue([filterConfig.min, filterConfig.max]),
+        };
+        tmpWFilterArray.push(tmpWFilterItem);
+      }
+    );
     setComboFilterList(tmpFilterArray);
     setComboWFilterList(tmpWFilterArray);
   }, []);
@@ -407,7 +409,6 @@ const CreateLegions: React.FC = () => {
       clickedItem: where ? "right" : "left",
     };
     handleMoveEvent(fromItem, toItem);
-    console.log("adfadfadf");
   };
 
   return (
@@ -547,7 +548,7 @@ const CreateLegions: React.FC = () => {
                           >
                             <FormControl
                               component="fieldset"
-                              sx={{ width: "100%", minWidth: "250px" }}
+                              sx={{ width: "100%" }}
                             >
                               <FormLabel component="legend">
                                 {getTranslation("filterByAp")}:
@@ -609,22 +610,22 @@ const CreateLegions: React.FC = () => {
                             </FormControl>
                           </Grid>
                         ) : (
-                          <Grid
-                            item
-                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
-                            xs={12}
-                            md={6}
-                          >
+                          <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
                             <FormControl component="fieldset">
                               <ButtonGroup
                                 variant="outlined"
                                 color="primary"
                                 aria-label="outlined button group"
+                                sx={{ flexWrap: "wrap" }}
+                                size={isSmallThanSM ? "small" : "medium"}
                               >
                                 <Button
                                   variant={`${
                                     filter === "all" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("all")}
                                 >
                                   {getTranslation("all")}
@@ -633,6 +634,9 @@ const CreateLegions: React.FC = () => {
                                   variant={`${
                                     filter === "1" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("1")}
                                 >
                                   1
@@ -641,6 +645,9 @@ const CreateLegions: React.FC = () => {
                                   variant={`${
                                     filter === "2" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("2")}
                                 >
                                   2
@@ -649,6 +656,9 @@ const CreateLegions: React.FC = () => {
                                   variant={`${
                                     filter === "3" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("3")}
                                 >
                                   3
@@ -657,6 +667,9 @@ const CreateLegions: React.FC = () => {
                                   variant={`${
                                     filter === "4" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("4")}
                                 >
                                   4
@@ -665,6 +678,9 @@ const CreateLegions: React.FC = () => {
                                   variant={`${
                                     filter === "5" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("5")}
                                 >
                                   5
@@ -673,6 +689,9 @@ const CreateLegions: React.FC = () => {
                                   variant={`${
                                     filter === "20" ? "contained" : "outlined"
                                   }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("20")}
                                 >
                                   20
@@ -817,15 +836,43 @@ const CreateLegions: React.FC = () => {
                       borderBottom: "2px dashed grey",
                     }}
                   >
-                    <Grid item>
-                      {isSmallThanSM ? "B" : getTranslation("beasts")}:{" "}
-                      {dropItemList.filter((item) => item.w5b === false).length}
-                      /{createlegions.main.maxAvailableDragCount}
-                    </Grid>
-                    <Grid item>
+                    <Grid
+                      item
+                      sx={{
+                        color:
+                          totalCP <
+                          dropItemList.filter((item) => item.w5b).length
+                            ? "red"
+                            : "white",
+                        fontWeight:
+                          totalCP <
+                          dropItemList.filter((item) => item.w5b).length
+                            ? "bold"
+                            : "normal",
+                      }}
+                    >
                       {isSmallThanSM ? "W" : getTranslation("warriors")}:{" "}
                       {dropItemList.filter((item) => item.w5b === true).length}/
                       {formatNumber(totalCP)}
+                    </Grid>
+                    <Grid
+                      item
+                      sx={{
+                        color:
+                          createlegions.main.maxAvailableDragCount <
+                          dropItemList.filter((item) => !item.w5b).length
+                            ? "red"
+                            : "white",
+                        fontWeight:
+                          totalCP <
+                          dropItemList.filter((item) => item.w5b).length
+                            ? "bold"
+                            : "normal",
+                      }}
+                    >
+                      {isSmallThanSM ? "B" : getTranslation("beasts")}:{" "}
+                      {dropItemList.filter((item) => item.w5b === false).length}
+                      /{createlegions.main.maxAvailableDragCount}
                     </Grid>
                   </Grid>
                 </Grid>
