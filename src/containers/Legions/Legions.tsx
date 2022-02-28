@@ -324,7 +324,7 @@ const Legions = () => {
 							>
 								{formatNumber(totalPower)}
 							</Typography>
-							<CommonBtn sx={{ fontWeight: "bold" }}>
+							<CommonBtn sx={{ fontWeight: "bold", mt: 1 }}>
 								<NavLink to="/hunt" className="non-style">
 									{getTranslation("hunt")}
 								</NavLink>

@@ -14,13 +14,14 @@ import {
 import CachedIcon from "@mui/icons-material/Cached";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useWeb3React } from "@web3-react/core";
 
 import {
   useBeast,
   useWarrior,
   useWeb3,
 } from "../../hooks/useContract";
-import { getBeastToken, getWarriorToken } from "../../hooks/contractFunction";
+import { getBeastToken, getWarriorToken, getWarriorBalance } from "../../hooks/contractFunction";
 import { formatNumber } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
 
@@ -52,12 +53,14 @@ export default function LegionCard(props: CardProps) {
     handleUpdate,
     handleOpenShopping
   } = props;
+  const { account } = useWeb3React();
 
   const [loaded, setLoaded] = React.useState(false);
   const [show, setShow] = React.useState(false);
   const [showWarrior, setShowWarrior] = React.useState(true);
   const [beastList, setBeastList] = React.useState(Array);
   const [warriorList, setWarriorList] = React.useState(Array);
+  const [warriorBalance, setWarriorBalance] = React.useState(0);
 
   const beastContract = useBeast();
   const warriorContract = useWarrior();
@@ -70,6 +73,7 @@ export default function LegionCard(props: CardProps) {
   const getBalance = async () => {
     let beast;
     let tempBeasts = [];
+    setWarriorBalance(parseInt(await getWarriorBalance(web3, warriorContract, account)));
     for (let i = 0; i < beasts.length; i++) {
       beast = await getBeastToken(web3, beastContract, beasts[i]);
       tempBeasts.push({ ...beast, id: beasts[i] });
@@ -255,20 +259,19 @@ export default function LegionCard(props: CardProps) {
           position: "absolute",
           alignItems: "center",
           bottom: "40px",
-          left: "calc(50% - 60px)",
+          left: "calc(50% - 45px)",
           fontWeight: "bold",
         }}
       >
         <Typography
           variant="h6"
           sx={{
-            fontWeight: "bold",
-            fontSize: "1.2rem",
+            fontSize: "0.8rem",
             textShadow:
               "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
           }}
         >
-          W/{warriors.length} B/{beasts.length}
+          W {warriors.length}/{warriors.length+warriorBalance}&nbsp;&nbsp;&nbsp;B {beasts.length}
         </Typography>
         <Box
           sx={{
