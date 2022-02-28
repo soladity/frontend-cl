@@ -82,10 +82,10 @@ export default function WarriorCard(props: CardProps) {
       )}
       <Typography
         sx={{
-          fontSize: isMobile ? 10 : 14,
+          fontSize: needButton ? 14 : 8,
           position: "absolute",
-          top: "15px",
-          left: "20px",
+          top: "2%",
+          left: "2%",
           fontWeight: "bold",
         }}
       >
@@ -98,8 +98,8 @@ export default function WarriorCard(props: CardProps) {
               display: "flex",
               position: "absolute",
               alignItems: "center",
-              top: "15px",
-              right: "10px",
+              top: "2%",
+              right: "2%",
               fontWeight: "bold",
             }}
           >
@@ -112,8 +112,9 @@ export default function WarriorCard(props: CardProps) {
           display: "flex",
           position: "absolute",
           alignItems: "center",
-          bottom: "20px",
-          left: "calc(50% - 20px)",
+          bottom: "2%",
+          width: "100%",
+          justifyContent: "center",
           fontWeight: "bold",
         }}
       >
@@ -134,8 +135,8 @@ export default function WarriorCard(props: CardProps) {
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "15px",
-              right: "20px",
+              bottom: "2%",
+              right: "2%",
               cursor: "pointer",
             }}
             onClick={() => open(id)}
@@ -150,8 +151,8 @@ export default function WarriorCard(props: CardProps) {
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "40px",
-              left: "20px",
+              bottom: "calc(2% + 20px)",
+              left: "2%",
               cursor: "pointer",
             }}
             onClick={() => execute(id)}
@@ -162,19 +163,19 @@ export default function WarriorCard(props: CardProps) {
               alt="Execute"
             />
           </Box>
-          <Typography
-            sx={{
-              fontSize: isMobile ? 10 : 14,
-              position: "absolute",
-              bottom: "15px",
-              left: "20px",
-              color: "darkgrey",
-            }}
-          >
-            #{id}
-          </Typography>
         </>
       )}
+      <Typography
+        sx={{
+          fontSize: isMobile ? 10 : 14,
+          position: "absolute",
+          bottom: "2%",
+          left: "2%",
+          color: "darkgrey",
+        }}
+      >
+        #{id}
+      </Typography>
     </Card>
   );
 }

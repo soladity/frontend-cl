@@ -27,7 +27,7 @@ export default function BeastCard(props: CardProps) {
     handleOpenSupply,
     handleExecute,
     isMobile,
-    needButton,
+    needButton = true,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -71,16 +71,15 @@ export default function BeastCard(props: CardProps) {
           display: "flex",
           flexWrap: "wrap",
           position: "absolute",
-          top: "15px",
+          top: "2%",
           justifyContent: "space-between",
-          width: "100%",
-          marginLeft: "10px",
-          paddingRight: "20px",
+          width: "96%",
+          paddingLeft: "2%",
         }}
       >
         <Typography
           sx={{
-            fontSize: isMobile ? 10 : 14,
+            fontSize: needButton ? 14 : 8,
             fontWeight: "bold",
           }}
         >
@@ -95,10 +94,20 @@ export default function BeastCard(props: CardProps) {
         >
           <img
             src="/assets/images/sword.png"
-            style={{ height: "20px", marginRight: "10px" }}
+            style={{
+              height: `${needButton ? "20px" : "10px"}`,
+              marginRight: "2%",
+            }}
             alt="Sword"
           />
-          <Typography sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}>
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              fontSize: isMobile ? 10 : 14,
+              textShadow:
+                "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+            }}
+          >
             {capacity}
           </Typography>
         </Box>
@@ -109,8 +118,8 @@ export default function BeastCard(props: CardProps) {
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "15px",
-              right: "20px",
+              bottom: "2%",
+              right: "5%",
               cursor: "pointer",
             }}
             onClick={() => open(id)}
@@ -125,8 +134,8 @@ export default function BeastCard(props: CardProps) {
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "40px",
-              left: "20px",
+              bottom: "calc(2% + 20px)",
+              left: "2%",
               cursor: "pointer",
             }}
             onClick={() => execute(id)}
@@ -143,8 +152,8 @@ export default function BeastCard(props: CardProps) {
         sx={{
           fontSize: isMobile ? 10 : 14,
           position: "absolute",
-          bottom: "15px",
-          left: "20px",
+          bottom: "2%",
+          left: "2%",
           color: "darkgrey",
         }}
       >
