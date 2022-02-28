@@ -132,11 +132,11 @@ const Home = () => {
                         </Typography>
                     </a>
                     <Grid container spacing={2} sx={{ my: 2, marginBottom: 4 }}>
-                        <Grid item xs={12} md={1} lg={3} xl={4}></Grid>
-                        <Grid item xs={12} md={10} lg={6} xl={4}>
+                        <Grid item xs={12} md={1} lg={3}></Grid>
+                        <Grid item xs={12} md={10} lg={6}>
                             <YourAchievements />
                         </Grid>
-                        <Grid item xs={12} md={1} lg={3} xl={4}></Grid>
+                        <Grid item xs={12} md={1} lg={3}></Grid>
                     </Grid>
                 </Box>
             </Box>
