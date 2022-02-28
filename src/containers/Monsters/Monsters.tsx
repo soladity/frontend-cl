@@ -41,6 +41,7 @@ import {
     getBaseGifURL,
     canHunt,
     hunt,
+    getBeastToken
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -112,6 +113,7 @@ interface LegionInterface {
     id: number;
     status: string;
     lastHuntTime: any;
+    warriorCapacity: number
 }
 
 const Monsters = () => {
@@ -134,9 +136,6 @@ const Monsters = () => {
     const [curComboLegionValue, setCurComboLegionValue] = useState("0");
     const [legions, setLegions] = useState(Array);
     const [legionIDs, setLegionIDs] = useState(Array);
-    const [beasts, setBeasts] = useState(Array);
-    const [warriors, setWarriors] = useState(Array);
-    const [mintedWarriorCnt, setMintedWarriorCnt] = useState(0);
     const [curLegion, setCurLegion] = useState<LegionInterface | null>();
     const [monsters, setMonsters] = useState(Array);
     const [curMonster, setCurMonster] = useState<MonsterInterface | null>();
@@ -172,13 +171,7 @@ const Monsters = () => {
         topics: [],
     };
 
-    let subscription = web3.eth.subscribe("logs", options, (err, event) => {
-        if (!err) {
-            console.log("event", event);
-        }
-    });
-
-    const initMonster = async () => {
+    const initMonster = async (legions: any) => {
         let monsterTmp;
         let monsterArraryTmp = [];
         for (let i = 1; i < 23; i++) {
@@ -187,6 +180,17 @@ const Monsters = () => {
         }
         console.log("monsterArraryTmp", monsterArraryTmp);
         setMonsters(monsterArraryTmp);
+
+        if (legions[0]) {
+            for (let i = 0; i < monsterArraryTmp.length; i++) {
+                const monster: any = monsterArraryTmp[i];
+                if (parseInt(monster?.ap) <= legions[0].attackPower) {
+                    setStrongestMonsterToHunt(i);
+                } else {
+                    break;
+                }
+            }
+        }
     };
 
     const updateMonster = async () => {
@@ -205,21 +209,30 @@ const Monsters = () => {
                 legionContract,
                 legionIDS[i]
             );
+            var warriorCapacity = 0
+            for (let j = 0; j < legionTmp.beasts.length; j++) {
+                console.log(await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+                warriorCapacity += parseInt((await getBeastToken(web3, beastContract, legionTmp.beasts[j])).capacity)
+            }
             legionArrayTmp.push({
                 ...legionTmp,
                 id: legionIDS[i],
                 status: legionStatus,
+                warriorCapacity: warriorCapacity
             });
         }
         setLegions(legionArrayTmp);
-        const tempLegionValue =
-            parseInt(curComboLegionValue) - 1 < 0
-                ? 0
-                : parseInt(curComboLegionValue) - 1;
-        setCurComboLegionValue(tempLegionValue + "");
-        setCurLegion(legionArrayTmp[tempLegionValue]);
-        setCurComboLegionValue(tempLegionValue + 1 + "");
-        setCurLegion(legionArrayTmp[tempLegionValue + 1]);
+        setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)])
+        if (legionArrayTmp[parseInt(curComboLegionValue)]) {
+            for (let i = 0; i < monsters.length; i++) {
+                const monster: any = monsters[i];
+                if (parseInt(monster?.ap) <= legionArrayTmp[parseInt(curComboLegionValue)].attackPower) {
+                    setStrongestMonsterToHunt(i);
+                } else {
+                    break;
+                }
+            }
+        }
     };
 
     const initialize = async () => {
@@ -232,9 +245,7 @@ const Monsters = () => {
         let legionTmp;
         let legionArrayTmp = [];
         let legionStatus = "";
-        let warriorCnt = 0;
         for (let i = 0; i < legionIDS.length; i++) {
-            // if (legionIDS[i] != 1) {
             legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
             legionTmp = await getLegionToken(
                 web3,
@@ -242,24 +253,23 @@ const Monsters = () => {
                 legionIDS[i]
             );
             console.log(legionTmp, legionStatus);
+            var warriorCapacity = 0
+            for (let j = 0; j < legionTmp.beasts.length; j++) {
+                console.log(await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+                warriorCapacity += parseInt((await getBeastToken(web3, beastContract, legionTmp.beasts[j])).capacity)
+            }
             legionArrayTmp.push({
                 ...legionTmp,
                 id: legionIDS[i],
                 status: legionStatus,
+                warriorCapacity: warriorCapacity
             });
-            warriorCnt += legionTmp.warriors.length;
-            // }
         }
-        await initMonster();
+        await initMonster(legionArrayTmp);
         setBaseJpgUrl(await getBaseJpgURL(web3, monsterContract));
         setBaseGifUrl(await getBaseGifURL(web3, monsterContract));
-        setBeasts(await getBeastBalance(web3, beastContract, account));
-        setWarriors(await getWarriorBalance(web3, warriorContract, account));
-        console.log(await getWarriorBalance(web3, warriorContract, account));
         setLegionIDs(legionIDS);
-        console.log(legionArrayTmp);
         setLegions(legionArrayTmp);
-        setMintedWarriorCnt(warriorCnt);
         setCurLegion(legionArrayTmp[0]);
         setLoading(false);
     };
@@ -274,19 +284,16 @@ const Monsters = () => {
     const handleCurLegionValue = (e: SelectChangeEvent) => {
         const selectedIndex = parseInt(e.target.value);
         const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface;
-        var strongestMonsterToHuntId: number;
         for (let i = 0; i < monsters.length; i++) {
             const monster: any = monsters[i];
             if (parseInt(monster?.ap) <= curLegionTmp.attackPower) {
                 setStrongestMonsterToHunt(i);
-                // strongestMonsterToHuntId = i;
             } else {
                 break;
             }
         }
         setCurComboLegionValue(e.target.value as string);
         setCurLegion(curLegionTmp);
-        // setStrongestMonsterToHunt(strongestMonsterToHuntId);
     };
 
     const handleHunt = async (monsterTokenID: number) => {
@@ -302,6 +309,7 @@ const Monsters = () => {
                 monsterTokenID
             );
             const result = response.events.Hunted.returnValues;
+            console.log(result)
             setHuntedRoll(result.roll);
             setHuntedStatus(result.success ? 1 : 2);
             dispatch(
@@ -310,7 +318,7 @@ const Monsters = () => {
                 })
             );
         } catch (e: any) {
-            console.log(e);
+            console.log('hunt result', e, 'hunt result');
             setDialogVisible(false);
         }
     };
@@ -354,9 +362,6 @@ const Monsters = () => {
         }
         return time;
     };
-    const navigate = useNavigate();
-
-    const toHighestMonster = (legionAP: any) => { };
 
     React.useEffect(() => {
         setTimeout(() => {
@@ -450,9 +455,6 @@ const Monsters = () => {
                                             cursor: "pointer",
                                             fontWeight: "bold",
                                         }}
-                                    // onClick={ () =>
-                                    //     toHighestMonster(curLegion?.attackPower)
-                                    // }
                                     >
                                         {curLegion?.attackPower.toFixed(0)} AP
                                     </Typography>
@@ -466,7 +468,7 @@ const Monsters = () => {
                                     }}
                                 >
                                     W {curLegion?.warriors.length}/
-                                    {warriors.length + mintedWarriorCnt}
+                                    {curLegion?.warriorCapacity}
                                 </Typography>
                             </Grid>
                             <Grid item xs={30} sm={12} md={7}>
@@ -551,19 +553,17 @@ const Monsters = () => {
                                             tokenID={index + 1}
                                             base={monster.base}
                                             minAP={monster.ap}
-                                            bouns={
+                                            bonus={
                                                 curLegion &&
                                                     monster.ap <
                                                     (
                                                         curLegion as LegionInterface
                                                     ).attackPower
-                                                    ? "" +
-                                                    ((
-                                                        curLegion as LegionInterface
-                                                    ).attackPower -
-                                                        monster.ap) /
-                                                    2000
-                                                    : "0"
+                                                    ?
+                                                    (parseInt(monster.base) + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000) > 89
+                                                        ? (89 - parseInt(monster.base)) + ''
+                                                        : ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 + ''
+                                                    : '0'
                                             }
                                             price={monster.reward}
                                             isHuntable={
@@ -712,17 +712,13 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("congSubtitle3")}{" "}
-                                        {parseInt(curMonster?.base as string) +
+                                        {(parseInt(curMonster?.base as string) +
                                             ((curMonster?.ap as number) <
                                                 (curLegion?.attackPower as number)
-                                                ? parseFloat(
-                                                    (
-                                                        ((curLegion?.attackPower as number) -
-                                                            (curMonster?.ap as number)) /
-                                                        2000
-                                                    ).toFixed(2)
-                                                )
-                                                : 0)}
+                                                ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
+                                                    ? (89 - parseInt(curMonster?.base as string))
+                                                    : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
+                                                : 0)).toFixed(2)}
                                     </Typography>
                                 </Box>
                             )}
@@ -781,17 +777,13 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("defeatSubtitle2")}{" "}
-                                        {parseInt(curMonster?.base as string) +
+                                        {(parseInt(curMonster?.base as string) +
                                             ((curMonster?.ap as number) <
                                                 (curLegion?.attackPower as number)
-                                                ? parseFloat(
-                                                    (
-                                                        ((curLegion?.attackPower as number) -
-                                                            (curMonster?.ap as number)) /
-                                                        2000
-                                                    ).toFixed(2)
-                                                )
-                                                : 0)}
+                                                ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
+                                                    ? (89 - parseInt(curMonster?.base as string))
+                                                    : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
+                                                : 0)).toFixed(2)}
                                     </Typography>
                                 </Box>
                             )}

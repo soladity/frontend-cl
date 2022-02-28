@@ -14,6 +14,8 @@ import { Card } from '@mui/material';
 
 import { navConfig } from '../../config';
 import { getTranslation } from '../../utils/translation';
+import { useDispatch } from "react-redux";
+import { setReloadStatus } from "../../actions/contractActions";
 
 const useStyles = makeStyles({
 	root: {
@@ -26,6 +28,7 @@ const useStyles = makeStyles({
 
 const NavList = (props: any) => {
 	const classes = useStyles();
+	const dispatch = useDispatch();
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [language, setLanguage] = React.useState<string | null>('en');
@@ -90,6 +93,11 @@ const NavList = (props: any) => {
 		setAnchorEl(null);
 		setLanguage(value);
 		localStorage.setItem('lang', value);
+		dispatch(
+			setReloadStatus({
+				reloadContractStatus: new Date(),
+			})
+		);
 	};
 
 	return <div>

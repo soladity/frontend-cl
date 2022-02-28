@@ -39,7 +39,7 @@ export function animateScroll({ targetPosition, initialPosition, duration }) {
         // calculate new position for every thick of the requesAnimationFrame
         position =
             initialPosition -
-            amountOfPixelsToScroll * Math.min(easedProgress, 1);
+            amountOfPixelsToScroll * Math.min(easedProgress, 1) - 100;
         // set the scrollbar position
         main.scrollTo(initialPosition, position);
 
