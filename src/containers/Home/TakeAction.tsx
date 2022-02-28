@@ -467,7 +467,7 @@ const TakeAction = () => {
                     TAKE ACTION
                 </Typography>
                 <Box>
-                    <Grid container spacing={{ sm: 2, md: 1, lg: 2 }}>
+                    <Grid container spacing={{ xs: 2, sm: 2, md: 1, lg: 2 }}>
                         <Grid item xs={6} md={12} lg={6}>
                             <Box
                                 sx={{
