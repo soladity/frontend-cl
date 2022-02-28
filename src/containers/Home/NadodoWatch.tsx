@@ -35,16 +35,18 @@ const NadodoWatch = () => {
             setHuntTax(
                 ((await getFee(feeHandlerContract, 1)) / 100).toFixed(0)
             );
-            setBuyTax(((await getFee(feeHandlerContract, 2)) / 100).toFixed(0));
-            setSellTax(
-                ((await getFee(feeHandlerContract, 3)) / 100).toFixed(0)
-            );
+            // setBuyTax(((await getFee(feeHandlerContract, 2)) / 100).toFixed(0));
+            // setSellTax(
+            //     ((await getFee(feeHandlerContract, 3)) / 100).toFixed(0)
+            // );
+            setBuyTax('2')
+            setSellTax('8')
             setDamageReduction(
-                ((await getFee(feeHandlerContract, 4)) / 100).toFixed(0)
+                ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
             );
-            setSummonFee(await getFee(feeHandlerContract, 5));
-            setSuppliesFee14(await getFee(feeHandlerContract, 6));
-            setSuppliesFee28(await getFee(feeHandlerContract, 7));
+            setSummonFee(await getFee(feeHandlerContract, 3));
+            setSuppliesFee14(await getFee(feeHandlerContract, 4));
+            setSuppliesFee28(await getFee(feeHandlerContract, 5));
         } catch (error) {
             console.log(error);
         }

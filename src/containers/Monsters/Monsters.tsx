@@ -171,12 +171,6 @@ const Monsters = () => {
         topics: [],
     };
 
-    let subscription = web3.eth.subscribe("logs", options, (err, event) => {
-        if (!err) {
-            console.log("event", event);
-        }
-    });
-
     const initMonster = async (legions: any) => {
         let monsterTmp;
         let monsterArraryTmp = [];
@@ -228,14 +222,17 @@ const Monsters = () => {
             });
         }
         setLegions(legionArrayTmp);
-        const tempLegionValue =
-            parseInt(curComboLegionValue) - 1 < 0
-                ? 0
-                : parseInt(curComboLegionValue) - 1;
-        setCurComboLegionValue(tempLegionValue + "");
-        setCurLegion(legionArrayTmp[tempLegionValue]);
-        setCurComboLegionValue(tempLegionValue + 1 + "");
-        setCurLegion(legionArrayTmp[tempLegionValue + 1]);
+        setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)])
+        if (legionArrayTmp[parseInt(curComboLegionValue)]) {
+            for (let i = 0; i < monsters.length; i++) {
+                const monster: any = monsters[i];
+                if (parseInt(monster?.ap) <= legionArrayTmp[parseInt(curComboLegionValue)].attackPower) {
+                    setStrongestMonsterToHunt(i);
+                } else {
+                    break;
+                }
+            }
+        }
     };
 
     const initialize = async () => {
