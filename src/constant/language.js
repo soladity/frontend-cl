@@ -36,7 +36,7 @@ export const translations = {
     ph: "bloodstone",
   },
   summonBeast: {
-    en: "Summon Beast",
+    en: "Summon Beasts",
     es: "Invocar Bestia",
     cn: "召唤兽",
     pt: "Invocar Besta",
@@ -396,7 +396,7 @@ export const translations = {
     ph: "Naglo-load ng mga Hayop ...",
   },
   summonWarrior: {
-    en: "Summon Warrior",
+    en: "Summon Warriors",
     es: "Invocar guerrero",
     cn: "召唤战士",
     pt: "Invocar Guerreiro",

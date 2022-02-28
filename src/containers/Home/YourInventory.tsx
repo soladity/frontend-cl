@@ -211,14 +211,14 @@ const YourInventory = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("beasts")}: <span className="legionOrangeColor">{beastBalance}</span>
+                    {getTranslation("warriors")}: <span className="legionOrangeColor">{warriorBalance}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("warriors")}: <span className="legionOrangeColor">{warriorBalance}</span>
+                    {getTranslation("beasts")}: <span className="legionOrangeColor">{beastBalance}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
