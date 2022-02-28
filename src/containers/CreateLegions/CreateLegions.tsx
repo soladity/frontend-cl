@@ -319,22 +319,29 @@ const CreateLegions: React.FC = () => {
     if (allowance === "0") {
       await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
     }
-    await mintLegion(
-      web3,
-      legionContract,
-      account,
-      legionName,
-      dropItemList
-        .filter((item) => item.w5b === false)
-        .map((fitem: any) => {
-          return parseInt(fitem["id"]);
-        }),
-      dropItemList
-        .filter((item) => item.w5b === true)
-        .map((fitem: any) => {
-          return parseInt(fitem["id"]);
-        })
-    );
+    try {
+      await mintLegion(
+        web3,
+        legionContract,
+        account,
+        legionName,
+        dropItemList
+          .filter((item) => item.w5b === false)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          }),
+        dropItemList
+          .filter((item) => item.w5b === true)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          })
+      );
+    } catch (e: any) {
+      if (e.code === 4001) {
+        setMintLoading(false);
+        return;
+      }
+    }
     setMintLoading(false);
     navigate("/legions");
   };
