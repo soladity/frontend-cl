@@ -74,16 +74,15 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
               display: "flex",
               flexWrap: "wrap",
               position: "absolute",
-              top: "15px",
+              top: "2%",
               justifyContent: "space-between",
-              width: "100%",
-              marginLeft: "10px",
-              paddingRight: "20px",
+              width: "96%",
+              paddingLeft: "2%",
             }}
           >
             <Typography
               sx={{
-                fontSize: isMobile ? 10 : 14,
+                fontSize: isMobile ? 8 : 10,
                 fontWeight: "bold",
               }}
             >
@@ -96,7 +95,12 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
               }}
             >
               <Typography
-                sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: isMobile ? 10 : 14,
+                  textShadow:
+                    "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+                }}
               >
                 {formatNumber(power)}
               </Typography>
@@ -106,8 +110,8 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             sx={{
               fontSize: isMobile ? 10 : 14,
               position: "absolute",
-              bottom: "15px",
-              left: "20px",
+              bottom: "2%",
+              left: "2%",
               color: "darkgrey",
             }}
           >
@@ -128,16 +132,15 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
               display: "flex",
               flexWrap: "wrap",
               position: "absolute",
-              top: "15px",
+              top: "2%",
               justifyContent: "space-between",
-              width: "100%",
-              marginLeft: "10px",
-              paddingRight: "20px",
+              width: "96%",
+              paddingLeft: "2%",
             }}
           >
             <Typography
               sx={{
-                fontSize: isMobile ? 10 : 14,
+                fontSize: isMobile ? 8 : 10,
                 fontWeight: "bold",
               }}
             >
@@ -151,11 +154,19 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             >
               <img
                 src="/assets/images/sword.png"
-                style={{ height: "25px", marginRight: "10px" }}
+                style={{
+                  height: `${isMobile ? "8px" : "10px"}`,
+                  marginRight: "1%",
+                }}
                 alt="Sword"
               />
               <Typography
-                sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: isMobile ? 10 : 14,
+                  textShadow:
+                    "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+                }}
               >
                 {capacity}
               </Typography>
@@ -165,8 +176,8 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             sx={{
               fontSize: isMobile ? 10 : 14,
               position: "absolute",
-              bottom: "15px",
-              left: "20px",
+              bottom: "2%",
+              left: "2%",
               color: "darkgrey",
             }}
           >
