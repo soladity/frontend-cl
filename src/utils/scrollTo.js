@@ -11,7 +11,7 @@ const getElementPosition = (element) => element.offsetTop;
 
 export const scrollTo = ({ id, duration = 3000 }) => {
     // the position of the scroll bar before the user clicks the button
-    const initialPosition = document.getElementById("main").offsetTop;
+    const initialPosition = document.getElementById("main").scrollTop;
 
     // decide what type of reference that is
     // if neither ref or id is provided  set element to null

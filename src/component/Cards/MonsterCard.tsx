@@ -13,7 +13,7 @@ type CardProps = {
     image: string;
     minAP: string;
     base: string;
-    bouns: string;
+    bonus: string;
     price: string;
     tokenID: number;
     isHuntable: boolean;
@@ -25,7 +25,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
     image,
     minAP,
     base,
-    bouns,
+    bonus,
     price,
     tokenID,
     isHuntable,
@@ -70,7 +70,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
                     <Grid item>
                         <Typography variant="h6">Bonus %</Typography>
                         <Typography variant="h6">
-                            {parseInt(bouns).toFixed(1)}
+                            {parseFloat(bonus).toFixed(1)}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -107,7 +107,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             >
                 <Grid item>
                     <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                        {(Math.round(parseInt(base) + parseFloat(bouns))) > 89 ? 89 : (Math.round(parseInt(base) + parseFloat(bouns)))}% to win
+                        {(Math.round(parseInt(base) + parseFloat(bonus))) > 89 ? 89 : ((parseInt(base) + parseFloat(bonus))).toFixed(1)}% to win
                     </Typography>
                 </Grid>
                 <Grid item>
