@@ -769,13 +769,9 @@ const CreateLegions: React.FC = () => {
                   fontSize: isSmallThanSM ? 10 : 14,
                 }}
               >
-                <Grid
-                  item
-                  xs={12}
-                  sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
-                >
+                <Grid item xs={12} sx={{ pt: 2, px: 2 }}>
                   <Grid container sx={{ justifyContent: "space-around" }}>
-                    <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
+                    <Grid item sx={{ mb: 2 }}>
                       <Input
                         style={{
                           fontSize: isSmallThanSM ? 10 : 14,
@@ -800,21 +796,21 @@ const CreateLegions: React.FC = () => {
                         disabled={!isWDropable || mintLoading}
                       >
                         {isSmallThanSM ? (
-                          "Create (" + totalAP + "AP)"
+                          "Create (" + formatNumber(totalAP) + "AP)"
                         ) : mintLoading ? (
                           <Spinner color="white" size={40} />
                         ) : totalCP <
                           dropItemList.filter((item) => item.w5b).length ? (
                           getTranslation("createLegion") +
                           " " +
-                          totalAP +
+                          formatNumber(totalAP) +
                           " AP" +
                           " (Not enough beasts)"
                         ) : (
                           getTranslation("createLegion") +
                           (totalAP < createlegions.main.minAvailableAP
                             ? " (min 2000 AP needed)"
-                            : " " + totalAP + " AP")
+                            : " " + formatNumber(totalAP) + " AP")
                         )}
                       </CommonBtn>
                     </Grid>
@@ -824,8 +820,8 @@ const CreateLegions: React.FC = () => {
                   item
                   xs={12}
                   sx={{
-                    px: isSmallThanSM ? 2 : 4,
-                    pt: isSmallThanSM ? 2 : 4,
+                    px: 2,
+                    pt: 2,
                     textAlign: "center",
                   }}
                 >
@@ -833,13 +829,13 @@ const CreateLegions: React.FC = () => {
                     ? getTranslation("ShortFeeToolTip") + mintFee + " $BLST"
                     : getTranslation("LongFeeToolTip") + mintFee + " $BLST"}
                 </Grid>
-                <Grid item xs={12} sx={isSmallThanSM ? { p: 2 } : { p: 4 }}>
+                <Grid item xs={12} sx={{ p: 2 }}>
                   <Grid
                     container
                     sx={{
                       display: "flex",
                       justifyContent: "space-around",
-                      pb: isSmallThanSM ? 2 : 4,
+                      pb: 2,
                       borderBottom: "2px dashed grey",
                     }}
                   >

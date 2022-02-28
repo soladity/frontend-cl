@@ -824,30 +824,22 @@ const UpdateLegions: React.FC = () => {
             {/* Right Panel */}
             <Grid item xs={6}>
               <Card sx={{ height: "100%", fontSize: isSmallThanSM ? 10 : 14 }}>
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ p: isSmallThanSM ? 2 : 4, textAlign: "center" }}
-                >
+                <Grid item xs={12} sx={{ p: 2, textAlign: "center" }}>
                   {isSmallThanSM
                     ? "Existing AP is " +
-                      tempAP +
+                      formatNumber(tempAP) +
                       " AP - Fee " +
                       mintFee +
                       " $BLST"
                     : "Your existing legion has " +
-                      tempAP +
+                      formatNumber(tempAP) +
                       " AP - Fee to update " +
                       mintFee +
                       " $BLST"}
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
-                >
+                <Grid item xs={12} sx={{ pt: 2, px: 2 }}>
                   <Grid container sx={{ justifyContent: "space-around" }}>
-                    <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
+                    <Grid item sx={{ mb: 2 }}>
                       <Input
                         readOnly
                         style={{
@@ -869,30 +861,26 @@ const UpdateLegions: React.FC = () => {
                         disabled={!isWDropable || mintLoading}
                       >
                         {isSmallThanSM ? (
-                          "Update (" + totalAP + "AP)"
+                          "Update (" + formatNumber(totalAP) + "AP)"
                         ) : mintLoading ? (
                           <Spinner color="white" size={40} />
                         ) : (
                           getTranslation("updateLegion") +
                           " to " +
-                          totalAP +
+                          formatNumber(totalAP) +
                           "AP"
                         )}
                       </CommonBtn>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ px: isSmallThanSM ? 2 : 4, pt: isSmallThanSM ? 2 : 4 }}
-                >
+                <Grid item xs={12} sx={{ px: 2, pt: 2 }}>
                   <Grid
                     container
                     sx={{
                       display: "flex",
                       justifyContent: "space-around",
-                      pb: isSmallThanSM ? 2 : 4,
+                      pb: 2,
                       borderBottom: "2px dashed grey",
                     }}
                   >
