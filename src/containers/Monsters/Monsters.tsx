@@ -682,9 +682,13 @@ const Monsters = () => {
                                 <CardMedia
                                     component="img"
                                     image={
-                                        "/assets/images/defeat/m" +
-                                        curMonsterID +
-                                        ".gif"
+                                        showAnimation === "0"
+                                            ? imageUrls.baseUrl +
+                                            imageUrls.monsters[curMonsterID]
+                                                .dead_jpg
+                                            : imageUrls.baseUrl +
+                                            imageUrls.monsters[curMonsterID]
+                                                .dead_gif
                                     }
                                     alt="Monster Image"
                                     loading="lazy"
