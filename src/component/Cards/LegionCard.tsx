@@ -259,7 +259,7 @@ export default function LegionCard(props: CardProps) {
           position: "absolute",
           alignItems: "center",
           bottom: "40px",
-          left: "calc(50% - 45px)",
+          left: "calc(50% - 55px)",
           fontWeight: "bold",
         }}
       >
@@ -267,11 +267,12 @@ export default function LegionCard(props: CardProps) {
           variant="h6"
           sx={{
             fontSize: "0.8rem",
+            fontWeight: '600',
             textShadow:
-              "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+              "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          W {warriors.length}/{warriors.length+warriorBalance}&nbsp;&nbsp;&nbsp;B {beasts.length}
+          W {warriors.length} / {warriors.length+warriorBalance}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B {beasts.length}
         </Typography>
         <Box
           sx={{
