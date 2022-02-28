@@ -151,11 +151,15 @@ const YourAchievements = () => {
     const getLegionStatus = async () => {
         try {
             const ids = await getLegionTokenIds(web3, legionContract, account);
+            var legionCount = 0
             for (let i = 0; i < ids.length; i++) {
                 const legion = await getLegionToken(web3, legionContract, ids[i]);
                 if (legion.attackPower > 30000) {
-                    setLegionMaster(true);
-                    return;
+                    legionCount++;
+                    if (legionCount == 10) {
+                        setLegionMaster(true);
+                        return;
+                    }
                 }
             }
         } catch (error) {
