@@ -287,14 +287,14 @@ const YourInventory = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    1 USD = xx $BLST
+                    1 USD = <span className="legionOrangeColor">xx $BLST</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    1 BLST = xx USD
+                    1 BLST = <span className="legionOrangeColor">xx USD</span>
                 </Typography>
             </Box>
         </Card>

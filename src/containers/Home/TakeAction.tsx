@@ -467,8 +467,8 @@ const TakeAction = () => {
                     TAKE ACTION
                 </Typography>
                 <Box>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                    <Grid container spacing={{ xs: 2, sm: 2, md: 1, lg: 2 }}>
+                        <Grid item xs={6} md={12} lg={6}>
                             <Box
                                 sx={{
                                     display: "flex",
@@ -485,6 +485,7 @@ const TakeAction = () => {
                                         onClick={handlePopoverOpenSummonWarrior}
                                         sx={{
                                             fontWeight: "bold",
+                                            wordBreak: 'break-word',
                                             fontSize: 14,
                                             width: "100%",
                                             marginBottom: 1,
@@ -512,6 +513,7 @@ const TakeAction = () => {
                                             <Box
                                                 sx={{
                                                     marginLeft: "auto",
+                                                    wordBreak: 'break-word',
                                                     cursor: "pointer",
                                                     marginRight: 1,
                                                     marginTop: 1,
@@ -545,6 +547,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -562,6 +565,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -584,6 +588,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -606,6 +611,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -628,6 +634,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -650,6 +657,7 @@ const TakeAction = () => {
                                         sx={{
                                             fontSize: 14,
                                             fontWeight: "bold",
+                                            wordBreak: 'break-word',
                                             width: "100%",
                                             marginBottom: 1,
                                         }}
@@ -724,6 +732,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -746,6 +755,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -768,6 +778,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -790,6 +801,7 @@ const TakeAction = () => {
                                                 }
                                                 sx={{
                                                     fontSize: 14,
+                                                    wordBreak: 'break-word',
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -809,6 +821,7 @@ const TakeAction = () => {
                                     <CommonBtn
                                         sx={{
                                             fontWeight: "bold",
+                                            wordBreak: 'break-word',
                                             fontSize: 14,
                                             width: "100%",
                                             marginBottom: 1,
@@ -830,17 +843,34 @@ const TakeAction = () => {
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
+                                                wordBreak: 'break-word',
                                                 fontSize: 14,
                                                 width: "100%",
+                                                marginBottom: 1,
                                             }}
                                         >
                                             {getTranslation("hunt")}
                                         </CommonBtn>
                                     </NavLink>
+                                    <NavLink
+                                        to="/hunt"
+                                        className="non-style"
+                                    >
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                wordBreak: 'break-word',
+                                                fontSize: 14,
+                                                width: "100%",
+                                            }}
+                                        >
+                                            {getTranslation("takeActionMassHunt")}
+                                        </CommonBtn>
+                                    </NavLink>
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={6} md={12} lg={6}>
                             <Box
                                 sx={{
                                     display: "flex",
@@ -853,27 +883,13 @@ const TakeAction = () => {
                                     sx={{ textAlign: "center", width: "100%" }}
                                 >
                                     <NavLink
-                                        to="/beastsMarketplace"
-                                        className="non-style"
-                                    >
-                                        <CommonBtn
-                                            sx={{
-                                                fontWeight: "bold",
-                                                fontSize: 14,
-                                                width: "100%",
-                                                marginBottom: 1,
-                                            }}
-                                        >
-                                            {getTranslation("takeActionBuyBeasts")}
-                                        </CommonBtn>
-                                    </NavLink>
-                                    <NavLink
                                         to="/warriorsMarketplace"
                                         className="non-style"
                                     >
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
+                                                wordBreak: 'break-word',
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
@@ -885,12 +901,29 @@ const TakeAction = () => {
                                         </CommonBtn>
                                     </NavLink>
                                     <NavLink
+                                        to="/beastsMarketplace"
+                                        className="non-style"
+                                    >
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                wordBreak: 'break-word',
+                                                fontSize: 14,
+                                                width: "100%",
+                                                marginBottom: 1,
+                                            }}
+                                        >
+                                            {getTranslation("takeActionBuyBeasts")}
+                                        </CommonBtn>
+                                    </NavLink>
+                                    <NavLink
                                         to="/legionsMarketplace"
                                         className="non-style"
                                     >
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
+                                                wordBreak: 'break-word',
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
@@ -899,10 +932,24 @@ const TakeAction = () => {
                                             {getTranslation("takeActionBuyLegions")}
                                         </CommonBtn>
                                     </NavLink>
+                                    <a href="https://poocoin.app" target='_blank'>
+                                        <CommonBtn
+                                            sx={{
+                                                fontWeight: "bold",
+                                                wordBreak: 'break-word',
+                                                fontSize: 14,
+                                                width: "100%",
+                                                marginBottom: 1,
+                                            }}
+                                        >
+                                            {getTranslation("takeActionPoocoin")}
+                                        </CommonBtn>
+                                    </a>
                                     <a href="https://pancakeswap.com" target='_blank'>
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
+                                                wordBreak: 'break-word',
                                                 fontSize: 14,
                                                 width: "100%",
                                             }}

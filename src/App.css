@@ -4,11 +4,14 @@
 .legionOrangeColor {
     color: #f66810;
 }
-.legionHoverOrangeColor {
-    color: #e89f38;
-}
-.legionHoverOrangeColor:hover {
+.achievementColor {
     color: #f66810;
+    transition: 0.4s all;
+    cursor: pointer;
+}
+.achievementColor:hover {
+    color: #a44916;
+    transition: 0.4s all;
 }
 .legionBtn {
     background: "radial-gradient(#dfd80d, #fb9300)" !important;
