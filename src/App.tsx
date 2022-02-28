@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { injected } from "./wallet";
 import View from "./View";
 import "./App.css";
+import { useSelector } from 'react-redux'
 
 function ResponsiveDrawer(props: any) {
   const [loaded, setLoaded] = React.useState(false);
@@ -13,6 +14,10 @@ function ResponsiveDrawer(props: any) {
     activate: activateNetwork,
   } = useWeb3React();
 
+
+  const { reloadContractStatus } = useSelector(
+    (state: any) => state.contractReducer
+  );
 
   // const path = window.location.pathname;
   // function stringRemover(str: string): string {

@@ -4,11 +4,14 @@
 .legionOrangeColor {
     color: #f66810;
 }
-.legionHoverOrangeColor {
-    color: #e89f38;
-}
-.legionHoverOrangeColor:hover {
+.achievementColor {
     color: #f66810;
+    transition: 0.4s all;
+    cursor: pointer;
+}
+.achievementColor:hover {
+    color: #a44916;
+    transition: 0.4s all;
 }
 .legionBtn {
     background: "radial-gradient(#dfd80d, #fb9300)" !important;
@@ -24,10 +27,6 @@ a {
     display: block;
     color: white;
     text-decoration: none;
-}
-.nav-bar-item.active {
-    background: #1f2a37;
-    background-image: "/assets/images/fireMenu.png";
 }
 
 .nav-bar-nostyle {
@@ -61,4 +60,13 @@ a {
 }
 .MuiButton-root a {
     color: white;
+}
+
+.hover-style:hover{
+    color: #f66810;
+    text-decoration: none;
+}
+
+.gray{
+    color: gray;
 }
