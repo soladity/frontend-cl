@@ -66,35 +66,42 @@ export default function BeastCard(props: CardProps) {
           <Skeleton width="60%" />
         </React.Fragment>
       )}
-      <Typography
-        sx={{
-          fontSize: isMobile ? 10 : 14,
-          position: "absolute",
-          top: "15px",
-          left: "20px",
-          fontWeight: "bold",
-        }}
-      >
-        {type}
-      </Typography>
       <Box
         sx={{
           display: "flex",
+          flexWrap: "wrap",
           position: "absolute",
-          alignItems: "center",
           top: "15px",
-          right: "20px",
-          fontWeight: "bold",
+          justifyContent: "space-between",
+          width: "100%",
+          marginLeft: "10px",
+          paddingRight: "20px",
         }}
       >
-        <img
-          src="/assets/images/sword.png"
-          style={{ height: "20px", marginRight: "10px" }}
-          alt="Sword"
-        />
-        <Typography sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}>
-          {capacity}
+        <Typography
+          sx={{
+            fontSize: isMobile ? 10 : 14,
+            fontWeight: "bold",
+          }}
+        >
+          {type}
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "bold",
+          }}
+        >
+          <img
+            src="/assets/images/sword.png"
+            style={{ height: "20px", marginRight: "10px" }}
+            alt="Sword"
+          />
+          <Typography sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}>
+            {capacity}
+          </Typography>
+        </Box>
       </Box>
       {needButton && (
         <>
@@ -130,19 +137,19 @@ export default function BeastCard(props: CardProps) {
               alt="Execute"
             />
           </Box>
-          <Typography
-            sx={{
-              fontSize: isMobile ? 10 : 14,
-              position: "absolute",
-              bottom: "15px",
-              left: "20px",
-              color: "darkgrey",
-            }}
-          >
-            #{id}
-          </Typography>
         </>
       )}
+      <Typography
+        sx={{
+          fontSize: isMobile ? 10 : 14,
+          position: "absolute",
+          bottom: "15px",
+          left: "20px",
+          color: "darkgrey",
+        }}
+      >
+        #{id}
+      </Typography>
     </Card>
   );
 }
