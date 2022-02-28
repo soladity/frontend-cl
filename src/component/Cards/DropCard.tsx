@@ -69,31 +69,38 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             loading="lazy"
             onLoad={handleImageLoaded}
           />
-          <Typography
-            sx={{
-              fontSize: isMobile ? 10 : 14,
-              position: "absolute",
-              top: "15px",
-              left: "20px",
-              fontWeight: "bold",
-            }}
-          >
-            {type}
-          </Typography>
           <Box
             sx={{
               display: "flex",
+              flexWrap: "wrap",
               position: "absolute",
               top: "15px",
-              right: "20px",
-              fontWeight: "bold",
+              justifyContent: "space-between",
+              width: "100%",
+              marginLeft: "10px",
+              paddingRight: "20px",
             }}
           >
             <Typography
-              sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+              sx={{
+                fontSize: isMobile ? 10 : 14,
+                fontWeight: "bold",
+              }}
             >
-              {formatNumber(power)}
+              {type}
             </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                fontWeight: "bold",
+              }}
+            >
+              <Typography
+                sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+              >
+                {formatNumber(power)}
+              </Typography>
+            </Box>
           </Box>
           <Typography
             sx={{
@@ -116,36 +123,43 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             loading="lazy"
             onLoad={handleImageLoaded}
           />
-          <Typography
-            sx={{
-              fontSize: isMobile ? 10 : 14,
-              position: "absolute",
-              top: "15px",
-              left: "20px",
-              fontWeight: "bold",
-            }}
-          >
-            {type}
-          </Typography>
           <Box
             sx={{
               display: "flex",
+              flexWrap: "wrap",
               position: "absolute",
               top: "15px",
-              right: "20px",
-              fontWeight: "bold",
+              justifyContent: "space-between",
+              width: "100%",
+              marginLeft: "10px",
+              paddingRight: "20px",
             }}
           >
-            <img
-              src="/assets/images/sword.png"
-              style={{ height: "25px", marginRight: "10px" }}
-              alt="Sword"
-            />
             <Typography
-              sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+              sx={{
+                fontSize: isMobile ? 10 : 14,
+                fontWeight: "bold",
+              }}
             >
-              {capacity}
+              {type}
             </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                fontWeight: "bold",
+              }}
+            >
+              <img
+                src="/assets/images/sword.png"
+                style={{ height: "25px", marginRight: "10px" }}
+                alt="Sword"
+              />
+              <Typography
+                sx={{ fontWeight: "bold", fontSize: isMobile ? 10 : 14 }}
+              >
+                {capacity}
+              </Typography>
+            </Box>
           </Box>
           <Typography
             sx={{
