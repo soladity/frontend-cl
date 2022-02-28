@@ -174,7 +174,7 @@ const Monsters = () => {
     const initMonster = async (legions: any) => {
         let monsterTmp;
         let monsterArraryTmp = [];
-        for (let i = 1; i < 23; i++) {
+        for (let i = 1; i < 25; i++) {
             monsterTmp = await getMonsterInfo(web3, monsterContract, i);
             monsterArraryTmp.push({ ...monsterTmp, id: i });
         }
@@ -308,7 +308,9 @@ const Monsters = () => {
                 curLegion?.id,
                 monsterTokenID
             );
-            const result = response.events.Hunted.returnValues;
+            const keys = Object.keys(response.events)
+            console.log(keys)
+            const result = response.events[keys[0]].returnValues;
             console.log(result)
             setHuntedRoll(result.roll);
             setHuntedStatus(result.success ? 1 : 2);
