@@ -718,7 +718,7 @@ const Monsters = () => {
                                                 ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
                                                     ? (89 - parseInt(curMonster?.base as string))
                                                     : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(2)}
+                                                : 0)).toFixed(0)}
                                     </Typography>
                                 </Box>
                             )}
@@ -783,7 +783,7 @@ const Monsters = () => {
                                                 ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
                                                     ? (89 - parseInt(curMonster?.base as string))
                                                     : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(2)}
+                                                : 0)).toFixed(0)}
                                     </Typography>
                                 </Box>
                             )}
