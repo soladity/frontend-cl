@@ -19,7 +19,7 @@ export const themeConfig = createTheme({
       main: '#f66810'
     },
     secondary: {
-      main: '#ef4444'
+      main: '#a44916'
     },
     info: {
       main: '#312881'

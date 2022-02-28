@@ -177,9 +177,9 @@ const NavList = (props: any) => {
 			</Box>
 			{navConfig.navBar.left.map((navItem, index) => (
 				navItem.type === "footer" &&
-				<a href='https://cryptogames.agency' target='_blank' className='non-style' key={index}>
-					<Card key={index} sx={{ m: 2, p: 2 }}>
-						<Typography variant="subtitle2" color='gray' sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+				<a href='https://cryptogames.agency' target='_blank' className='hover-style gray' key={index}>
+					<Card key={index} sx={{ m: 2, p: 2, color: 'inherit' }}>
+						<Typography variant="subtitle2" color='inherit' sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
 							{getTranslation(navItem.title1)}
 							<img src='/assets/images/heart.png' alt='favorite' style={{ width: '14px', height: '14px', margin: '0 10px' }} />
 							{getTranslation(navItem.title2)}

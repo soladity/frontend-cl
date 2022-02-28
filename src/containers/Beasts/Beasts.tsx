@@ -500,7 +500,7 @@ const Beasts = () => {
 						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
 							{balance}
 						</Typography>
-						<CommonBtn sx={{ fontWeight: 'bold' }}>
+						<CommonBtn sx={{ fontWeight: 'bold', mt: 1 }}>
 							<NavLink to='/createlegions' className='non-style'>
 								{getTranslation('createLegion')}
 							</NavLink>
@@ -544,7 +544,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} isMobile={false} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} isMobile={false} needButton={true} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
 					}

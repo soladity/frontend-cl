@@ -25,10 +25,6 @@ a {
     color: white;
     text-decoration: none;
 }
-.nav-bar-item.active {
-    background: #1f2a37;
-    background-image: "/assets/images/fireMenu.png";
-}
 
 .nav-bar-nostyle {
     color: inherit;
@@ -61,4 +57,13 @@ a {
 }
 .MuiButton-root a {
     color: white;
+}
+
+.hover-style:hover{
+    color: #f66810;
+    text-decoration: none;
+}
+
+.gray{
+    color: gray;
 }
