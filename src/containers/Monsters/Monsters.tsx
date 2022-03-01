@@ -14,6 +14,8 @@ import {
     DialogTitle,
     DialogActions,
     DialogContent,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
@@ -55,6 +57,13 @@ import imageUrls from "../../constant/images";
 import { useNavigate } from "react-router-dom";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionUp(props: TransitionProps) {
+    return <Slide {...props} direction="up" />;
+}
 
 const useStyles = makeStyles(() => ({
     Card: {
@@ -122,6 +131,9 @@ const Monsters = () => {
     const { account } = useWeb3React();
     const web3 = useWeb3();
 
+    //SnackBar
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
     const monsterRef = React.useRef(null);
 
     const legionContract = useLegion();
@@ -145,6 +157,7 @@ const Monsters = () => {
     const [huntedStatus, setHuntedStatus] = useState(0);
     const [continueLoading, setContinueLoading] = useState(false);
     const [huntedRoll, setHuntedRoll] = useState(0);
+    const [huntAvailablePercent, setHuntAvailablePercent] = useState(0)
     const [currentTime, setCurrentTime] = React.useState(new Date());
     const [strongestMonsterToHunt, setStrongestMonsterToHunt] =
         React.useState(0);
@@ -313,6 +326,7 @@ const Monsters = () => {
             const result = response.events[keys[0]].returnValues;
             console.log(result)
             setHuntedRoll(result.roll);
+            setHuntAvailablePercent(result.percent)
             setHuntedStatus(result.success ? 1 : 2);
             dispatch(
                 setReloadStatus({
@@ -322,6 +336,12 @@ const Monsters = () => {
         } catch (e: any) {
             console.log('hunt result', e, 'hunt result');
             setDialogVisible(false);
+            if (e.code == 4001) {
+
+            } else {
+                setSnackBarMessage(getTranslation("huntTransactionFailed"));
+                setOpenSnackBar(true);
+            }
         }
     };
 
@@ -556,7 +576,8 @@ const Monsters = () => {
                                             base={monster.base}
                                             minAP={monster.ap}
                                             bonus={
-                                                curLegion &&
+                                                index < 20 &&
+                                                    curLegion &&
                                                     monster.ap <
                                                     (
                                                         curLegion as LegionInterface
@@ -564,7 +585,7 @@ const Monsters = () => {
                                                     ?
                                                     (parseInt(monster.base) + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000) > 89
                                                         ? (89 - parseInt(monster.base)) + ''
-                                                        : ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 + ''
+                                                        : Math.floor(((curLegion as LegionInterface).attackPower - monster.ap) / 2000) + ''
                                                     : '0'
                                             }
                                             price={monster.reward}
@@ -686,10 +707,10 @@ const Monsters = () => {
                                     image={
                                         showAnimation === "0"
                                             ? imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID]
+                                            imageUrls.monsters[curMonsterID - 1]
                                                 .dead_jpg
                                             : imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID]
+                                            imageUrls.monsters[curMonsterID - 1]
                                                 .dead_gif
                                     }
                                     alt="Monster Image"
@@ -718,20 +739,14 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("congSubtitle3")}{" "}
-                                        {(parseInt(curMonster?.base as string) +
-                                            ((curMonster?.ap as number) <
-                                                (curLegion?.attackPower as number)
-                                                ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
-                                                    ? (89 - parseInt(curMonster?.base as string))
-                                                    : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(0)}
+                                        {huntAvailablePercent}
                                     </Typography>
                                 </Box>
                             )}
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -783,20 +798,14 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("defeatSubtitle2")}{" "}
-                                        {(parseInt(curMonster?.base as string) +
-                                            ((curMonster?.ap as number) <
-                                                (curLegion?.attackPower as number)
-                                                ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
-                                                    ? (89 - parseInt(curMonster?.base as string))
-                                                    : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(0)}
+                                        {huntAvailablePercent}
                                     </Typography>
                                 </Box>
                             )}
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -808,6 +817,27 @@ const Monsters = () => {
                     </>
                 )}
             </Dialog>
+            <Snackbar
+                open={openSnackBar}
+                TransitionComponent={TransitionUp}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackBar(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                key={TransitionUp ? TransitionUp.name : ""}
+            >
+                <Alert
+                    onClose={() => setOpenSnackBar(false)}
+                    variant="filled"
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    <Box
+                        sx={{ cursor: "pointer" }}
+                    >
+                        {snackBarMessage}
+                    </Box>
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
