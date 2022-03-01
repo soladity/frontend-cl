@@ -16,6 +16,7 @@ type CardProps = {
   isMobile?: boolean;
   handleOpenSupply: Function;
   handleExecute: Function;
+  needButton?: boolean;
 };
 
 export default function WarriorCard(props: CardProps) {
@@ -25,9 +26,10 @@ export default function WarriorCard(props: CardProps) {
     type,
     power,
     strength,
-    isMobile = false,
+    isMobile,
     handleOpenSupply,
     handleExecute,
+    needButton = true,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -38,7 +40,7 @@ export default function WarriorCard(props: CardProps) {
       <img
         key={i}
         src="/assets/images/bloodstoneGrey.png"
-        style={{ height: "30px" }}
+        style={{ height: needButton ? "30px" : "10px" }}
         alt="icon"
       />
     );
@@ -57,7 +59,13 @@ export default function WarriorCard(props: CardProps) {
   };
 
   return (
-    <Card sx={{ position: "relative" }}>
+    <Card
+      sx={{
+        position: "relative",
+        width: "100%",
+        fontSize: isMobile ? 10 : 14,
+      }}
+    >
       <CardMedia
         component="img"
         image={image}
@@ -73,62 +81,58 @@ export default function WarriorCard(props: CardProps) {
         </React.Fragment>
       )}
       <Typography
-        variant="h6"
         sx={{
+          fontSize: needButton ? 14 : 8,
           position: "absolute",
-          top: "15px",
-          left: "20px",
+          top: "2%",
+          left: "2%",
           fontWeight: "bold",
         }}
       >
         {type}
       </Typography>
-      {isMobile === false && (
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              position: "absolute",
-              alignItems: "center",
-              top: "15px",
-              right: "10px",
-              fontWeight: "bold",
-            }}
-          >
-            {itemList}
-          </Box>
-        </>
-      )}
       <Box
         sx={{
           display: "flex",
           position: "absolute",
           alignItems: "center",
-          bottom: "20px",
-          left: "calc(50% - 20px)",
+          top: "2%",
+          right: "2%",
+          fontWeight: "bold",
+        }}
+      >
+        {itemList}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          position: "absolute",
+          alignItems: "center",
+          bottom: "2%",
+          width: "100%",
+          justifyContent: "center",
           fontWeight: "bold",
         }}
       >
         <Typography
-          variant="h6"
           sx={{
+            fontSize: isMobile ? 10 : 14,
             fontWeight: "bold",
-            fontSize: "1.4rem",
             textShadow:
-              "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+              "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
           {formatNumber(power)}
         </Typography>
       </Box>
-      {isMobile === false && (
+      {needButton && (
         <>
           <Box
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "15px",
-              right: "20px",
+              bottom: "2%",
+              right: "2%",
               cursor: "pointer",
             }}
             onClick={() => open(id)}
@@ -143,8 +147,8 @@ export default function WarriorCard(props: CardProps) {
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "40px",
-              left: "20px",
+              bottom: "calc(2% + 20px)",
+              left: "2%",
               cursor: "pointer",
             }}
             onClick={() => execute(id)}
@@ -155,19 +159,19 @@ export default function WarriorCard(props: CardProps) {
               alt="Execute"
             />
           </Box>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              position: "absolute",
-              bottom: "15px",
-              left: "20px",
-              color: "darkgrey",
-            }}
-          >
-            #{id}
-          </Typography>
         </>
       )}
+      <Typography
+        sx={{
+          fontSize: isMobile ? 10 : 14,
+          position: "absolute",
+          bottom: "2%",
+          left: "2%",
+          color: "darkgrey",
+        }}
+      >
+        #{id}
+      </Typography>
     </Card>
   );
 }

@@ -14,6 +14,7 @@ type CardProps = {
   isMobile?: boolean;
   handleOpenSupply: Function;
   handleExecute: Function;
+  needButton?: boolean;
 };
 
 export default function BeastCard(props: CardProps) {
@@ -25,7 +26,8 @@ export default function BeastCard(props: CardProps) {
     strength,
     handleOpenSupply,
     handleExecute,
-    isMobile = false,
+    isMobile,
+    needButton = true,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -43,7 +45,13 @@ export default function BeastCard(props: CardProps) {
   };
 
   return (
-    <Card sx={{ position: "relative" }}>
+    <Card
+      sx={{
+        position: "relative",
+        width: "100%",
+        fontSize: isMobile ? 10 : 14,
+      }}
+    >
       <CardMedia
         component="img"
         image={image}
@@ -58,44 +66,60 @@ export default function BeastCard(props: CardProps) {
           <Skeleton width="60%" />
         </React.Fragment>
       )}
-      <Typography
-        variant="h6"
-        sx={{
-          position: "absolute",
-          top: "15px",
-          left: "20px",
-          fontWeight: "bold",
-        }}
-      >
-        {type}
-      </Typography>
       <Box
         sx={{
           display: "flex",
+          flexWrap: "wrap",
           position: "absolute",
-          alignItems: "center",
-          top: "15px",
-          right: "20px",
-          fontWeight: "bold",
+          top: "2%",
+          justifyContent: "space-between",
+          width: "96%",
+          paddingLeft: "2%",
         }}
       >
-        <img
-          src="/assets/images/sword.png"
-          style={{ height: "20px", marginRight: "10px" }}
-          alt="Sword"
-        />
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          {capacity}
+        <Typography
+          sx={{
+            fontSize: needButton ? 14 : 10,
+            fontWeight: "bold",
+          }}
+        >
+          {type}
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "bold",
+          }}
+        >
+          <img
+            src="/assets/images/sword.png"
+            style={{
+              height: `${needButton ? "20px" : "15px"}`,
+              marginRight: "2%",
+            }}
+            alt="Sword"
+          />
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              fontSize: isMobile ? 10 : 16,
+              textShadow:
+                "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
+            }}
+          >
+            {capacity}
+          </Typography>
+        </Box>
       </Box>
-      {isMobile === false && (
+      {needButton && (
         <>
           <Box
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "15px",
-              right: "20px",
+              bottom: "2%",
+              right: "5%",
               cursor: "pointer",
             }}
             onClick={() => open(id)}
@@ -110,8 +134,8 @@ export default function BeastCard(props: CardProps) {
             sx={{
               display: "flex",
               position: "absolute",
-              bottom: "40px",
-              left: "20px",
+              bottom: "calc(2% + 20px)",
+              left: "2%",
               cursor: "pointer",
             }}
             onClick={() => execute(id)}
@@ -122,19 +146,19 @@ export default function BeastCard(props: CardProps) {
               alt="Execute"
             />
           </Box>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              position: "absolute",
-              bottom: "15px",
-              left: "20px",
-              color: "darkgrey",
-            }}
-          >
-            #{id}
-          </Typography>
         </>
       )}
+      <Typography
+        sx={{
+          fontSize: isMobile ? 10 : 14,
+          position: "absolute",
+          bottom: "2%",
+          left: "2%",
+          color: "darkgrey",
+        }}
+      >
+        #{id}
+      </Typography>
     </Card>
   );
 }

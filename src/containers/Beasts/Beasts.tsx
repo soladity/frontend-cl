@@ -67,7 +67,7 @@ const Beasts = () => {
 			amount: 0,
 			per: "0",
 		},
-		b5: {
+		b50: {
 			amount: 0,
 			per: "0",
 		},
@@ -75,11 +75,11 @@ const Beasts = () => {
 			amount: 0,
 			per: "0",
 		},
-		b20: {
+		b200: {
 			amount: 0,
 			per: "0",
 		},
-		b100: {
+		b500: {
 			amount: 0,
 			per: "0",
 		},
@@ -110,16 +110,16 @@ const Beasts = () => {
 
 	const getBlstAmountToMintBeast = async () => {
 		var BLST_amount_1 = 0;
-		var BLST_amount_5 = 0;
 		var BLST_amount_10 = 0;
-		var BLST_amount_20 = 0;
-		var BLST_amount_100 = 0;
+		var BLST_amount_50 = 0;
+		var BLST_amount_200 = 0;
+		var BLST_amount_500 = 0;
 
 		var BLST_per_1 = "0";
-		var BLST_per_5 = "0";
 		var BLST_per_10 = "0";
-		var BLST_per_20 = "0";
-		var BLST_per_100 = "0";
+		var BLST_per_50 = "0";
+		var BLST_per_200 = "0";
+		var BLST_per_500 = "0";
 
 		try {
 			BLST_amount_1 = await getBloodstoneAmountToMintBeast(
@@ -127,41 +127,41 @@ const Beasts = () => {
 				beastContract,
 				1
 			);
-			BLST_amount_5 = await getBloodstoneAmountToMintBeast(
-				web3,
-				beastContract,
-				5
-			);
 			BLST_amount_10 = await getBloodstoneAmountToMintBeast(
 				web3,
 				beastContract,
 				10
 			);
-			BLST_amount_20 = await getBloodstoneAmountToMintBeast(
+			BLST_amount_50 = await getBloodstoneAmountToMintBeast(
 				web3,
 				beastContract,
-				20
+				50
 			);
-			BLST_amount_100 = await getBloodstoneAmountToMintBeast(
+			BLST_amount_200 = await getBloodstoneAmountToMintBeast(
 				web3,
 				beastContract,
-				100
+				200
+			);
+			BLST_amount_500 = await getBloodstoneAmountToMintBeast(
+				web3,
+				beastContract,
+				500
 			);
 			BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-			BLST_per_5 = (
-				(1 - BLST_amount_5 / (BLST_amount_1 * 5)) *
-				100
-			).toFixed(0);
 			BLST_per_10 = (
 				(1 - BLST_amount_10 / (BLST_amount_1 * 10)) *
 				100
 			).toFixed(0);
-			BLST_per_20 = (
-				(1 - BLST_amount_20 / (BLST_amount_1 * 20)) *
+			BLST_per_50 = (
+				(1 - BLST_amount_50 / (BLST_amount_1 * 50)) *
 				100
 			).toFixed(0);
-			BLST_per_100 = (
-				(1 - BLST_amount_100 / (BLST_amount_1 * 100)) *
+			BLST_per_200 = (
+				(1 - BLST_amount_200 / (BLST_amount_1 * 200)) *
+				100
+			).toFixed(0);
+			BLST_per_500 = (
+				(1 - BLST_amount_500 / (BLST_amount_1 * 500)) *
 				100
 			).toFixed(0);
 			var amount_per = {
@@ -169,21 +169,21 @@ const Beasts = () => {
 					amount: BLST_amount_1,
 					per: BLST_per_1,
 				},
-				b5: {
-					amount: BLST_amount_5,
-					per: BLST_per_5,
+				b50: {
+					amount: BLST_amount_50,
+					per: BLST_per_50,
 				},
 				b10: {
 					amount: BLST_amount_10,
 					per: BLST_per_10,
 				},
-				b20: {
-					amount: BLST_amount_20,
-					per: BLST_per_20,
+				b200: {
+					amount: BLST_amount_200,
+					per: BLST_per_200,
 				},
-				b100: {
-					amount: BLST_amount_100,
-					per: BLST_per_100,
+				b500: {
+					amount: BLST_amount_500,
+					per: BLST_per_500,
 				},
 			};
 			setBeastBlstAmountPer(amount_per);
@@ -221,12 +221,12 @@ const Beasts = () => {
 				await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await mintBeast(web3, beastContract, account, amount);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}));
 		getBalance();
 		setMintLoading(false);
 	}
@@ -297,6 +297,9 @@ const Beasts = () => {
 		try {
 			await execute(web3, legionContract, account, true, id);
 			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
 		} catch (e) {
 			console.log(e);
 		}
@@ -400,27 +403,6 @@ const Beasts = () => {
 									<CommonBtn
 										onClick={() =>
 											handleMint(
-												5
-											)
-										}
-										sx={{
-											fontSize: 14,
-											fontWeight: "bold",
-											marginBottom: 1,
-										}}
-									>
-										5 (
-										{"-" +
-											beastBlstAmountPer.b5.per +
-											"%" +
-											" | " +
-											beastBlstAmountPer.b5
-												?.amount}{" "}
-										$BLST)
-									</CommonBtn>
-									<CommonBtn
-										onClick={() =>
-											handleMint(
 												10
 											)
 										}
@@ -442,7 +424,7 @@ const Beasts = () => {
 									<CommonBtn
 										onClick={() =>
 											handleMint(
-												20
+												50
 											)
 										}
 										sx={{
@@ -451,19 +433,19 @@ const Beasts = () => {
 											marginBottom: 1,
 										}}
 									>
-										20 (
+										50 (
 										{"-" +
-											beastBlstAmountPer.b20.per +
+											beastBlstAmountPer.b50.per +
 											"%" +
 											" | " +
-											beastBlstAmountPer.b20
+											beastBlstAmountPer.b50
 												?.amount}{" "}
 										$BLST)
 									</CommonBtn>
 									<CommonBtn
 										onClick={() =>
 											handleMint(
-												100
+												200
 											)
 										}
 										sx={{
@@ -472,13 +454,34 @@ const Beasts = () => {
 											marginBottom: 1,
 										}}
 									>
-										100 (
+										200 (
 										{"-" +
-											beastBlstAmountPer.b100
+											beastBlstAmountPer.b200.per +
+											"%" +
+											" | " +
+											beastBlstAmountPer.b200
+												?.amount}{" "}
+										$BLST)
+									</CommonBtn>
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												500
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										500 (
+										{"-" +
+											beastBlstAmountPer.b500
 												.per +
 											"%" +
 											" | " +
-											beastBlstAmountPer.b100
+											beastBlstAmountPer.b500
 												?.amount}{" "}
 										$BLST)
 									</CommonBtn>
@@ -497,7 +500,7 @@ const Beasts = () => {
 						<Typography variant='h4' color='secondary' sx={{ fontWeight: 'bold' }}>
 							{balance}
 						</Typography>
-						<CommonBtn sx={{ fontWeight: 'bold' }}>
+						<CommonBtn sx={{ fontWeight: 'bold', mt: 1 }}>
 							<NavLink to='/createlegions' className='non-style'>
 								{getTranslation('createLegion')}
 							</NavLink>
@@ -540,8 +543,8 @@ const Beasts = () => {
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
-							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
+							<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} isMobile={false} needButton={true} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
 					}

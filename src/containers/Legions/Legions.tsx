@@ -91,7 +91,7 @@ const Legions = () => {
 	const [huntStatus, setHuntStatus] = React.useState("");
 	const [hideWeak, setHideWeak] = React.useState(false);
 	const [openSupply, setOpenSupply] = React.useState(false);
-	const [selectedLegion, setSelectedLegion] = React.useState(0);
+	const [selectedLegion, setSelectedLegion] = React.useState(-1);
 	const [openShopping, setOpenShopping] = React.useState(false);
 	const [price, setPrice] = React.useState(0);
 	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
@@ -324,7 +324,7 @@ const Legions = () => {
 							>
 								{formatNumber(totalPower)}
 							</Typography>
-							<CommonBtn sx={{ fontWeight: "bold" }}>
+							<CommonBtn sx={{ fontWeight: "bold", mt: 1 }}>
 								<NavLink to="/hunt" className="non-style">
 									{getTranslation("hunt")}
 								</NavLink>
@@ -498,7 +498,7 @@ const Legions = () => {
 									huntStatus === item.huntStatus || huntStatus === ""
 							)
 							.map((item: any, index) => (
-								<Grid item xs={12} sm={6} md={4} key={index}>
+								<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
 									<LegionCard
 										id={item["id"]}
 										image={baseUrl + item.image}
@@ -589,21 +589,21 @@ const Legions = () => {
 						sx={{ textAlign: "center" }}
 						onClick={() => handleSupplyClick("7")}
 					>
-						<ListItemText primary="7 hunts" />
+						<ListItemText primary={`7 Hunts (${selectedLegion === -1 ? 0 : legions.filter((item) => parseInt(item.id) === selectedLegion)[0]['warriors'].length * 7} $BLST)`} />
 					</ListItem>
 					<ListItem
 						button
 						sx={{ textAlign: "center" }}
 						onClick={() => handleSupplyClick("14")}
 					>
-						<ListItemText primary="14 hunts" />
+						<ListItemText primary={`14 Hunts (${selectedLegion === -1 ? 0 : legions.filter((item) => parseInt(item.id) === selectedLegion)[0]['warriors'].length * 13} $BLST)`} />
 					</ListItem>
 					<ListItem
 						button
 						sx={{ textAlign: "center" }}
 						onClick={() => handleSupplyClick("28")}
 					>
-						<ListItemText primary="28 hunts" />
+						<ListItemText primary={`28 Hunts (${selectedLegion === -1 ? 0 : legions.filter((item) => parseInt(item.id) === selectedLegion)[0]['warriors'].length * 24} $BLST)`} />
 					</ListItem>
 				</List>
 			</Dialog>

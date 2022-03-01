@@ -35,16 +35,18 @@ const NadodoWatch = () => {
             setHuntTax(
                 ((await getFee(feeHandlerContract, 1)) / 100).toFixed(0)
             );
-            setBuyTax(((await getFee(feeHandlerContract, 2)) / 100).toFixed(0));
-            setSellTax(
-                ((await getFee(feeHandlerContract, 3)) / 100).toFixed(0)
-            );
+            // setBuyTax(((await getFee(feeHandlerContract, 2)) / 100).toFixed(0));
+            // setSellTax(
+            //     ((await getFee(feeHandlerContract, 3)) / 100).toFixed(0)
+            // );
+            setBuyTax('2')
+            setSellTax('8')
             setDamageReduction(
-                ((await getFee(feeHandlerContract, 4)) / 100).toFixed(0)
+                ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
             );
-            setSummonFee(await getFee(feeHandlerContract, 5));
-            setSuppliesFee14(await getFee(feeHandlerContract, 6));
-            setSuppliesFee28(await getFee(feeHandlerContract, 7));
+            setSummonFee(await getFee(feeHandlerContract, 3));
+            setSuppliesFee14(await getFee(feeHandlerContract, 4));
+            setSuppliesFee28(await getFee(feeHandlerContract, 5));
         } catch (error) {
             console.log(error);
         }
@@ -80,56 +82,56 @@ const NadodoWatch = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("marketplaceTax")}: {marketplaceTax}%
+                    {getTranslation("marketplaceTax")}:<span className="legionOrangeColor"> {marketplaceTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("huntTax")}: {huntTax}%
+                    {getTranslation("huntTax")}:<span className="legionOrangeColor"> {huntTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("buyTax")}: {buyTax}%
+                    {getTranslation("buyTax")}:<span className="legionOrangeColor"> {buyTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("sellTax")}: {sellTax}%
+                    {getTranslation("sellTax")}:<span className="legionOrangeColor"> {sellTax}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("legionDamagePerHunt")}: {damageReduction}%
+                    {getTranslation("legionDamagePerHunt")}:<span className="legionOrangeColor"> {damageReduction}%</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("summoningFee")}: {summonFee}$
+                    {getTranslation("summoningFee")}:<span className="legionOrangeColor"> {summonFee}$</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("SuppliesFee14Hunts")}: {suppliesFee14}$
+                    {getTranslation("SuppliesFee14Hunts")}:<span className="legionOrangeColor"> {suppliesFee14}$</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("SuppliesFee28Hunts")}: {suppliesFee28}$
+                    {getTranslation("SuppliesFee28Hunts")}:<span className="legionOrangeColor"> {suppliesFee28}$</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -140,9 +142,9 @@ const NadodoWatch = () => {
                         alignItems: "center",
                     }}
                 >
-                    <span>{getTranslation("RewardPool")}:&nbsp;</span>
+                    {getTranslation("RewardPool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    <span>&nbsp;Healthy</span>
+                    &nbsp;<span className="legionOrangeColor">Healthy</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -153,9 +155,9 @@ const NadodoWatch = () => {
                         alignItems: "center",
                     }}
                 >
-                    <span>{getTranslation("ReservePool")}:&nbsp;</span>
+                    {getTranslation("ReservePool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    <span>&nbsp;Healthy</span>
+                    &nbsp;<span className="legionOrangeColor">Healthy</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
@@ -166,9 +168,9 @@ const NadodoWatch = () => {
                         alignItems: "center",
                     }}
                 >
-                    <span>{getTranslation("LiquidityPool")}:&nbsp;</span>
+                    {getTranslation("LiquidityPool")}:&nbsp;
                     <CircleIcon style={{ color: "lime", fontSize: 16 }} />{" "}
-                    <span>&nbsp;Healthy</span>
+                    &nbsp;<span className="legionOrangeColor">Healthy</span>
                 </Typography>
             </Box>
         </Card>

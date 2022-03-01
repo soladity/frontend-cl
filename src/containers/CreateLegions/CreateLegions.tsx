@@ -2,14 +2,6 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Helmet from "react-helmet";
 import {
-  DragDropContext,
-  Droppable,
-  DroppableProvided,
-  DraggableLocation,
-  DropResult,
-  DroppableStateSnapshot,
-} from "react-beautiful-dnd";
-import {
   useTheme,
   useMediaQuery,
   Box,
@@ -91,13 +83,14 @@ const capFilterConfigList = [
 ];
 
 const powerFilterConfigList = [
-  { id: 0, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
-  { id: 1, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
-  { id: 2, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
-  { id: 3, name: "3K < AP < 4K", min: 2999, max: 4000, onClick: Function },
-  { id: 4, name: "4K < AP < 5K", min: 3999, max: 5000, onClick: Function },
-  { id: 5, name: "5K < AP < 6K", min: 4999, max: 6000, onClick: Function },
-  { id: 6, name: "6K < AP", min: 5999, max: 10000, onClick: Function },
+  { id: 0, name: "ALL", min: 0, max: 10000, onClick: Function },
+  { id: 1, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
+  { id: 2, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
+  { id: 3, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
+  { id: 4, name: "3K < AP < 4K", min: 2999, max: 4000, onClick: Function },
+  { id: 5, name: "4K < AP < 5K", min: 3999, max: 5000, onClick: Function },
+  { id: 6, name: "5K < AP < 6K", min: 4999, max: 6000, onClick: Function },
+  { id: 7, name: "6K < AP", min: 5999, max: 10000, onClick: Function },
 ];
 
 interface IItem {
@@ -128,6 +121,11 @@ interface IWFilterItem {
   min: number;
   max: number;
   onClick: Function;
+}
+
+interface IClickedItem {
+  index: number;
+  clickedItem: string;
 }
 
 const CreateLegions: React.FC = () => {
@@ -189,16 +187,18 @@ const CreateLegions: React.FC = () => {
     });
     let tmpWFilterItem: IWFilterItem;
     let tmpWFilterArray: IWFilterItem[] = [];
-    powerFilterConfigList.forEach((filterConfig: IWFilterItem) => {
-      tmpWFilterItem = {
-        id: filterConfig.id,
-        name: filterConfig.name,
-        min: filterConfig.min,
-        max: filterConfig.max,
-        onClick: () => setApValue([filterConfig.min, filterConfig.max]),
-      };
-      tmpWFilterArray.push(tmpWFilterItem);
-    });
+    powerFilterConfigList.forEach(
+      (filterConfig: IWFilterItem, index: number) => {
+        tmpWFilterItem = {
+          id: index,
+          name: filterConfig.name,
+          min: filterConfig.min,
+          max: filterConfig.max,
+          onClick: () => setApValue([filterConfig.min, filterConfig.max]),
+        };
+        tmpWFilterArray.push(tmpWFilterItem);
+      }
+    );
     setComboFilterList(tmpFilterArray);
     setComboWFilterList(tmpWFilterArray);
   }, []);
@@ -319,22 +319,29 @@ const CreateLegions: React.FC = () => {
     if (allowance === "0") {
       await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
     }
-    await mintLegion(
-      web3,
-      legionContract,
-      account,
-      legionName,
-      dropItemList
-        .filter((item) => item.w5b === false)
-        .map((fitem: any) => {
-          return parseInt(fitem["id"]);
-        }),
-      dropItemList
-        .filter((item) => item.w5b === true)
-        .map((fitem: any) => {
-          return parseInt(fitem["id"]);
-        })
-    );
+    try {
+      await mintLegion(
+        web3,
+        legionContract,
+        account,
+        legionName,
+        dropItemList
+          .filter((item) => item.w5b === false)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          }),
+        dropItemList
+          .filter((item) => item.w5b === true)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          })
+      );
+    } catch (e: any) {
+      if (e.code === 4001) {
+        setMintLoading(false);
+        return;
+      }
+    }
     setMintLoading(false);
     navigate("/legions");
   };
@@ -349,8 +356,8 @@ const CreateLegions: React.FC = () => {
   const move = (
     src: IItem[],
     des: IItem[],
-    droppableSrc: DraggableLocation,
-    droppableDes: DraggableLocation
+    droppableSrc: IClickedItem,
+    droppableDes: IClickedItem
   ): IMoveResult | any => {
     const srcClone = [...src];
     const desClone = [...des];
@@ -358,33 +365,24 @@ const CreateLegions: React.FC = () => {
     desClone.splice(droppableDes.index, 0, removed);
 
     const result = {} as { [index: string]: any };
-    result[droppableSrc.droppableId] = srcClone;
-    result[droppableDes.droppableId] = desClone;
+    result[droppableSrc.clickedItem] = srcClone;
+    result[droppableDes.clickedItem] = desClone;
     return result;
   };
 
-  const handleDragEnd = (res: DropResult) => {
-    const { source, destination } = res;
-    if (!destination) {
+  const handleMoveEvent = (from: IClickedItem, to: IClickedItem) => {
+    if (!from || !to) {
       return;
     }
 
-    if (source.droppableId !== destination.droppableId) {
-      const src = warrior5beast ? warriors : beasts;
-      const resultFromMove: IMoveResult = move(
-        src,
-        dropItemList,
-        source,
-        destination
-      );
-      if (warrior5beast) {
-        setWarriors(resultFromMove.left);
-      } else {
-        setBeasts(resultFromMove.left);
-      }
-      setDropItemList(resultFromMove.right);
+    const src = warrior5beast ? warriors : beasts;
+    const resultFromMove: IMoveResult = move(src, dropItemList, from, to);
+    if (warrior5beast) {
+      setWarriors(resultFromMove.left);
+    } else {
+      setBeasts(resultFromMove.left);
     }
-    console.log(source, destination);
+    setDropItemList(resultFromMove.right);
   };
 
   const handleComboFilter = (e: SelectChangeEvent) => {
@@ -401,6 +399,23 @@ const CreateLegions: React.FC = () => {
     );
     setComboWFilterValue(e.target.value);
     comboWFilterList[curFilterIndex].onClick();
+  };
+
+  const tokenID2Index = (w5b: boolean, tokenID: number): number => {
+    const tmpSrc = w5b ? warriors : beasts;
+    return tmpSrc.findIndex((item) => +item.id === tokenID);
+  };
+
+  const handleCardClick = (from: number, to: number, where: boolean) => {
+    const fromItem: IClickedItem = {
+      index: tokenID2Index(warrior5beast, from),
+      clickedItem: where ? "left" : "right",
+    };
+    const toItem: IClickedItem = {
+      index: to,
+      clickedItem: where ? "right" : "left",
+    };
+    handleMoveEvent(fromItem, toItem);
   };
 
   return (
@@ -451,386 +466,428 @@ const CreateLegions: React.FC = () => {
           </CommonBtn>
         </Grid>
         {!loading && (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Grid
-              container
-              spacing={2}
-              justifyContent="center"
-              wrap="wrap-reverse"
-              sx={{ my: 2 }}
-            >
-              <Grid item xs={6}>
-                <Card>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            wrap="wrap-reverse"
+            sx={{ my: 2 }}
+          >
+            <Grid item xs={6}>
+              <Card>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
+                >
+                  <Grid item xs={12}>
+                    <Grid container sx={{ justifyContent: "space-between" }}>
+                      <Grid
+                        item
+                        sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                        xs={12}
+                        lg={6}
+                      >
+                        <FormControl component="fieldset">
+                          <ButtonGroup variant="outlined" color="primary">
+                            <Button
+                              variant={warrior5beast ? "contained" : "outlined"}
+                              onClick={() => {
+                                setWarrior5beat(!warrior5beast);
+                              }}
+                            >
+                              {isSmallThanSM ? "W" : getTranslation("warriors")}
+                            </Button>
+                            <Button
+                              variant={
+                                !warrior5beast ? "contained" : "outlined"
+                              }
+                              onClick={() => {
+                                setWarrior5beat(!warrior5beast);
+                              }}
+                            >
+                              {isSmallThanSM ? "B" : getTranslation("beasts")}
+                            </Button>
+                          </ButtonGroup>
+                        </FormControl>
+                      </Grid>
+                      {warrior5beast &&
+                        (isSmallThanSM ? (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl fullWidth>
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                style={{ fontSize: isSmallThanSM ? 10 : 14 }}
+                              >
+                                {getTranslation("filterByAp")}
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={comboWFilterValue}
+                                label={getTranslation("filterByAp")}
+                                onChange={handleWComboFilter}
+                              >
+                                {comboWFilterList.map(
+                                  (comboFilterItem: IWFilterItem, index) => (
+                                    <MenuItem
+                                      value={comboFilterItem.id}
+                                      key={index}
+                                    >
+                                      {comboFilterItem.name}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        ) : (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl
+                              component="fieldset"
+                              sx={{ width: "100%" }}
+                            >
+                              <FormLabel component="legend">
+                                {getTranslation("filterByAp")}:
+                              </FormLabel>
+                              <Slider
+                                getAriaLabel={() => "Custom marks"}
+                                // defaultValue={20}
+                                value={apValue}
+                                min={500}
+                                max={6000}
+                                marks={[
+                                  { value: 500, label: "500" },
+                                  {
+                                    value: 6000,
+                                    label: formatNumber("6000+"),
+                                  },
+                                ]}
+                                step={1}
+                                valueLabelDisplay="auto"
+                                onChange={handleChangeAp}
+                                disableSwap
+                              />
+                            </FormControl>
+                          </Grid>
+                        ))}
+                      {!warrior5beast &&
+                        (isSmallThanSM ? (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl fullWidth>
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                style={{ fontSize: isSmallThanSM ? 10 : 14 }}
+                              >
+                                {getTranslation("filterCapacity")}
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={comboFilterValue}
+                                label={getTranslation("filterCapacity")}
+                                onChange={handleComboFilter}
+                              >
+                                {comboFilterList.map(
+                                  (comboFilterItem: IBFilterItem, index) => (
+                                    <MenuItem
+                                      value={comboFilterItem.id}
+                                      key={index}
+                                    >
+                                      {toCapitalize(comboFilterItem.name)}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        ) : (
+                          <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
+                            <FormControl component="fieldset">
+                              <ButtonGroup
+                                variant="outlined"
+                                color="primary"
+                                aria-label="outlined button group"
+                                sx={{ flexWrap: "wrap" }}
+                                size={isSmallThanSM ? "small" : "medium"}
+                              >
+                                <Button
+                                  variant={`${
+                                    filter === "all" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("all")}
+                                >
+                                  {getTranslation("all")}
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "1" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("1")}
+                                >
+                                  1
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "2" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("2")}
+                                >
+                                  2
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "3" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("3")}
+                                >
+                                  3
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "4" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("4")}
+                                >
+                                  4
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "5" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("5")}
+                                >
+                                  5
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "20" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("20")}
+                                >
+                                  20
+                                </Button>
+                              </ButtonGroup>
+                            </FormControl>
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={isSmallThanSM ? { p: 2 } : { p: 4 }}
+                >
+                  {warrior5beast &&
+                    warriors
+                      .filter(
+                        (fitem: any) =>
+                          apValue[0] < parseInt(fitem.power) &&
+                          apValue[1] > parseInt(fitem.power)
+                      )
+                      .map((item: any, index) => (
+                        <DraggableCard
+                          w5b={true}
+                          image={
+                            showAnimation === "0"
+                              ? baseUrl + item["jpg"]
+                              : baseUrl + item["gif"]
+                          }
+                          item={item}
+                          key={10000 + item.id}
+                          index={+item.id}
+                          handleClick={handleCardClick}
+                        />
+                      ))}
+                  {!warrior5beast &&
+                    beasts
+                      .filter((fitem: any) =>
+                        filter === "all"
+                          ? parseInt(fitem.capacity) >= 0
+                          : fitem.capacity === filter
+                      )
+                      .map((item: any, index) => (
+                        <DraggableCard
+                          w5b={false}
+                          image={
+                            showAnimation === "0"
+                              ? baseUrl + item["jpg"]
+                              : baseUrl + item["gif"]
+                          }
+                          item={item}
+                          key={item.id}
+                          index={+item.id}
+                          handleClick={handleCardClick}
+                        />
+                      ))}
+                </Grid>
+              </Card>
+            </Grid>
+
+            {/* Right Panel */}
+            <Grid item xs={6}>
+              <Card
+                sx={{
+                  height: "100%",
+                  fontSize: isSmallThanSM ? 10 : 14,
+                }}
+              >
+                <Grid item xs={12} sx={{ pt: 2, px: 2 }}>
+                  <Grid container sx={{ justifyContent: "space-around" }}>
+                    <Grid item sx={{ mb: 2 }}>
+                      <Input
+                        style={{
+                          fontSize: isSmallThanSM ? 10 : 14,
+                        }}
+                        placeholder={
+                          isSmallThanSM ? "Name" : getTranslation("nameLegion")
+                        }
+                        value={legionName}
+                        onChange={handleChangedName}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <CommonBtn
+                        variant="contained"
+                        sx={{
+                          fontSize: isSmallThanSM ? 10 : 14,
+                          fontWeight: "bold",
+                          width: "100%",
+                          marginBottom: 1,
+                        }}
+                        onClick={() => handleMint()}
+                        disabled={!isWDropable || mintLoading}
+                      >
+                        {isSmallThanSM ? (
+                          getTranslation("create") + " (" + formatNumber(totalAP) + "AP)"
+                        ) : mintLoading ? (
+                          <Spinner color="white" size={40} />
+                        ) : totalCP <
+                          dropItemList.filter((item) => item.w5b).length ? (
+                          getTranslation("createLegion") +
+                          " " +
+                          formatNumber(totalAP) +
+                          " AP" +
+                          " (" + getTranslation("notEnoughBeasts") + ")"
+                        ) : (
+                          getTranslation("createLegion") +
+                          (totalAP < createlegions.main.minAvailableAP
+                            ? " (" + getTranslation("min") + " 2000 AP " + getTranslation("needed") + ")"
+                            : " " + formatNumber(totalAP) + " AP")
+                        )}
+                      </CommonBtn>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sx={{
+                    px: 2,
+                    pt: 2,
+                    textAlign: "center",
+                  }}
+                >
+                  {isSmallThanSM
+                    ? getTranslation("ShortFeeToolTip") + mintFee + " $BLST"
+                    : getTranslation("LongFeeToolTip") + mintFee + " $BLST"}
+                </Grid>
+                <Grid item xs={12} sx={{ p: 2 }}>
                   <Grid
                     container
-                    spacing={2}
-                    sx={isSmallThanSM ? { pt: 1, px: 1 } : { pt: 4, px: 4 }}
-                  >
-                    <Grid item xs={12}>
-                      <Grid container sx={{ justifyContent: "space-between" }}>
-                        <Grid
-                          item
-                          sx={isSmallThanSM ? { mb: 1 } : { mb: 4 }}
-                          xs={12}
-                          lg={6}
-                        >
-                          <FormControl component="fieldset">
-                            <ButtonGroup variant="outlined" color="primary">
-                              <Button
-                                variant={
-                                  warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
-                              >
-                                {isSmallThanSM
-                                  ? "W"
-                                  : getTranslation("warriors")}
-                              </Button>
-                              <Button
-                                variant={
-                                  !warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
-                              >
-                                {isSmallThanSM ? "B" : getTranslation("beasts")}
-                              </Button>
-                            </ButtonGroup>
-                          </FormControl>
-                        </Grid>
-                        {warrior5beast &&
-                          (isSmallThanSM ? (
-                            <Grid item sx={{ mb: 4 }} xs={12} lg={6}>
-                              <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">
-                                  {getTranslation("filterByAp")}
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={comboWFilterValue}
-                                  label={getTranslation("filterByAp")}
-                                  onChange={handleWComboFilter}
-                                >
-                                  {comboWFilterList.map(
-                                    (comboFilterItem: IWFilterItem, index) => (
-                                      <MenuItem
-                                        value={comboFilterItem.id}
-                                        key={index}
-                                      >
-                                        {comboFilterItem.name}
-                                      </MenuItem>
-                                    )
-                                  )}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                          ) : (
-                            <Grid
-                              item
-                              sx={isSmallThanSM ? { mb: 1 } : { mb: 4 }}
-                              xs={12}
-                              lg={6}
-                            >
-                              <FormControl
-                                component="fieldset"
-                                sx={{ width: "100%", minWidth: "250px" }}
-                              >
-                                <FormLabel component="legend">
-                                  {getTranslation("filterByAp")}:
-                                </FormLabel>
-                                <Slider
-                                  getAriaLabel={() => "Custom marks"}
-                                  // defaultValue={20}
-                                  value={apValue}
-                                  min={500}
-                                  max={6000}
-                                  marks={[
-                                    { value: 500, label: "500" },
-                                    {
-                                      value: 6000,
-                                      label: formatNumber("6000+"),
-                                    },
-                                  ]}
-                                  step={1}
-                                  valueLabelDisplay="auto"
-                                  onChange={handleChangeAp}
-                                  disableSwap
-                                />
-                              </FormControl>
-                            </Grid>
-                          ))}
-                        {!warrior5beast &&
-                          (isSmallThanSM ? (
-                            <Grid item sx={{ mb: 4 }} xs={12} lg={6}>
-                              <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">
-                                  {getTranslation("filterCapacity")}
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={comboFilterValue}
-                                  label={getTranslation("filterCapacity")}
-                                  onChange={handleComboFilter}
-                                >
-                                  {comboFilterList.map(
-                                    (comboFilterItem: IBFilterItem, index) => (
-                                      <MenuItem
-                                        value={comboFilterItem.id}
-                                        key={index}
-                                      >
-                                        {toCapitalize(comboFilterItem.name)}
-                                      </MenuItem>
-                                    )
-                                  )}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                          ) : (
-                            <Grid item sx={{ mb: 4 }} xs={12} md={6}>
-                              <FormControl component="fieldset">
-                                <ButtonGroup
-                                  variant="outlined"
-                                  color="primary"
-                                  aria-label="outlined button group"
-                                >
-                                  <Button
-                                    variant={`${
-                                      filter === "all"
-                                        ? "contained"
-                                        : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("all")}
-                                  >
-                                    {getTranslation("all")}
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "1" ? "contained" : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("1")}
-                                  >
-                                    1
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "2" ? "contained" : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("2")}
-                                  >
-                                    2
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "3" ? "contained" : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("3")}
-                                  >
-                                    3
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "4" ? "contained" : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("4")}
-                                  >
-                                    4
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "5" ? "contained" : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("5")}
-                                  >
-                                    5
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "20" ? "contained" : "outlined"
-                                    }`}
-                                    onClick={() => setFilter("20")}
-                                  >
-                                    20
-                                  </Button>
-                                </ButtonGroup>
-                              </FormControl>
-                            </Grid>
-                          ))}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Droppable droppableId="left" isDropDisabled={true}>
-                    {(
-                      provided: DroppableProvided,
-                      snapshot: DroppableStateSnapshot
-                    ) => (
-                      <Grid
-                        container
-                        spacing={2}
-                        sx={isSmallThanSM ? { p: 1 } : { p: 4 }}
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                      >
-                        {warrior5beast &&
-                          warriors
-                            .filter(
-                              (fitem: any) =>
-                                apValue[0] < parseInt(fitem.power) &&
-                                apValue[1] > parseInt(fitem.power)
-                            )
-                            .map((item: any, index) => (
-                              <DraggableCard
-                                w5b={true}
-                                image={
-                                  showAnimation === "0"
-                                    ? baseUrl + item["jpg"]
-                                    : baseUrl + item["gif"]
-                                }
-                                item={item}
-                                key={10000 + item.id}
-                                draggableId={item.id}
-                                index={index}
-                              />
-                            ))}
-                        {!warrior5beast &&
-                          beasts
-                            .filter((fitem: any) =>
-                              filter === "all"
-                                ? parseInt(fitem.capacity) >= 0
-                                : fitem.capacity === filter
-                            )
-                            .map((item: any, index) => (
-                              <DraggableCard
-                                w5b={false}
-                                image={
-                                  showAnimation === "0"
-                                    ? baseUrl + item["jpg"]
-                                    : baseUrl + item["gif"]
-                                }
-                                item={item}
-                                key={item.id}
-                                draggableId={item.id}
-                                index={index}
-                              />
-                            ))}
-                        {provided.placeholder}
-                      </Grid>
-                    )}
-                  </Droppable>
-                </Card>
-              </Grid>
-
-              {/* Right Panel */}
-              <Grid item xs={6}>
-                <Card sx={{ height: "100%" }}>
-                  <Grid
-                    item
-                    xs={12}
                     sx={{
-                      pt: 4,
-                      px: 4,
+                      display: "flex",
+                      justifyContent: "space-around",
+                      pb: 2,
+                      borderBottom: "2px dashed grey",
                     }}
                   >
-                    <Grid container sx={{ justifyContent: "space-around" }}>
-                      <Grid item sx={{ mb: 4 }}>
-                        <Input
-                          placeholder={
-                            isSmallThanSM
-                              ? "Name"
-                              : getTranslation("nameLegion")
-                          }
-                          value={legionName}
-                          onChange={handleChangedName}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <CommonBtn
-                          variant="contained"
-                          sx={{
-                            fontSize: 14,
-                            fontWeight: "bold",
-                            width: "100%",
-                            marginBottom: 1,
-                          }}
-                          onClick={() => handleMint()}
-                          disabled={!isWDropable || mintLoading}
-                        >
-                          {isSmallThanSM ? (
-                            "Create (" + totalAP + "AP)"
-                          ) : mintLoading ? (
-                            <Spinner color="white" size={40} />
-                          ) : totalCP <
-                            dropItemList.filter((item) => item.w5b).length ? (
-                            getTranslation("createLegion") +
-                            " " +
-                            totalAP +
-                            " AP" +
-                            " (Not enough beasts)"
-                          ) : (
-                            getTranslation("createLegion") +
-                            (totalAP < createlegions.main.minAvailableAP
-                              ? " (min 2000 AP needed)"
-                              : " " + totalAP + " AP")
-                          )}
-                        </CommonBtn>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ padding: "16px 16px 0 16px", textAlign: "center" }}
-                  >
-                    {isSmallThanSM
-                      ? getTranslation("ShortFeeToolTip") + mintFee + "$BLST"
-                      : getTranslation("LongFeeToolTip") + mintFee + "$BLST"}
-                  </Grid>
-                  <Grid item xs={12} sx={{ p: 4 }}>
                     <Grid
-                      container
+                      item
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                        pb: 2,
-                        borderBottom: "2px dashed grey",
+                        color:
+                          totalCP <
+                          dropItemList.filter((item) => item.w5b).length
+                            ? "red"
+                            : "white",
+                        fontWeight:
+                          totalCP <
+                          dropItemList.filter((item) => item.w5b).length
+                            ? "bold"
+                            : "normal",
                       }}
                     >
-                      <Grid item>
-                        <Typography>
-                          {getTranslation("beasts")}:{" "}
-                          {
-                            dropItemList.filter((item) => item.w5b === false)
-                              .length
-                          }
-                          /{createlegions.main.maxAvailableDragCount}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography>
-                          {getTranslation("warriors")}:{" "}
-                          {
-                            dropItemList.filter((item) => item.w5b === true)
-                              .length
-                          }
-                          /{formatNumber(totalCP)}
-                        </Typography>
-                      </Grid>
+                      {isSmallThanSM ? "W" : getTranslation("warriors")}:{" "}
+                      {dropItemList.filter((item) => item.w5b === true).length}/
+                      {formatNumber(totalCP)}
+                    </Grid>
+                    <Grid
+                      item
+                      sx={{
+                        color:
+                          createlegions.main.maxAvailableDragCount <
+                          dropItemList.filter((item) => !item.w5b).length
+                            ? "red"
+                            : "white",
+                        fontWeight:
+                          totalCP <
+                          dropItemList.filter((item) => item.w5b).length
+                            ? "bold"
+                            : "normal",
+                      }}
+                    >
+                      {isSmallThanSM ? "B" : getTranslation("beasts")}:{" "}
+                      {dropItemList.filter((item) => item.w5b === false).length}
+                      /{createlegions.main.maxAvailableDragCount}
                     </Grid>
                   </Grid>
-                  <DropBox
-                    showAnim={showAnimation}
-                    baseUrl={baseUrl}
-                    items={dropItemList}
-                    moveToLeft={moveToLeft}
-                  />
-                </Card>
-              </Grid>
+                </Grid>
+                <DropBox
+                  showAnim={showAnimation}
+                  baseUrl={baseUrl}
+                  items={dropItemList}
+                  moveToLeft={moveToLeft}
+                />
+              </Card>
             </Grid>
-          </DragDropContext>
+          </Grid>
         )}
         {loading && (
           <>

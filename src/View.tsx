@@ -59,13 +59,14 @@ const View = () => {
                     zIndex: 99,
                 }}
                 aria-label="mailbox folders"
+                id="navbar"
             >
                 {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                 <Navigation />
             </Box>
             <Box
                 component="main"
-                className={classes.mainBox}
+                // className={classes.mainBox}
                 id="main"
                 sx={{
                     flexGrow: 1,

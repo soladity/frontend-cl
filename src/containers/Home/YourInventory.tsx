@@ -211,47 +211,47 @@ const YourInventory = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("beasts")}: {beastBalance}
+                    {getTranslation("warriors")}: <span className="legionOrangeColor">{warriorBalance}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("warriors")}: {warriorBalance}
+                    {getTranslation("beasts")}: <span className="legionOrangeColor">{beastBalance}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("availableLegions")}: {availableLegionCount}{" "}
-                    / {legionTokenIds.length}
+                    {getTranslation("availableLegions")}: <span className="legionOrangeColor">{availableLegionCount}{" "}
+                        / {legionTokenIds.length}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("waitingTimeToHunt")}:{" "}
-                    {calcHuntTime(firstHuntTime)}
+                    {getTranslation("waitingTimeToHunt")}:<span className="legionOrangeColor">{" "}
+                        {calcHuntTime(firstHuntTime)}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("yourMaxAp")}:{" "}
-                    {formatNumber(
-                        (parseFloat(maxAttackPower) / 100).toFixed(0)
-                    )}
+                    {getTranslation("yourMaxAp")}:<span className="legionOrangeColor">{" "}
+                        {formatNumber(
+                            (parseFloat(maxAttackPower) / 100).toFixed(0)
+                        )}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("unClaimed")}: {unclaimedBalance}
+                    {getTranslation("unClaimed")}:<span className="legionOrangeColor"> {unclaimedBalance}</span>
                 </Typography>
                 {parseInt(unclaimedBalance) > 0 && (
                     <Typography
@@ -259,12 +259,12 @@ const YourInventory = () => {
                         variant="subtitle1"
                         sx={{ fontWeight: "bold" }}
                     >
-                        {getTranslation("claimTax")}:{" "}
-                        {(
-                            (taxLeftDays * 2 * parseInt(unclaimedBalance)) /
-                            100
-                        ).toFixed(2)}{" "}
-                        {getTranslation("claimTaxVal")}
+                        {getTranslation("claimTax")}:<span className="legionOrangeColor">{" "}
+                            {(
+                                (taxLeftDays * 2 * parseInt(unclaimedBalance)) /
+                                100
+                            ).toFixed(2)}{" "}
+                            {getTranslation("claimTaxVal")}</span>
                     </Typography>
                 )}
                 <Typography
@@ -272,29 +272,29 @@ const YourInventory = () => {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("taxDaysLeft")}: {taxLeftDays}
+                    {getTranslation("taxDaysLeft")}:<span className="legionOrangeColor"> {taxLeftDays}</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    {getTranslation("BLSTInYourWallet")}:{" "}
-                    {formatNumber(parseFloat(BLSTBalance).toFixed(2))}( = xx USD )
+                    {getTranslation("BLSTInYourWallet")}:<span className="legionOrangeColor">{" "}
+                        {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( = xx USD )</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    1 USD = xx $BLST
+                    1 USD = <span className="legionOrangeColor">xx $BLST</span>
                 </Typography>
                 <Typography
                     className="legionFontColor"
                     variant="subtitle1"
                     sx={{ fontWeight: "bold" }}
                 >
-                    1 BLST = xx USD
+                    1 BLST = <span className="legionOrangeColor">xx USD</span>
                 </Typography>
             </Box>
         </Card>
