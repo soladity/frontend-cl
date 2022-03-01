@@ -82,7 +82,7 @@ export default function WarriorCard(props: CardProps) {
       )}
       <Typography
         sx={{
-          fontSize: needButton ? 14 : 8,
+          fontSize: needButton ? 14 : 10,
           position: "absolute",
           top: "2%",
           left: "2%",
@@ -116,7 +116,7 @@ export default function WarriorCard(props: CardProps) {
       >
         <Typography
           sx={{
-            fontSize: isMobile ? 10 : 14,
+            fontSize: needButton ? 20 : isMobile ? 10 : 14,
             fontWeight: "bold",
             textShadow:
               "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
@@ -163,7 +163,7 @@ export default function WarriorCard(props: CardProps) {
       )}
       <Typography
         sx={{
-          fontSize: isMobile ? 10 : 14,
+          fontSize: isMobile ? 8 : 10,
           position: "absolute",
           bottom: "2%",
           left: "2%",
