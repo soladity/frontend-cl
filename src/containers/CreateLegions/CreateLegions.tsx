@@ -867,8 +867,8 @@ const CreateLegions: React.FC = () => {
                             ? "red"
                             : "white",
                         fontWeight:
-                          totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                          createlegions.main.maxAvailableDragCount <
+                          dropItemList.filter((item) => !item.w5b).length
                             ? "bold"
                             : "normal",
                       }}

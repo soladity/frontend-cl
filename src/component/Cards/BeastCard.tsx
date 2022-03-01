@@ -103,7 +103,7 @@ export default function BeastCard(props: CardProps) {
           <Typography
             sx={{
               fontWeight: "bold",
-              fontSize: isMobile ? 10 : 16,
+              fontSize: needButton ? 20 : isMobile ? 10 : 16,
               textShadow:
                 "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
             }}
@@ -150,7 +150,7 @@ export default function BeastCard(props: CardProps) {
       )}
       <Typography
         sx={{
-          fontSize: isMobile ? 10 : 14,
+          fontSize: isMobile ? 8 : 10,
           position: "absolute",
           bottom: "2%",
           left: "2%",
