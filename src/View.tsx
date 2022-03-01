@@ -66,7 +66,7 @@ const View = () => {
             </Box>
             <Box
                 component="main"
-                className={classes.mainBox}
+                // className={classes.mainBox}
                 id="main"
                 sx={{
                     flexGrow: 1,
