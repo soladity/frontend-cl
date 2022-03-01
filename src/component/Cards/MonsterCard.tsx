@@ -70,7 +70,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
                     <Grid item>
                         <Typography variant="h6">Bonus %</Typography>
                         <Typography variant="h6">
-                            {parseFloat(bonus).toFixed(0)}
+                            {parseInt(bonus)}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -107,7 +107,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             >
                 <Grid item>
                     <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                        {(Math.round(parseInt(base) + parseFloat(bonus))) > 89 ? 89 : ((parseInt(base) + parseFloat(bonus))).toFixed(0)}% to win
+                        {(parseInt(base) + parseInt(bonus)) > 89 ? 89 : ((parseInt(base) + parseInt(bonus))).toFixed(0)}% to win
                     </Typography>
                 </Grid>
                 <Grid item>
