@@ -796,7 +796,7 @@ const CreateLegions: React.FC = () => {
                         disabled={!isWDropable || mintLoading}
                       >
                         {isSmallThanSM ? (
-                          "Create (" + formatNumber(totalAP) + "AP)"
+                          getTranslation("create") + " (" + formatNumber(totalAP) + "AP)"
                         ) : mintLoading ? (
                           <Spinner color="white" size={40} />
                         ) : totalCP <
@@ -805,11 +805,11 @@ const CreateLegions: React.FC = () => {
                           " " +
                           formatNumber(totalAP) +
                           " AP" +
-                          " (Not enough beasts)"
+                          " (" + getTranslation("notEnoughBeasts") + ")"
                         ) : (
                           getTranslation("createLegion") +
                           (totalAP < createlegions.main.minAvailableAP
-                            ? " (min 2000 AP needed)"
+                            ? " (" + getTranslation("min") + " 2000 AP " + getTranslation("needed") + ")"
                             : " " + formatNumber(totalAP) + " AP")
                         )}
                       </CommonBtn>
