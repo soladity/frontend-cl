@@ -67,19 +67,19 @@ const Warriors = () => {
 			amount: 0,
 			per: "0",
 		},
-		b5: {
-			amount: 0,
-			per: "0",
-		},
 		b10: {
 			amount: 0,
 			per: "0",
 		},
-		b20: {
+		b50: {
 			amount: 0,
 			per: "0",
 		},
-		b100: {
+		b200: {
+			amount: 0,
+			per: "0",
+		},
+		b500: {
 			amount: 0,
 			per: "0",
 		},
@@ -109,16 +109,16 @@ const Warriors = () => {
 
 	const getBlstAmountToMintWarrior = async () => {
 		var BLST_amount_1 = 0;
-		var BLST_amount_5 = 0;
 		var BLST_amount_10 = 0;
-		var BLST_amount_20 = 0;
-		var BLST_amount_100 = 0;
+		var BLST_amount_50 = 0;
+		var BLST_amount_200 = 0;
+		var BLST_amount_500 = 0;
 
 		var BLST_per_1 = "0";
-		var BLST_per_5 = "0";
 		var BLST_per_10 = "0";
-		var BLST_per_20 = "0";
-		var BLST_per_100 = "0";
+		var BLST_per_50 = "0";
+		var BLST_per_200 = "0";
+		var BLST_per_500 = "0";
 
 		try {
 			BLST_amount_1 = await getBloodstoneAmountToMintWarrior(
@@ -126,41 +126,41 @@ const Warriors = () => {
 				warriorContract,
 				1
 			);
-			BLST_amount_5 = await getBloodstoneAmountToMintWarrior(
-				web3,
-				warriorContract,
-				5
-			);
 			BLST_amount_10 = await getBloodstoneAmountToMintWarrior(
 				web3,
 				warriorContract,
 				10
 			);
-			BLST_amount_20 = await getBloodstoneAmountToMintWarrior(
+			BLST_amount_50 = await getBloodstoneAmountToMintWarrior(
 				web3,
 				warriorContract,
-				20
+				50
 			);
-			BLST_amount_100 = await getBloodstoneAmountToMintWarrior(
+			BLST_amount_200 = await getBloodstoneAmountToMintWarrior(
 				web3,
 				warriorContract,
-				100
+				200
+			);
+			BLST_amount_500 = await getBloodstoneAmountToMintWarrior(
+				web3,
+				warriorContract,
+				500
 			);
 			BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-			BLST_per_5 = (
-				(1 - BLST_amount_5 / (BLST_amount_1 * 5)) *
-				100
-			).toFixed(0);
 			BLST_per_10 = (
 				(1 - BLST_amount_10 / (BLST_amount_1 * 10)) *
 				100
 			).toFixed(0);
-			BLST_per_20 = (
-				(1 - BLST_amount_20 / (BLST_amount_1 * 20)) *
+			BLST_per_50 = (
+				(1 - BLST_amount_50 / (BLST_amount_1 * 50)) *
 				100
 			).toFixed(0);
-			BLST_per_100 = (
-				(1 - BLST_amount_100 / (BLST_amount_1 * 100)) *
+			BLST_per_200 = (
+				(1 - BLST_amount_200 / (BLST_amount_1 * 200)) *
+				100
+			).toFixed(0);
+			BLST_per_500 = (
+				(1 - BLST_amount_500 / (BLST_amount_1 * 500)) *
 				100
 			).toFixed(0);
 			var amount_per = {
@@ -168,21 +168,21 @@ const Warriors = () => {
 					amount: BLST_amount_1,
 					per: BLST_per_1,
 				},
-				b5: {
-					amount: BLST_amount_5,
-					per: BLST_per_5,
-				},
 				b10: {
 					amount: BLST_amount_10,
 					per: BLST_per_10,
 				},
-				b20: {
-					amount: BLST_amount_20,
-					per: BLST_per_20,
+				b50: {
+					amount: BLST_amount_50,
+					per: BLST_per_50,
 				},
-				b100: {
-					amount: BLST_amount_100,
-					per: BLST_per_100,
+				b200: {
+					amount: BLST_amount_200,
+					per: BLST_per_200,
+				},
+				b500: {
+					amount: BLST_amount_500,
+					per: BLST_per_500,
 				},
 			};
 			setWarriorBlstAmountPer(amount_per);
@@ -420,27 +420,6 @@ const Warriors = () => {
 									<CommonBtn
 										onClick={() =>
 											handleMint(
-												5,
-											)
-										}
-										sx={{
-											fontSize: 14,
-											fontWeight: "bold",
-											marginBottom: 1,
-										}}
-									>
-										5 (
-										{"-" +
-											warriorBlstAmountPer.b5.per +
-											"%" +
-											" | " +
-											warriorBlstAmountPer.b5
-												?.amount}{" "}
-										$BLST)
-									</CommonBtn>
-									<CommonBtn
-										onClick={() =>
-											handleMint(
 												10,
 											)
 										}
@@ -462,7 +441,7 @@ const Warriors = () => {
 									<CommonBtn
 										onClick={() =>
 											handleMint(
-												20,
+												50,
 											)
 										}
 										sx={{
@@ -471,19 +450,19 @@ const Warriors = () => {
 											marginBottom: 1,
 										}}
 									>
-										20 (
+										50 (
 										{"-" +
-											warriorBlstAmountPer.b20.per +
+											warriorBlstAmountPer.b50.per +
 											"%" +
 											" | " +
-											warriorBlstAmountPer.b20
+											warriorBlstAmountPer.b50
 												?.amount}{" "}
 										$BLST)
 									</CommonBtn>
 									<CommonBtn
 										onClick={() =>
 											handleMint(
-												100,
+												200,
 											)
 										}
 										sx={{
@@ -492,13 +471,34 @@ const Warriors = () => {
 											marginBottom: 1,
 										}}
 									>
-										100 (
+										200 (
 										{"-" +
-											warriorBlstAmountPer.b100
+											warriorBlstAmountPer.b200.per +
+											"%" +
+											" | " +
+											warriorBlstAmountPer.b200
+												?.amount}{" "}
+										$BLST)
+									</CommonBtn>
+									<CommonBtn
+										onClick={() =>
+											handleMint(
+												500,
+											)
+										}
+										sx={{
+											fontSize: 14,
+											fontWeight: "bold",
+											marginBottom: 1,
+										}}
+									>
+										500 (
+										{"-" +
+											warriorBlstAmountPer.b500
 												.per +
 											"%" +
 											" | " +
-											warriorBlstAmountPer.b100
+											warriorBlstAmountPer.b500
 												?.amount}{" "}
 										$BLST)
 									</CommonBtn>
