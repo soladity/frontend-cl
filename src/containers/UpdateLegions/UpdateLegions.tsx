@@ -236,12 +236,12 @@ const UpdateLegions: React.FC = () => {
     setTotalAP(sum + tempAP);
     setIsWDropable(
       dropItemList.length > 0 &&
-      createlegions.main.maxAvailableDragCount >=
-      dropItemList.filter((item) => !item.w5b).length &&
-      cp + tempCP >=
-      dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
-      sum + tempAP >= createlegions.main.minAvailableAP &&
-      legionName.length > 0
+        createlegions.main.maxAvailableDragCount >=
+          dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
+        cp + tempCP >=
+          dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
+        sum + tempAP >= createlegions.main.minAvailableAP &&
+        legionName.length > 0
     );
     setMintFee(
       0.5 * dropItemList.length +
