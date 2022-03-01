@@ -237,7 +237,7 @@ const UpdateLegions: React.FC = () => {
     setIsWDropable(
       dropItemList.length > 0 &&
         createlegions.main.maxAvailableDragCount >=
-          dropItemList.filter((item) => !item.w5b).length &&
+          dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
         cp + tempCP >=
           dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
         sum + tempAP >= createlegions.main.minAvailableAP &&
