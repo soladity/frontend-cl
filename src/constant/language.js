@@ -1691,4 +1691,16 @@ export const translations = {
     pl: "Opłata",
     ph: "Bayad",
   },
+  huntTransactionFailed: {
+    en: "Transaction is failed, please try again!",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  }
 };
