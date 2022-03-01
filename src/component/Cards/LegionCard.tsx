@@ -21,7 +21,7 @@ import {
   useWarrior,
   useWeb3,
 } from "../../hooks/useContract";
-import { getBeastToken, getWarriorToken, getWarriorBalance } from "../../hooks/contractFunction";
+import { getBeastToken, getWarriorToken } from "../../hooks/contractFunction";
 import { formatNumber } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
 
@@ -60,7 +60,7 @@ export default function LegionCard(props: CardProps) {
   const [showWarrior, setShowWarrior] = React.useState(true);
   const [beastList, setBeastList] = React.useState(Array);
   const [warriorList, setWarriorList] = React.useState(Array);
-  const [warriorBalance, setWarriorBalance] = React.useState(0);
+  const [totalWarrior, setTotalWarrior] = React.useState(0);
 
   const beastContract = useBeast();
   const warriorContract = useWarrior();
@@ -73,11 +73,13 @@ export default function LegionCard(props: CardProps) {
   const getBalance = async () => {
     let beast;
     let tempBeasts = [];
-    setWarriorBalance(parseInt(await getWarriorBalance(web3, warriorContract, account)));
+    let capacity = 0;
     for (let i = 0; i < beasts.length; i++) {
       beast = await getBeastToken(web3, beastContract, beasts[i]);
       tempBeasts.push({ ...beast, id: beasts[i] });
+      capacity = capacity + parseInt(beast.capacity);
     }
+    setTotalWarrior(capacity);
     setBeastList(tempBeasts);
     let warrior;
     let tempWarriors = [];
@@ -272,7 +274,7 @@ export default function LegionCard(props: CardProps) {
               "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          W {warriors.length} / {warriors.length+warriorBalance}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B {beasts.length}
+          W {warriors.length} / {totalWarrior}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B {beasts.length}
         </Typography>
         <Box
           sx={{
