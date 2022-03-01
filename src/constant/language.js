@@ -1834,5 +1834,5 @@ export const translations = {
     de: "",
     pl: "",
     ph: "",
-  }
+  },
 };
