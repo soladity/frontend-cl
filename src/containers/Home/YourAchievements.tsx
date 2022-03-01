@@ -1,13 +1,10 @@
 import * as React from "react";
 import {
-    Grid,
     Card,
     Box,
-    Button,
-    Popover,
+    useMediaQuery,
+    useTheme,
     Checkbox,
-    Dialog,
-    DialogTitle,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
@@ -113,6 +110,9 @@ const YourAchievements = () => {
     const [legionMaster, setLegionMaster] = React.useState(false);
     const [monsterConqueror, setMonsterConqueror] = React.useState(false);
     const [kingOfNicah, setKingOfNicah] = React.useState(false);
+
+    const theme = useTheme();
+    const isSmallThanSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     const getWarriorStatus = async () => {
         try {
@@ -241,6 +241,7 @@ const YourAchievements = () => {
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("warriorMaster")}
                     </span>{" "}
+                    {isSmallThanSM && (<br />)}
                     <span style={{ fontSize: 12 }}>
                         ({getTranslation("warriorMasterEx")})
                     </span>
@@ -250,6 +251,7 @@ const YourAchievements = () => {
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("beastMaster")}
                     </span>{" "}
+                    {isSmallThanSM && (<br />)}
                     <span style={{ fontSize: 12 }}>
                         ({getTranslation("beastMasterEx")})
                     </span>
@@ -259,6 +261,7 @@ const YourAchievements = () => {
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("legionMaster")}
                     </span>{" "}
+                    {isSmallThanSM && (<br />)}
                     <span style={{ fontSize: 12 }}>
                         ({getTranslation("legionMasterEx")})
                     </span>
@@ -268,6 +271,7 @@ const YourAchievements = () => {
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("monsterConqueror")}
                     </span>{" "}
+                    {isSmallThanSM && (<br />)}
                     <span style={{ fontSize: 12 }}>
                         ({getTranslation("monsterConquerorEx")})
                     </span>
@@ -277,6 +281,7 @@ const YourAchievements = () => {
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("King/Queen")}
                     </span>{" "}
+                    {isSmallThanSM && (<br />)}
                     <span style={{ fontSize: 12 }}>
                         ({getTranslation("King/QueenEx")})
                     </span>

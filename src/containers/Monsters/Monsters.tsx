@@ -174,7 +174,7 @@ const Monsters = () => {
     const initMonster = async (legions: any) => {
         let monsterTmp;
         let monsterArraryTmp = [];
-        for (let i = 1; i < 23; i++) {
+        for (let i = 1; i < 25; i++) {
             monsterTmp = await getMonsterInfo(web3, monsterContract, i);
             monsterArraryTmp.push({ ...monsterTmp, id: i });
         }
@@ -308,7 +308,9 @@ const Monsters = () => {
                 curLegion?.id,
                 monsterTokenID
             );
-            const result = response.events.Hunted.returnValues;
+            const keys = Object.keys(response.events)
+            console.log(keys)
+            const result = response.events[keys[0]].returnValues;
             console.log(result)
             setHuntedRoll(result.roll);
             setHuntedStatus(result.success ? 1 : 2);
@@ -682,9 +684,13 @@ const Monsters = () => {
                                 <CardMedia
                                     component="img"
                                     image={
-                                        "/assets/images/defeat/m" +
-                                        curMonsterID +
-                                        ".gif"
+                                        showAnimation === "0"
+                                            ? imageUrls.baseUrl +
+                                            imageUrls.monsters[curMonsterID]
+                                                .dead_jpg
+                                            : imageUrls.baseUrl +
+                                            imageUrls.monsters[curMonsterID]
+                                                .dead_gif
                                     }
                                     alt="Monster Image"
                                     loading="lazy"
@@ -718,7 +724,7 @@ const Monsters = () => {
                                                 ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
                                                     ? (89 - parseInt(curMonster?.base as string))
                                                     : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(2)}
+                                                : 0)).toFixed(0)}
                                     </Typography>
                                 </Box>
                             )}
@@ -783,7 +789,7 @@ const Monsters = () => {
                                                 ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
                                                     ? (89 - parseInt(curMonster?.base as string))
                                                     : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(2)}
+                                                : 0)).toFixed(0)}
                                     </Typography>
                                 </Box>
                             )}
