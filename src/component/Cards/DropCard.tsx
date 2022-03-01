@@ -8,17 +8,6 @@ import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DroppableProvided,
-  DraggableLocation,
-  DropResult,
-  DroppableStateSnapshot,
-  DraggableProvided,
-  DraggableStateSnapshot,
-} from "react-beautiful-dnd";
 import { formatNumber } from "../../utils/common";
 
 interface DropCardProps {
@@ -45,6 +34,18 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
   isMobile,
 }) {
   const [loaded, setLoaded] = React.useState(false);
+
+  let itemList = [];
+  for (let i = 0; i < parseInt(strength !== undefined ? strength : "0"); i++) {
+    itemList.push(
+      <img
+        key={i}
+        src="/assets/images/bloodstoneGrey.png"
+        style={{ height: isMobile ? "8px" : "10px" }}
+        alt="icon"
+      />
+    );
+  }
 
   const handleImageLoaded = () => {
     setLoaded(true);
@@ -88,6 +89,18 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             >
               {type}
             </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              top: "2%",
+              right: "2%",
+              fontWeight: "bold",
+            }}
+          >
+            {itemList}
           </Box>
           <Box
             sx={{
