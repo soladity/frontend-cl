@@ -707,10 +707,10 @@ const Monsters = () => {
                                     image={
                                         showAnimation === "0"
                                             ? imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID]
+                                            imageUrls.monsters[curMonsterID - 1]
                                                 .dead_jpg
                                             : imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID]
+                                            imageUrls.monsters[curMonsterID - 1]
                                                 .dead_gif
                                     }
                                     alt="Monster Image"
@@ -746,7 +746,7 @@ const Monsters = () => {
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -805,7 +805,7 @@ const Monsters = () => {
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
