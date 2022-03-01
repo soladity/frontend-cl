@@ -889,12 +889,16 @@ const UpdateLegions: React.FC = () => {
                       sx={{
                         color:
                           totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                          dropItemList.filter((item) => item.w5b === true)
+                            .length +
+                            tempWarriorsCnt
                             ? "red"
                             : "white",
                         fontWeight:
                           totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                          dropItemList.filter((item) => item.w5b === true)
+                            .length +
+                            tempWarriorsCnt
                             ? "bold"
                             : "normal",
                       }}
@@ -908,13 +912,17 @@ const UpdateLegions: React.FC = () => {
                       item
                       sx={{
                         color:
-                          totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                          createlegions.main.maxAvailableDragCount <
+                          dropItemList.filter((item) => item.w5b === false)
+                            .length +
+                            tempBeastsCnt
                             ? "red"
                             : "white",
                         fontWeight:
-                          totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                          createlegions.main.maxAvailableDragCount <
+                          dropItemList.filter((item) => item.w5b === false)
+                            .length +
+                            tempBeastsCnt
                             ? "bold"
                             : "normal",
                       }}

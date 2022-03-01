@@ -79,7 +79,7 @@ export default function BeastCard(props: CardProps) {
       >
         <Typography
           sx={{
-            fontSize: needButton ? 14 : 8,
+            fontSize: needButton ? 14 : 10,
             fontWeight: "bold",
           }}
         >
@@ -95,7 +95,7 @@ export default function BeastCard(props: CardProps) {
           <img
             src="/assets/images/sword.png"
             style={{
-              height: `${needButton ? "20px" : "10px"}`,
+              height: `${needButton ? "20px" : "15px"}`,
               marginRight: "2%",
             }}
             alt="Sword"
@@ -103,9 +103,9 @@ export default function BeastCard(props: CardProps) {
           <Typography
             sx={{
               fontWeight: "bold",
-              fontSize: isMobile ? 10 : 14,
+              fontSize: isMobile ? 10 : 16,
               textShadow:
-                "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+                "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
             }}
           >
             {capacity}

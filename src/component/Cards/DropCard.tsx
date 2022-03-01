@@ -88,27 +88,32 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             >
               {type}
             </Typography>
-            <Box
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              bottom: "2%",
+              width: "100%",
+              justifyContent: "center",
+              fontWeight: "bold",
+            }}
+          >
+            <Typography
               sx={{
-                display: "flex",
                 fontWeight: "bold",
+                fontSize: isMobile ? 10 : 14,
+                textShadow:
+                  "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
               }}
             >
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: isMobile ? 10 : 14,
-                  textShadow:
-                    "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
-                }}
-              >
-                {formatNumber(power)}
-              </Typography>
-            </Box>
+              {formatNumber(power)}
+            </Typography>
           </Box>
           <Typography
             sx={{
-              fontSize: isMobile ? 10 : 14,
+              fontSize: isMobile ? 8 : 10,
               position: "absolute",
               bottom: "2%",
               left: "2%",
@@ -157,6 +162,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
                 style={{
                   height: `${isMobile ? "8px" : "10px"}`,
                   marginRight: "1%",
+                  alignSelf: "center",
                 }}
                 alt="Sword"
               />
@@ -165,7 +171,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
                   fontWeight: "bold",
                   fontSize: isMobile ? 10 : 14,
                   textShadow:
-                    "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+                    "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
                 }}
               >
                 {capacity}
@@ -174,7 +180,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
           </Box>
           <Typography
             sx={{
-              fontSize: isMobile ? 10 : 14,
+              fontSize: isMobile ? 8 : 10,
               position: "absolute",
               bottom: "2%",
               left: "2%",

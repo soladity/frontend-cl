@@ -16,12 +16,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useWeb3React } from "@web3-react/core";
 
+import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
 import {
-  useBeast,
-  useWarrior,
-  useWeb3,
-} from "../../hooks/useContract";
-import { getBeastToken, getWarriorToken, getWarriorBalance } from "../../hooks/contractFunction";
+  getBeastToken,
+  getWarriorToken,
+  getWarriorBalance,
+} from "../../hooks/contractFunction";
 import { formatNumber } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
 
@@ -51,7 +51,7 @@ export default function LegionCard(props: CardProps) {
     huntStatus,
     handleOpenSupply,
     handleUpdate,
-    handleOpenShopping
+    handleOpenShopping,
   } = props;
   const { account } = useWeb3React();
 
@@ -73,7 +73,9 @@ export default function LegionCard(props: CardProps) {
   const getBalance = async () => {
     let beast;
     let tempBeasts = [];
-    setWarriorBalance(parseInt(await getWarriorBalance(web3, warriorContract, account)));
+    setWarriorBalance(
+      parseInt(await getWarriorBalance(web3, warriorContract, account))
+    );
     for (let i = 0; i < beasts.length; i++) {
       beast = await getBeastToken(web3, beastContract, beasts[i]);
       tempBeasts.push({ ...beast, id: beasts[i] });
@@ -110,7 +112,7 @@ export default function LegionCard(props: CardProps) {
 
   const openShopping = (id: string) => {
     handleOpenShopping(parseInt(id));
-  }
+  };
 
   return (
     <Card sx={{ position: "relative", height: "100%" }}>
@@ -157,68 +159,68 @@ export default function LegionCard(props: CardProps) {
           <Grid container spacing={1} sx={{ pt: 2 }}>
             {showWarrior
               ? warriorList.map((item: any, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                  <Box
-                    sx={{
-                      backgroundColor: "black",
-                      padding: 1,
-                      borderRadius: 1,
-                    }}
-                  >
+                  <Grid item xs={12} md={6} key={index}>
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
                       }}
                     >
-                      <Typography variant="subtitle2">{item.type}</Typography>
-                      <Typography variant="subtitle2">#{item.id}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="subtitle2">{item.type}</Typography>
+                        <Typography variant="subtitle2">#{item.id}</Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {formatNumber(item.power)} AP
+                        </Typography>
+                        <Box>{item.item}</Box>
+                      </Box>
                     </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Typography variant="subtitle2">
-                        {formatNumber(item.power)} AP
-                      </Typography>
-                      <Box>{item.item}</Box>
-                    </Box>
-                  </Box>
-                </Grid>
-              ))
+                  </Grid>
+                ))
               : beastList.map((item: any, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                  <Box
-                    sx={{
-                      backgroundColor: "black",
-                      padding: 1,
-                      borderRadius: 1,
-                    }}
-                  >
+                  <Grid item xs={12} md={6} key={index}>
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
                       }}
                     >
-                      <Typography variant="subtitle2">{item.type}</Typography>
-                      <Typography variant="subtitle2">#{item.id}</Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="subtitle2">{item.type}</Typography>
+                        <Typography variant="subtitle2">#{item.id}</Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="subtitle2">
+                          {item.capacity}
+                        </Typography>
+                        <img
+                          src="/assets/images/sword.png"
+                          style={{ height: "15px", marginLeft: "5px" }}
+                          alt="Sword"
+                        />
+                      </Box>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Typography variant="subtitle2">
-                        {item.capacity}
-                      </Typography>
-                      <img
-                        src="/assets/images/sword.png"
-                        style={{ height: "15px", marginLeft: "5px" }}
-                        alt="Sword"
-                      />
-                    </Box>
-                  </Box>
-                </Grid>
-              ))}
+                  </Grid>
+                ))}
           </Grid>
         </CardContent>
       )}
@@ -246,8 +248,8 @@ export default function LegionCard(props: CardProps) {
             huntStatus === "green"
               ? "green"
               : huntStatus === "orange"
-                ? "orange"
-                : "red",
+              ? "orange"
+              : "red",
         }}
         onClick={() => open(id)}
       >
@@ -268,16 +270,17 @@ export default function LegionCard(props: CardProps) {
           sx={{
             fontSize: "0.8rem",
             textShadow:
-              "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+              "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          W {warriors.length}/{warriors.length+warriorBalance}&nbsp;&nbsp;&nbsp;B {beasts.length}
+          W {warriors.length}/{warriors.length + warriorBalance}
+          &nbsp;&nbsp;&nbsp;B {beasts.length}
         </Typography>
         <Box
           sx={{
             display: "flex",
             cursor: "pointer",
-            ml: 2
+            ml: 2,
           }}
         >
           {show === false ? (
@@ -321,14 +324,13 @@ export default function LegionCard(props: CardProps) {
             fontWeight: "bold",
             fontSize: "1.4rem",
             textShadow:
-              "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+              "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
           {formatNumber(attackPower)} AP
         </Typography>
       </Box>
-      {
-        attackPower >= 2000 &&
+      {attackPower >= 2000 && (
         <Box
           sx={{
             display: "flex",
@@ -337,25 +339,23 @@ export default function LegionCard(props: CardProps) {
             right: "20px",
             cursor: "pointer",
           }}
-          onClick={() => huntStatus !== 'orange' && openShopping(id)}
+          onClick={() => huntStatus !== "orange" && openShopping(id)}
         >
-          {
-            huntStatus !== 'orange' ? (
-              <img
-                src="/assets/images/shopping.png"
-                style={{ height: "20px" }}
-                alt="Shopping"
-              />
-            ) : (
-              <img
-                src="/assets/images/shoppingRed.png"
-                style={{ height: "20px" }}
-                alt="Shopping"
-              />
-            )
-          }
+          {huntStatus !== "orange" ? (
+            <img
+              src="/assets/images/shopping.png"
+              style={{ height: "20px" }}
+              alt="Shopping"
+            />
+          ) : (
+            <img
+              src="/assets/images/shoppingRed.png"
+              style={{ height: "20px" }}
+              alt="Shopping"
+            />
+          )}
         </Box>
-      }
+      )}
       <Box
         sx={{
           display: "flex",
