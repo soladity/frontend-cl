@@ -8,17 +8,6 @@ import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DroppableProvided,
-  DraggableLocation,
-  DropResult,
-  DroppableStateSnapshot,
-  DraggableProvided,
-  DraggableStateSnapshot,
-} from "react-beautiful-dnd";
 import { formatNumber } from "../../utils/common";
 
 interface DropCardProps {
@@ -45,6 +34,18 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
   isMobile,
 }) {
   const [loaded, setLoaded] = React.useState(false);
+
+  let itemList = [];
+  for (let i = 0; i < parseInt(strength !== undefined ? strength : "0"); i++) {
+    itemList.push(
+      <img
+        key={i}
+        src="/assets/images/bloodstoneGrey.png"
+        style={{ height: isMobile ? "8px" : "10px" }}
+        alt="icon"
+      />
+    );
+  }
 
   const handleImageLoaded = () => {
     setLoaded(true);
@@ -88,27 +89,44 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
             >
               {type}
             </Typography>
-            <Box
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              top: "2%",
+              right: "2%",
+              fontWeight: "bold",
+            }}
+          >
+            {itemList}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              bottom: "2%",
+              width: "100%",
+              justifyContent: "center",
+              fontWeight: "bold",
+            }}
+          >
+            <Typography
               sx={{
-                display: "flex",
                 fontWeight: "bold",
+                fontSize: isMobile ? 10 : 14,
+                textShadow:
+                  "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
               }}
             >
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: isMobile ? 10 : 14,
-                  textShadow:
-                    "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
-                }}
-              >
-                {formatNumber(power)}
-              </Typography>
-            </Box>
+              {formatNumber(power)}
+            </Typography>
           </Box>
           <Typography
             sx={{
-              fontSize: isMobile ? 10 : 14,
+              fontSize: isMobile ? 8 : 10,
               position: "absolute",
               bottom: "2%",
               left: "2%",
@@ -157,6 +175,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
                 style={{
                   height: `${isMobile ? "8px" : "10px"}`,
                   marginRight: "1%",
+                  alignSelf: "center",
                 }}
                 alt="Sword"
               />
@@ -165,7 +184,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
                   fontWeight: "bold",
                   fontSize: isMobile ? 10 : 14,
                   textShadow:
-                    "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+                    "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
                 }}
               >
                 {capacity}
@@ -174,7 +193,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
           </Box>
           <Typography
             sx={{
-              fontSize: isMobile ? 10 : 14,
+              fontSize: isMobile ? 8 : 10,
               position: "absolute",
               bottom: "2%",
               left: "2%",

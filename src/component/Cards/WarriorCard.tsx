@@ -40,7 +40,7 @@ export default function WarriorCard(props: CardProps) {
       <img
         key={i}
         src="/assets/images/bloodstoneGrey.png"
-        style={{ height: "30px" }}
+        style={{ height: needButton ? "30px" : "10px" }}
         alt="icon"
       />
     );
@@ -91,22 +91,18 @@ export default function WarriorCard(props: CardProps) {
       >
         {type}
       </Typography>
-      {needButton && (
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              position: "absolute",
-              alignItems: "center",
-              top: "2%",
-              right: "2%",
-              fontWeight: "bold",
-            }}
-          >
-            {itemList}
-          </Box>
-        </>
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          position: "absolute",
+          alignItems: "center",
+          top: "2%",
+          right: "2%",
+          fontWeight: "bold",
+        }}
+      >
+        {itemList}
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -123,7 +119,7 @@ export default function WarriorCard(props: CardProps) {
             fontSize: isMobile ? 10 : 14,
             fontWeight: "bold",
             textShadow:
-              "-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000",
+              "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
           {formatNumber(power)}
