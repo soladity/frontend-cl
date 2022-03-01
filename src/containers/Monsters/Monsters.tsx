@@ -145,6 +145,7 @@ const Monsters = () => {
     const [huntedStatus, setHuntedStatus] = useState(0);
     const [continueLoading, setContinueLoading] = useState(false);
     const [huntedRoll, setHuntedRoll] = useState(0);
+    const [huntAvailablePercent, setHuntAvailablePercent] = useState(0)
     const [currentTime, setCurrentTime] = React.useState(new Date());
     const [strongestMonsterToHunt, setStrongestMonsterToHunt] =
         React.useState(0);
@@ -313,6 +314,7 @@ const Monsters = () => {
             const result = response.events[keys[0]].returnValues;
             console.log(result)
             setHuntedRoll(result.roll);
+            setHuntAvailablePercent(result.percent)
             setHuntedStatus(result.success ? 1 : 2);
             dispatch(
                 setReloadStatus({
@@ -564,7 +566,7 @@ const Monsters = () => {
                                                     ?
                                                     (parseInt(monster.base) + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000) > 89
                                                         ? (89 - parseInt(monster.base)) + ''
-                                                        : ((curLegion as LegionInterface).attackPower - monster.ap) / 2000 + ''
+                                                        : Math.floor(((curLegion as LegionInterface).attackPower - monster.ap) / 2000) + ''
                                                     : '0'
                                             }
                                             price={monster.reward}
@@ -718,13 +720,7 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("congSubtitle3")}{" "}
-                                        {(parseInt(curMonster?.base as string) +
-                                            ((curMonster?.ap as number) <
-                                                (curLegion?.attackPower as number)
-                                                ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
-                                                    ? (89 - parseInt(curMonster?.base as string))
-                                                    : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(0)}
+                                        {huntAvailablePercent}
                                     </Typography>
                                 </Box>
                             )}
@@ -783,13 +779,7 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("defeatSubtitle2")}{" "}
-                                        {(parseInt(curMonster?.base as string) +
-                                            ((curMonster?.ap as number) <
-                                                (curLegion?.attackPower as number)
-                                                ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
-                                                    ? (89 - parseInt(curMonster?.base as string))
-                                                    : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(0)}
+                                        {huntAvailablePercent}
                                     </Typography>
                                 </Box>
                             )}
