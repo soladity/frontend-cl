@@ -682,9 +682,13 @@ const Monsters = () => {
                                 <CardMedia
                                     component="img"
                                     image={
-                                        "/assets/images/defeat/m" +
-                                        curMonsterID +
-                                        ".gif"
+                                        showAnimation === "0"
+                                            ? imageUrls.baseUrl +
+                                            imageUrls.monsters[curMonsterID]
+                                                .dead_jpg
+                                            : imageUrls.baseUrl +
+                                            imageUrls.monsters[curMonsterID]
+                                                .dead_gif
                                     }
                                     alt="Monster Image"
                                     loading="lazy"
@@ -718,7 +722,7 @@ const Monsters = () => {
                                                 ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
                                                     ? (89 - parseInt(curMonster?.base as string))
                                                     : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(2)}
+                                                : 0)).toFixed(0)}
                                     </Typography>
                                 </Box>
                             )}
@@ -783,7 +787,7 @@ const Monsters = () => {
                                                 ? (parseInt(curMonster?.base as string) + ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000) > 89
                                                     ? (89 - parseInt(curMonster?.base as string))
                                                     : ((curLegion as LegionInterface).attackPower - (curMonster?.ap as number)) / 2000
-                                                : 0)).toFixed(2)}
+                                                : 0)).toFixed(0)}
                                     </Typography>
                                 </Box>
                             )}
