@@ -174,7 +174,7 @@ export const DropCard: React.FC<DropCardProps> = function DropCard({
                 src="/assets/images/sword.png"
                 style={{
                   height: `${isMobile ? "10px" : "15px"}`,
-                  marginRight: "5%",
+                  marginRight: "10%",
                   alignSelf: "center",
                 }}
                 alt="Sword"
