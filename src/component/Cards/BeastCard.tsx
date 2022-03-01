@@ -96,7 +96,7 @@ export default function BeastCard(props: CardProps) {
             src="/assets/images/sword.png"
             style={{
               height: `${needButton ? "20px" : "15px"}`,
-              marginRight: "2%",
+              marginRight: "5%",
             }}
             alt="Sword"
           />
