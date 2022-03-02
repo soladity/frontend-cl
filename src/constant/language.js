@@ -1823,4 +1823,16 @@ export const translations = {
     pl: "wygrać",
     ph: "para manalo",
   },
+  updatePrice: {
+    en: "Update Price",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
 };

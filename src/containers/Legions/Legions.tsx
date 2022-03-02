@@ -88,7 +88,7 @@ const Legions = () => {
 	const [totalPower, setTotalPower] = React.useState(0);
 	const [legions, setLegions] = React.useState<LegionProps[]>(Array);
 	const [highest, setHighest] = React.useState(true);
-	const [huntStatus, setHuntStatus] = React.useState("");
+	const [huntStatus, setHuntStatus] = React.useState("all");
 	const [hideWeak, setHideWeak] = React.useState(false);
 	const [openSupply, setOpenSupply] = React.useState(false);
 	const [selectedLegion, setSelectedLegion] = React.useState(-1);
@@ -423,6 +423,14 @@ const Legions = () => {
 								</FormLabel>
 								<ButtonGroup variant="outlined" color="primary" sx={{ pt: 1 }}>
 									<Button
+										variant={huntStatus === "all" ? "contained" : "outlined"}
+										onClick={() => {
+											setHuntStatus("all");
+										}}
+									>
+										{getTranslation("all")}
+									</Button>
+									<Button
 										variant={huntStatus === "green" ? "contained" : "outlined"}
 										onClick={() => {
 											setHuntStatus("green");
@@ -495,7 +503,7 @@ const Legions = () => {
 							)
 							.filter(
 								(item: any) =>
-									huntStatus === item.huntStatus || huntStatus === ""
+									huntStatus === item.huntStatus || huntStatus === "all"
 							)
 							.map((item: any, index) => (
 								<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -625,7 +633,7 @@ const Legions = () => {
 						(= XXX USD)
 					</Typography>
 					<Typography variant='subtitle1'>
-					If sold, you will pay {marketplaceTax}% marketplace tax.
+						If sold, you will pay {marketplaceTax}% marketplace tax.
 					</Typography>
 				</DialogContent>
 				<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>

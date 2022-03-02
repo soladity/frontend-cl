@@ -101,8 +101,8 @@ const NavList = (props: any) => {
 	};
 
 	return <div>
-		<Toolbar />
-		<Divider />
+		<Toolbar sx={{ display: { xs: "none", md: "flex" } }} />
+		<Divider sx={{ display: { xs: "none", md: "block" } }} />
 		<List sx={{
 			pb: 8
 		}}>

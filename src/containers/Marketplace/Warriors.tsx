@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Checkbox, FormLabel, FormControl, Slider } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Checkbox, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
@@ -8,9 +8,10 @@ import { useDispatch } from 'react-redux';
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
-import { getOnMarketplace, getWarriorToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { getOnMarketplace, getWarriorToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem, updatePrice } from '../../hooks/contractFunction';
 import { useWarrior, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
 import WarriorMarketCard from '../../component/Cards/WarriorMarketCard';
+import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import Image from '../../config/image.json';
@@ -38,6 +39,8 @@ type WarriorProps = {
 	strength: string;
 	owner: boolean;
 	price: string;
+	gif: string;
+	jpg: string;
 };
 
 const Warriors = () => {
@@ -47,10 +50,13 @@ const Warriors = () => {
 
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [sort, setSort] = React.useState('0');
-	const [warriors, setWarriors] = React.useState(Array);
+	const [warriors, setWarriors] = React.useState<WarriorProps[]>(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [onlyMyWarrior, setOnlyMyWarrior] = React.useState(false);
 	const [currentPage, setCurrentPage] = React.useState(1);
+	const [openUpdate, setOpenUpdate] = React.useState(false);
+	const [price, setPrice] = React.useState(0);
+	const [selectedWarrior, setSelectedWarrior] = React.useState(0);
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
@@ -116,7 +122,7 @@ const Warriors = () => {
 		try {
 			await cancelMarketplace(web3, marketplaceContract, account, '2', id);
 			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
-		} catch (e){
+		} catch (e) {
 			console.log(e);
 		}
 		setActionLoading(false);
@@ -134,7 +140,7 @@ const Warriors = () => {
 				reloadContractStatus: new Date()
 			}))
 			setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
-		} catch (e){
+		} catch (e) {
 			console.log(e);
 		}
 		setActionLoading(false);
@@ -188,6 +194,39 @@ const Warriors = () => {
 
 	const handlePage = (value: any) => {
 		setCurrentPage(value);
+	}
+
+	const handleUpdate = (id: number) => {
+		setSelectedWarrior(id);
+		setPrice(parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price));
+		setOpenUpdate(true);
+	}
+
+	const handleUpdateClose = () => {
+		setOpenUpdate(false);
+	};
+
+	const handlePrice = (e: any) => {
+		setPrice(e.target.value);
+	}
+
+	const handleUpdatePrice = async () => {
+		setActionLoading(true);
+		try {
+			setOpenUpdate(false);
+			await updatePrice(web3, marketplaceContract, account, '2', selectedWarrior, price);
+			let temp = [];
+			for (let i = 0;i < warriors.length; i++){
+				if (parseInt(warriors[i].id) === selectedWarrior)
+					temp.push({...warriors[i], price: price.toString()});
+				else 
+				temp.push({...warriors[i]});
+			}
+			setWarriors([...temp]);
+		} catch (e) {
+			console.log(e);
+		}
+		setActionLoading(false);
 	}
 
 	return <Box>
@@ -287,9 +326,9 @@ const Warriors = () => {
 				</Grid>
 				<Grid container spacing={2} sx={{ mb: 4 }}>
 					{
-						warriors.length > 0 &&	warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] <= parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))).filter((item: any) => onlyMyWarrior === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
+						warriors.length > 0 && warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] <= parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))).filter((item: any) => onlyMyWarrior === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorMarketCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
+								<WarriorMarketCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
 							</Grid>
 						))
 					}
@@ -342,6 +381,28 @@ const Warriors = () => {
 					</Grid>
 				</>
 			)}
+		<Dialog onClose={handleUpdateClose} open={openUpdate}>
+			<DialogTitle>{getTranslation('updatePrice')}</DialogTitle>
+			<DialogContent>
+				<TextField
+					autoFocus
+					margin="dense"
+					id="price"
+					label="Price in $BLST"
+					type="number"
+					fullWidth
+					variant="standard"
+					value={price}
+					onChange={handlePrice}
+				/>
+				<Typography variant='subtitle1'>
+					(= XXX USD)
+				</Typography>
+			</DialogContent>
+			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleUpdatePrice}>
+				{getTranslation('confirm')}
+			</CommonBtn>
+		</Dialog>
 	</Box>
 }
 
