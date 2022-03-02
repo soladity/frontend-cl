@@ -1,9 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Skeleton from '@mui/material/Skeleton';
+import { Box, Typography, Card, CardMedia, IconButton, Skeleton } from "@mui/material";
+import CachedIcon from "@mui/icons-material/Cached";
 
 import CommonBtn from '../../component/Buttons/CommonBtn';
 
@@ -17,6 +14,7 @@ type CardProps = {
 	price: string;
 	handleCancel: Function;
 	handleBuy: Function;
+	handleUpdate: Function;
 };
 
 export default function BeastMarketCard(props: CardProps) {
@@ -28,7 +26,8 @@ export default function BeastMarketCard(props: CardProps) {
 		owner,
 		price,
 		handleCancel,
-		handleBuy
+		handleBuy,
+		handleUpdate
 	} = props;
 
 	const [loaded, setLoaded] = React.useState(false);
@@ -44,6 +43,10 @@ export default function BeastMarketCard(props: CardProps) {
 	const buy = (id: string) => {
 		handleBuy(parseInt(id));
 	}
+
+	const update = (id: string) => {
+		handleUpdate(parseInt(id));
+	};
 
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -79,6 +82,24 @@ export default function BeastMarketCard(props: CardProps) {
 				<Typography variant="subtitle2" sx={{ position: 'absolute', bottom: '15px', left: '20px', color: 'darkgrey' }}>
 					#{id}
 				</Typography>
+				<Box
+					sx={{
+						display: "flex",
+						position: "absolute",
+						bottom: "35px",
+						left: "20px",
+						cursor: "pointer",
+					}}
+				>
+					<IconButton
+						aria-label="claim"
+						component="span"
+						sx={{ padding: 0 }}
+						onClick={() => update(id)}
+					>
+						<CachedIcon />
+					</IconButton>
+				</Box>
 			</Card>
 			{
 				owner === false &&

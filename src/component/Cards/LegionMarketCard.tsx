@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CachedIcon from "@mui/icons-material/Cached";
 
 import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -33,6 +34,7 @@ type CardProps = {
   price: string;
   handleCancel: Function;
   handleBuy: Function;
+  handleUpdate: Function;
 };
 
 export default function LegionCard(props: CardProps) {
@@ -49,6 +51,7 @@ export default function LegionCard(props: CardProps) {
     price,
     handleCancel,
     handleBuy,
+    handleUpdate
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -106,6 +109,10 @@ export default function LegionCard(props: CardProps) {
     handleBuy(parseInt(id));
   };
 
+  const update = (id: string) => {
+    handleUpdate(parseInt(id));
+  };
+
   return (
     <Box
       sx={{
@@ -159,76 +166,76 @@ export default function LegionCard(props: CardProps) {
             <Grid container spacing={1} sx={{ pt: 2 }}>
               {showWarrior
                 ? warriorList.map((item: any, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                  <Grid item xs={12} md={6} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "black",
-                          padding: 1,
-                          borderRadius: 1,
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {item.type}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            #{item.id}
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {formatNumber(item.power)} AP
-                          </Typography>
-                          <Box>{item.item}</Box>
-                        </Box>
+                        <Typography variant="subtitle2">
+                          {item.type}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          #{item.id}
+                        </Typography>
                       </Box>
-                    </Grid>
-                  ))
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {formatNumber(item.power)} AP
+                        </Typography>
+                        <Box>{item.item}</Box>
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))
                 : beastList.map((item: any, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                  <Grid item xs={12} md={6} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "black",
-                          padding: 1,
-                          borderRadius: 1,
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {item.type}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            #{item.id}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Typography variant="subtitle2">
-                            {item.capacity}
-                          </Typography>
-                          <img
-                            src="/assets/images/sword.png"
-                            style={{ height: "15px", marginLeft: "5px" }}
-                            alt="Sword"
-                          />
-                        </Box>
+                        <Typography variant="subtitle2">
+                          {item.type}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          #{item.id}
+                        </Typography>
                       </Box>
-                    </Grid>
-                  ))}
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="subtitle2">
+                          {item.capacity}
+                        </Typography>
+                        <img
+                          src="/assets/images/sword.png"
+                          style={{ height: "15px", marginLeft: "5px" }}
+                          alt="Sword"
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
             </Grid>
           </CardContent>
         )}
@@ -256,8 +263,8 @@ export default function LegionCard(props: CardProps) {
               huntStatus === "green"
                 ? "green"
                 : huntStatus === "orange"
-                ? "orange"
-                : "red",
+                  ? "orange"
+                  : "red",
           }}
         >
           {supplies} H
@@ -366,6 +373,24 @@ export default function LegionCard(props: CardProps) {
         >
           #{id}
         </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            position: "absolute",
+            bottom: "35px",
+            left: "20px",
+            cursor: "pointer",
+          }}
+        >
+          <IconButton
+            aria-label="claim"
+            component="span"
+            sx={{ padding: 0 }}
+            onClick={() => update(id)}
+          >
+            <CachedIcon />
+          </IconButton>
+        </Box>
       </Card>
       {owner === false && (
         <CommonBtn
