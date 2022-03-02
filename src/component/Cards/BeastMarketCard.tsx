@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Box, Typography, Card, CardMedia, IconButton, Skeleton } from "@mui/material";
-import CachedIcon from "@mui/icons-material/Cached";
+import { Box, Typography, Card, CardMedia, Button, Skeleton } from "@mui/material";
 
 import CommonBtn from '../../component/Buttons/CommonBtn';
 
@@ -82,31 +81,28 @@ export default function BeastMarketCard(props: CardProps) {
 				<Typography variant="subtitle2" sx={{ position: 'absolute', bottom: '15px', left: '20px', color: 'darkgrey' }}>
 					#{id}
 				</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						position: "absolute",
-						bottom: "35px",
-						left: "20px",
-						cursor: "pointer",
-					}}
-				>
-					<IconButton
-						aria-label="claim"
-						component="span"
-						sx={{ padding: 0 }}
-						onClick={() => update(id)}
-					>
-						<CachedIcon />
-					</IconButton>
-				</Box>
 			</Card>
-			{
-				owner === false &&
-				<CommonBtn sx={{ fontWeight: 'bold', marginTop: '10px', fontSize: '1rem' }} onClick={() => buy(id)}>
+			{owner === false ? (
+				<CommonBtn
+					sx={{ fontWeight: "bold", marginTop: "10px", fontSize: "1rem" }}
+					onClick={() => buy(id)}
+				>
 					{price} $BLST
 				</CommonBtn>
-			}
+			) : (
+				<Button
+					variant="outlined"
+					sx={{ mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem' }}
+					onClick={() => update(id)}
+				>
+					{price} $BLST
+					<img
+						src="/assets/images/updatePrice.png"
+						style={{ height: "20px", marginLeft: '10px' }}
+						alt="Update Price"
+					/>
+				</Button>
+			)}
 		</Box>
 	);
 }
