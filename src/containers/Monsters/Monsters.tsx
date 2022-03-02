@@ -14,6 +14,8 @@ import {
     DialogTitle,
     DialogActions,
     DialogContent,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
@@ -55,6 +57,13 @@ import imageUrls from "../../constant/images";
 import { useNavigate } from "react-router-dom";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionUp(props: TransitionProps) {
+    return <Slide {...props} direction="up" />;
+}
 
 const useStyles = makeStyles(() => ({
     Card: {
@@ -122,6 +131,9 @@ const Monsters = () => {
     const { account } = useWeb3React();
     const web3 = useWeb3();
 
+    //SnackBar
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
     const monsterRef = React.useRef(null);
 
     const legionContract = useLegion();
@@ -324,6 +336,12 @@ const Monsters = () => {
         } catch (e: any) {
             console.log('hunt result', e, 'hunt result');
             setDialogVisible(false);
+            if (e.code == 4001) {
+
+            } else {
+                setSnackBarMessage(getTranslation("huntTransactionFailed"));
+                setOpenSnackBar(true);
+            }
         }
     };
 
@@ -558,7 +576,8 @@ const Monsters = () => {
                                             base={monster.base}
                                             minAP={monster.ap}
                                             bonus={
-                                                curLegion &&
+                                                index < 20 &&
+                                                    curLegion &&
                                                     monster.ap <
                                                     (
                                                         curLegion as LegionInterface
@@ -688,10 +707,10 @@ const Monsters = () => {
                                     image={
                                         showAnimation === "0"
                                             ? imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID]
+                                            imageUrls.monsters[curMonsterID - 1]
                                                 .dead_jpg
                                             : imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID]
+                                            imageUrls.monsters[curMonsterID - 1]
                                                 .dead_gif
                                     }
                                     alt="Monster Image"
@@ -727,7 +746,7 @@ const Monsters = () => {
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -786,7 +805,7 @@ const Monsters = () => {
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -798,6 +817,27 @@ const Monsters = () => {
                     </>
                 )}
             </Dialog>
+            <Snackbar
+                open={openSnackBar}
+                TransitionComponent={TransitionUp}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackBar(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                key={TransitionUp ? TransitionUp.name : ""}
+            >
+                <Alert
+                    onClose={() => setOpenSnackBar(false)}
+                    variant="filled"
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    <Box
+                        sx={{ cursor: "pointer" }}
+                    >
+                        {snackBarMessage}
+                    </Box>
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
