@@ -564,12 +564,8 @@ const Monsters = () => {
                                         <MonsterCard
                                             image={
                                                 showAnimation === "0"
-                                                    ? imageUrls.baseUrl +
-                                                    imageUrls.monsters[index]
-                                                        .jpg
-                                                    : imageUrls.baseUrl +
-                                                    imageUrls.monsters[index]
-                                                        .gif
+                                                    ? `./assets/images/characters/jpg/monsters/m${index + 1}.jpg`
+                                                    : `./assets/images/characters/gif/monsters/m${index + 1}.gif`
                                             }
                                             name={monster.name}
                                             tokenID={index + 1}
@@ -706,12 +702,8 @@ const Monsters = () => {
                                     component="img"
                                     image={
                                         showAnimation === "0"
-                                            ? imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID - 1]
-                                                .dead_jpg
-                                            : imageUrls.baseUrl +
-                                            imageUrls.monsters[curMonsterID - 1]
-                                                .dead_gif
+                                            ? `/assets/images/characters/jpg/monsters_dying/m${curMonsterID}.jpg`
+                                            : `/assets/images/characters/gif/monsters_dying/m${curMonsterID}.gif`
                                     }
                                     alt="Monster Image"
                                     loading="lazy"

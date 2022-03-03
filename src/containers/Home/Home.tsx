@@ -26,12 +26,17 @@ import YourAchievements from "./YourAchievements";
 import nicahBackground from "../../assets/images/nicah_background.jpg";
 import ReactPlayer from "react-player/youtube";
 
+import { useDispatch } from "react-redux";
+import { setBeastIds } from "../../actions/contractActions";
+
 export interface SimpleDialogProps {
     open: boolean;
     onClose: () => void;
 }
 
 const Home = () => {
+    const dispatch = useDispatch()
+
     const [anchorElYourAchievement, setAnchorElYourAchievement] =
         React.useState<HTMLElement | null>(null);
 
@@ -64,6 +69,9 @@ const Home = () => {
                     />
                 )}
             </Helmet>
+            <Button variant="contained" color="primary" onClick={() => {
+                dispatch(setBeastIds([1, 2, 4]))
+            }}>setIds</Button>
             <Grid container spacing={2} sx={{ my: 4 }}>
                 <Grid item xs={12} md={4}>
                     <YourInventory />
