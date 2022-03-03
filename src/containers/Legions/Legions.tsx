@@ -110,10 +110,10 @@ const Legions = () => {
 	const web3 = useWeb3();
 
 	React.useEffect(() => {
+		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 		if (account) {
 			getBalance();
 		}
-		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
 
 	const getLegionImageUrl = (ap: number) => {

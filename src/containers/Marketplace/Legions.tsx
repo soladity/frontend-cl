@@ -74,10 +74,10 @@ const Legions = () => {
 	const dispatch = useDispatch();
 
 	React.useEffect(() => {
+		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 		if (account) {
 			getBalance();
 		}
-		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
 
 
