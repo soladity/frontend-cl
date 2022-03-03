@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Checkbox, FormLabel, FormControl, Slider } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Checkbox, FormLabel, FormControl, Slider, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
@@ -8,9 +8,10 @@ import { useDispatch } from 'react-redux';
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
-import { getOnMarketplace, getLegionToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem, getLegionImage, getHuntStatus } from '../../hooks/contractFunction';
+import { getOnMarketplace, getLegionToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem, getLegionImage, getHuntStatus, updatePrice } from '../../hooks/contractFunction';
 import { useLegion, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
 import LegionMarketCard from '../../component/Cards/LegionMarketCard';
+import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import Image from '../../config/image.json';
@@ -31,6 +32,21 @@ const useStyles = makeStyles({
 	}
 });
 
+type LegionProps = {
+	id: string;
+	name: string;
+	beasts: Array<string>;
+	warriors: Array<string>;
+	supplies: string;
+	attackPower: number;
+	lastHuntTime: string;
+	owner: boolean;
+	price: string;
+	huntStatus: String;
+	image: string;
+	// animationImage: string;
+};
+
 const Legions = () => {
 	const {
 		account,
@@ -38,14 +54,17 @@ const Legions = () => {
 
 	const [baseUrl, setBaseUrl] = React.useState("");
 	const [sort, setSort] = React.useState('0');
-	const [legions, setLegions] = React.useState(Array);
+	const [legions, setLegions] = React.useState<LegionProps[]>(Array);
 	const [onlyMyLegion, setOnlyMyLegion] = React.useState(false);
 	const [currentPage, setCurrentPage] = React.useState(1);
+	const [openUpdate, setOpenUpdate] = React.useState(false);
+	const [price, setPrice] = React.useState(0);
+	const [selectedLegion, setSelectedLegion] = React.useState(0);
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
-	const [apValue, setApValue] = React.useState<number[]>([2000, 250000]);
-	const [huntsValue, setHuntsValue] = React.useState<number[]>([0, 28]);
+	const [apValue, setApValue] = React.useState<number[]>([2000, 100000]);
+	const [huntsValue, setHuntsValue] = React.useState<number[]>([0, 14]);
 
 	const classes = useStyles();
 	const legionContract = useLegion();
@@ -55,11 +74,22 @@ const Legions = () => {
 	const dispatch = useDispatch();
 
 	React.useEffect(() => {
+		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 		if (account) {
 			getBalance();
 		}
-		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
+
+
+	const getLegionImageUrl = (ap: number) => {
+		const showAnimation = localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0'
+		if (ap <= 150000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion0.jpg' : '/assets/images/characters/gif/legions/legion0.gif';
+		else if (ap > 150000 && ap <= 300000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion15.jpg' : '/assets/images/characters/gif/legions/legion15.gif';
+		else if (ap > 300000 && ap <= 450000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion30.jpg' : '/assets/images/characters/gif/legions/legion30.gif';
+		else if (ap > 450000 && ap <= 600000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion45.jpg' : '/assets/images/characters/gif/legions/legion45.gif';
+		else if (ap > 600000 && ap <= 2500000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion60.jpg' : '/assets/images/characters/gif/legions/legion60.gif';
+		else return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion250.jpg' : '/assets/images/characters/gif/legions/legion250.gif';
+	}
 
 	const getBalance = async () => {
 		setLoading(true);
@@ -70,13 +100,13 @@ const Legions = () => {
 		let marketItem;
 		let image;
 		let huntStatus;
-		let tempLegions = [];
+		var tempLegions = [];
 		for (let i = 0; i < ids.length; i++) {
 			legion = await getLegionToken(web3, legionContract, ids[i]);
 			marketItem = await getMarketItem(web3, marketplaceContract, '3', ids[i]);
-			image = await getLegionImage(web3, legionContract, legion.attackPower);
+			image = getLegionImageUrl(legion.attackPower);
 			huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
-			tempLegions.push({ ...legion, id: ids[i], ...image, owner: marketItem.owner === account ? true : false, price: marketItem.price, huntStatus: huntStatus });
+			tempLegions.push({ ...legion, id: ids[i], image: image, owner: marketItem.owner === account ? true : false, price: marketItem.price, huntStatus: huntStatus });
 		}
 		setLegions(tempLegions);
 		setLoading(false);
@@ -193,6 +223,39 @@ const Legions = () => {
 		setCurrentPage(value);
 	}
 
+	const handleUpdate = (id: number) => {
+		setSelectedLegion(id);
+		setPrice(parseInt(legions.filter((item: any) => parseInt(item.id) === id)[0].price));
+		setOpenUpdate(true);
+	}
+
+	const handleUpdateClose = () => {
+		setOpenUpdate(false);
+	};
+
+	const handlePrice = (e: any) => {
+		setPrice(e.target.value);
+	}
+
+	const handleUpdatePrice = async () => {
+		setActionLoading(true);
+		try {
+			setOpenUpdate(false);
+			await updatePrice(web3, marketplaceContract, account, '3', selectedLegion, price);
+			let temp = [];
+			for (let i = 0; i < legions.length; i++) {
+				if (parseInt(legions[i].id) === selectedLegion)
+					temp.push({ ...legions[i], price: price.toString() });
+				else
+					temp.push({ ...legions[i] });
+			}
+			setLegions([...temp]);
+		} catch (e) {
+			console.log(e);
+		}
+		setActionLoading(false);
+	}
+
 	return <Box>
 		<Helmet>
 			<meta charSet="utf-8" />
@@ -225,10 +288,10 @@ const Legions = () => {
 								// defaultValue={20}
 								value={apValue}
 								min={2000}
-								max={250000}
+								max={100000}
 								marks={[
 									{ value: 2000, label: '2,000' },
-									{ value: 250000, label: formatNumber('250K+') },
+									{ value: 100000, label: '100K+' },
 								]}
 								step={1}
 								valueLabelDisplay="auto"
@@ -256,10 +319,10 @@ const Legions = () => {
 								// defaultValue={20}
 								value={huntsValue}
 								min={0}
-								max={28}
+								max={14}
 								marks={[
 									{ value: 0, label: '0' },
-									{ value: 28, label: formatNumber('28+') },
+									{ value: 14, label: formatNumber('14+') },
 								]}
 								step={1}
 								valueLabelDisplay="auto"
@@ -299,12 +362,12 @@ const Legions = () => {
 						legions.length > 0 && legions.filter(
 							(item: any) =>
 								apValue[0] <= parseInt(item.attackPower) &&
-								(apValue[1] === 250000
+								(apValue[1] === 100000
 									? true
 									: apValue[1] >= parseInt(item.attackPower))
-						).filter((item: any) => huntsValue[0] <= parseInt(item.supplies) && (huntsValue[1] === 28 ? true : huntsValue[1] >= parseInt(item.supplies))).filter((item: any) => onlyMyLegion === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
+						).filter((item: any) => huntsValue[0] <= parseInt(item.supplies) && (huntsValue[1] === 14 ? true : huntsValue[1] >= parseInt(item.supplies))).filter((item: any) => onlyMyLegion === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<LegionMarketCard image={baseUrl + item['image']} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} id={item['id']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
+								<LegionMarketCard image={item['image']} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} id={item['id']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
 							</Grid>
 						))
 					}
@@ -357,6 +420,28 @@ const Legions = () => {
 					</Grid>
 				</>
 			)}
+		<Dialog onClose={handleUpdateClose} open={openUpdate}>
+			<DialogTitle>{getTranslation('updatePrice')}</DialogTitle>
+			<DialogContent>
+				<TextField
+					autoFocus
+					margin="dense"
+					id="price"
+					label="Price in $BLST"
+					type="number"
+					fullWidth
+					variant="standard"
+					value={price}
+					onChange={handlePrice}
+				/>
+				<Typography variant='subtitle1'>
+					(= XXX USD)
+				</Typography>
+			</DialogContent>
+			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleUpdatePrice}>
+				{getTranslation('confirm')}
+			</CommonBtn>
+		</Dialog>
 	</Box>
 }
 

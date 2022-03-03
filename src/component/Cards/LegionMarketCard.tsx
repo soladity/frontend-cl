@@ -33,6 +33,7 @@ type CardProps = {
   price: string;
   handleCancel: Function;
   handleBuy: Function;
+  handleUpdate: Function;
 };
 
 export default function LegionCard(props: CardProps) {
@@ -49,6 +50,7 @@ export default function LegionCard(props: CardProps) {
     price,
     handleCancel,
     handleBuy,
+    handleUpdate
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -106,6 +108,10 @@ export default function LegionCard(props: CardProps) {
     handleBuy(parseInt(id));
   };
 
+  const update = (id: string) => {
+    handleUpdate(parseInt(id));
+  };
+
   return (
     <Box
       sx={{
@@ -159,76 +165,76 @@ export default function LegionCard(props: CardProps) {
             <Grid container spacing={1} sx={{ pt: 2 }}>
               {showWarrior
                 ? warriorList.map((item: any, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                  <Grid item xs={12} md={6} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "black",
-                          padding: 1,
-                          borderRadius: 1,
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {item.type}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            #{item.id}
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {formatNumber(item.power)} AP
-                          </Typography>
-                          <Box>{item.item}</Box>
-                        </Box>
+                        <Typography variant="subtitle2">
+                          {item.type}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          #{item.id}
+                        </Typography>
                       </Box>
-                    </Grid>
-                  ))
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {formatNumber(item.power)} AP
+                        </Typography>
+                        <Box>{item.item}</Box>
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))
                 : beastList.map((item: any, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                  <Grid item xs={12} md={6} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "black",
-                          padding: 1,
-                          borderRadius: 1,
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {item.type}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            #{item.id}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Typography variant="subtitle2">
-                            {item.capacity}
-                          </Typography>
-                          <img
-                            src="/assets/images/sword.png"
-                            style={{ height: "15px", marginLeft: "5px" }}
-                            alt="Sword"
-                          />
-                        </Box>
+                        <Typography variant="subtitle2">
+                          {item.type}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          #{item.id}
+                        </Typography>
                       </Box>
-                    </Grid>
-                  ))}
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="subtitle2">
+                          {item.capacity}
+                        </Typography>
+                        <img
+                          src="/assets/images/sword.png"
+                          style={{ height: "15px", marginLeft: "5px" }}
+                          alt="Sword"
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
             </Grid>
           </CardContent>
         )}
@@ -256,8 +262,8 @@ export default function LegionCard(props: CardProps) {
               huntStatus === "green"
                 ? "green"
                 : huntStatus === "orange"
-                ? "orange"
-                : "red",
+                  ? "orange"
+                  : "red",
           }}
         >
           {supplies} H
@@ -367,13 +373,26 @@ export default function LegionCard(props: CardProps) {
           #{id}
         </Typography>
       </Card>
-      {owner === false && (
+      {owner === false ? (
         <CommonBtn
           sx={{ fontWeight: "bold", marginTop: "10px", fontSize: "1rem" }}
           onClick={() => buy(id)}
         >
           {price} $BLST
         </CommonBtn>
+      ) : (
+        <Button
+          variant="outlined"
+          sx={{ mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem' }}
+          onClick={() => update(id)}
+        >
+          {price} $BLST
+          <img
+            src="/assets/images/updatePrice.png"
+            style={{ height: "20px", marginLeft: '10px' }}
+            alt="Update Price"
+          />
+        </Button>
       )}
     </Box>
   );

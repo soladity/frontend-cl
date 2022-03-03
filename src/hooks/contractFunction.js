@@ -427,3 +427,10 @@ export const updateLegion = async (
     .send({ from: account });
   return response;
 };
+
+export const updatePrice = async (web3, contract, account, type, id, price) => {
+  const response = await contract.methods
+    .updatePrice(type, id, price)
+    .send({ from: account });
+  return response;
+};
