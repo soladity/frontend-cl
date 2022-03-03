@@ -69,9 +69,6 @@ const Home = () => {
                     />
                 )}
             </Helmet>
-            <Button variant="contained" color="primary" onClick={() => {
-                dispatch(setBeastIds([1, 2, 4]))
-            }}>setIds</Button>
             <Grid container spacing={2} sx={{ my: 4 }}>
                 <Grid item xs={12} md={4}>
                     <YourInventory />

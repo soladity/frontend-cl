@@ -564,8 +564,8 @@ const Monsters = () => {
                                         <MonsterCard
                                             image={
                                                 showAnimation === "0"
-                                                    ? `./assets/images/characters/jpg/monsters/m${index + 1}.jpg`
-                                                    : `./assets/images/characters/gif/monsters/m${index + 1}.gif`
+                                                    ? `/assets/images/characters/jpg/monsters/m${index + 1}.jpg`
+                                                    : `/assets/images/characters/gif/monsters/m${index + 1}.gif`
                                             }
                                             name={monster.name}
                                             tokenID={index + 1}

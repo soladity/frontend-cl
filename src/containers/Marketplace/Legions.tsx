@@ -44,7 +44,7 @@ type LegionProps = {
 	price: string;
 	huntStatus: String;
 	image: string;
-	animationImage: string;
+	// animationImage: string;
 };
 
 const Legions = () => {
@@ -80,6 +80,17 @@ const Legions = () => {
 		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 	}, []);
 
+
+	const getLegionImageUrl = (ap: number) => {
+		console.log(showAnimation, 'showAnimation')
+		if (ap <= 150000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion0.jpg' : '/assets/images/characters/gif/legions/legion0.gif';
+		else if (ap > 150000 && ap <= 300000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion15.jpg' : '/assets/images/characters/gif/legions/legion15.gif';
+		else if (ap > 300000 && ap <= 450000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion30.jpg' : '/assets/images/characters/gif/legions/legion30.gif';
+		else if (ap > 450000 && ap <= 600000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion45.jpg' : '/assets/images/characters/gif/legions/legion45.gif';
+		else if (ap > 600000 && ap <= 2500000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion60.jpg' : '/assets/images/characters/gif/legions/legion60.gif';
+		else return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion250.jpg' : '/assets/images/characters/gif/legions/legion250.gif';
+	}
+
 	const getBalance = async () => {
 		setLoading(true);
 		setBaseUrl(await getBaseUrl());
@@ -89,13 +100,13 @@ const Legions = () => {
 		let marketItem;
 		let image;
 		let huntStatus;
-		let tempLegions = [];
+		var tempLegions = [];
 		for (let i = 0; i < ids.length; i++) {
 			legion = await getLegionToken(web3, legionContract, ids[i]);
 			marketItem = await getMarketItem(web3, marketplaceContract, '3', ids[i]);
-			image = await getLegionImage(web3, legionContract, legion.attackPower);
+			image = getLegionImageUrl(legion.attackPower);
 			huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
-			tempLegions.push({ ...legion, id: ids[i], ...image, owner: marketItem.owner === account ? true : false, price: marketItem.price, huntStatus: huntStatus });
+			tempLegions.push({ ...legion, id: ids[i], image: image, owner: marketItem.owner === account ? true : false, price: marketItem.price, huntStatus: huntStatus });
 		}
 		setLegions(tempLegions);
 		setLoading(false);
@@ -356,7 +367,7 @@ const Legions = () => {
 									: apValue[1] >= parseInt(item.attackPower))
 						).filter((item: any) => huntsValue[0] <= parseInt(item.supplies) && (huntsValue[1] === 14 ? true : huntsValue[1] >= parseInt(item.supplies))).filter((item: any) => onlyMyLegion === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<LegionMarketCard image={baseUrl + item['image']} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} id={item['id']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
+								<LegionMarketCard image={item['image']} name={item['name']} beasts={item['beasts']} warriors={item['warriors']} id={item['id']} supplies={item['supplies']} attackPower={item['attackPower']} huntStatus={item['huntStatus']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
 							</Grid>
 						))
 					}
