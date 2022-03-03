@@ -421,7 +421,10 @@ const Legions = () => {
 				</>
 			)}
 		<Dialog onClose={handleUpdateClose} open={openUpdate}>
-			<DialogTitle>{getTranslation('updatePrice')}</DialogTitle>
+			<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+				{getTranslation('updatePrice')}
+				<span style={{ cursor: 'pointer' }} onClick={handleUpdateClose}>X</span>
+			</DialogTitle>
 			<DialogContent>
 				<TextField
 					autoFocus

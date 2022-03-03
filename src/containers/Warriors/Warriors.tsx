@@ -665,7 +665,10 @@ const Warriors = () => {
 				</>
 			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
-			<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
+			<DialogTitle sx={{display: 'flex', justifyContent: 'space-between'}}>
+				{getTranslation('listOnMarketplace')}
+				<span style={{cursor: 'pointer'}} onClick={handleSupplyClose}>X</span>
+			</DialogTitle>
 			<DialogContent>
 				<TextField
 					autoFocus
