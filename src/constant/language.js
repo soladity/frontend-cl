@@ -1344,7 +1344,7 @@ export const translations = {
     ph: "Baka palarin sa susunod...",
   },
   defeatSubtitle1: {
-    en: "Your legion did not succeed in getting Bloodstoone from this monster, this time",
+    en: "Your legion did not succeed in getting Bloodstone from this monster today.",
     es: "Tu legión no logró obtener Bloodstoone de este monstruo, esta vez",
     cn: "这次你们军团没能从这个怪物身上得到血石",
     pt: "Sua legião não conseguiu obter Bloodstoone deste monstro, desta vez",
