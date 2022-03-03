@@ -216,11 +216,11 @@ const Warriors = () => {
 			setOpenUpdate(false);
 			await updatePrice(web3, marketplaceContract, account, '2', selectedWarrior, price);
 			let temp = [];
-			for (let i = 0;i < warriors.length; i++){
+			for (let i = 0; i < warriors.length; i++) {
 				if (parseInt(warriors[i].id) === selectedWarrior)
-					temp.push({...warriors[i], price: price.toString()});
-				else 
-				temp.push({...warriors[i]});
+					temp.push({ ...warriors[i], price: price.toString() });
+				else
+					temp.push({ ...warriors[i] });
 			}
 			setWarriors([...temp]);
 		} catch (e) {
@@ -382,7 +382,10 @@ const Warriors = () => {
 				</>
 			)}
 		<Dialog onClose={handleUpdateClose} open={openUpdate}>
-			<DialogTitle>{getTranslation('updatePrice')}</DialogTitle>
+			<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+				{getTranslation('updatePrice')}
+				<span style={{ cursor: 'pointer' }} onClick={handleUpdateClose}>X</span>
+			</DialogTitle>
 			<DialogContent>
 				<TextField
 					autoFocus

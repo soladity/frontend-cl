@@ -590,7 +590,10 @@ const Legions = () => {
 					</>
 				)}
 			<Dialog onClose={handleSupplyClose} open={openSupply}>
-				<DialogTitle>{getTranslation("buySupply")}</DialogTitle>
+				<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+					{getTranslation('buySupply')}
+					<span style={{ cursor: 'pointer' }} onClick={handleSupplyClose}>X</span>
+				</DialogTitle>
 				<List sx={{ pt: 0 }}>
 					<ListItem
 						button
@@ -616,7 +619,10 @@ const Legions = () => {
 				</List>
 			</Dialog>
 			<Dialog onClose={handleShoppingClose} open={openShopping}>
-				<DialogTitle>{getTranslation('listOnMarketplace')}</DialogTitle>
+				<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+					{getTranslation('listOnMarketplace')}
+					<span style={{ cursor: 'pointer' }} onClick={handleSupplyClose}>X</span>
+				</DialogTitle>
 				<DialogContent>
 					<TextField
 						autoFocus
