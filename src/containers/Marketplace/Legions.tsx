@@ -82,7 +82,7 @@ const Legions = () => {
 
 
 	const getLegionImageUrl = (ap: number) => {
-		console.log(showAnimation, 'showAnimation')
+		const showAnimation = localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0'
 		if (ap <= 150000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion0.jpg' : '/assets/images/characters/gif/legions/legion0.gif';
 		else if (ap > 150000 && ap <= 300000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion15.jpg' : '/assets/images/characters/gif/legions/legion15.gif';
 		else if (ap > 300000 && ap <= 450000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion30.jpg' : '/assets/images/characters/gif/legions/legion30.gif';

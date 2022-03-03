@@ -99,7 +99,6 @@ const Legions = () => {
 	const [supplyLoading, setSupplyLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
 	const [actionLoading, setActionLoading] = React.useState(false);
-	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 
 	const classes = useStyles();
 	const legionContract = useLegion();
@@ -110,14 +109,13 @@ const Legions = () => {
 	const web3 = useWeb3();
 
 	React.useEffect(() => {
-		setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
 		if (account) {
 			getBalance();
 		}
 	}, []);
 
 	const getLegionImageUrl = (ap: number) => {
-		console.log(showAnimation, 'showAnimation')
+		const showAnimation = localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0'
 		if (ap <= 150000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion0.jpg' : '/assets/images/characters/gif/legions/legion0.gif';
 		else if (ap > 150000 && ap <= 300000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion15.jpg' : '/assets/images/characters/gif/legions/legion15.gif';
 		else if (ap > 300000 && ap <= 450000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion30.jpg' : '/assets/images/characters/gif/legions/legion30.gif';
