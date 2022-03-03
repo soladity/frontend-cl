@@ -631,7 +631,7 @@ const Legions = () => {
 			<Dialog onClose={handleShoppingClose} open={openShopping}>
 				<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
 					{getTranslation('listOnMarketplace')}
-					<span style={{ cursor: 'pointer' }} onClick={handleSupplyClose}>X</span>
+					<span style={{ cursor: 'pointer' }} onClick={handleShoppingClose}>X</span>
 				</DialogTitle>
 				<DialogContent>
 					<TextField
