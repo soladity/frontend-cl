@@ -160,15 +160,15 @@ export default function WarriorMarketCard(props: CardProps) {
           sx={{ fontWeight: "bold", marginTop: "10px", fontSize: "1rem" }}
           onClick={() => buy(id)}
         >
-          {price} $BLST
+          {formatNumber(price)} $BLST
         </CommonBtn>
       ) : (
         <Button
           variant="outlined"
-          sx={{ mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem'}}
+          sx={{ display: 'flex', whiteSpace: 'nowrap', mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem'}}
           onClick={() => update(id)}
         >
-          {price} $BLST
+          {formatNumber(price)} $BLST
           <img
             src="/assets/images/updatePrice.png"
             style={{ height: "20px", marginLeft: '10px' }}

@@ -314,7 +314,10 @@ const Beasts = () => {
 				</>
 			)}
 		<Dialog onClose={handleUpdateClose} open={openUpdate}>
-			<DialogTitle>{getTranslation('updatePrice')}</DialogTitle>
+			<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+				{getTranslation('updatePrice')}
+				<span className='close-button' onClick={handleUpdateClose}>x</span>
+			</DialogTitle>
 			<DialogContent>
 				<TextField
 					autoFocus
