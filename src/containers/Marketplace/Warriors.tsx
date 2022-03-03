@@ -216,11 +216,11 @@ const Warriors = () => {
 			setOpenUpdate(false);
 			await updatePrice(web3, marketplaceContract, account, '2', selectedWarrior, price);
 			let temp = [];
-			for (let i = 0;i < warriors.length; i++){
+			for (let i = 0; i < warriors.length; i++) {
 				if (parseInt(warriors[i].id) === selectedWarrior)
-					temp.push({...warriors[i], price: price.toString()});
-				else 
-				temp.push({...warriors[i]});
+					temp.push({ ...warriors[i], price: price.toString() });
+				else
+					temp.push({ ...warriors[i] });
 			}
 			setWarriors([...temp]);
 		} catch (e) {
@@ -328,7 +328,7 @@ const Warriors = () => {
 					{
 						warriors.length > 0 && warriors.filter((item: any) => filter === 'all' ? parseInt(item.strength) >= 0 : item.strength === filter).filter((item: any) => apValue[0] <= parseInt(item.power) && (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))).filter((item: any) => onlyMyWarrior === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<WarriorMarketCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
+								<WarriorMarketCard image={showAnimation === '0' ? '/assets/images/characters/jpg/warriors/' + item['type'] + '.jpg' : '/assets/images/characters/gif/warriors/' + item['type'] + '.gif'} type={item['type']} power={item['power']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
 							</Grid>
 						))
 					}

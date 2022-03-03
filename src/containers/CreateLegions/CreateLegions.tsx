@@ -217,11 +217,11 @@ const CreateLegions: React.FC = () => {
     setTotalAP(sum);
     setIsWDropable(
       cp > 0 &&
-        createlegions.main.maxAvailableDragCount >=
-          dropItemList.filter((item) => !item.w5b).length &&
-        cp >= dropItemList.filter((item) => item.w5b).length &&
-        sum >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
+      createlegions.main.maxAvailableDragCount >=
+      dropItemList.filter((item) => !item.w5b).length &&
+      cp >= dropItemList.filter((item) => item.w5b).length &&
+      sum >= createlegions.main.minAvailableAP &&
+      legionName.length > 0
     );
     setMintFee(0.5 * dropItemList.length);
   }, [beasts, warriors, dropItemList, legionName]);
@@ -627,9 +627,8 @@ const CreateLegions: React.FC = () => {
                                 size={isSmallThanSM ? "small" : "medium"}
                               >
                                 <Button
-                                  variant={`${
-                                    filter === "all" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "all" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -638,9 +637,8 @@ const CreateLegions: React.FC = () => {
                                   {getTranslation("all")}
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "1" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "1" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -649,9 +647,8 @@ const CreateLegions: React.FC = () => {
                                   1
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "2" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "2" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -660,9 +657,8 @@ const CreateLegions: React.FC = () => {
                                   2
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "3" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "3" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -671,9 +667,8 @@ const CreateLegions: React.FC = () => {
                                   3
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "4" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "4" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -682,9 +677,8 @@ const CreateLegions: React.FC = () => {
                                   4
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "5" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "5" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -693,9 +687,8 @@ const CreateLegions: React.FC = () => {
                                   5
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "20" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "20" ? "contained" : "outlined"
+                                    }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -725,11 +718,7 @@ const CreateLegions: React.FC = () => {
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={true}
-                          image={
-                            showAnimation === "0"
-                              ? baseUrl + item["jpg"]
-                              : baseUrl + item["gif"]
-                          }
+                          image={showAnimation === '0' ? '/assets/images/characters/jpg/warriors/' + item['type'] + '.jpg' : '/assets/images/characters/gif/warriors/' + item['type'] + '.gif'}
                           item={item}
                           key={10000 + item.id}
                           index={+item.id}
@@ -746,11 +735,7 @@ const CreateLegions: React.FC = () => {
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={false}
-                          image={
-                            showAnimation === "0"
-                              ? baseUrl + item["jpg"]
-                              : baseUrl + item["gif"]
-                          }
+                          image={showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif'}
                           item={item}
                           key={item.id}
                           index={+item.id}
@@ -844,12 +829,12 @@ const CreateLegions: React.FC = () => {
                       sx={{
                         color:
                           totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                            dropItemList.filter((item) => item.w5b).length
                             ? "red"
                             : "white",
                         fontWeight:
                           totalCP <
-                          dropItemList.filter((item) => item.w5b).length
+                            dropItemList.filter((item) => item.w5b).length
                             ? "bold"
                             : "normal",
                       }}
@@ -863,12 +848,12 @@ const CreateLegions: React.FC = () => {
                       sx={{
                         color:
                           createlegions.main.maxAvailableDragCount <
-                          dropItemList.filter((item) => !item.w5b).length
+                            dropItemList.filter((item) => !item.w5b).length
                             ? "red"
                             : "white",
                         fontWeight:
                           createlegions.main.maxAvailableDragCount <
-                          dropItemList.filter((item) => !item.w5b).length
+                            dropItemList.filter((item) => !item.w5b).length
                             ? "bold"
                             : "normal",
                       }}

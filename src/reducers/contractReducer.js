@@ -1,7 +1,8 @@
-import { RELOAD_CONTRACT_STATUS } from '../actions/contractActions'
+import { RELOAD_CONTRACT_STATUS, SET_BEAST_IDS } from '../actions/contractActions'
 
 let initalState = {
-    reloadContractStatus: new Date()
+    reloadContractStatus: new Date(),
+    beastIds: []
 }
 
 export const contractReducer = (state = initalState, action) => {
@@ -11,6 +12,13 @@ export const contractReducer = (state = initalState, action) => {
                 ...state,
                 ...action.payload
             };
+
+        case SET_BEAST_IDS:
+            return {
+                ...state,
+                beastIds: action.payload
+            };
+
         default:
             return state;
     }
