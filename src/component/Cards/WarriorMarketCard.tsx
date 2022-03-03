@@ -165,7 +165,7 @@ export default function WarriorMarketCard(props: CardProps) {
       ) : (
         <Button
           variant="outlined"
-          sx={{ display: 'flex', mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem'}}
+          sx={{ display: 'flex', whiteSpace: 'nowrap', mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem'}}
           onClick={() => update(id)}
         >
           {formatNumber(price)} $BLST

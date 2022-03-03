@@ -667,7 +667,7 @@ const Warriors = () => {
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
 			<DialogTitle sx={{display: 'flex', justifyContent: 'space-between'}}>
 				{getTranslation('listOnMarketplace')}
-				<span style={{cursor: 'pointer'}} onClick={handleSupplyClose}>X</span>
+				<span className='close-button' onClick={handleSupplyClose}>x</span>
 			</DialogTitle>
 			<DialogContent>
 				<TextField
