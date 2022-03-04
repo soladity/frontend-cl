@@ -114,6 +114,16 @@ const Legions = () => {
 		}
 	}, []);
 
+	const getLegionImageUrl = (ap: number) => {
+		const showAnimation = localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0'
+		if (ap <= 150000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion0.jpg' : '/assets/images/characters/gif/legions/legion0.gif';
+		else if (ap > 150000 && ap <= 300000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion15.jpg' : '/assets/images/characters/gif/legions/legion15.gif';
+		else if (ap > 300000 && ap <= 450000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion30.jpg' : '/assets/images/characters/gif/legions/legion30.gif';
+		else if (ap > 450000 && ap <= 600000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion45.jpg' : '/assets/images/characters/gif/legions/legion45.gif';
+		else if (ap > 600000 && ap <= 2500000) return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion60.jpg' : '/assets/images/characters/gif/legions/legion60.gif';
+		else return showAnimation === '0' ? '/assets/images/characters/jpg/legions/legion250.jpg' : '/assets/images/characters/gif/legions/legion250.gif';
+	}
+
 	const getBalance = async () => {
 		setLoading(true);
 		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
@@ -128,12 +138,12 @@ const Legions = () => {
 		let tempLegions = [];
 		for (let i = 0; i < ids.length; i++) {
 			legion = await getLegionToken(web3, legionContract, ids[i]);
-			image = await getLegionImage(web3, legionContract, legion.attackPower);
+			image = getLegionImageUrl(legion.attackPower);
 			huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
 			tempLegions.push({
 				...legion,
 				id: ids[i],
-				...image,
+				image: image,
 				huntStatus: huntStatus,
 			});
 			amount += legion.attackPower;
@@ -509,7 +519,7 @@ const Legions = () => {
 								<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
 									<LegionCard
 										id={item["id"]}
-										image={baseUrl + item.image}
+										image={item.image}
 										name={item["name"]}
 										beasts={item["beasts"]}
 										warriors={item["warriors"]}

@@ -244,6 +244,7 @@ const Beasts = () => {
 		let jpg = '';
 		for (let i = 0; i < ids.length; i++) {
 			beast = await getBeastToken(web3, beastContract, ids[i]);
+			console.log(beast)
 			for (let j = 0; j < Image.beasts.length; j++) {
 				if (Image.beasts[j].name === beast.type) {
 					gif = Image.beasts[j].gif;
@@ -253,6 +254,7 @@ const Beasts = () => {
 			tempBeasts.push({ ...beast, id: ids[i], gif: gif, jpg: jpg });
 			amount += parseInt(beast.capacity);
 		}
+		console.log(tempBeasts)
 		setMaxWarrior(amount);
 		setBeasts(tempBeasts);
 		setLoading(false);
@@ -544,7 +546,7 @@ const Beasts = () => {
 					{
 						beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-								<BeastCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} isMobile={false} needButton={true} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
+								<BeastCard image={(showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif')} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} isMobile={false} needButton={true} handleOpenSupply={handleOpenSupply} handleExecute={handleExecute} />
 							</Grid>
 						))
 					}

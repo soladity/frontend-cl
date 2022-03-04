@@ -123,16 +123,16 @@ const AskMetaLogin = () => {
                 <Box sx={{ textAlign: 'center' }}>
                     <img
                         src={logoImage}
-                        style={{ width: '60%' }}
+                        style={{ width: '40%' }}
                         className={classes.logo}
                         alt='logo'
                     />
                 </Box>
                 <Grid container spacing={2}>
-                    <Grid item md={2} xs={12}>
+                    <Grid item md={3} xs={12}>
 
                     </Grid>
-                    <Grid item md={8} xs={12}>
+                    <Grid item md={6} xs={12}>
                         <Grid
                             container
                             spacing={2}
@@ -170,7 +170,7 @@ const AskMetaLogin = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item md={2} xs={12}>
+                    <Grid item md={3} xs={12}>
                     </Grid>
                 </Grid>
                 <Box sx={{ marginTop: 2, textAlign: 'center' }} className={classes.fadeAnimation}>

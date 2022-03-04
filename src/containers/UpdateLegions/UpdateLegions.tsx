@@ -236,12 +236,12 @@ const UpdateLegions: React.FC = () => {
     setTotalAP(sum + tempAP);
     setIsWDropable(
       dropItemList.length > 0 &&
-        createlegions.main.maxAvailableDragCount >=
-          dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
-        cp + tempCP >=
-          dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
-        sum + tempAP >= createlegions.main.minAvailableAP &&
-        legionName.length > 0
+      createlegions.main.maxAvailableDragCount >=
+      dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
+      cp + tempCP >=
+      dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
+      sum + tempAP >= createlegions.main.minAvailableAP &&
+      legionName.length > 0
     );
     setMintFee(
       0.5 * dropItemList.length +
@@ -778,11 +778,7 @@ const UpdateLegions: React.FC = () => {
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={true}
-                          image={
-                            showAnimation === "0"
-                              ? baseUrl + item["jpg"]
-                              : baseUrl + item["gif"]
-                          }
+                          image={showAnimation === '0' ? '/assets/images/characters/jpg/warriors/' + item['type'] + '.jpg' : '/assets/images/characters/gif/warriors/' + item['type'] + '.gif'}
                           item={item}
                           key={10000 + item.id}
                           index={+item.id}
@@ -799,11 +795,7 @@ const UpdateLegions: React.FC = () => {
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={false}
-                          image={
-                            showAnimation === "0"
-                              ? baseUrl + item["jpg"]
-                              : baseUrl + item["gif"]
-                          }
+                          image={showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif'}
                           item={item}
                           key={item.id}
                           index={+item.id}
@@ -901,13 +893,13 @@ const UpdateLegions: React.FC = () => {
                       item
                       sx={{
                         color: createlegions.main.maxAvailableDragCount < dropItemList.filter((item) => item.w5b === false).length +
-                            tempBeastsCnt
-                            ? "red"
-                            : "white",
+                          tempBeastsCnt
+                          ? "red"
+                          : "white",
                         fontWeight: createlegions.main.maxAvailableDragCount < dropItemList.filter((item) => item.w5b === false).length +
-                            tempBeastsCnt
-                            ? "bold"
-                            : "normal",
+                          tempBeastsCnt
+                          ? "bold"
+                          : "normal",
                       }}
                     >
                       {isSmallThanSM ? "B" : getTranslation("beasts")}:{" "}
