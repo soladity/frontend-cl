@@ -40,9 +40,7 @@ export const DropBox: FC<DropBoxProps> = function DropBox({
                 w5b={element.w5b}
                 baseIndex={index}
                 image={
-                  showAnim === "0"
-                    ? baseUrl + element["jpg"]
-                    : baseUrl + element["gif"]
+                  showAnim === '0' ? ('/assets/images/characters/jpg/' + (element.w5b ? 'warriors' : 'beasts') + '/' + element['type'] + '.jpg') : ('/assets/images/characters/gif/' + (element.w5b ? 'warriors' : 'beasts') + '/' + element['type'] + '.gif')
                 }
                 type={element["type"]}
                 strength={element["strength"]}
