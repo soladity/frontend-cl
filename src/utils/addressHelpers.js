@@ -11,7 +11,7 @@ export const getWarriorAddress = () => {
 };
 
 export const getLegionAddress = () => {
-  return "0xc9204e724439ed65ab566f081581681d2b2465f6";
+  return "0x5544d3237eE4f7E7943155eA08e437B245002F14";
 };
 
 export const getMonsterAddress = () => {
