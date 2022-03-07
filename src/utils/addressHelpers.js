@@ -3,29 +3,29 @@ export const getBloodstoneAddress = () => {
 };
 
 export const getBeastAddress = () => {
-  return "0xb878bd666f5dbd7e7b2d446f713867656ca0bb69";
+  return "0xf40059509e05f420ce7aba8b3261d784332cbdb6";
 };
 
 export const getWarriorAddress = () => {
-  return "0x7857e61e16e4d870ef2b6708fd42fc060978c2ed";
+  return "0x75ecb65d55aa6b7a057a5dfa05edea3f169d08d2";
 };
 
 export const getLegionAddress = () => {
-  return "0x023a368a269C60fb7701b7E20CB3bF46EeD508bc";
+  return "0x66784bF0bD65E090eF5227337DDe2466e5E0f75F";
 };
 
 export const getMonsterAddress = () => {
-  return "0x536e138d0e3cb01bb9750c9372e6eef160bb7992";
+  return "0x0b27676df1179ef473e325007917491c534c026d";
 };
 
 export const getRewardPoolAddress = () => {
-  return "0x84fa07f1662056ed9afa3b8019e3db4153760552";
+  return "0xe4dd6404364dd6943fbe5f348df6797626448dbe";
 };
 
 export const getMarketplaceAddress = () => {
-  return "0xcb23d3443f20df2d2a293cd6230d557ae5d8f1ce";
+  return "0xb95571c924f6a832e27ffb5535a5543a5fd3d93a";
 };
 
 export const getFeeHandlerAddress = () => {
-  return "0xc153d1397ba248dca1fe6eaaa5b0eecfb04516f0";
+  return "0x8dbbc4e5c34c9528a8e8393bb6e0e77e749c9169";
 };
