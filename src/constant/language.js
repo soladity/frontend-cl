@@ -1199,6 +1199,18 @@ export const translations = {
     pl: "Kupowanie materiałów eksploatacyjnych...",
     ph: "Pagbili ng Supplies...",
   },
+  suppliesNeeded: {
+    en: "Supplies Needed",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
   loadingLegions: {
     en: "Loading Legions...",
     es: "Cargando Legiones...",
