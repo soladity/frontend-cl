@@ -16,6 +16,10 @@ import {
     DialogContent,
     Snackbar,
     Alert,
+    List,
+    ListItem,
+    ListItemText,
+    LinearProgress
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
@@ -43,7 +47,8 @@ import {
     getBaseGifURL,
     canHunt,
     hunt,
-    getBeastToken
+    getBeastToken,
+    addSupply
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -87,19 +92,7 @@ const useStyles = makeStyles(() => ({
         },
     },
     Grid: {
-        paddingTop: "2%",
-        // "@media(min-width: 0px)": {
-        //   paddingTop: "14%",
-        // },
-        // "@media(min-width: 600px)": {
-        //   paddingTop: "20%",
-        // },
-        // "@media(min-width: 763px)": {
-        //   paddingTop: "6%",
-        // },
-        // "@media(min-width: 900px)": {
-        //   paddingTop: "2%",
-        // },
+        paddingTop: "2%"
     },
 }));
 
@@ -115,8 +108,8 @@ interface MonsterInterface {
 
 interface LegionInterface {
     name: string;
-    beasts: string;
-    warriors: string;
+    beasts: Array<any>;
+    warriors: Array<any>;
     supplies: string;
     attackPower: number;
     id: number;
@@ -159,6 +152,10 @@ const Monsters = () => {
     const [huntedRoll, setHuntedRoll] = useState(0);
     const [huntAvailablePercent, setHuntAvailablePercent] = useState(0)
     const [currentTime, setCurrentTime] = React.useState(new Date());
+
+    const [openSupply, setOpenSupply] = React.useState(false);
+    const [supplyLoading, setSupplyLoading] = React.useState(false);
+
     const [strongestMonsterToHunt, setStrongestMonsterToHunt] =
         React.useState(0);
 
@@ -358,6 +355,29 @@ const Monsters = () => {
         );
     };
 
+    const handleSupplyClose = () => {
+        setOpenSupply(false);
+    };
+
+    const handleSupplyClick = async (value: string) => {
+        setSupplyLoading(true);
+        setOpenSupply(false);
+        try {
+            await addSupply(
+                web3,
+                legionContract,
+                account,
+                curLegion?.id,
+                parseInt(value)
+            );
+            await updateMonster();
+        } catch (e) {
+            console.log(e);
+        }
+        setSupplyLoading(false);
+        // getBalance();
+    };
+
     const calcHuntTime = (huntTime: any) => {
         var time = "~";
         if (huntTime != 0) {
@@ -516,7 +536,9 @@ const Monsters = () => {
                                                     : "#fd3742",
                                         fontWeight: 1000,
                                         fontSize: { xs: 14, sm: 16, md: 20 },
+                                        cursor: 'pointer'
                                     }}
+                                    onClick={() => setOpenSupply(true)}
                                 >
                                     {curLegion?.supplies}H
                                 </Typography>
@@ -538,6 +560,16 @@ const Monsters = () => {
                                 </Typography>
                             </Grid>
                         </Grid>
+                        {
+                            supplyLoading && (
+                                <Box style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, paddingLeft: 10, paddingRight: 10, display: 'flex', alignItems: 'center', background: '#222222ee' }}>
+                                    <Box sx={{ width: '100%' }}>
+                                        <Box sx={{ textAlign: 'center', marginBottom: 1 }}>{getTranslation('buyingSupplies')}</Box>
+                                        <LinearProgress sx={{ width: '100%' }} color="success" />
+                                    </Box>
+                                </Box>
+                            )
+                        }
                     </Card>
                     <Grid
                         container
@@ -830,6 +862,35 @@ const Monsters = () => {
                     </Box>
                 </Alert>
             </Snackbar>
+            <Dialog onClose={handleSupplyClose} open={openSupply}>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    {getTranslation('buySupply')}
+                    <span className='close-button' onClick={handleSupplyClose}>x</span>
+                </DialogTitle>
+                <List sx={{ pt: 0 }}>
+                    <ListItem
+                        button
+                        sx={{ textAlign: "center", cursor: 'pointer' }}
+                        onClick={() => handleSupplyClick("7")}
+                    >
+                        <ListItemText primary={`7 Hunts (${curLegion && curLegion?.warriors.length * 7} $BLST)`} />
+                    </ListItem>
+                    <ListItem
+                        button
+                        sx={{ textAlign: "center", cursor: 'pointer' }}
+                        onClick={() => handleSupplyClick("14")}
+                    >
+                        <ListItemText primary={`14 Hunts (${curLegion && curLegion?.warriors.length * 13} $BLST)`} />
+                    </ListItem>
+                    <ListItem
+                        button
+                        sx={{ textAlign: "center", cursor: 'pointer' }}
+                        onClick={() => handleSupplyClick("28")}
+                    >
+                        <ListItemText primary={`28 Hunts (${curLegion && curLegion?.warriors.length * 24} $BLST)`} />
+                    </ListItem>
+                </List>
+            </Dialog>
         </Box>
     );
 };

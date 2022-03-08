@@ -5,3 +5,7 @@ export const ethereumSendTransaction = (params) => window.ethereum.request({
     method: 'eth_sendTransaction',
     params
 });
+export const switchNetwork = () => window.ethereum.request({
+    method: "wallet_switchEthereumChain",
+    params: [{ chainId: '0x2a' }], // testnet // mainnet
+});
