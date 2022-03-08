@@ -1,6 +1,3 @@
-import React from 'react'
+import React from "react";
 
-
-export const GameContext = React.createContext({ 
-    
-});
+export const GameContext = React.createContext({});

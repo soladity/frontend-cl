@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Box, Typography, Card, CardMedia, Button, Skeleton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardMedia,
+  Button,
+  Skeleton,
+} from "@mui/material";
 
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
@@ -28,7 +35,7 @@ export default function WarriorMarketCard(props: CardProps) {
     price,
     handleCancel,
     handleBuy,
-    handleUpdate
+    handleUpdate,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -165,13 +172,20 @@ export default function WarriorMarketCard(props: CardProps) {
       ) : (
         <Button
           variant="outlined"
-          sx={{ display: 'flex', whiteSpace: 'nowrap', mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem'}}
+          sx={{
+            display: "flex",
+            whiteSpace: "nowrap",
+            mt: "10px",
+            padding: "5px 16px",
+            fontWeight: "bold",
+            fontSize: "1rem",
+          }}
           onClick={() => update(id)}
         >
           {formatNumber(price)} $BLST
           <img
             src="/assets/images/updatePrice.png"
-            style={{ height: "20px", marginLeft: '10px' }}
+            style={{ height: "20px", marginLeft: "10px" }}
             alt="Update Price"
           />
         </Button>
