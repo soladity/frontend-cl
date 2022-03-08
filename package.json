@@ -50,7 +50,9 @@
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-helmet": "^6.1.5",
-    "node-sass": "^7.0.0"
+    "eslint": "^8.10.0",
+    "node-sass": "^7.0.0",
+    "prettier": "^2.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
