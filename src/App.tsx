@@ -18,17 +18,6 @@ function ResponsiveDrawer(props: any) {
     (state: any) => state.contractReducer
   );
 
-  // const path = window.location.pathname;
-  // function stringRemover(str: string): string {
-  //   if (str[str.length - 1] === "/") {
-  //     return stringRemover(str.slice(0, str.length - 1));
-  //   }
-  //   return str;
-  // }
-  // if (path.length !== 1 && path[path.length - 1] === "/") {
-  //   window.location.href = window.location.origin + stringRemover(path);
-  // }
-
   React.useEffect(() => {
     injected
       .isAuthorized()

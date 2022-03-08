@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import { makeStyles } from "@mui/styles";
+import { switchNetwork } from "../../wallet/ethereum";
 
 const useStyles = makeStyles({
   loginToWhitePaperBtn: {
@@ -99,18 +100,32 @@ const AskMetaLogin = () => {
   };
 
   React.useEffect(() => {
+    // injected
+    //     .isAuthorized()
+    //     .then((isAuthorized) => {
+    //         // setLoaded(true)
+    //         if (isAuthorized && !active && !error) {
+    //             activate(injected)
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         console.log(err)
+    //         // setLoaded(true)
+    //     })
+    // console.log(error)
     if (error) {
       if (error.toString().indexOf("NoEthereumProviderError") > -1) {
         setErrorMsg("Please Install MetaMask!");
         setOpenSnackBar(true);
       }
       if (error.toString().indexOf("UnsupportedChainIdError") > -1) {
+        switchNetwork();
         setErrorMsg("Please choose Kovan Network!");
         setOpenSnackBar(true);
       }
     }
     setLoading(false);
-  }, [active, error]);
+  }, [active, activate, error]);
 
   return (
     <div

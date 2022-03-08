@@ -121,7 +121,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("summoningFee")}:
-          <span className="legionOrangeColor"> {summonFee}$</span>
+          <span className="legionOrangeColor"> $ {summonFee}</span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -129,7 +129,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("SuppliesFee14Hunts")}:
-          <span className="legionOrangeColor"> {suppliesFee14}$</span>
+          <span className="legionOrangeColor"> $ {suppliesFee14}</span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -137,7 +137,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("SuppliesFee28Hunts")}:
-          <span className="legionOrangeColor"> {suppliesFee28}$</span>
+          <span className="legionOrangeColor"> $ {suppliesFee28}</span>
         </Typography>
         <Typography
           className="legionFontColor"
