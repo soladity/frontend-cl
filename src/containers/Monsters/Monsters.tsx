@@ -520,7 +520,7 @@ const Monsters = () => {
                   }}
                   onClick={() => setOpenSupply(true)}
                 >
-                  {curLegion?.supplies}H
+                  {curLegion?.supplies}H {curLegion?.supplies == '0' && 'supplies needed'}
                 </Typography>
               </Grid>
               <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
