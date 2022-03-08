@@ -100,19 +100,6 @@ const AskMetaLogin = () => {
   };
 
   React.useEffect(() => {
-    // injected
-    //     .isAuthorized()
-    //     .then((isAuthorized) => {
-    //         // setLoaded(true)
-    //         if (isAuthorized && !active && !error) {
-    //             activate(injected)
-    //         }
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //         // setLoaded(true)
-    //     })
-    // console.log(error)
     if (error) {
       if (error.toString().indexOf("NoEthereumProviderError") > -1) {
         setErrorMsg("Please Install MetaMask!");

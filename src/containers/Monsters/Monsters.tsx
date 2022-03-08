@@ -512,8 +512,8 @@ const Monsters = () => {
                       curLegion?.status === "1"
                         ? "#18e001"
                         : curLegion?.status === "2"
-                        ? "#ae7c00"
-                        : "#fd3742",
+                          ? "#ae7c00"
+                          : "#fd3742",
                     fontWeight: 1000,
                     fontSize: { xs: 14, sm: 16, md: 20 },
                     cursor: "pointer",
@@ -582,12 +582,10 @@ const Monsters = () => {
                   <MonsterCard
                     image={
                       showAnimation === "0"
-                        ? `/assets/images/characters/jpg/monsters/m${
-                            index + 1
-                          }.jpg`
-                        : `/assets/images/characters/gif/monsters/m${
-                            index + 1
-                          }.gif`
+                        ? `/assets/images/characters/jpg/monsters/m${index + 1
+                        }.jpg`
+                        : `/assets/images/characters/gif/monsters/m${index + 1
+                        }.gif`
                     }
                     name={monster.name}
                     tokenID={index + 1}
@@ -595,19 +593,19 @@ const Monsters = () => {
                     minAP={monster.ap}
                     bonus={
                       index < 20 &&
-                      curLegion &&
-                      monster.ap < (curLegion as LegionInterface).attackPower
+                        curLegion &&
+                        monster.ap < (curLegion as LegionInterface).attackPower
                         ? parseInt(monster.base) +
-                            ((curLegion as LegionInterface).attackPower -
-                              monster.ap) /
-                              2000 >
+                          ((curLegion as LegionInterface).attackPower -
+                            monster.ap) /
+                          2000 >
                           89
                           ? 89 - parseInt(monster.base) + ""
                           : Math.floor(
-                              ((curLegion as LegionInterface).attackPower -
-                                monster.ap) /
-                                2000
-                            ) + ""
+                            ((curLegion as LegionInterface).attackPower -
+                              monster.ap) /
+                            2000
+                          ) + ""
                         : "0"
                     }
                     price={monster.reward}
@@ -832,9 +830,8 @@ const Monsters = () => {
             onClick={() => handleSupplyClick("7")}
           >
             <ListItemText
-              primary={`7 Hunts (${
-                curLegion && curLegion?.warriors.length * 7
-              } $BLST)`}
+              primary={`7 Hunts (${curLegion && curLegion?.warriors.length * 7
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -843,9 +840,8 @@ const Monsters = () => {
             onClick={() => handleSupplyClick("14")}
           >
             <ListItemText
-              primary={`14 Hunts (${
-                curLegion && curLegion?.warriors.length * 13
-              } $BLST)`}
+              primary={`14 Hunts (${curLegion && curLegion?.warriors.length * 13
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -854,9 +850,8 @@ const Monsters = () => {
             onClick={() => handleSupplyClick("28")}
           >
             <ListItemText
-              primary={`28 Hunts (${
-                curLegion && curLegion?.warriors.length * 24
-              } $BLST)`}
+              primary={`28 Hunts (${curLegion && curLegion?.warriors.length * 24
+                } $BLST)`}
             />
           </ListItem>
         </List>
