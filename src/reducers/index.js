@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux'
-import { contractReducer } from './contractReducer'
+import { combineReducers } from "redux";
+import { contractReducer } from "./contractReducer";
 
 const rootReducer = combineReducers({
-    contractReducer
-})
+  contractReducer,
+});
 
-export default rootReducer
+export default rootReducer;

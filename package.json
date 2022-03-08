@@ -50,7 +50,6 @@
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-helmet": "^6.1.5",
-    "eslint": "^8.10.0",
     "node-sass": "^7.0.0",
     "prettier": "^2.5.1"
   },
@@ -59,7 +58,8 @@
     "style": "node-sass --watch ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css",
     "build": "CI=false && node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"**/*.+(js|jsx|json|css|scss|md|ts|tsx)\""
   },
   "eslintConfig": {
     "extends": [

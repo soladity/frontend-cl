@@ -1,1 +1,1 @@
-export { default } from './UpdateLegions'
+export { default } from "./UpdateLegions";

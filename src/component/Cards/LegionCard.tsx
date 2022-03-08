@@ -265,12 +265,13 @@ export default function LegionCard(props: CardProps) {
           variant="h6"
           sx={{
             fontSize: "0.8rem",
-            fontWeight: '600',
+            fontWeight: "600",
             textShadow:
               "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          W {warriors.length} / {totalWarrior}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B {beasts.length}
+          W {warriors.length} / {totalWarrior}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B{" "}
+          {beasts.length}
         </Typography>
         <Box
           sx={{

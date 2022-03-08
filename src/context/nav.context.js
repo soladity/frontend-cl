@@ -1,11 +1,9 @@
-import React from 'react'
+import React from "react";
 
-const NavContext = React.createContext({ 
-    nav: []
+const NavContext = React.createContext({
+  nav: [],
 });
 
-export default props => {
-    return (<NavContext.Provider>
-        {props.children}
-    </NavContext.Provider>)
+export default (props) => {
+  return <NavContext.Provider>{props.children}</NavContext.Provider>;
 };
