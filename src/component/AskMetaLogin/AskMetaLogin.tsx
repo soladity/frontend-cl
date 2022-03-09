@@ -100,6 +100,11 @@ const AskMetaLogin = () => {
   };
 
   React.useEffect(() => {
+    console.log('test---------')
+    console.log(error)
+    console.log(process.env.REACT_APP_CHAIN_ID)
+    console.log(process.env.REACT_APP_CHAIN_ID_HEX)
+    console.log('test---------')
     if (error) {
       if (error.toString().indexOf("NoEthereumProviderError") > -1) {
         setErrorMsg("Please Install MetaMask!");
