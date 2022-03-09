@@ -267,6 +267,7 @@ const Legions = () => {
           power = temp[i]["attackPower"];
       }
       setTotalPower(totalPower - power);
+      setSelectedLegion(-1);
       setLegions(
         legions.filter((item: any) => parseInt(item.id) !== selectedLegion)
       );
