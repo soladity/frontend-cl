@@ -27,8 +27,6 @@ jobs:
           echo "AWS_SECRET_ACCESS_KEY=${NODE_ENV}_AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
           echo "AWS_S3_BUCKET=${NODE_ENV}_AWS_S3_BUCKET" >> $GITHUB_ENV
           echo "DISTRIBUTION_ID=${NODE_ENV}_DISTRIBUTION_ID" >> $GITHUB_ENV
-          echo "REACT_APP_CHAIN_ID=${{ secrets[env.REACT_APP_CHAIN_ID] }}" >> $GITHUB_ENV
-          echo "REACT_APP_CHAIN_ID_HEX=${{ secrets[env.REACT_APP_CHAIN_ID_HEX] }}"" >> $GITHUB_ENV
 
       - name: Install Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
