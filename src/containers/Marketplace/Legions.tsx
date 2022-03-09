@@ -253,23 +253,23 @@ const Legions = () => {
     let temp = legions;
     temp.sort((a: any, b: any) => {
       if (value === "1" || value === "2") {
-        if (value === "2") {
-          if (parseInt(a.power) > parseInt(b.power)) {
+        if (value === "1") {
+          if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
             return 1;
           }
-          if (parseInt(a.power) < parseInt(b.power)) {
+          if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
             return -1;
           }
         } else {
-          if (parseInt(a.power) > parseInt(b.power)) {
+          if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
             return -1;
           }
-          if (parseInt(a.power) < parseInt(b.power)) {
+          if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
             return 1;
           }
         }
       } else {
-        if (value === "4") {
+        if (value === "3") {
           if (parseInt(a.price) > parseInt(b.price)) {
             return 1;
           }

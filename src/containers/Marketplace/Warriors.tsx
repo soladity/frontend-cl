@@ -205,7 +205,7 @@ const Warriors = () => {
     let temp = warriors;
     temp.sort((a: any, b: any) => {
       if (value === "1" || value === "2") {
-        if (value === "2") {
+        if (value === "1") {
           if (parseInt(a.power) > parseInt(b.power)) {
             return 1;
           }
@@ -221,7 +221,7 @@ const Warriors = () => {
           }
         }
       } else {
-        if (value === "4") {
+        if (value === "3") {
           if (parseInt(a.price) > parseInt(b.price)) {
             return 1;
           }

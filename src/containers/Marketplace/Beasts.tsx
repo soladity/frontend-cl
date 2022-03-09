@@ -179,17 +179,26 @@ const Beasts = () => {
 
   const handleSortBlst = (value: boolean) => {
     setSortBlst(value);
-    handleSort("blst");
+    handleSort();
   };
 
-  const handleSort = (type: string) => {
+  const handleSort = () => {
     let temp = beasts;
     temp.sort((a: any, b: any) => {
-      if (parseInt(a.price) > parseInt(b.price)) {
-        return 1;
-      }
-      if (parseInt(a.price) < parseInt(b.price)) {
-        return -1;
+      if (sortBlst === true) {
+        if (parseInt(a.price) > parseInt(b.price)) {
+          return 1;
+        }
+        if (parseInt(a.price) < parseInt(b.price)) {
+          return -1;
+        }
+      } else {
+        if (parseInt(a.price) > parseInt(b.price)) {
+          return -1;
+        }
+        if (parseInt(a.price) < parseInt(b.price)) {
+          return 1;
+        }
       }
       return 0;
     });
@@ -406,11 +415,11 @@ const Beasts = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/beasts/" +
-                            item["type"] +
-                            ".jpg"
+                          item["type"] +
+                          ".jpg"
                           : "/assets/images/characters/gif/beasts/" +
-                            item["type"] +
-                            ".gif"
+                          item["type"] +
+                          ".gif"
                       }
                       type={item["type"]}
                       capacity={item["capacity"]}
