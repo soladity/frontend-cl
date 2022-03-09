@@ -28,6 +28,13 @@ jobs:
           echo "AWS_S3_BUCKET=${NODE_ENV}_AWS_S3_BUCKET" >> $GITHUB_ENV
           echo "DISTRIBUTION_ID=${NODE_ENV}_DISTRIBUTION_ID" >> $GITHUB_ENV
 
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_DEBUG: false
+          envkey_REACT_APP_CHAIN_ID: ${{ secrets.REACT_APP_CHAIN_ID }}
+          envkey_REACT_APP_CHAIN_ID_HEX: ${{ secrets.REACT_APP_CHAIN_ID_HEX }}
+
       - name: Install Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
         with:
