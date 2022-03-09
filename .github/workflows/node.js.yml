@@ -36,6 +36,12 @@ jobs:
 
       - run: npm i -g yarn
       - run: yarn install
+      - name: Create env file
+          run: |
+            touch .env
+            echo REACT_APP_CHAIN_ID=${{ secrets[env.REACT_APP_CHAIN_ID] }} >> .env
+            echo REACT_APP_CHAIN_ID_HEX=${{ secrets[env.REACT_APP_CHAIN_ID_HEX] }} >> .env
+            cat .env
       - run: npm run build
       # - run: npm test
 
@@ -44,8 +50,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets[env.AWS_ACCESS_KEY_ID] }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
-          REACT_APP_CHAIN_ID: ${{ secrets[env.REACT_APP_CHAIN_ID] }}
-          REACT_APP_CHAIN_ID_HEX: ${{ secrets[env.REACT_APP_CHAIN_ID_HEX] }}
+          
         with:
           folder: build
           bucket: ${{ secrets[env.AWS_S3_BUCKET] }}
