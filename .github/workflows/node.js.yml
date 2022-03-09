@@ -34,6 +34,7 @@ jobs:
           envkey_DEBUG: false
           envkey_REACT_APP_CHAIN_ID: ${{ secrets.REACT_APP_CHAIN_ID }}
           envkey_REACT_APP_CHAIN_ID_HEX: ${{ secrets.REACT_APP_CHAIN_ID_HEX }}
+          envkey_REACT_APP_HELP_API_KEY: ${{ secrets.REACT_APP_HELP_API_KEY }}
 
       - name: Install Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
