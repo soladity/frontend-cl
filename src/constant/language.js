@@ -1211,6 +1211,18 @@ export const translations = {
     pl: "Ładowanie legionów...",
     ph: "Naglo-load ng Legions...",
   },
+  suppliesNeeded: {
+    en: "Supplies is needed",
+    es: "Se necesitan suministros",
+    cn: "需要用品",
+    pt: "Suprimentos é necessário",
+    tr: "Sarf malzemeleri gerekli",
+    ru: "Необходимы расходные материалы",
+    fr: "Des fournitures sont nécessaires",
+    de: "Benodigdheden zijn nodig",
+    pl: "Potrzebne są materiały eksploatacyjne",
+    ph: "Kailangan ang mga gamit",
+  },
   noMintedLegion: {
     en: "You need to create a legion first to start hunting!",
     es: "¡Necesitas crear una legión primero para comenzar a cazar!",
