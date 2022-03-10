@@ -546,7 +546,7 @@ const Monsters = () => {
                                     }}
                                     onClick={() => setOpenSupply(true)}
                                 >
-                                    {curLegion?.supplies}H {curLegion?.supplies == '0' && getTranslation('suppliesNeeded')}
+                                    {curLegion?.supplies}H {curLegion?.supplies == '0' && '(' + getTranslation('suppliesNeeded') + ')'}
                                 </Typography>
                             </Grid>
                             <Grid
