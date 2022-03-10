@@ -1212,7 +1212,7 @@ export const translations = {
     ph: "Naglo-load ng Legions...",
   },
   suppliesNeeded: {
-    en: "Supplies is needed",
+    en: "Supplies needed",
     es: "Se necesitan suministros",
     cn: "需要用品",
     pt: "Suprimentos é necessário",
