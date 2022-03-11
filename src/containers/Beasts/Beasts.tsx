@@ -63,7 +63,7 @@ const Beasts = () => {
 	const [mintLoading, setMintLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
 
-	const maxSellPrice = 10000000000
+	const maxSellPrice = 5000000
 
 	const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
 		b1: {
