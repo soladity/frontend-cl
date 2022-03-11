@@ -14,6 +14,12 @@ import {
     DialogTitle,
     DialogActions,
     DialogContent,
+    Snackbar,
+    Alert,
+    List,
+    ListItem,
+    ListItemText,
+    LinearProgress,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
@@ -41,6 +47,8 @@ import {
     getBaseGifURL,
     canHunt,
     hunt,
+    getBeastToken,
+    addSupply,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -51,6 +59,16 @@ import { Spinner } from "../../component/Buttons/Spinner";
 import { useDispatch } from "react-redux";
 import { setReloadStatus } from "../../actions/contractActions";
 import imageUrls from "../../constant/images";
+import { useNavigate } from "react-router-dom";
+import ScrollToButton from "../../component/Scroll/ScrollToButton";
+import ScrollSection from "../../component/Scroll/Section";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionUp(props: TransitionProps) {
+    return <Slide {...props} direction="up" />;
+}
 
 const useStyles = makeStyles(() => ({
     Card: {
@@ -75,22 +93,11 @@ const useStyles = makeStyles(() => ({
     },
     Grid: {
         paddingTop: "2%",
-        // "@media(min-width: 0px)": {
-        //   paddingTop: "14%",
-        // },
-        // "@media(min-width: 600px)": {
-        //   paddingTop: "20%",
-        // },
-        // "@media(min-width: 763px)": {
-        //   paddingTop: "6%",
-        // },
-        // "@media(min-width: 900px)": {
-        //   paddingTop: "2%",
-        // },
     },
 }));
 
 interface MonsterInterface {
+    id: number;
     base: string;
     ap: number;
     reward: string;
@@ -108,6 +115,7 @@ interface LegionInterface {
     id: number;
     status: string;
     lastHuntTime: any;
+    warriorCapacity: number
 }
 
 const Monsters = () => {
@@ -115,6 +123,11 @@ const Monsters = () => {
     const dispatch = useDispatch();
     const { account } = useWeb3React();
     const web3 = useWeb3();
+
+    //SnackBar
+    const [openSnackBar, setOpenSnackBar] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
+    const monsterRef = React.useRef(null);
 
     const legionContract = useLegion();
     const beastContract = useBeast();
@@ -128,9 +141,6 @@ const Monsters = () => {
     const [curComboLegionValue, setCurComboLegionValue] = useState("0");
     const [legions, setLegions] = useState(Array);
     const [legionIDs, setLegionIDs] = useState(Array);
-    const [beasts, setBeasts] = useState(Array);
-    const [warriors, setWarriors] = useState(Array);
-    const [mintedWarriorCnt, setMintedWarriorCnt] = useState(0);
     const [curLegion, setCurLegion] = useState<LegionInterface | null>();
     const [monsters, setMonsters] = useState(Array);
     const [curMonster, setCurMonster] = useState<MonsterInterface | null>();
@@ -140,7 +150,18 @@ const Monsters = () => {
     const [huntedStatus, setHuntedStatus] = useState(0);
     const [continueLoading, setContinueLoading] = useState(false);
     const [huntedRoll, setHuntedRoll] = useState(0);
+    const [huntAvailablePercent, setHuntAvailablePercent] = useState(0)
     const [currentTime, setCurrentTime] = React.useState(new Date());
+
+
+    const [openSupply, setOpenSupply] = React.useState(false);
+    const [supplyLoading, setSupplyLoading] = React.useState(false);
+
+    const [loadingText, setLoadingText] = React.useState('')
+
+
+    const [strongestMonsterToHunt, setStrongestMonsterToHunt] =
+        React.useState(0);
 
     const scrollArea = useCallback((node) => {
         if (node != null) {
@@ -164,21 +185,26 @@ const Monsters = () => {
         topics: [],
     };
 
-    let subscription = web3.eth.subscribe("logs", options, (err, event) => {
-        if (!err) {
-            console.log("event", event);
-        }
-    });
-
-    const initMonster = async () => {
+    const initMonster = async (legions: any) => {
         let monsterTmp;
         let monsterArraryTmp = [];
-        for (let i = 1; i < 23; i++) {
+        for (let i = 1; i < 25; i++) {
             monsterTmp = await getMonsterInfo(web3, monsterContract, i);
             monsterArraryTmp.push({ ...monsterTmp, id: i });
         }
         console.log("monsterArraryTmp", monsterArraryTmp);
         setMonsters(monsterArraryTmp);
+
+        if (legions[0]) {
+            for (let i = 0; i < monsterArraryTmp.length; i++) {
+                const monster: any = monsterArraryTmp[i];
+                if (parseInt(monster?.ap) <= legions[0].attackPower) {
+                    setStrongestMonsterToHunt(i);
+                } else {
+                    break;
+                }
+            }
+        }
     };
 
     const updateMonster = async () => {
@@ -197,21 +223,30 @@ const Monsters = () => {
                 legionContract,
                 legionIDS[i]
             );
+            var warriorCapacity = 0
+            for (let j = 0; j < legionTmp.beasts.length; j++) {
+                console.log(await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+                warriorCapacity += parseInt((await getBeastToken(web3, beastContract, legionTmp.beasts[j])).capacity)
+            }
             legionArrayTmp.push({
                 ...legionTmp,
                 id: legionIDS[i],
                 status: legionStatus,
+                warriorCapacity: warriorCapacity
             });
         }
         setLegions(legionArrayTmp);
-        const tempLegionValue =
-            parseInt(curComboLegionValue) - 1 < 0
-                ? 0
-                : parseInt(curComboLegionValue) - 1;
-        setCurComboLegionValue(tempLegionValue + "");
-        setCurLegion(legionArrayTmp[tempLegionValue]);
-        setCurComboLegionValue(tempLegionValue + 1 + "");
-        setCurLegion(legionArrayTmp[tempLegionValue + 1]);
+        setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)])
+        if (legionArrayTmp[parseInt(curComboLegionValue)]) {
+            for (let i = 0; i < monsters.length; i++) {
+                const monster: any = monsters[i];
+                if (parseInt(monster?.ap) <= legionArrayTmp[parseInt(curComboLegionValue)].attackPower) {
+                    setStrongestMonsterToHunt(i);
+                } else {
+                    break;
+                }
+            }
+        }
     };
 
     const initialize = async () => {
@@ -224,9 +259,7 @@ const Monsters = () => {
         let legionTmp;
         let legionArrayTmp = [];
         let legionStatus = "";
-        let warriorCnt = 0;
         for (let i = 0; i < legionIDS.length; i++) {
-            // if (legionIDS[i] != 1) {
             legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
             legionTmp = await getLegionToken(
                 web3,
@@ -234,24 +267,23 @@ const Monsters = () => {
                 legionIDS[i]
             );
             console.log(legionTmp, legionStatus);
+            var warriorCapacity = 0
+            for (let j = 0; j < legionTmp.beasts.length; j++) {
+                console.log(await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+                warriorCapacity += parseInt((await getBeastToken(web3, beastContract, legionTmp.beasts[j])).capacity)
+            }
             legionArrayTmp.push({
                 ...legionTmp,
                 id: legionIDS[i],
                 status: legionStatus,
+                warriorCapacity: warriorCapacity
             });
-            warriorCnt += legionTmp.warriors.length;
-            // }
         }
-        await initMonster();
+        await initMonster(legionArrayTmp);
         setBaseJpgUrl(await getBaseJpgURL(web3, monsterContract));
         setBaseGifUrl(await getBaseGifURL(web3, monsterContract));
-        setBeasts(await getBeastBalance(web3, beastContract, account));
-        setWarriors(await getWarriorBalance(web3, warriorContract, account));
-        console.log(await getWarriorBalance(web3, warriorContract, account));
         setLegionIDs(legionIDS);
-        console.log(legionArrayTmp);
         setLegions(legionArrayTmp);
-        setMintedWarriorCnt(warriorCnt);
         setCurLegion(legionArrayTmp[0]);
         setLoading(false);
     };
@@ -266,18 +298,16 @@ const Monsters = () => {
     const handleCurLegionValue = (e: SelectChangeEvent) => {
         const selectedIndex = parseInt(e.target.value);
         const curLegionTmp = (legions as any)[selectedIndex] as LegionInterface;
-        let indexOfCurMonster = 0;
-        for (let i = 0; i < allConstants.listOfMonsterAP.length; i++) {
-            if (
-                allConstants.listOfMonsterAP[i] < curLegionTmp.attackPower &&
-                curLegionTmp.attackPower < allConstants.listOfMonsterAP[i + 1]
-            )
-                indexOfCurMonster = i;
+        for (let i = 0; i < monsters.length; i++) {
+            const monster: any = monsters[i];
+            if (parseInt(monster?.ap) <= curLegionTmp.attackPower) {
+                setStrongestMonsterToHunt(i);
+            } else {
+                break;
+            }
         }
-        const scrollPosition = (scrollMaxHeight / 22) * indexOfCurMonster;
         setCurComboLegionValue(e.target.value as string);
         setCurLegion(curLegionTmp);
-        window.scrollTo({ top: scrollPosition, left: 0, behavior: "smooth" });
     };
 
     const handleHunt = async (monsterTokenID: number) => {
@@ -292,8 +322,12 @@ const Monsters = () => {
                 curLegion?.id,
                 monsterTokenID
             );
-            const result = response.events.Hunted.returnValues;
+            const keys = Object.keys(response.events)
+            console.log(keys)
+            const result = response.events[keys[0]].returnValues;
+            console.log(result)
             setHuntedRoll(result.roll);
+            setHuntAvailablePercent(result.percent)
             setHuntedStatus(result.success ? 1 : 2);
             dispatch(
                 setReloadStatus({
@@ -301,8 +335,14 @@ const Monsters = () => {
                 })
             );
         } catch (e: any) {
-            console.log(e);
+            console.log('hunt result', e, 'hunt result');
             setDialogVisible(false);
+            if (e.code == 4001) {
+
+            } else {
+                setSnackBarMessage(getTranslation("huntTransactionFailed"));
+                setOpenSnackBar(true);
+            }
         }
     };
 
@@ -319,6 +359,31 @@ const Monsters = () => {
         );
     };
 
+
+    const handleSupplyClose = () => {
+        setOpenSupply(false);
+    };
+
+    const handleSupplyClick = async (value: string) => {
+        setLoadingText(getTranslation("buyingSupplies"))
+        setSupplyLoading(true);
+        setOpenSupply(false);
+        try {
+            await addSupply(
+                web3,
+                legionContract,
+                account,
+                curLegion?.id,
+                parseInt(value)
+            );
+            setLoadingText(getTranslation("loadingLegions"))
+            await updateMonster();
+        } catch (e) {
+            console.log(e);
+        }
+        setSupplyLoading(false);
+    };
+
     const calcHuntTime = (huntTime: any) => {
         var time = "~";
         if (huntTime != 0) {
@@ -326,12 +391,9 @@ const Monsters = () => {
             if (diff / 1000 / 3600 >= 24) {
                 time = "00s";
             } else {
-                console.log(diff, "diff");
-                console.log(24 * 1000 * 3600);
                 var totalSecs = parseInt(
                     ((24 * 1000 * 3600 - diff) / 1000).toFixed(2)
                 );
-                console.log(totalSecs, "total");
                 var hours = Math.floor(totalSecs / 3600).toFixed(0);
                 var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
                 var secs = Math.floor(totalSecs % 3600) % 60;
@@ -376,6 +438,7 @@ const Monsters = () => {
                     component="div"
                     sx={{ position: "relative" }}
                     ref={scrollArea}
+                    id="monsters"
                 >
                     <Card className={classes.Card}>
                         <Grid
@@ -403,21 +466,21 @@ const Monsters = () => {
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </GreenBGMenuItem>
                                             ) : legion.status === "2" ? (
                                                 <OrgBGMenuItem
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </OrgBGMenuItem>
                                             ) : (
                                                 <RedBGMenuItem
                                                     value={index}
                                                     key={index}
                                                 >
-                                                    #{legion.id} {legion.name}
+                                                    #{legion.id} {legion.name} ({legion.attackPower} AP)
                                                 </RedBGMenuItem>
                                             )
                                         )}
@@ -425,14 +488,25 @@ const Monsters = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={30} sm={12} md={9}>
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        fontSize: { xs: 14, sm: 16, md: 20 },
-                                    }}
+                                <ScrollToButton
+                                    toId={"monster" + strongestMonsterToHunt}
+                                    duration={1000}
                                 >
-                                    {curLegion?.attackPower.toFixed(0)} AP
-                                </Typography>
+                                    <Typography
+                                        variant="h5"
+                                        sx={{
+                                            fontSize: {
+                                                xs: 14,
+                                                sm: 16,
+                                                md: 20,
+                                            },
+                                            cursor: "pointer",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {curLegion?.attackPower.toFixed(0)} AP
+                                    </Typography>
+                                </ScrollToButton>
                             </Grid>
                             <Grid item xs={30} sm={12} md={7}>
                                 <Typography
@@ -442,7 +516,7 @@ const Monsters = () => {
                                     }}
                                 >
                                     W {curLegion?.warriors.length}/
-                                    {warriors.length + mintedWarriorCnt}
+                                    {curLegion?.warriorCapacity}
                                 </Typography>
                             </Grid>
                             <Grid item xs={30} sm={12} md={7}>
@@ -464,13 +538,15 @@ const Monsters = () => {
                                             curLegion?.status === "1"
                                                 ? "#18e001"
                                                 : curLegion?.status === "2"
-                                                ? "#ae7c00"
-                                                : "#50010b",
+                                                    ? "#ae7c00"
+                                                    : "#fd3742",
                                         fontWeight: 1000,
                                         fontSize: { xs: 14, sm: 16, md: 20 },
+                                        cursor: "pointer",
                                     }}
+                                    onClick={() => setOpenSupply(true)}
                                 >
-                                    {curLegion?.supplies}H
+                                    {curLegion?.supplies}H {curLegion?.supplies == '0' && '(' + getTranslation('suppliesNeeded') + ')'}
                                 </Typography>
                             </Grid>
                             <Grid
@@ -490,6 +566,29 @@ const Monsters = () => {
                                 </Typography>
                             </Grid>
                         </Grid>
+                        {supplyLoading && (
+                            <Box
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    background: "#222222ee",
+                                }}
+                            >
+                                <Box sx={{ width: "100%" }}>
+                                    <Box sx={{ textAlign: "center", marginBottom: 1 }}>
+                                        {loadingText}
+                                    </Box>
+                                    <LinearProgress sx={{ width: "100%" }} color="success" />
+                                </Box>
+                            </Box>
+                        )}
                     </Card>
                     <Grid
                         container
@@ -512,40 +611,41 @@ const Monsters = () => {
                                     }}
                                     key={index}
                                 >
-                                    <MonsterCard
-                                        image={
-                                            showAnimation === "0"
-                                                ? imageUrls.baseUrl +
-                                                  imageUrls.monsters[index].jpg
-                                                : imageUrls.baseUrl +
-                                                  imageUrls.monsters[index].gif
-                                        }
-                                        name={monster.name}
-                                        tokenID={index + 1}
-                                        base={monster.base}
-                                        minAP={monster.ap}
-                                        bouns={
-                                            curLegion &&
-                                            monster.ap <
-                                                (curLegion as LegionInterface)
-                                                    .attackPower
-                                                ? "" +
-                                                  ((
-                                                      curLegion as LegionInterface
-                                                  ).attackPower -
-                                                      monster.ap) /
-                                                      2000
-                                                : "0"
-                                        }
-                                        price={monster.reward}
-                                        isHuntable={
-                                            curLegion?.status === "1" &&
-                                            monster.ap <=
-                                                (curLegion as LegionInterface)
-                                                    .attackPower
-                                        }
-                                        handleHunt={handleHunt}
-                                    />
+                                    <ScrollSection id={"monster" + index}>
+                                        <MonsterCard
+                                            image={
+                                                showAnimation === "0"
+                                                    ? `/assets/images/characters/jpg/monsters/m${index + 1}.jpg`
+                                                    : `/assets/images/characters/gif/monsters/m${index + 1}.gif`
+                                            }
+                                            name={monster.name}
+                                            tokenID={index + 1}
+                                            base={monster.base}
+                                            minAP={monster.ap}
+                                            bonus={
+                                                index < 20 &&
+                                                    curLegion &&
+                                                    monster.ap <
+                                                    (
+                                                        curLegion as LegionInterface
+                                                    ).attackPower
+                                                    ?
+                                                    (parseInt(monster.base) + ((curLegion as LegionInterface).attackPower - monster.ap) / 2000) > 89
+                                                        ? (89 - parseInt(monster.base)) + ''
+                                                        : Math.floor(((curLegion as LegionInterface).attackPower - monster.ap) / 2000) + ''
+                                                    : '0'
+                                            }
+                                            price={monster.reward}
+                                            isHuntable={
+                                                curLegion?.status === "1" &&
+                                                monster.ap <=
+                                                (
+                                                    curLegion as LegionInterface
+                                                ).attackPower
+                                            }
+                                            handleHunt={handleHunt}
+                                        />
+                                    </ScrollSection>
                                 </Grid>
                                 // </Box>
                             )
@@ -652,9 +752,9 @@ const Monsters = () => {
                                 <CardMedia
                                     component="img"
                                     image={
-                                        "/assets/images/defeat/m" +
-                                        curMonsterID +
-                                        ".gif"
+                                        showAnimation === "0"
+                                            ? `/assets/images/characters/jpg/monsters_dying/m${curMonsterID}.jpg`
+                                            : `/assets/images/characters/gif/monsters_dying/m${curMonsterID}.gif`
                                     }
                                     alt="Monster Image"
                                     loading="lazy"
@@ -682,24 +782,14 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("congSubtitle3")}{" "}
-                                        {parseInt(curMonster?.base as string) +
-                                            ((curMonster?.ap as number) <
-                                            (curLegion?.attackPower as number)
-                                                ? parseFloat(
-                                                      (
-                                                          ((curLegion?.attackPower as number) -
-                                                              (curMonster?.ap as number)) /
-                                                          2000
-                                                      ).toFixed(2)
-                                                  )
-                                                : 0)}
+                                        {huntAvailablePercent}
                                     </Typography>
                                 </Box>
                             )}
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -751,24 +841,14 @@ const Monsters = () => {
                                     </Typography>
                                     <Typography>
                                         {getTranslation("defeatSubtitle2")}{" "}
-                                        {parseInt(curMonster?.base as string) +
-                                            ((curMonster?.ap as number) <
-                                            (curLegion?.attackPower as number)
-                                                ? parseFloat(
-                                                      (
-                                                          ((curLegion?.attackPower as number) -
-                                                              (curMonster?.ap as number)) /
-                                                          2000
-                                                      ).toFixed(2)
-                                                  )
-                                                : 0)}
+                                        {huntAvailablePercent}
                                     </Typography>
                                 </Box>
                             )}
                             <CommonBtn
                                 onClick={() => handleContinue()}
                                 disabled={continueLoading}
-                                sx={{ paddingX: 3 }}
+                                sx={{ paddingX: 3, fontWeight: 'bold' }}
                             >
                                 {continueLoading ? (
                                     <Spinner color="white" size={40} />
@@ -779,6 +859,68 @@ const Monsters = () => {
                         </DialogActions>
                     </>
                 )}
+            </Dialog>
+            <Snackbar
+                open={openSnackBar}
+                TransitionComponent={TransitionUp}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackBar(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                key={TransitionUp ? TransitionUp.name : ""}
+            >
+                <Alert
+                    onClose={() => setOpenSnackBar(false)}
+                    variant="filled"
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    <Box
+                        sx={{ cursor: "pointer" }}
+                    >
+                        {snackBarMessage}
+                    </Box>
+                </Alert>
+            </Snackbar>
+
+            <Dialog onClose={handleSupplyClose} open={openSupply}>
+                <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
+                    {getTranslation("buySupply")}
+                    <span className="close-button" onClick={handleSupplyClose}>
+                        x
+                    </span>
+                </DialogTitle>
+                <List sx={{ pt: 0 }}>
+                    <ListItem
+                        button
+                        sx={{ textAlign: "center", cursor: "pointer" }}
+                        onClick={() => handleSupplyClick("7")}
+                    >
+                        <ListItemText
+                            primary={`7 Hunts (${curLegion && curLegion?.warriors.length * 7
+                                } $BLST)`}
+                        />
+                    </ListItem>
+                    <ListItem
+                        button
+                        sx={{ textAlign: "center", cursor: "pointer" }}
+                        onClick={() => handleSupplyClick("14")}
+                    >
+                        <ListItemText
+                            primary={`14 Hunts (${curLegion && curLegion?.warriors.length * 13
+                                } $BLST)`}
+                        />
+                    </ListItem>
+                    <ListItem
+                        button
+                        sx={{ textAlign: "center", cursor: "pointer" }}
+                        onClick={() => handleSupplyClick("28")}
+                    >
+                        <ListItemText
+                            primary={`28 Hunts (${curLegion && curLegion?.warriors.length * 24
+                                } $BLST)`}
+                        />
+                    </ListItem>
+                </List>
             </Dialog>
         </Box>
     );

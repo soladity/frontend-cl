@@ -2,9 +2,9 @@
 import React from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Helmet from "react-helmet";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import {
+  useTheme,
+  useMediaQuery,
   Box,
   Typography,
   Grid,
@@ -17,6 +17,10 @@ import {
   FormLabel,
   ButtonGroup,
   Button,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
@@ -29,14 +33,12 @@ import {
   getWarriorTokenIds,
   getWarriorToken,
   getLegionToken,
-  addBeasts,
-  addWarriors,
+  updateLegion,
 } from "../../hooks/contractFunction";
 import {
   getBeastTokenIds,
   getBeastToken,
-  getBaseJpgURL,
-  getBaseGifURL,
+  getBaseUrl,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -46,10 +48,13 @@ import {
   useLegion,
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
+import { toCapitalize } from "../../utils/common";
 import { formatNumber } from "../../utils/common";
-import { DragBox } from "./DragBox";
-import { DropBox } from "./DropBox";
+import { DropBox } from "../../component/Cards/DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
+import { Spinner } from "../../component/Buttons/Spinner";
+import DraggableCard from "../../component/Cards/DraggableCard";
+import Image from "../../config/image.json";
 
 const useStyles = makeStyles({
   root: {
@@ -69,6 +74,43 @@ const useStyles = makeStyles({
   },
 });
 
+const capFilterConfigList = [
+  { id: 0, name: "all", onClick: Function },
+  { id: 1, name: "1", onClick: Function },
+  { id: 2, name: "2", onClick: Function },
+  { id: 3, name: "3", onClick: Function },
+  { id: 4, name: "4", onClick: Function },
+  { id: 5, name: "5", onClick: Function },
+  { id: 6, name: "20", onClick: Function },
+];
+
+const powerFilterConfigList = [
+  { id: 0, name: "ALL", min: 0, max: 10000, onClick: Function },
+  { id: 1, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
+  { id: 2, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
+  { id: 3, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
+  { id: 4, name: "3K < AP < 4K", min: 2999, max: 4000, onClick: Function },
+  { id: 5, name: "4K < AP < 5K", min: 3999, max: 5000, onClick: Function },
+  { id: 6, name: "5K < AP < 6K", min: 4999, max: 6000, onClick: Function },
+  { id: 7, name: "6K < AP", min: 5999, max: 10000, onClick: Function },
+];
+
+interface IItem {
+  w5b: boolean;
+  type: string;
+  strength: string;
+  capacity: string | null;
+  power: string | null;
+  jpg: string;
+  gif: string;
+  id: string;
+}
+
+interface IMoveResult {
+  left: IItem[];
+  right: IItem[];
+}
+
 interface LegionInterface {
   name: string;
   beasts: Array<Number>;
@@ -77,37 +119,58 @@ interface LegionInterface {
   attackPower: number;
 }
 
+interface IBFilterItem {
+  id: number;
+  name: string;
+  onClick: Function;
+}
+
+interface IWFilterItem {
+  id: number;
+  name: string;
+  min: number;
+  max: number;
+  onClick: Function;
+}
+
+interface IClickedItem {
+  index: number;
+  clickedItem: string;
+}
+
 const UpdateLegions: React.FC = () => {
   const { account } = useWeb3React();
 
   const [loading, setLoading] = React.useState(true);
   const [curLegion, setCurLegion] = React.useState<LegionInterface | null>();
-  const [curLegionID, setCurLegionID] = React.useState(0);
-  const [baseBeastJpgUrl, setBaseBeastJpgUrl] = React.useState("");
-  const [baseBeastGifUrl, setBaseBeastGifUrl] = React.useState("");
-  const [baseWarriorJpgUrl, setBaseWarriorJpgUrl] = React.useState("");
-  const [baseWarriorGifUrl, setBaseWarriorGifUrl] = React.useState("");
+  const [curLegionID, setCurLegionID] = React.useState<string>("-1");
+  const [baseUrl, setBaseUrl] = React.useState("");
   const [apValue, setApValue] = React.useState<number[]>([500, 60000]);
   const [warrior5beast, setWarrior5beat] = React.useState(false);
-  const [warriorDropBoxList, setWarriorDropBoxList] = React.useState(Array);
-  const [beastDropBoxList, setBeastDropBoxList] = React.useState(Array);
-  const [warriorDragBoxList, setWarriorDragBoxList] = React.useState(Array);
-  const [beastDragBoxList, setBeastDragBoxList] = React.useState(Array);
-  const [beasts, setBeasts] = React.useState(Array);
-  const [warriors, setWarriors] = React.useState(Array);
+  const [beasts, setBeasts] = React.useState<IItem[]>(Array);
+  const [warriors, setWarriors] = React.useState<IItem[]>(Array);
   const [filter, setFilter] = React.useState("all");
-  const [droppedID, setDroppedID] = React.useState(-1);
-  const [w5bInDropList, setW5bInDropList] = React.useState(Boolean);
-  const [indexForLeft, setIndexForLeft] = React.useState<Number>(-1);
-  const [dropItemList, setDropItemList] = React.useState(Array);
-  const [tempDroppedItem, setTempDroppedItem] = React.useState();
+  const [dropItemList, setDropItemList] = React.useState<IItem[]>(Array);
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
-  const [totalAP, setTotalAp] = React.useState(0);
+  const [totalAP, setTotalAP] = React.useState(0);
   const [totalCP, setTotalCP] = React.useState(0);
   const [legionName, setLegionName] = React.useState("");
   const [isWDropable, setIsWDropable] = React.useState(false);
+  const [mintLoading, setMintLoading] = React.useState(false);
   const [tempCP, setTempCP] = React.useState(0);
   const [tempAP, setTempAP] = React.useState(0);
+  const [tempBeastsCnt, setTempBeastsCnt] = React.useState(0);
+  const [tempWarriorsCnt, setTempWarriorsCnt] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState(0);
+  const [curLegionSupply, setCurLegionSupply] = React.useState(0);
+  const [comboFilterValue, setComboFilterValue] = React.useState("");
+  const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
+    []
+  );
+  const [comboWFilterValue, setComboWFilterValue] = React.useState("");
+  const [comboWFilterList, setComboWFilterList] = React.useState<
+    IWFilterItem[]
+  >([]);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -118,9 +181,12 @@ const UpdateLegions: React.FC = () => {
   const bloodstoneContract = useBloodstone();
   const web3 = useWeb3();
 
+  const theme = useTheme();
+  const isSmallThanSM = useMediaQuery(theme.breakpoints.down("sm"));
+
   React.useEffect(() => {
     if (account) {
-      setCurLegionID(parseInt(params.id as string));
+      setCurLegionID(params.id as string);
       getBalance();
     }
     setShowAnimation(
@@ -128,203 +194,170 @@ const UpdateLegions: React.FC = () => {
         ? localStorage.getItem("showAnimation")
         : "0"
     );
-  }, []);
-
-  React.useEffect(() => {
-    if (
-      beastDropBoxList.length < createlegions.main.maxAvailableDragCount &&
-      droppedID > -1
-    ) {
-      let dragBoxList = warrior5beast ? warriorDragBoxList : beastDragBoxList;
-      let dropBoxList = warrior5beast ? warriorDropBoxList : beastDropBoxList;
-      const droppedIDIndex = dragBoxList.indexOf(droppedID);
-      if (droppedIDIndex <= -1) {
-        return;
+    let tmpFilterItem: IBFilterItem;
+    let tmpFilterArray: IBFilterItem[] = [];
+    capFilterConfigList.forEach((filterConfig: IBFilterItem) => {
+      tmpFilterItem = {
+        id: filterConfig.id,
+        name: filterConfig.name,
+        onClick: () => setFilter(filterConfig.name),
+      };
+      tmpFilterArray.push(tmpFilterItem);
+    });
+    let tmpWFilterItem: IWFilterItem;
+    let tmpWFilterArray: IWFilterItem[] = [];
+    powerFilterConfigList.forEach(
+      (filterConfig: IWFilterItem, index: number) => {
+        tmpWFilterItem = {
+          id: index,
+          name: filterConfig.name,
+          min: filterConfig.min,
+          max: filterConfig.max,
+          onClick: () => setApValue([filterConfig.min, filterConfig.max]),
+        };
+        tmpWFilterArray.push(tmpWFilterItem);
       }
-      let droppedNum = dragBoxList.splice(droppedIDIndex, 1)[0];
-      dropBoxList = [...dropBoxList, droppedNum];
-      if (warrior5beast) {
-        setWarriorDropBoxList(dropBoxList);
-        setWarriorDragBoxList(dragBoxList);
-      } else {
-        setBeastDropBoxList(dropBoxList);
-        setBeastDragBoxList(dragBoxList);
-      }
-      setDropItemList((prevState) => [...prevState, tempDroppedItem]);
-    }
-    setDroppedID(-1);
-    // getTotalAP_CP();
-  }, [droppedID]);
-
-  React.useEffect(() => {
-    if (indexForLeft === -1) {
-      return;
-    }
-    let dragBoxList = w5bInDropList ? warriorDragBoxList : beastDragBoxList;
-    let dropBoxList = w5bInDropList ? warriorDropBoxList : beastDropBoxList;
-    const droppedIDIndex = dropBoxList.indexOf(indexForLeft);
-    if (droppedIDIndex <= -1) {
-      return;
-    }
-    let tmpInsertPos = -1;
-    const droppedNum = dropBoxList.splice(droppedIDIndex, 1)[0];
-    let tmpIndexValue = droppedNum as number;
-    if (tmpIndexValue === 0) {
-      tmpInsertPos = 0;
-    } else {
-      let tmpDragBoxItem, tmpDragBoxItem1;
-      for (let i = 0; i < dragBoxList.length; i++) {
-        tmpDragBoxItem = dragBoxList[i] as number;
-        tmpDragBoxItem1 = dragBoxList[i + 1] as number;
-        if (tmpIndexValue < tmpDragBoxItem) {
-          tmpInsertPos = 0;
-          break;
-        } else if (
-          tmpDragBoxItem < tmpIndexValue &&
-          tmpIndexValue < tmpDragBoxItem1
-        ) {
-          tmpInsertPos = i + 1;
-          break;
-        } else if (
-          tmpIndexValue > (dragBoxList[dragBoxList.length - 1] as number)
-        ) {
-          tmpInsertPos = dragBoxList.length;
-          break;
-        }
-      }
-    }
-    tmpInsertPos = tmpInsertPos === 0 ? 0 : tmpInsertPos + 1;
-    dragBoxList.splice(tmpInsertPos, 0, droppedNum);
-    dragBoxList = [...dragBoxList];
-
-    if (warrior5beast) {
-      setWarriorDropBoxList(dropBoxList);
-      setWarriorDragBoxList(dragBoxList);
-    } else {
-      setBeastDropBoxList(dropBoxList);
-      setBeastDragBoxList(dragBoxList);
-    }
-    let tmpDropItemList = dropItemList;
-    const indexOfRight = tmpDropItemList.findIndex(
-      (item: any) => item.w5b === w5bInDropList && item.id === indexForLeft
     );
-    tmpDropItemList.splice(indexOfRight, 1);
-    setDropItemList(tmpDropItemList);
-    setIndexForLeft(-1);
-    // getTotalAP_CP();
-  }, [indexForLeft, w5bInDropList]);
+    setComboFilterList(tmpFilterArray);
+    setComboWFilterList(tmpWFilterArray);
+  }, []);
 
   React.useEffect(() => {
     let sum = 0;
     let cp = 0;
-    warriorDropBoxList.forEach((index: any) => {
-      if (index !== -1) {
-        sum += parseInt((warriors[index] as any)["power"]);
+    dropItemList.forEach((item: IItem) => {
+      if (item.w5b) {
+        sum += parseInt(item.power as string);
+      } else {
+        cp += parseInt(item.capacity as string);
       }
     });
-    beastDropBoxList.forEach((index: any) => {
-      if (index !== -1) {
-        cp += parseInt((beasts[index] as any)["capacity"]);
-      }
-    });
-    setTotalCP(tempCP + cp);
-    setTotalAp(tempAP + sum);
+    setTotalCP(cp + tempCP);
+    setTotalAP(sum + tempAP);
     setIsWDropable(
-      cp > 0 &&
-        cp >= warriorDropBoxList.length &&
-        totalAP >= createlegions.main.minAvailableAP
+      dropItemList.length > 0 &&
+      createlegions.main.maxAvailableDragCount >=
+      dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
+      cp + tempCP >=
+      dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
+      sum + tempAP >= createlegions.main.minAvailableAP &&
+      legionName.length > 0
     );
-  }, [
-    warriorDragBoxList,
-    beastDragBoxList,
-    warriorDropBoxList,
-    beastDropBoxList,
-  ]);
+    setMintFee(
+      0.5 * dropItemList.length +
+      dropItemList.filter((item) => item.w5b === true).length *
+      curLegionSupply
+    );
+  }, [beasts, warriors, dropItemList, legionName]);
 
-  const setDropBoxListbySelectedLegion = async () => {
-    const curLegionTmp = await getLegionToken(
-      web3,
-      legionContract,
-      curLegionID
-    );
-    let beast;
-    // let tempDropItemList = []
-    let tempBeasts = [];
-    let tempCP = 0;
-    for (let i = 0; i < curLegionTmp?.beasts.length; i++) {
-      beast = await getBeastToken(web3, beastContract, curLegionTmp?.beasts[i]);
-      tempCP += parseInt(beast["capacity"]);
-      tempBeasts.push(-1);
-      // tempDropItemList.push({ ...beast, id: curLegionTmp?.beasts[i], w5b: false, movable: false })
-    }
-    setBeastDropBoxList(tempBeasts);
-    let warrior;
-    let tempWarriors = [];
-    let tempAP = 0;
-    for (let i = 0; i < curLegionTmp?.warriors.length; i++) {
-      warrior = await getWarriorToken(
+  React.useEffect(() => {
+    const initCurLegion = async () => {
+      const curLegionTmp = await getLegionToken(
         web3,
-        warriorContract,
-        curLegionTmp?.warriors[i]
+        legionContract,
+        +curLegionID
       );
-      tempWarriors.push(-1);
-      tempAP += parseInt(warrior["power"]);
-      // tempDropItemList.push({ ...warrior, id: curLegionTmp?.warriors[i], w5b: true, movable: false })
+      let beast;
+      let tempCP = 0;
+      for (let i = 0; i < curLegionTmp?.beasts.length; i++) {
+        beast = await getBeastToken(
+          web3,
+          beastContract,
+          curLegionTmp?.beasts[i]
+        );
+        tempCP += parseInt(beast["capacity"]);
+      }
+      let warrior;
+      let tempAP = 0;
+      for (let i = 0; i < curLegionTmp?.warriors.length; i++) {
+        warrior = await getWarriorToken(
+          web3,
+          warriorContract,
+          curLegionTmp?.warriors[i]
+        );
+        tempAP += parseInt(warrior["power"]);
+      }
+      setLegionName(curLegionTmp?.name);
+      setTempBeastsCnt(curLegionTmp?.beasts.length);
+      setTempWarriorsCnt(curLegionTmp?.warriors.length);
+      setCurLegionSupply(+curLegionTmp?.supplies);
+      setTempCP(tempCP);
+      setTempAP(tempAP);
+      setTotalCP(tempCP);
+      setTotalAP(tempAP);
+      setCurLegion({ ...curLegionTmp });
+    };
+    if (curLegionID !== "-1") {
+      initCurLegion();
     }
-    setWarriorDropBoxList(tempWarriors);
-    setLegionName(curLegionTmp?.name);
-    setTempCP(tempCP);
-    setTempAP(tempAP);
-    setTotalCP(tempCP);
-    setTotalAp(tempAP);
-    setCurLegion({ ...curLegionTmp });
-    // setDropItemList(tempDropItemList)
-  };
+  }, [curLegionID]);
 
   const getBalance = async () => {
     setLoading(true);
-    setBaseBeastJpgUrl(await getBaseJpgURL(web3, beastContract));
-    setBaseBeastGifUrl(await getBaseGifURL(web3, beastContract));
-    setBaseWarriorJpgUrl(await getBaseJpgURL(web3, warriorContract));
-    setBaseWarriorGifUrl(await getBaseGifURL(web3, warriorContract));
+    setBaseUrl(await getBaseUrl());
     const beastIds = await getBeastTokenIds(web3, beastContract, account);
     const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
     let beast;
-    let tempBeasts = [];
-    let tempBeastsIndexS = [];
+    let tempBeasts: IItem[] = [];
+    let gif = "";
+    let jpg = "";
     for (let i = 0; i < beastIds.length; i++) {
       beast = await getBeastToken(web3, beastContract, beastIds[i]);
-      tempBeasts.push({ ...beast, id: beastIds[i] });
-      tempBeastsIndexS.push(i as number);
+      for (let j = 0; j < Image.beasts.length; j++) {
+        if (Image.beasts[j].name === beast.type) {
+          gif = Image.beasts[j].gif;
+          jpg = Image.beasts[j].jpg;
+        }
+      }
+      tempBeasts.push({
+        id: beastIds[i],
+        type: beast.type,
+        strength: beast.strength,
+        capacity: beast.capacity,
+        power: null,
+        w5b: false,
+        jpg: jpg,
+        gif: gif,
+      });
     }
     let warrior;
-    let tempWarriors = [];
-    let tempWarriorsIndexS = [];
+    let tempWarriors: IItem[] = [];
     for (let i = 0; i < warriorIds.length; i++) {
       warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
-      tempWarriors.push({ ...warrior, id: warriorIds[i] });
-      tempWarriorsIndexS.push(i as number);
+      for (let j = 0; j < Image.warriors.length; j++) {
+        if (Image.warriors[j].name === warrior.type) {
+          gif = Image.warriors[j].gif;
+          jpg = Image.warriors[j].jpg;
+        }
+      }
+      tempWarriors.push({
+        id: warriorIds[i],
+        type: warrior.type,
+        strength: warrior.strength,
+        capacity: null,
+        power: warrior.power,
+        w5b: true,
+        jpg: jpg,
+        gif: gif,
+      });
     }
     // Set selected beasts and warriors to dropList
-    await setDropBoxListbySelectedLegion();
     setBeasts(tempBeasts);
     setWarriors(tempWarriors);
-    setBeastDragBoxList(tempBeastsIndexS);
-    setWarriorDragBoxList(tempWarriorsIndexS);
     setLoading(false);
   };
 
-  const changeDroppedIndex = (index: number) => {
-    setDroppedID(index);
-  };
-
-  const moveToRight = (item: any) => {
-    setTempDroppedItem({ ...item, movable: true });
-  };
-
   const moveToLeft = (index: number, w5b: boolean) => {
-    setIndexForLeft(index);
-    setW5bInDropList(w5b);
+    const dropItemClone = [...dropItemList];
+    const srcClone = w5b ? [...warriors] : [...beasts];
+    const [removed] = dropItemClone.splice(index, 1);
+    srcClone.splice(srcClone.length, 0, removed);
+    setDropItemList(dropItemClone);
+    if (w5b) {
+      setWarriors(srcClone);
+    } else {
+      setBeasts(srcClone);
+    }
   };
 
   const handleChangeAp = (
@@ -344,6 +377,7 @@ const UpdateLegions: React.FC = () => {
   };
 
   const handleMint = async () => {
+    setMintLoading(true);
     const allowance = await getLegionBloodstoneAllowance(
       web3,
       bloodstoneContract,
@@ -352,29 +386,96 @@ const UpdateLegions: React.FC = () => {
     if (allowance === "0") {
       await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
     }
-    await addBeasts(
-      web3,
-      legionContract,
-      account,
-      curLegionID,
-      beasts
-        .filter((b, index) => beastDropBoxList.includes(index))
-        .map((beast: any) => {
-          return parseInt(beast["id"]);
-        })
-    );
-    await addWarriors(
-      web3,
-      legionContract,
-      account,
-      curLegionID,
-      warriors
-        .filter((w, index) => warriorDropBoxList.includes(index))
-        .map((warrior: any) => {
-          return parseInt(warrior["id"]);
-        })
-    );
+    try {
+      await updateLegion(
+        web3,
+        legionContract,
+        account,
+        curLegionID,
+        dropItemList
+          .filter((item) => item.w5b === false)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          }),
+        dropItemList
+          .filter((item) => item.w5b === true)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          })
+      );
+    } catch (e: any) {
+      if (e.code === 4001) {
+        setMintLoading(false);
+        return;
+      }
+    }
+    setMintLoading(false);
     navigate("/legions");
+  };
+
+  const move = (
+    src: IItem[],
+    des: IItem[],
+    droppableSrc: IClickedItem,
+    droppableDes: IClickedItem
+  ): IMoveResult | any => {
+    const srcClone = [...src];
+    const desClone = [...des];
+    const [removed] = srcClone.splice(droppableSrc.index, 1);
+    desClone.splice(droppableDes.index, 0, removed);
+
+    const result = {} as { [index: string]: any };
+    result[droppableSrc.clickedItem] = srcClone;
+    result[droppableDes.clickedItem] = desClone;
+    return result;
+  };
+
+  const handleMoveEvent = (from: IClickedItem, to: IClickedItem) => {
+    if (!from || !to) {
+      return;
+    }
+
+    const src = warrior5beast ? warriors : beasts;
+    const resultFromMove: IMoveResult = move(src, dropItemList, from, to);
+    if (warrior5beast) {
+      setWarriors(resultFromMove.left);
+    } else {
+      setBeasts(resultFromMove.left);
+    }
+    setDropItemList(resultFromMove.right);
+  };
+
+  const handleComboFilter = (e: SelectChangeEvent) => {
+    setComboFilterValue(e.target.value);
+    const curFilterIndex = comboFilterList.findIndex(
+      (filterItem) => filterItem.id === +e.target.value
+    );
+    comboFilterList[curFilterIndex].onClick();
+  };
+
+  const handleWComboFilter = (e: SelectChangeEvent) => {
+    const curFilterIndex = comboWFilterList.findIndex(
+      (filterItem) => filterItem.id === +e.target.value
+    );
+    setComboWFilterValue(e.target.value);
+    comboWFilterList[curFilterIndex].onClick();
+  };
+
+  const tokenID2Index = (w5b: boolean, tokenID: number): number => {
+    const tmpSrc = w5b ? warriors : beasts;
+    return tmpSrc.findIndex((item) => +item.id === tokenID);
+  };
+
+  const handleCardClick = (from: number, to: number, where: boolean) => {
+    const fromItem: IClickedItem = {
+      index: tokenID2Index(warrior5beast, from),
+      clickedItem: where ? "left" : "right",
+    };
+    const toItem: IClickedItem = {
+      index: to,
+      clickedItem: where ? "right" : "left",
+    };
+    handleMoveEvent(fromItem, toItem);
   };
 
   return (
@@ -394,20 +495,22 @@ const UpdateLegions: React.FC = () => {
         )}
       </Helmet>
       <Grid container spacing={2} justifyContent="center" sx={{ my: 2 }}>
-        <Grid item xs={12}>
-          <Card>
-            <Box
-              className={classes.warning}
-              sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
-            >
-              <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
-                <Typography variant="h3" sx={{ fontWeight: "bold" }}>
-                  {getTranslation("updateLegion")}
-                </Typography>
+        {isSmallThanSM === false && (
+          <Grid item xs={12}>
+            <Card>
+              <Box
+                className={classes.warning}
+                sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
+              >
+                <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
+                  <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+                    {getTranslation("updateLegion")}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          </Card>
-        </Grid>
+            </Card>
+          </Grid>
+        )}
         <Grid item xs={12}>
           <CommonBtn variant="contained" sx={{ fontWeight: "bold", p: 2 }}>
             <NavLink to="/legions" className="non-style">
@@ -418,55 +521,101 @@ const UpdateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {getTranslation("btnBackToLegions")}
+              {isSmallThanSM ? "BACK" : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>
         {!loading && (
-          <DndProvider backend={HTML5Backend}>
-            <Grid
-              container
-              spacing={2}
-              justifyContent="center"
-              wrap="wrap-reverse"
-              sx={{ my: 2 }}
-            >
-              <Grid item xs={12} sm={12} md={6}>
-                <Card>
-                  <Grid container spacing={2} sx={{ p: 4 }}>
-                    <Grid item xs={12}>
-                      <Grid container sx={{ justifyContent: "space-between" }}>
-                        <Grid item>
-                          <FormControl component="fieldset">
-                            <ButtonGroup variant="outlined" color="primary">
-                              <Button
-                                variant={
-                                  warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
+          <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            wrap="wrap-reverse"
+            sx={{ my: 2 }}
+          >
+            <Grid item xs={6}>
+              <Card>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
+                >
+                  <Grid item xs={12}>
+                    <Grid container sx={{ justifyContent: "space-between" }}>
+                      <Grid
+                        item
+                        sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                        xs={12}
+                        lg={6}
+                      >
+                        <FormControl component="fieldset">
+                          <ButtonGroup variant="outlined" color="primary">
+                            <Button
+                              variant={warrior5beast ? "contained" : "outlined"}
+                              onClick={() => {
+                                setWarrior5beat(!warrior5beast);
+                              }}
+                            >
+                              {isSmallThanSM ? "W" : getTranslation("warriors")}
+                            </Button>
+                            <Button
+                              variant={
+                                !warrior5beast ? "contained" : "outlined"
+                              }
+                              onClick={() => {
+                                setWarrior5beat(!warrior5beast);
+                              }}
+                            >
+                              {isSmallThanSM ? "B" : getTranslation("beasts")}
+                            </Button>
+                          </ButtonGroup>
+                        </FormControl>
+                      </Grid>
+                      {warrior5beast &&
+                        (isSmallThanSM ? (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl fullWidth>
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                style={{ fontSize: isSmallThanSM ? 10 : 14 }}
                               >
-                                {getTranslation("warriors")}
-                              </Button>
-                              <Button
-                                variant={
-                                  !warrior5beast ? "contained" : "outlined"
-                                }
-                                onClick={() => {
-                                  setWarrior5beat(!warrior5beast);
-                                }}
+                                {getTranslation("filterByAp")}
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={comboWFilterValue}
+                                label={getTranslation("filterByAp")}
+                                onChange={handleWComboFilter}
                               >
-                                {getTranslation("beasts")}
-                              </Button>
-                            </ButtonGroup>
-                          </FormControl>
-                        </Grid>
-                        {warrior5beast && (
-                          <Grid item>
+                                {comboWFilterList.map(
+                                  (comboFilterItem: IWFilterItem, index) => (
+                                    <MenuItem
+                                      value={comboFilterItem.id}
+                                      key={index}
+                                    >
+                                      {comboFilterItem.name}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        ) : (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
                             <FormControl
                               component="fieldset"
-                              sx={{ width: "100%", minWidth: "250px" }}
+                              sx={{ width: "100%" }}
                             >
                               <FormLabel component="legend">
                                 {getTranslation("filterByAp")}:
@@ -476,12 +625,12 @@ const UpdateLegions: React.FC = () => {
                                 // defaultValue={20}
                                 value={apValue}
                                 min={500}
-                                max={60000}
+                                max={6000}
                                 marks={[
                                   { value: 500, label: "500" },
                                   {
-                                    value: 60000,
-                                    label: formatNumber("60000"),
+                                    value: 6000,
+                                    label: formatNumber("6000+"),
                                   },
                                 ]}
                                 step={1}
@@ -491,67 +640,118 @@ const UpdateLegions: React.FC = () => {
                               />
                             </FormControl>
                           </Grid>
-                        )}
-                        {!warrior5beast && (
-                          <Grid item>
+                        ))}
+                      {!warrior5beast &&
+                        (isSmallThanSM ? (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl fullWidth>
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                style={{ fontSize: isSmallThanSM ? 10 : 14 }}
+                              >
+                                {getTranslation("filterCapacity")}
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={comboFilterValue}
+                                label={getTranslation("filterCapacity")}
+                                onChange={handleComboFilter}
+                              >
+                                {comboFilterList.map(
+                                  (comboFilterItem: IBFilterItem, index) => (
+                                    <MenuItem
+                                      value={comboFilterItem.id}
+                                      key={index}
+                                    >
+                                      {toCapitalize(comboFilterItem.name)}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        ) : (
+                          <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
                             <FormControl component="fieldset">
                               <ButtonGroup
                                 variant="outlined"
                                 color="primary"
                                 aria-label="outlined button group"
+                                sx={{ flexWrap: "wrap" }}
+                                size={isSmallThanSM ? "small" : "medium"}
                               >
                                 <Button
-                                  variant={`${
-                                    filter === "all" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "all" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("all")}
                                 >
                                   {getTranslation("all")}
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "1" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "1" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("1")}
                                 >
                                   1
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "2" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "2" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("2")}
                                 >
                                   2
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "3" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "3" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("3")}
                                 >
                                   3
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "4" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "4" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("4")}
                                 >
                                   4
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "5" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "5" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("5")}
                                 >
                                   5
                                 </Button>
                                 <Button
-                                  variant={`${
-                                    filter === "20" ? "contained" : "outlined"
-                                  }`}
+                                  variant={`${filter === "20" ? "contained" : "outlined"
+                                    }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
                                   onClick={() => setFilter("20")}
                                 >
                                   20
@@ -559,120 +759,165 @@ const UpdateLegions: React.FC = () => {
                               </ButtonGroup>
                             </FormControl>
                           </Grid>
-                        )}
-                      </Grid>
+                        ))}
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2} sx={{ p: 4 }}>
-                    {warrior5beast &&
-                      warriors
-                        .filter(
-                          (fitem: any, findex) =>
-                            warriorDragBoxList.includes(findex) &&
-                            apValue[0] < parseInt(fitem.power) &&
-                            apValue[1] > parseInt(fitem.power)
-                        )
-                        .map((item: any, index) => (
-                          <DragBox
-                            item={item}
-                            showAnimation={showAnimation}
-                            baseJpgUrl={baseWarriorJpgUrl}
-                            baseGifUrl={baseWarriorGifUrl}
-                            baseIndex={warriorDragBoxList[index] as number}
-                            dropped={changeDroppedIndex}
-                            curIndex={index}
-                            w5b={warrior5beast}
-                            key={warriorDragBoxList[index] as number}
-                          />
-                        ))}
-                    {!warrior5beast &&
-                      beasts
-                        .filter(
-                          (fitem: any, findex) =>
-                            beastDragBoxList.includes(findex) &&
-                            (filter === "all"
-                              ? parseInt(fitem.capacity) >= 0
-                              : fitem.capacity === filter)
-                        )
-                        .map((item: any, index) => (
-                          <DragBox
-                            item={item}
-                            showAnimation={showAnimation}
-                            baseJpgUrl={baseBeastJpgUrl}
-                            baseGifUrl={baseWarriorGifUrl}
-                            baseIndex={beastDragBoxList[index] as number}
-                            dropped={changeDroppedIndex}
-                            curIndex={index}
-                            w5b={warrior5beast}
-                            key={beastDragBoxList[index] as number}
-                          />
-                        ))}
-                  </Grid>
-                </Card>
-              </Grid>
+                </Grid>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={isSmallThanSM ? { p: 2 } : { p: 4 }}
+                >
+                  {warrior5beast &&
+                    warriors
+                      .filter(
+                        (fitem: any) =>
+                          apValue[0] < parseInt(fitem.power) &&
+                          apValue[1] > parseInt(fitem.power)
+                      )
+                      .map((item: any, index) => (
+                        <DraggableCard
+                          w5b={true}
+                          image={showAnimation === '0' ? '/assets/images/characters/jpg/warriors/' + item['type'] + '.jpg' : '/assets/images/characters/gif/warriors/' + item['type'] + '.gif'}
+                          item={item}
+                          key={10000 + item.id}
+                          index={+item.id}
+                          handleClick={handleCardClick}
+                        />
+                      ))}
+                  {!warrior5beast &&
+                    beasts
+                      .filter((fitem: any) =>
+                        filter === "all"
+                          ? parseInt(fitem.capacity) >= 0
+                          : fitem.capacity === filter
+                      )
+                      .map((item: any, index) => (
+                        <DraggableCard
+                          w5b={false}
+                          image={showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif'}
+                          item={item}
+                          key={item.id}
+                          index={+item.id}
+                          handleClick={handleCardClick}
+                        />
+                      ))}
+                </Grid>
+              </Card>
+            </Grid>
 
-              {/* Right Panel */}
-              <Grid item xs={12} sm={12} md={6}>
-                <Card sx={{ height: "100%" }}>
-                  <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-                    <Typography variant="h6">
-                      Your existing legion has {tempAP} AP
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sx={{ p: 4 }}>
-                    <Grid container sx={{ justifyContent: "space-around" }}>
-                      <Grid item>
-                        <Input readOnly value={legionName} />
-                      </Grid>
-                      <Grid item>
-                        <CommonBtn
-                          variant="contained"
-                          onClick={() => handleMint()}
-                          disabled={!isWDropable}
-                        >
-                          {getTranslation("updateLegion")} to {totalAP} AP
-                        </CommonBtn>
-                      </Grid>
+            {/* Right Panel */}
+            <Grid item xs={6}>
+              <Card sx={{ height: "100%", fontSize: isSmallThanSM ? 10 : 14 }}>
+                <Grid item xs={12} sx={{ p: 2, textAlign: "center" }}>
+                  {isSmallThanSM
+                    ? getTranslation("existingAPIs") + " " +
+                    formatNumber(tempAP) +
+                    " AP - " + getTranslation("ShortFeeToolTip") + " " +
+                    mintFee +
+                    " $BLST"
+                    : getTranslation('yourOldLegionAP') +
+                    formatNumber(tempAP) +
+                    " AP - " + getTranslation('feeToUpdate') +
+                    mintFee +
+                    " $BLST"}
+                </Grid>
+                <Grid item xs={12} sx={{ pt: 2, px: 2 }}>
+                  <Grid container sx={{ justifyContent: "space-around" }}>
+                    <Grid item sx={{ mb: 2 }}>
+                      <Input
+                        readOnly
+                        style={{
+                          fontSize: isSmallThanSM ? 10 : 14,
+                        }}
+                        value={legionName}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <CommonBtn
+                        variant="contained"
+                        sx={{
+                          fontSize: isSmallThanSM ? 10 : 14,
+                          fontWeight: "bold",
+                          width: "100%",
+                          marginBottom: 1,
+                        }}
+                        onClick={() => handleMint()}
+                        disabled={!isWDropable || mintLoading}
+                      >
+                        {isSmallThanSM ? (
+                          getTranslation("Update") + " (" + formatNumber(totalAP) + "AP)"
+                        ) : mintLoading ? (
+                          <Spinner color="white" size={40} />
+                        ) : (
+                          getTranslation("updateLegion") +
+                          " " + getTranslation('to') + " " +
+                          formatNumber(totalAP) +
+                          "AP"
+                        )}
+                      </CommonBtn>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} sx={{ p: 4 }}>
+                </Grid>
+                <Grid item xs={12} sx={{ px: 2, pt: 2 }}>
+                  <Grid
+                    container
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      pb: 2,
+                      borderBottom: "2px dashed grey",
+                    }}
+                  >
                     <Grid
-                      container
+                      item
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                        pb: 2,
-                        borderBottom: "2px dashed grey",
+                        color:
+                          totalCP < dropItemList.filter((item) => item.w5b === true).length +
+                            tempWarriorsCnt
+                            ? "red"
+                            : "white",
+                        fontWeight:
+                          totalCP < dropItemList.filter((item) => item.w5b === true).length +
+                            tempWarriorsCnt
+                            ? "bold"
+                            : "normal",
                       }}
                     >
-                      <Grid item>
-                        <Typography>
-                          {getTranslation("beasts")}: {beastDropBoxList.length}/
-                          {createlegions.main.maxAvailableDragCount}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography>
-                          {getTranslation("warriors")}:{" "}
-                          {warriorDropBoxList.length}/{formatNumber(totalCP)}
-                        </Typography>
-                      </Grid>
+                      {isSmallThanSM ? "W" : getTranslation("warriors")}:{" "}
+                      {dropItemList.filter((item) => item.w5b === true).length +
+                        tempWarriorsCnt}
+                      /{formatNumber(totalCP)}
+                    </Grid>
+                    <Grid
+                      item
+                      sx={{
+                        color: createlegions.main.maxAvailableDragCount < dropItemList.filter((item) => item.w5b === false).length +
+                          tempBeastsCnt
+                          ? "red"
+                          : "white",
+                        fontWeight: createlegions.main.maxAvailableDragCount < dropItemList.filter((item) => item.w5b === false).length +
+                          tempBeastsCnt
+                          ? "bold"
+                          : "normal",
+                      }}
+                    >
+                      {isSmallThanSM ? "B" : getTranslation("beasts")}:{" "}
+                      {dropItemList.filter((item) => item.w5b === false)
+                        .length + tempBeastsCnt}
+                      /{createlegions.main.maxAvailableDragCount}
                     </Grid>
                   </Grid>
-                  <DropBox
-                    showAnim={showAnimation}
-                    baseBeastJpgUrl={baseBeastJpgUrl}
-                    baseBeastGifUrl={baseBeastGifUrl}
-                    baseWarriorJpgUrl={baseWarriorJpgUrl}
-                    baseWarriorGifUrl={baseWarriorGifUrl}
-                    items={dropItemList}
-                    toLeft={moveToLeft}
-                    moveToRight={moveToRight}
-                  />
-                </Card>
-              </Grid>
+                </Grid>
+                <DropBox
+                  showAnim={showAnimation}
+                  baseUrl={baseUrl}
+                  items={dropItemList}
+                  moveToLeft={moveToLeft}
+                />
+              </Card>
             </Grid>
-          </DndProvider>
+          </Grid>
         )}
         {loading && (
           <>

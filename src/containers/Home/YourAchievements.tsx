@@ -1,13 +1,10 @@
 import * as React from "react";
 import {
-    Grid,
     Card,
     Box,
-    Button,
-    Popover,
+    useMediaQuery,
+    useTheme,
     Checkbox,
-    Dialog,
-    DialogTitle,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
@@ -19,10 +16,19 @@ import {
     getBeastToken,
     getWarriorTokenIds,
     getWarriorToken,
+    getLegionTokenIds,
+    getLegionToken,
 } from "../../hooks/contractFunction";
-import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
+import {
+    useBeast,
+    useWarrior,
+    useWeb3,
+    useLegion
+} from "../../hooks/useContract";
+import Axios from 'axios'
 
 import { useSelector } from "react-redux";
+import classnames from 'classnames'
 
 const useStyles = makeStyles({
     root: {
@@ -96,41 +102,114 @@ const YourAchievements = () => {
     //Beast Contract
     const beastContract = useBeast();
     const warriorContract = useWarrior();
+    const legionContract = useLegion();
     const web3 = useWeb3();
 
-    const [ownBeastWith20, setOwnBeastWith20] = React.useState(false);
-    const [ownWarriorWith6, setOwnWarriorWith6] = React.useState(false);
+    const [beastMaster, setBeastMaster] = React.useState(false);
+    const [warriorMaster, setWarriorMaster] = React.useState(false);
+    const [legionMaster, setLegionMaster] = React.useState(false);
+    const [monsterConqueror, setMonsterConqueror] = React.useState(false);
+    const [kingOfNicah, setKingOfNicah] = React.useState(false);
 
-    const getBeastStatus = async () => {
-        const ids = await getBeastTokenIds(web3, beastContract, account);
-        console.log(ids);
-        for (let i = 0; i < ids.length; i++) {
-            const beast = await getBeastToken(web3, beastContract, ids[i]);
-            if (beast.capacity === "4") {
-                setOwnBeastWith20(true);
-                return;
-            }
-        }
-    };
+    const theme = useTheme();
+    const isSmallThanSM = useMediaQuery(theme.breakpoints.down("sm"));
 
     const getWarriorStatus = async () => {
-        const ids = await getWarriorTokenIds(web3, warriorContract, account);
-        for (let i = 0; i < ids.length; i++) {
-            const warrior = await getWarriorToken(
-                web3,
-                warriorContract,
-                ids[i]
-            );
-            if (warrior.strength === "6") {
-                setOwnWarriorWith6(true);
-                return;
+        try {
+            const ids = await getWarriorTokenIds(web3, warriorContract, account);
+            for (let i = 0; i < ids.length; i++) {
+                const warrior = await getWarriorToken(
+                    web3,
+                    warriorContract,
+                    ids[i]
+                );
+                if (warrior.strength === "6") {
+                    setWarriorMaster(true);
+                    return;
+                }
             }
+        } catch (error) {
+            console.log(error)
         }
     };
+
+    const getBeastStatus = async () => {
+        try {
+            const ids = await getBeastTokenIds(web3, beastContract, account);
+            for (let i = 0; i < ids.length; i++) {
+                const beast = await getBeastToken(web3, beastContract, ids[i]);
+                if (beast.capacity === "20") {
+                    setBeastMaster(true);
+                    return;
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const getLegionStatus = async () => {
+        try {
+            const ids = await getLegionTokenIds(web3, legionContract, account);
+            var legionCount = 0
+            for (let i = 0; i < ids.length; i++) {
+                const legion = await getLegionToken(web3, legionContract, ids[i]);
+                if (legion.attackPower > 30000) {
+                    legionCount++;
+                    if (legionCount == 10) {
+                        setLegionMaster(true);
+                        return;
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getMonsterStatus = async () => {
+        try {
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getKingStatus = async () => {
+        try {
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getInvitationLink = (role: string, status: boolean) => {
+        if (status) {
+            const baseInviteUrl = "https://www.cryptolegions.link/users/invite/"
+            Axios.get(`https://www.cryptolegions.link/api/get-roles/check/${role}/${account}`).then(res => {
+                if (res.data.hasAlready) {
+                    console.log('already-----', res)
+                    window.open(baseInviteUrl + res.data.hasAlready.random_string, '_blank')
+                } else {
+                    Axios.get(`https://www.cryptolegions.link/api/get-roles/${role}/12/${account}`).then(res => {
+                        console.log('new-----', res)
+                        window.open(res.data.link, '_blank')
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }
 
     React.useEffect(() => {
         getBeastStatus();
         getWarriorStatus();
+        getLegionStatus();
+        getMonsterStatus();
+        getKingStatus();
     }, [reloadContractStatus]);
 
     return (
@@ -157,43 +236,58 @@ const YourAchievements = () => {
                 >
                     {getTranslation("yourAchievements")}
                 </Typography>
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} />
+                <Typography sx={{ p: 1 }} className={classnames({ 'achievementColor': warriorMaster })} onClick={() => getInvitationLink('warrior_master', warriorMaster)}>
+                    <Checkbox checked={warriorMaster} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("warriorMaster")}
                     </span>{" "}
-                    ({getTranslation("warriorMasterEx")})
+                    {isSmallThanSM && (<br />)}
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("warriorMasterEx")})
+                    </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={ownBeastWith20} />{" "}
+                <Typography sx={{ p: 1 }} className={classnames({ 'achievementColor': beastMaster })} onClick={() => getInvitationLink('beast_master', beastMaster)}>
+                    <Checkbox checked={beastMaster} />{" "}
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("beastMaster")}
                     </span>{" "}
-                    ({getTranslation("beastMasterEx")})
+                    {isSmallThanSM && (<br />)}
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("beastMasterEx")})
+                    </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} />
+                <Typography sx={{ p: 1 }} className={classnames({ 'achievementColor': legionMaster })} onClick={() => getInvitationLink('legion_master', legionMaster)}>
+                    <Checkbox checked={legionMaster} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("legionMaster")}
                     </span>{" "}
-                    ({getTranslation("legionMasterEx")})
+                    {isSmallThanSM && (<br />)}
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("legionMasterEx")})
+                    </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} />
+                <Typography sx={{ p: 1 }} className={classnames({ 'achievementColor': monsterConqueror })} onClick={() => getInvitationLink('monster_conqueror', monsterConqueror)}>
+                    <Checkbox checked={monsterConqueror} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("monsterConqueror")}
                     </span>{" "}
-                    ({getTranslation("monsterConquerorEx")})
+                    {isSmallThanSM && (<br />)}
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("monsterConquerorEx")})
+                    </span>
                 </Typography>
-                <Typography sx={{ p: 1 }}>
-                    <Checkbox checked={false} />
+                <Typography sx={{ p: 1 }} className={classnames({ 'achievementColor': kingOfNicah })} onClick={() => getInvitationLink('king_of_nicah', kingOfNicah)}>
+                    <Checkbox checked={kingOfNicah} />
                     <span style={{ fontWeight: "bold", fontSize: 16 }}>
                         {getTranslation("King/Queen")}
                     </span>{" "}
-                    ({getTranslation("King/QueenEx")})
+                    {isSmallThanSM && (<br />)}
+                    <span style={{ fontSize: 12 }}>
+                        ({getTranslation("King/QueenEx")})
+                    </span>
                 </Typography>
             </Box>
-        </Card>
+        </Card >
     );
 };
 

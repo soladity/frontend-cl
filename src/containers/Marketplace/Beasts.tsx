@@ -1,6 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Checkbox, FormLabel, FormControl } from '@mui/material';
+import { Box, Typography, Grid, Card, CardMedia, ButtonGroup, Button, Checkbox, FormLabel, FormControl, Dialog, DialogTitle, DialogContent, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
@@ -8,8 +8,9 @@ import { useDispatch } from 'react-redux';
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
-import { getOnMarketplace, getBeastToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem } from '../../hooks/contractFunction';
+import { getOnMarketplace, getBeastToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem, updatePrice } from '../../hooks/contractFunction';
 import { useBeast, useMarketplace, useBloodstone, useWeb3 } from '../../hooks/useContract';
+import CommonBtn from '../../component/Buttons/CommonBtn';
 import BeastMarketCard from '../../component/Cards/BeastMarketCard';
 import { getTranslation } from '../../utils/translation';
 import Image from '../../config/image.json';
@@ -37,6 +38,8 @@ type BeastProps = {
 	strength: string;
 	owner: boolean;
 	price: string;
+	gif: string;
+	jpg: string;
 };
 
 const Beasts = () => {
@@ -46,10 +49,13 @@ const Beasts = () => {
 
 	const [baseUrl, setBaseUrl] = React.useState('');
 	const [sortBlst, setSortBlst] = React.useState(false);
-	const [beasts, setBeasts] = React.useState(Array);
+	const [beasts, setBeasts] = React.useState<BeastProps[]>(Array);
 	const [filter, setFilter] = React.useState('all');
 	const [onlyMyBeast, setOnlyMyBeast] = React.useState(false);
 	const [currentPage, setCurrentPage] = React.useState(1);
+	const [openUpdate, setOpenUpdate] = React.useState(false);
+	const [price, setPrice] = React.useState(0);
+	const [selectedBeast, setSelectedBeast] = React.useState(0);
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
@@ -97,10 +103,10 @@ const Beasts = () => {
 		setActionLoading(true);
 		try {
 			await cancelMarketplace(web3, marketplaceContract, account, '1', id);
-		} catch (e){
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+		} catch (e) {
 			console.log(e);
 		}
-		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
@@ -112,37 +118,79 @@ const Beasts = () => {
 				await setMarketplaceBloodstoneApprove(web3, bloodstoneContract, account);
 			}
 			await buyToken(web3, marketplaceContract, account, '1', id);
-		} catch (e){
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}))
+			setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+		} catch (e) {
 			console.log(e);
 		}
-		dispatch(setReloadStatus({
-			reloadContractStatus: new Date()
-		}))
-		setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
 		setActionLoading(false);
 	}
 
 	const handleSortBlst = (value: boolean) => {
 		setSortBlst(value);
-		handleSort('blst');
+		handleSort();
 	}
 
-	const handleSort = (type: string) => {
+	const handleSort = () => {
 		let temp = beasts;
 		temp.sort((a: any, b: any) => {
-			if (parseInt(a.price) > parseInt(b.price)) {
-				return 1;
-			}
-			if (parseInt(a.price) < parseInt(b.price)) {
-				return -1;
+			if (sortBlst === true) {
+				if (parseInt(a.price) > parseInt(b.price)) {
+					return 1;
+				}
+				if (parseInt(a.price) < parseInt(b.price)) {
+					return -1;
+				}
+			} else {
+				if (parseInt(a.price) > parseInt(b.price)) {
+					return -1;
+				}
+				if (parseInt(a.price) < parseInt(b.price)) {
+					return 1;
+				}
 			}
 			return 0;
 		});
 		setBeasts(temp);
-	}
+	};
 
 	const handlePage = (value: any) => {
 		setCurrentPage(value);
+	}
+
+	const handleUpdate = (id: number) => {
+		setSelectedBeast(id);
+		setPrice(parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price));
+		setOpenUpdate(true);
+	}
+
+	const handleUpdateClose = () => {
+		setOpenUpdate(false);
+	};
+
+	const handlePrice = (e: any) => {
+		setPrice(e.target.value);
+	}
+
+	const handleUpdatePrice = async () => {
+		setActionLoading(true);
+		try {
+			setOpenUpdate(false);
+			await updatePrice(web3, marketplaceContract, account, '1', selectedBeast, price);
+			let temp = [];
+			for (let i = 0; i < beasts.length; i++) {
+				if (parseInt(beasts[i].id) === selectedBeast)
+					temp.push({ ...beasts[i], price: price.toString() });
+				else
+					temp.push({ ...beasts[i] });
+			}
+			setBeasts([...temp]);
+		} catch (e) {
+			console.log(e);
+		}
+		setActionLoading(false);
 	}
 
 	return <Box>
@@ -221,7 +269,7 @@ const Beasts = () => {
 					{
 						beasts.length > 0 && beasts.filter((item: any) => filter === 'all' ? parseInt(item.capacity) >= 0 : item.capacity === filter).filter((item: any) => onlyMyBeast === true ? item.owner === true : true).slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20).map((item: any, index) => (
 							<Grid item xs={12} sm={6} md={3} key={index}>
-								<BeastMarketCard image={(showAnimation === '0' ? baseUrl + item['jpg'] : baseUrl + item['gif'])} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} />
+								<BeastMarketCard image={showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif'} type={item['type']} capacity={item['capacity']} strength={item['strength']} id={item['id']} owner={item['owner']} price={item['price']} handleCancel={handleCancel} handleBuy={handleBuy} handleUpdate={handleUpdate} />
 							</Grid>
 						))
 					}
@@ -274,6 +322,31 @@ const Beasts = () => {
 					</Grid>
 				</>
 			)}
+		<Dialog onClose={handleUpdateClose} open={openUpdate}>
+			<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
+				{getTranslation('updatePrice')}
+				<span className='close-button' onClick={handleUpdateClose}>x</span>
+			</DialogTitle>
+			<DialogContent>
+				<TextField
+					autoFocus
+					margin="dense"
+					id="price"
+					label="Price in $BLST"
+					type="number"
+					fullWidth
+					variant="standard"
+					value={price}
+					onChange={handlePrice}
+				/>
+				<Typography variant='subtitle1'>
+					(= XXX USD)
+				</Typography>
+			</DialogContent>
+			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleUpdatePrice}>
+				{getTranslation('confirm')}
+			</CommonBtn>
+		</Dialog>
 	</Box>
 }
 

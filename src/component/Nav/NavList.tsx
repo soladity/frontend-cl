@@ -1,21 +1,21 @@
 import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Button, Menu, MenuItem } from '@mui/material';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
-import { CardContent, Tooltip, Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import { Card } from '@mui/material';
 
 import { navConfig } from '../../config';
 import { getTranslation } from '../../utils/translation';
+import { useDispatch } from "react-redux";
+import { setReloadStatus } from "../../actions/contractActions";
 
 const useStyles = makeStyles({
 	root: {
@@ -28,6 +28,7 @@ const useStyles = makeStyles({
 
 const NavList = (props: any) => {
 	const classes = useStyles();
+	const dispatch = useDispatch();
 
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [language, setLanguage] = React.useState<string | null>('en');
@@ -92,11 +93,16 @@ const NavList = (props: any) => {
 		setAnchorEl(null);
 		setLanguage(value);
 		localStorage.setItem('lang', value);
+		dispatch(
+			setReloadStatus({
+				reloadContractStatus: new Date(),
+			})
+		);
 	};
 
 	return <div>
-		<Toolbar />
-		<Divider />
+		<Toolbar sx={{ display: { xs: "none", md: "flex" } }} />
+		<Divider sx={{ display: { xs: "none", md: "block" } }} />
 		<List sx={{
 			pb: 8
 		}}>
@@ -117,7 +123,7 @@ const NavList = (props: any) => {
 						<NavLink to={navItem.path || ''} className={({ isActive }) => 'nav-bar-item ' + (isActive ? 'active' : '')}>
 							<Tooltip title={navItem.title || ""} placement="right">
 								<ListItemButton>
-								<img src={`/assets/images/${navItem.icon}`} style={{ width: '22px', height: '22px', marginRight: '34px' }} alt='icon' />
+									<img src={`/assets/images/${navItem.icon}`} style={{ width: '22px', height: '22px', marginRight: '34px' }} alt='icon' />
 									<ListItemText primary={getTranslation(navItem.title)} />
 								</ListItemButton>
 							</Tooltip>
@@ -179,9 +185,9 @@ const NavList = (props: any) => {
 			</Box>
 			{navConfig.navBar.left.map((navItem, index) => (
 				navItem.type === "footer" &&
-				<a href='https://cryptogames.agency' target='_blank' className='non-style' key={index}>
-					<Card key={index} sx={{ m: 2, p: 2 }}>
-						<Typography variant="subtitle2" color='gray' sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+				<a href='https://cryptogames.agency' target='_blank' className='hover-style gray' key={index}>
+					<Card key={index} sx={{ m: 2, p: 2, color: 'inherit' }}>
+						<Typography variant="subtitle2" color='inherit' sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
 							{getTranslation(navItem.title1)}
 							<img src='/assets/images/heart.png' alt='favorite' style={{ width: '14px', height: '14px', margin: '0 10px' }} />
 							{getTranslation(navItem.title2)}

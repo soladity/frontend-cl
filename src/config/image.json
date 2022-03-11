@@ -67,112 +67,170 @@
         {
             "name": "bat",
             "gif": "QmfSdAjVdQQAAax796z9A3rcGCggbG92o2Voeb8tGkQk69",
-            "jpg": "QmaVaMWogFQwuABYq8tEdqAuYzQVJuMrcDSkvgjhgFGHJc"
+            "jpg": "QmaVaMWogFQwuABYq8tEdqAuYzQVJuMrcDSkvgjhgFGHJc",
+            "dead_jpg": "QmNi9a5RexBo9HpqqA8PyWpHMSeRBaMMiBUUf8Zu3L6J7L",
+            "dead_gif": "QmTgRQuCn2pjbNwQofrDSN8PcLnPst6yGbtYX85XnEMT4k"
         },
         {
             "name": "wereshark",
             "gif": "QmaNNA3RnHRd64EYCAS31oLTCzZUET8mTBY5qDmcDEFCAL",
-            "jpg": "QmNhZUtoZxUKJ6USw26Lz12Pr8f7u1ZKVSykvh3ZjKZKsm"
+            "jpg": "QmNhZUtoZxUKJ6USw26Lz12Pr8f7u1ZKVSykvh3ZjKZKsm",
+            "dead_jpg": "QmduLaq87NrP1ohB5PsBijBawkYNCSuVpCVf2S7WC3gKq8",
+            "dead_gif": "QmZban2x4KwerSThsDLi6xv4ya6uCp3hHrYHDLEPJhKobi"
         },
         {
             "name": "rhinark",
             "gif": "QmTcyp5U3vVda3rvb4MkMbufm2htAe1ByEkxMac7kF6PR2",
-            "jpg": "QmfA6bDhho36RNpgB4GmiDXMUBULP4oR8qqiao2bqpME7y"
+            "jpg": "QmfA6bDhho36RNpgB4GmiDXMUBULP4oR8qqiao2bqpME7y",
+            "dead_jpg": "QmZ5jcVwczkkVto7qkwLtAo4N3DtVjwSszXrq9sctpi8KM",
+            "dead_gif": "Qme53bWQhyjkeYm79Y8c3FVrQVCyLVJ2ACZTKQP8twwwAy"
         },
         {
             "name": "locodon",
             "gif": "QmYn35BQoYxHEJ4t9aLxyZ83M6mJWQfXao8ANtDSb1gh2u",
-            "jpg": "QmVzcCtDP34HdpZ5SW46MtvLjVVw1iGsWhpfFjtk7hRihK"
+            "jpg": "QmVzcCtDP34HdpZ5SW46MtvLjVVw1iGsWhpfFjtk7hRihK",
+            "dead_jpg": "QmRjYY6RhhHHWcmmoMk1fucV5ypzyt5T4HwgGkNadEpt3A",
+            "dead_gif": "QmfYE17XuSB3WcYYPSvvathRyzxT1VkYKcqn31p2FQ2ko3"
         },
         {
             "name": "oliphant",
             "gif": "QmcMiN47AYZpFxp1GG6npBuRXStuWFXhab2RcMqHng66q9",
-            "jpg": "QmPJQ4wqHm68nURYJRPopug6ZyEgNroRp2dAtgo3h8FGKG"
+            "jpg": "QmPJQ4wqHm68nURYJRPopug6ZyEgNroRp2dAtgo3h8FGKG",
+            "dead_jpg": "QmY84qFJLn8DcDkZYiWnh7HAM7X2siBNivZyYnv9DWvGLW",
+            "dead_gif": "QmbVYCvoc36XkwF4w2FWZmXqJXVrcxU6UiVC3bgMDCU7Cf"
         },
         {
             "name": "Great Ogre",
             "gif": "QmU5yjhoUZXBZq3zrqk97Bg4G3zvqtdPywm8FXWy2PoRne",
-            "jpg": "QmPJQ4wqHm68nURYJRPopug6ZyEgNroRp2dAtgo3h8FGKG"
+            "jpg": "QmVcka2zcxGteZaFC8HLDHyAxHRdCThJoW2QeanRcPoyfY",
+            "dead_jpg": "QmceP1f7PK2wXwt9J3q4bpDVD38wNHmfzh1tjxPTtBS6TX",
+            "dead_gif": "0x458a5bc5822C85ebF29Bd72515de62a7aBaD68Cf"
         },
         {
             "name": "Werewolf",
             "gif": "QmdQQCjMoNGodctMtXT28RKWTxSTRS8sKDt72vNkGrPuVY",
-            "jpg": "QmYazkYVDt6gDbykUALmX61DHDguwtw3r2JHjFMHyywZLY"
+            "jpg": "QmYazkYVDt6gDbykUALmX61DHDguwtw3r2JHjFMHyywZLY",
+            "dead_jpg": "QmdmNdaX5S69ySKnwCxnQGwHjnUAEQ2baEePymw9Wda9os",
+            "dead_gif": "QmXJmdmVcbbqBMTCVc8DiAJ8qkVXcewiVLiGLvZL74Rz7t"
         },
         {
             "name": "warlord",
             "gif": "QmRunDufqd9n793sSUPKgK7akhLGsiEzYUgv6Wuh5Rcvvj",
-            "jpg": "QmNZHhpRjtyWiv2C9SisZ5spBtrNZgPmZXyBYLrxVsdZY4"
+            "jpg": "QmNZHhpRjtyWiv2C9SisZ5spBtrNZgPmZXyBYLrxVsdZY4",
+            "dead_jpg": "QmW8VJVr3HZUNxKF3EaMgfeaZJ1wgHLqBoBwfCmqtgSo67",
+            "dead_gif": "QmQk6xD9FJVcunmRM2pdRXYSF69hTHCLByf6Rjny1gZgA6"
         },
         {
             "name": "Cyclops",
             "gif": "Qma2BojPvTKvfxUX4htfu21nbvSTZiff6f31BuEmRPi7Pv",
-            "jpg": "QmeTMoTRgH2A9gmcDr17uaiQUB6p9GDymbrXerW9i5rBcz"
+            "jpg": "QmeTMoTRgH2A9gmcDr17uaiQUB6p9GDymbrXerW9i5rBcz",
+            "dead_jpg": "QmQmCaGy3eANrJnQrvwuL7qnpRAprz8qm59YW8REfK4FVZ",
+            "dead_gif": "QmX4whbhqy5Qe5b2x3kH9o5NGLh8F4pfftXSFs23hvAmic"
         },
         {
             "name": "gargoyle",
             "gif": "QmXsmgUGaEiSTLupLRvkPmqxJm3mskYvrYNVoYgEjgqfnz",
-            "jpg": "QmRJJgx3DneuE5b4QovaZ1VqbJ3K6qAHJctvJN5JZaGxwD"
+            "jpg": "QmRJJgx3DneuE5b4QovaZ1VqbJ3K6qAHJctvJN5JZaGxwD",
+            "dead_jpg": "Qmd7n4niYoTFm36RVnzWfPLPzyfgyXx4eLLnWdvGfGeMGR",
+            "dead_gif": "QmTU9quFbNc5st2ow42NxERpoJDehaZDRueqUoUJd9MEjr"
         },
         {
             "name": "Stone Golem",
             "gif": "QmNQW45M3XKKkg2jzyX5453J7KZRDYeRLch96WywF8SCGi",
-            "jpg": "QmeUaPhVyxc3xXaGA55D9sUuJFweXMnpHALQsnab6Kyjx7"
+            "jpg": "QmeUaPhVyxc3xXaGA55D9sUuJFweXMnpHALQsnab6Kyjx7",
+            "dead_jpg": "QmUNA7anhXcjSemdbPybRQu1bvnVmPWZzaGecTDs2BtkZy",
+            "dead_gif": "Qmf14g2HmiC4vs5FZDYLk1s5o5W2LrwdPefgtntNjNvVML"
         },
         {
             "name": "land dragon",
             "gif": "QmS2veKCqPuXfA7NQx55tBmNeh7sSEJm6d5qrEqowJsCMo",
-            "jpg": "QmX82xvxCas1p9hnNtqSqvtrnF94Kt93sMmxaEqwytfWMw"
+            "jpg": "QmX82xvxCas1p9hnNtqSqvtrnF94Kt93sMmxaEqwytfWMw",
+            "dead_jpg": "QmcJNpUBsXwfNMCWbk9gy24MM3NK5pV3iJWy7WaQewRhmK",
+            "dead_gif": "QmWuf6n8aRYwHomhu1eToMYk7BjZ1mEDL8ZuBLJ77snfRE"
         },
         {
             "name": "chimera",
             "gif": "QmXEwyJs3g1ZdegcNWzekBmeCajSyme7LbmZmVg8BTVt7V",
-            "jpg": "QmWwAsqQLTXZLguaZDpGAXqSNqasaXxit1hBjaoNyL97Ln"
+            "jpg": "QmWwAsqQLTXZLguaZDpGAXqSNqasaXxit1hBjaoNyL97Ln",
+            "dead_jpg": "QmVZztrjBMHQQo2LQzo89DdsrfzZdXDqktWhxen2Xdnmyi",
+            "dead_gif": "QmcSwgENTDxKcuSnB3CXWvhAaxT4fqDazcSkK7G5QQj1e6"
         },
         {
             "name": "Giant Earth Worm",
             "gif": "QmU6rUGBryVH8fk3KQzY3fSWsgyma52SA1iDnMeYMyUhYc",
-            "jpg": "QmZ3ZzGf1NmNhZCBR7nypCacVMtJNcKTAX3dbqQ68TATwm"
+            "jpg": "QmZ3ZzGf1NmNhZCBR7nypCacVMtJNcKTAX3dbqQ68TATwm",
+            "dead_jpg": "QmcZVkub6dYZ66a2fZ5de4keahz6EHuLML8x5qmNZqcdG5",
+            "dead_gif": "QmTjDWKtXx7pWaxkQCPNZjU51869y8MpwLTH2c7ifCaq74"
         },
         {
             "name": "Three headed hydra",
             "gif": "QmTTL5V5p7mGKsdGVgu4wczWr272GGmTHorWBN9WZ3ompy",
-            "jpg": "QmXB7htXDEaGvaMKJLr66AwPHv1vESWDfAsBzF7ZDzweET"
+            "jpg": "QmXB7htXDEaGvaMKJLr66AwPHv1vESWDfAsBzF7ZDzweET",
+            "dead_jpg": "QmZx83PT6xJQUtiDQSt971JQ4i2wLoj8Esd24ATPfCkj3C",
+            "dead_gif": "QmPWEECjZ1Rdwhsj3uFDr5jet7kxZc1RxdMFrSLfnrMcMY"
         },
         {
             "name": "rancor",
             "gif": "QmQpaM3ebf7zJ4DWW1yUKKw9ewkFdHv5SVRhgvp4YpDGxe",
-            "jpg": "QmdrwiwZEcBZvaeBwFPEWPdM531aeLrEM2aH7XqzJ9vTX8"
+            "jpg": "QmdrwiwZEcBZvaeBwFPEWPdM531aeLrEM2aH7XqzJ9vTX8",
+            "dead_jpg": "QmceeBmiVYVbCtcYfeWpS1yFfMtifjAu3BBs59T3oWhvtN",
+            "dead_gif": "Qmd3eonKHA81GPNFgo4J7cumNeFUPG9p2jhP6ZNHUPo3ZY"
         },
         {
             "name": "cerberus",
             "gif": "QmagmjrkxR8k697mg9FetnRNF3BKnLTQWRsuXHy2RwxxhE",
-            "jpg": "Qme1gswDd6Rcbv2CC3n2y5fdNtdnQgwjXsst7gXWBzk6HZ"
+            "jpg": "Qme1gswDd6Rcbv2CC3n2y5fdNtdnQgwjXsst7gXWBzk6HZ",
+            "dead_jpg": "QmRYc4ir5THtLcZoPosTphWpViTHTHJ6oiKZcVgQ4mR67w",
+            "dead_gif": "QmPcfMKTVZVGee3iUh4kASmyXLTv1NmchQMANxTwYPgPsx"
         },
         {
             "name": "titan",
             "gif": "QmYPavSDjmZZxrKNHqLBveLSo9uUb6snU7asFiwfHTVhwq",
-            "jpg": "QmZo3yHHvduPAVqe2An4M76GDD3sTrF6MhgzSVABP3SjND"
+            "jpg": "QmZo3yHHvduPAVqe2An4M76GDD3sTrF6MhgzSVABP3SjND",
+            "dead_jpg": "QmdZjZQDguG3XohSVjMBNoDNzzsJe59DEVHAtdsVegihfY",
+            "dead_gif": "QmegfwKyvFRwaeRwwRfFFySGTf9FinGuAnRKN9HBEj1mcw"
         },
         {
             "name": "forest dragon",
             "gif": "QmPKrwq2TCPrGwLH5RvxwU6Urk9vjtCNogyBR6VotqLoKh",
-            "jpg": "QmcYp6mvoJkguqtizLPKdKJczoDwBLbCd3g19RA8NyYbR1"
+            "jpg": "QmcYp6mvoJkguqtizLPKdKJczoDwBLbCd3g19RA8NyYbR1",
+            "dead_jpg": "QmQwvsJuNncrRZGdmqETmwaxKmBvLKQP81K8yBVuvHfkDf",
+            "dead_gif": "QmRwT32uYJHcGFg7Nwb6LCSSntzKDANmb9tbmtL2ppJCDb"
         },
         {
             "name": "ice dragon",
             "gif": "QmVDUS7mUCKWGWtu7e76LvhNCaDDXk36yZRVK8tc67LZ9Z",
-            "jpg": "QmWp2kHf3ivGDxh6GHJ8eZcDF57dgTcu7YkeAWcQRCNUt7"
+            "jpg": "QmWp2kHf3ivGDxh6GHJ8eZcDF57dgTcu7YkeAWcQRCNUt7",
+            "dead_jpg": "QmXgiHKQHFV3EkRusNCjhN3SBo8XZkJu8mpZs3cCN5WezE",
+            "dead_gif": "Qma37ULvhNreTVLcq2NWJVotpaPPGTDLoEX3pckhBbRr5m"
+        },
+        {
+            "name": "undead dragon",
+            "gif": "QmZNQQ79G714qqW4cgADi4FN9AWbmCqoGuXXY6qwrWmusZ",
+            "jpg": "QmZwo9WvZFYrQkkmphfaxhbwniQfqJ7sahjQgr1n9vDbwi",
+            "dead_jpg": "QmXeW6hDfYo6JR8HiaDNEZhHh3Qin4aj2V4epiFujQFvq4",
+            "dead_gif": "QmWfxtdErPRuvMkp2qsPGm5u6Fr2C5BpngEuGPWT3pn4fU"
         },
         {
             "name": "volcano dragon",
             "gif": "QmPQ6fnxNqwzn9VymkEq7w8PtF6oxuzsWThARhUX9SNUA1",
-            "jpg": "QmRnQ8YBsAzJBcQCyATMS99WP18Jnir5xAAHJqaJzbSyCK"
+            "jpg": "QmRnQ8YBsAzJBcQCyATMS99WP18Jnir5xAAHJqaJzbSyCK",
+            "dead_jpg": "QmbgRUr33yknhMkvfbR6febSePyAHXmQe1XdVC6ptVzujD",
+            "dead_gif": "QmPPwtmimfPiLE2ftFcZNxbEfJbBMNGNridtanM25WhgRT"
         },
         {
             "name": "fire demon",
             "gif": "QmZtQPRR6SEiuJdmwq7UTx5hwTVNd2utKR7AwMtKShhkq7",
-            "jpg": "QmYtBGsWzLTwjxTkk7Mm6hsK3acFoxxCc5aQj7X8sgyMuu"
+            "jpg": "QmYtBGsWzLTwjxTkk7Mm6hsK3acFoxxCc5aQj7X8sgyMuu",
+            "dead_jpg": "QmXx8fKDqV1UPnsy5J7wpMMkh4dXdCHdedpRnKSoUdvsM6",
+            "dead_gif": "QmQMjrxoK9qmEEh4HzjHLabM3s9r3eXDYa1sajYpSwqED7"
+        },
+        {
+            "name": "invisible",
+            "gif": "QmPE5XKACDWDJWbRCQCWRkjr5M1UssT97V3S5FBz64Am6K",
+            "jpg": "QmYyRtxHo2Tp7tm2wM4qToSrPfsvfYbujQUwVMhnCyZ6ux",
+            "dead_jpg": "QmW3KaoBwtZifKULJCkc2mdoLH6QmwTA1fkD7mJMJ1dTAA",
+            "dead_gif": "QmXBE4AXAzC1BBqJXtPhbUx1Bo92n51SoXopuqGm1uzBx2"
         }
     ]
 }

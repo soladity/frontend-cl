@@ -19,11 +19,20 @@ export const themeConfig = createTheme({
       main: '#f66810'
     },
     secondary: {
-      main: '#ef4444'
+      main: '#a44916'
     },
     info: {
       main: '#312881'
     },
     mode: 'dark'
   },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1300,
+      xl: 1536
+    }
+  }
 });

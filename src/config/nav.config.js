@@ -165,9 +165,9 @@ export const navConfig = {
       },
       {
         type: "social",
-        title: "twitter",
-        icon: "/assets/images/twitter.png",
-        path: "https://cryptolegions.app/tw",
+        title: "discord",
+        icon: "/assets/images/discord.png",
+        path: "https://cryptolegions.app/d",
       },
       {
         type: "social",
@@ -177,9 +177,9 @@ export const navConfig = {
       },
       {
         type: "social",
-        title: "discord",
-        icon: "/assets/images/discord.png",
-        path: "https://cryptolegions.app/d",
+        title: "twitter",
+        icon: "/assets/images/twitter.png",
+        path: "https://cryptolegions.app/tw",
       },
       {
         type: "social",

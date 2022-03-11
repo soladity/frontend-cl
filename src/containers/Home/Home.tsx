@@ -26,12 +26,17 @@ import YourAchievements from "./YourAchievements";
 import nicahBackground from "../../assets/images/nicah_background.jpg";
 import ReactPlayer from "react-player/youtube";
 
+import { useDispatch } from "react-redux";
+import { setBeastIds } from "../../actions/contractActions";
+
 export interface SimpleDialogProps {
     open: boolean;
     onClose: () => void;
 }
 
 const Home = () => {
+    const dispatch = useDispatch()
+
     const [anchorElYourAchievement, setAnchorElYourAchievement] =
         React.useState<HTMLElement | null>(null);
 
@@ -56,6 +61,7 @@ const Home = () => {
                     name="description"
                     content={meta_constant.home.description}
                 />
+                {/* <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta> */}
                 {meta_constant.home.keywords && (
                     <meta
                         name="keywords"
@@ -121,17 +127,21 @@ const Home = () => {
                                 fontWeight: "bold",
                                 textAlign: "center",
                                 marginTop: 2,
+                                '&:hover': {
+                                    color: '#f66810',
+                                    transition: '.4s all'
+                                }
                             }}
                         >
                             READ INSTRUCTIONS IN WHITEPAPER
                         </Typography>
                     </a>
-                    <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                        <Grid item xs={12} md={4}></Grid>
-                        <Grid item xs={12} md={4}>
+                    <Grid container spacing={2} sx={{ my: 2, marginBottom: 4 }}>
+                        <Grid item xs={12} md={1} lg={3}></Grid>
+                        <Grid item xs={12} md={10} lg={6}>
                             <YourAchievements />
                         </Grid>
-                        <Grid item xs={12} md={4}></Grid>
+                        <Grid item xs={12} md={1} lg={3}></Grid>
                     </Grid>
                 </Box>
             </Box>
