@@ -62,6 +62,8 @@ const Warriors = () => {
 	const [mintLoading, setMintLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
 
+	const maxSellPrice = 10000000000
+
 	const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
 		b1: {
 			amount: 0,
@@ -665,7 +667,7 @@ const Warriors = () => {
 				</>
 			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
-			<DialogTitle sx={{display: 'flex', justifyContent: 'space-between'}}>
+			<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
 				{getTranslation('listOnMarketplace')}
 				<span className='close-button' onClick={handleSupplyClose}>x</span>
 			</DialogTitle>
@@ -680,6 +682,12 @@ const Warriors = () => {
 					variant="standard"
 					value={price}
 					onChange={handlePrice}
+					color={price < maxSellPrice ? 'primary' : 'error'}
+					sx={{
+						input: {
+							color: price < maxSellPrice ? 'white' : '#f44336'
+						}
+					}}
 				/>
 				<Typography variant='subtitle1'>
 					(= XXX USD)
@@ -688,9 +696,18 @@ const Warriors = () => {
 					If sold, you will pay {marketplaceTax}% marketplace tax.
 				</Typography>
 			</DialogContent>
-			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-				{getTranslation('sell')}
-			</CommonBtn>
+			{
+				price < maxSellPrice ? (
+
+					<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
+						{getTranslation('sell')}
+					</CommonBtn>
+				) : (
+					<Box sx={{ textAlign: 'center', padding: 2, color: '#f44336', wordBreak: 'break-word' }}>
+						{getTranslation('maxSellPrice')}
+					</Box>
+				)
+			}
 		</Dialog>
 	</Box>
 }
