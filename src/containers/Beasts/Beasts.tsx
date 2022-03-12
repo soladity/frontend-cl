@@ -16,6 +16,7 @@ import CommonBtn from '../../component/Buttons/CommonBtn';
 import { getTranslation } from '../../utils/translation';
 import Image from '../../config/image.json';
 import { FaTimes } from "react-icons/fa";
+import { formatNumber } from '../../utils/common';
 
 const useStyles = makeStyles({
 	root: {
@@ -61,6 +62,8 @@ const Beasts = () => {
 	const [loading, setLoading] = React.useState(false);
 	const [mintLoading, setMintLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
+
+	const maxSellPrice = 5000000
 
 	const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
 		b1: {
@@ -645,6 +648,12 @@ const Beasts = () => {
 					variant="standard"
 					value={price}
 					onChange={handlePrice}
+					color={price < maxSellPrice ? 'primary' : 'error'}
+					sx={{
+						input: {
+							color: price < maxSellPrice ? 'white' : '#f44336'
+						}
+					}}
 				/>
 				<Typography variant='subtitle1'>
 					(= XXX USD)
@@ -653,9 +662,18 @@ const Beasts = () => {
 					If sold, you will pay {marketplaceTax}% marketplace tax.
 				</Typography>
 			</DialogContent>
-			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-				{getTranslation('sell')}
-			</CommonBtn>
+			{
+				price < maxSellPrice ? (
+
+					<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
+						{getTranslation('sell')}
+					</CommonBtn>
+				) : (
+					<Box sx={{ textAlign: 'center', padding: 2, color: '#f44336', wordBreak: 'break-word' }}>
+						{getTranslation('maxSellPrice')}
+					</Box>
+				)
+			}
 		</Dialog>
 	</Box>
 }

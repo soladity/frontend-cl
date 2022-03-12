@@ -1859,4 +1859,16 @@ export const translations = {
     pl: "Transakcja nie powiodła się, spróbuj ponownie!",
     ph: "Nabigo ang transaksyon, pakisubukang muli!",
   },
+  maxSellPrice: {
+    en: "The price must be less than 5,000,000.",
+    es: "El precio debe ser inferior a 5,000,000.",
+    cn: "价格必须小于 5,000,000。",
+    pt: "O preço deve ser inferior a 5,000,000.",
+    tr: "Fiyat 5,000,000'dan az olmalıdır.",
+    ru: "Цена должна быть меньше 5,000,000.",
+    fr: "Le prix doit être inférieur à 5,000,000.",
+    de: "De prijs moet lager zijn dan 10.000.000.000.",
+    pl: "Cena musi być mniejsza niż 5,000,000.",
+    ph: "Ang presyo ay dapat na mas mababa sa 5,000,000.",
+  },
 };
