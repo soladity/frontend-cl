@@ -100,7 +100,7 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-  const maxSellPrice = 10000000000
+  const maxSellPrice = 5000000
 
   const classes = useStyles();
   const legionContract = useLegion();
