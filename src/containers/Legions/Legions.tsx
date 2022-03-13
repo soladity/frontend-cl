@@ -277,6 +277,34 @@ const Legions = () => {
     setActionLoading(false);
   };
 
+  const handleSort = (value: boolean) => {
+    setHighest(value);
+    handleSortValue();
+  };
+
+  const handleSortValue = () => {
+    let temp = legions;
+    temp.sort((a: any, b: any) => {
+      if (highest === true) {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return 1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return -1;
+        }
+      } else {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return -1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    setLegions(temp);
+  };
+
   return (
     <Box>
       <Helmet>
@@ -399,8 +427,8 @@ const Legions = () => {
                           item.huntStatus === "green"
                             ? "green"
                             : item.huntStatus === "orange"
-                            ? "orange"
-                            : "red",
+                              ? "orange"
+                              : "red",
                       }}
                     >
                       {formatNumber(item.attackPower)} AP
@@ -445,7 +473,7 @@ const Legions = () => {
                   <Button
                     variant={!highest ? "contained" : "outlined"}
                     onClick={() => {
-                      setHighest(!highest);
+                      handleSort(!highest);
                     }}
                   >
                     {getTranslation("lowest")}
@@ -453,7 +481,7 @@ const Legions = () => {
                   <Button
                     variant={highest ? "contained" : "outlined"}
                     onClick={() => {
-                      setHighest(!highest);
+                      handleSort(!highest);
                     }}
                   >
                     {getTranslation("highest")}
@@ -531,9 +559,7 @@ const Legions = () => {
             container
             spacing={4}
             sx={{
-              mb: 4,
-              flexDirection: highest ? "row" : "row-reverse",
-              justifyContent: highest ? "flex-start" : "flex-end",
+              mb: 4
             }}
           >
             {legions
@@ -646,13 +672,12 @@ const Legions = () => {
             onClick={() => handleSupplyClick("7")}
           >
             <ListItemText
-              primary={`7 Hunts (${
-                selectedLegion === -1
+              primary={`7 Hunts (${selectedLegion === -1
                   ? 0
                   : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 7
-              } $BLST)`}
+                    (item) => parseInt(item.id) === selectedLegion
+                  )[0]["warriors"].length * 7
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -661,13 +686,12 @@ const Legions = () => {
             onClick={() => handleSupplyClick("14")}
           >
             <ListItemText
-              primary={`14 Hunts (${
-                selectedLegion === -1
+              primary={`14 Hunts (${selectedLegion === -1
                   ? 0
                   : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 13
-              } $BLST)`}
+                    (item) => parseInt(item.id) === selectedLegion
+                  )[0]["warriors"].length * 13
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -676,13 +700,12 @@ const Legions = () => {
             onClick={() => handleSupplyClick("28")}
           >
             <ListItemText
-              primary={`28 Hunts (${
-                selectedLegion === -1
+              primary={`28 Hunts (${selectedLegion === -1
                   ? 0
                   : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 24
-              } $BLST)`}
+                    (item) => parseInt(item.id) === selectedLegion
+                  )[0]["warriors"].length * 24
+                } $BLST)`}
             />
           </ListItem>
         </List>
