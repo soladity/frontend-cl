@@ -46,7 +46,7 @@ import {
   sellToken,
   getFee,
 } from "../../hooks/contractFunction";
-import { meta_constant } from "../../config/meta.config";
+import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
@@ -100,7 +100,7 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-  const maxSellPrice = 5000000;
+  const maxSellPrice = allConstants.maxSellPrice;
 
   const classes = useStyles();
   const legionContract = useLegion();
@@ -241,7 +241,8 @@ const Legions = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(e.target.value);
+    const onlyNums = e.target.value.replace(/[^0-9]/g, '');
+    setPrice(onlyNums)
   };
 
   const handleSendToMarketplace = async () => {
@@ -401,8 +402,8 @@ const Legions = () => {
                           item.huntStatus === "green"
                             ? "green"
                             : item.huntStatus === "orange"
-                            ? "orange"
-                            : "red",
+                              ? "orange"
+                              : "red",
                       }}
                     >
                       {formatNumber(item.attackPower)} AP
@@ -649,13 +650,12 @@ const Legions = () => {
             onClick={() => handleSupplyClick("7")}
           >
             <ListItemText
-              primary={`7 Hunts (${
-                selectedLegion === -1
-                  ? 0
-                  : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 7
-              } $BLST)`}
+              primary={`7 Hunts (${selectedLegion === -1
+                ? 0
+                : legions.filter(
+                  (item) => parseInt(item.id) === selectedLegion
+                )[0]["warriors"].length * 7
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -664,13 +664,12 @@ const Legions = () => {
             onClick={() => handleSupplyClick("14")}
           >
             <ListItemText
-              primary={`14 Hunts (${
-                selectedLegion === -1
-                  ? 0
-                  : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 13
-              } $BLST)`}
+              primary={`14 Hunts (${selectedLegion === -1
+                ? 0
+                : legions.filter(
+                  (item) => parseInt(item.id) === selectedLegion
+                )[0]["warriors"].length * 13
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -679,13 +678,12 @@ const Legions = () => {
             onClick={() => handleSupplyClick("28")}
           >
             <ListItemText
-              primary={`28 Hunts (${
-                selectedLegion === -1
-                  ? 0
-                  : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 24
-              } $BLST)`}
+              primary={`28 Hunts (${selectedLegion === -1
+                ? 0
+                : legions.filter(
+                  (item) => parseInt(item.id) === selectedLegion
+                )[0]["warriors"].length * 24
+                } $BLST)`}
             />
           </ListItem>
         </List>
@@ -703,7 +701,6 @@ const Legions = () => {
             margin="dense"
             id="price"
             label="Price in $BLST"
-            type="number"
             fullWidth
             variant="standard"
             value={price}
