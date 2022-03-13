@@ -108,6 +108,8 @@ const Legions = () => {
   const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
+  const maxSellPrice = 5000000;
+
   React.useEffect(() => {
     if (account) {
       getBalance();
@@ -728,18 +730,30 @@ const Legions = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
+            color={price < maxSellPrice ? 'primary' : 'error'}
+            sx={{
+              input: {
+                color: price < maxSellPrice ? 'white' : '#f44336'
+              }
+            }}
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
           <Typography variant="subtitle1">
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        <CommonBtn
-          sx={{ fontWeight: "bold" }}
-          onClick={handleSendToMarketplace}
-        >
-          {getTranslation("sell")}
-        </CommonBtn>
+        {
+          price < maxSellPrice ? (
+
+            <CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
+              {getTranslation('sell')}
+            </CommonBtn>
+          ) : (
+            <Box sx={{ textAlign: 'center', padding: 2, color: '#f44336', wordBreak: 'break-word' }}>
+              {getTranslation('maxSellPrice')}
+            </Box>
+          )
+        }
       </Dialog>
     </Box>
   );

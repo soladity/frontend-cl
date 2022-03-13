@@ -97,6 +97,8 @@ const Warriors = () => {
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
 
+  const maxSellPrice = 5000000;
+
   const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
     b1: {
       amount: 0,
@@ -696,11 +698,11 @@ const Warriors = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/warriors/" +
-                          item["type"] +
-                          ".jpg"
+                        item["type"] +
+                        ".jpg"
                         : "/assets/images/characters/gif/warriors/" +
-                          item["type"] +
-                          ".gif"
+                        item["type"] +
+                        ".gif"
                     }
                     type={item["type"]}
                     power={item["power"]}
