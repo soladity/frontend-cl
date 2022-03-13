@@ -100,7 +100,7 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-  const maxSellPrice = 5000000
+  const maxSellPrice = 5000000;
 
   const classes = useStyles();
   const legionContract = useLegion();
@@ -401,8 +401,8 @@ const Legions = () => {
                           item.huntStatus === "green"
                             ? "green"
                             : item.huntStatus === "orange"
-                              ? "orange"
-                              : "red",
+                            ? "orange"
+                            : "red",
                       }}
                     >
                       {formatNumber(item.attackPower)} AP
@@ -534,6 +534,7 @@ const Legions = () => {
             spacing={4}
             sx={{
               mb: 4,
+              flexWrap: highest ? "wrap" : "wrap-reverse",
               flexDirection: highest ? "row" : "row-reverse",
               justifyContent: highest ? "flex-start" : "flex-end",
             }}
@@ -648,12 +649,13 @@ const Legions = () => {
             onClick={() => handleSupplyClick("7")}
           >
             <ListItemText
-              primary={`7 Hunts (${selectedLegion === -1
-                ? 0
-                : legions.filter(
-                  (item) => parseInt(item.id) === selectedLegion
-                )[0]["warriors"].length * 7
-                } $BLST)`}
+              primary={`7 Hunts (${
+                selectedLegion === -1
+                  ? 0
+                  : legions.filter(
+                      (item) => parseInt(item.id) === selectedLegion
+                    )[0]["warriors"].length * 7
+              } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -662,12 +664,13 @@ const Legions = () => {
             onClick={() => handleSupplyClick("14")}
           >
             <ListItemText
-              primary={`14 Hunts (${selectedLegion === -1
-                ? 0
-                : legions.filter(
-                  (item) => parseInt(item.id) === selectedLegion
-                )[0]["warriors"].length * 13
-                } $BLST)`}
+              primary={`14 Hunts (${
+                selectedLegion === -1
+                  ? 0
+                  : legions.filter(
+                      (item) => parseInt(item.id) === selectedLegion
+                    )[0]["warriors"].length * 13
+              } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -676,12 +679,13 @@ const Legions = () => {
             onClick={() => handleSupplyClick("28")}
           >
             <ListItemText
-              primary={`28 Hunts (${selectedLegion === -1
-                ? 0
-                : legions.filter(
-                  (item) => parseInt(item.id) === selectedLegion
-                )[0]["warriors"].length * 24
-                } $BLST)`}
+              primary={`28 Hunts (${
+                selectedLegion === -1
+                  ? 0
+                  : legions.filter(
+                      (item) => parseInt(item.id) === selectedLegion
+                    )[0]["warriors"].length * 24
+              } $BLST)`}
             />
           </ListItem>
         </List>
@@ -704,11 +708,11 @@ const Legions = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            color={price < maxSellPrice ? 'primary' : 'error'}
+            color={price < maxSellPrice ? "primary" : "error"}
             sx={{
               input: {
-                color: price < maxSellPrice ? 'white' : '#f44336'
-              }
+                color: price < maxSellPrice ? "white" : "#f44336",
+              },
             }}
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
@@ -716,18 +720,25 @@ const Legions = () => {
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        {
-          price < maxSellPrice ? (
-
-            <CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleSendToMarketplace}>
-              {getTranslation('sell')}
-            </CommonBtn>
-          ) : (
-            <Box sx={{ textAlign: 'center', padding: 2, color: '#f44336', wordBreak: 'break-word' }}>
-              {getTranslation('maxSellPrice')}
-            </Box>
-          )
-        }
+        {price < maxSellPrice ? (
+          <CommonBtn
+            sx={{ fontWeight: "bold" }}
+            onClick={handleSendToMarketplace}
+          >
+            {getTranslation("sell")}
+          </CommonBtn>
+        ) : (
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: 2,
+              color: "#f44336",
+              wordBreak: "break-word",
+            }}
+          >
+            {getTranslation("maxSellPrice")}
+          </Box>
+        )}
       </Dialog>
     </Box>
   );
