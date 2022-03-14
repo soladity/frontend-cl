@@ -91,6 +91,8 @@ const Warriors = () => {
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
 
+  const maxSellPrice = allConstants.maxSellPrice;
+
   const classes = useStyles();
   const warriorContract = useWarrior();
   const marketplaceContract = useMarketplace();

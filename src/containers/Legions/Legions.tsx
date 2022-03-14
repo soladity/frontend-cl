@@ -46,7 +46,7 @@ import {
   sellToken,
   getFee,
 } from "../../hooks/contractFunction";
-import { meta_constant } from "../../config/meta.config";
+import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
@@ -100,7 +100,7 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-  const maxSellPrice = 5000000;
+  const maxSellPrice = allConstants.maxSellPrice;
 
   const classes = useStyles();
   const legionContract = useLegion();
@@ -242,6 +242,14 @@ const Legions = () => {
 
   const handlePrice = (e: any) => {
     setPrice(+e.target.value);
+  };
+
+  const handleBlurPrice = (e: any) => {
+    let onlyNums = e.target.value.replace(/[^0-9]/g, "");
+    if (onlyNums === "") {
+      onlyNums = "0";
+      setPrice(onlyNums);
+    }
   };
 
   const handleSendToMarketplace = async () => {
@@ -703,11 +711,11 @@ const Legions = () => {
             margin="dense"
             id="price"
             label="Price in $BLST"
-            type="number"
             fullWidth
             variant="standard"
             value={price}
             onChange={handlePrice}
+            onBlur={handleBlurPrice}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{

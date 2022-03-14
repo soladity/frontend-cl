@@ -97,6 +97,8 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([2000, 100000]);
   const [huntsValue, setHuntsValue] = React.useState<number[]>([0, 14]);
 
+  const maxSellPrice = allConstants.maxSellPrice;
+
   const classes = useStyles();
   const legionContract = useLegion();
   const marketplaceContract = useMarketplace();
