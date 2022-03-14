@@ -241,7 +241,7 @@ const Legions = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(e.target.value);
+    setPrice(+e.target.value);
   };
 
   const handleSendToMarketplace = async () => {
@@ -709,6 +709,7 @@ const Legions = () => {
             value={price}
             onChange={handlePrice}
             color={price < maxSellPrice ? "primary" : "error"}
+            inputProps={{ step: "0.1" }}
             sx={{
               input: {
                 color: price < maxSellPrice ? "white" : "#f44336",
@@ -720,7 +721,7 @@ const Legions = () => {
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        {price < maxSellPrice ? (
+        {price && price !== 0 && price < maxSellPrice ? (
           <CommonBtn
             sx={{ fontWeight: "bold" }}
             onClick={handleSendToMarketplace}
