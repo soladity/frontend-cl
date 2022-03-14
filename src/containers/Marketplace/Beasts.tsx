@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
 
-import { meta_constant } from '../../config/meta.config';
+import { allConstants, meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import Navigation from '../../component/Navigation/Navigation';
 import { getOnMarketplace, getBeastToken, getBaseUrl, getMarketplaceBloodstoneAllowance, setMarketplaceBloodstoneApprove, cancelMarketplace, buyToken, getMarketItem, updatePrice } from '../../hooks/contractFunction';
@@ -59,6 +59,8 @@ const Beasts = () => {
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
+
+	const maxSellPrice = allConstants.maxSellPrice;
 
 	const classes = useStyles();
 	const beastContract = useBeast();
@@ -171,7 +173,16 @@ const Beasts = () => {
 	};
 
 	const handlePrice = (e: any) => {
-		setPrice(e.target.value);
+		let onlyNums = e.target.value.replace(/[^0-9]/g, '');
+		setPrice(onlyNums)
+	}
+
+	const handleBlurPrice = (e: any) => {
+		let onlyNums = e.target.value.replace(/[^0-9]/g, '');
+		if (onlyNums === '') {
+			onlyNums = '0'
+			setPrice(onlyNums)
+		}
 	}
 
 	const handleUpdatePrice = async () => {
@@ -333,19 +344,39 @@ const Beasts = () => {
 					margin="dense"
 					id="price"
 					label="Price in $BLST"
-					type="number"
 					fullWidth
 					variant="standard"
 					value={price}
 					onChange={handlePrice}
+					onBlur={handleBlurPrice}
+					color={price < maxSellPrice ? "primary" : "error"}
+					sx={{
+						input: {
+							color: price < maxSellPrice ? "white" : "#f44336",
+						},
+					}}
 				/>
 				<Typography variant='subtitle1'>
 					(= XXX USD)
 				</Typography>
 			</DialogContent>
-			<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleUpdatePrice}>
-				{getTranslation('confirm')}
-			</CommonBtn>
+
+			{price < maxSellPrice ? (
+				<CommonBtn sx={{ fontWeight: 'bold' }} onClick={handleUpdatePrice}>
+					{getTranslation('confirm')}
+				</CommonBtn>
+			) : (
+				<Box
+					sx={{
+						textAlign: "center",
+						padding: 2,
+						color: "#f44336",
+						wordBreak: "break-word",
+					}}
+				>
+					{getTranslation("maxSellPrice")}
+				</Box>
+			)}
 		</Dialog>
 	</Box>
 }
