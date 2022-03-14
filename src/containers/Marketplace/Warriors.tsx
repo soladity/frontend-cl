@@ -263,7 +263,9 @@ const Warriors = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(+e.target.value);
+    if (e.target.value >= 0) {
+      setPrice(+e.target.value);
+    }
   };
 
   const handleUpdatePrice = async () => {
@@ -500,11 +502,11 @@ const Warriors = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/warriors/" +
-                            item["type"] +
-                            ".jpg"
+                          item["type"] +
+                          ".jpg"
                           : "/assets/images/characters/gif/warriors/" +
-                            item["type"] +
-                            ".gif"
+                          item["type"] +
+                          ".gif"
                       }
                       type={item["type"]}
                       power={item["power"]}
@@ -591,9 +593,22 @@ const Warriors = () => {
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
         </DialogContent>
-        <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
-          {getTranslation("confirm")}
-        </CommonBtn>
+        {+price >= 0 && price < maxSellPrice ? (
+          <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
+            {getTranslation("confirm")}
+          </CommonBtn>
+        ) : (
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: 2,
+              color: "#f44336",
+              wordBreak: "break-word",
+            }}
+          >
+            {getTranslation("maxSellPrice")}
+          </Box>
+        )}
       </Dialog>
     </Box>
   );
