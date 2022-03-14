@@ -698,11 +698,11 @@ const Warriors = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/warriors/" +
-                        item["type"] +
-                        ".jpg"
+                          item["type"] +
+                          ".jpg"
                         : "/assets/images/characters/gif/warriors/" +
-                        item["type"] +
-                        ".gif"
+                          item["type"] +
+                          ".gif"
                     }
                     type={item["type"]}
                     power={item["power"]}

@@ -149,6 +149,7 @@ export const navConfig = {
         title: "whitepaper",
         icon: "whitepaper.png",
         path: "https://docs.cryptolegions.app/",
+        esPath: "https://docs-es.cryptolegions.app/"
       },
       {
         type: "navlink",

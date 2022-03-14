@@ -102,7 +102,7 @@ const Help = () => {
 
     setEmailValidationText("");
 
-    var API_KEY = process.env.REACT_APP_HELP_API_KEY
+    var API_KEY = process.env.REACT_APP_HELP_API_KEY;
     var FD_ENDPOINT = "cryptolegions";
     var PATH = "/api/v2/tickets";
     var auth = "Basic " + new Buffer(API_KEY + ":" + "X").toString("base64");
@@ -165,7 +165,7 @@ const Help = () => {
         setAttachmentFile(null);
         setPriority("1");
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
 
   const setFile = (e: any) => {
@@ -295,9 +295,9 @@ const Help = () => {
                   </IconButton>
                   {attachmentFile
                     ? attachmentFile["name"] +
-                    " / " +
-                    (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
-                    "MB"
+                      " / " +
+                      (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
+                      "MB"
                     : "Attachment File (optional)"}
                 </label>
               </Grid>

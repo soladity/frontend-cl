@@ -716,9 +716,11 @@ const CreateLegions: React.FC = () => {
                   {warrior5beast &&
                     warriors
                       .filter(
-                        (fitem: any) =>
-                          apValue[0] < parseInt(fitem.power) &&
-                          apValue[1] > parseInt(fitem.power)
+                        (item: any) =>
+                          apValue[0] <= parseInt(item.power) &&
+                          (apValue[1] === 6000
+                            ? true
+                            : apValue[1] >= parseInt(item.power))
                       )
                       .map((item: any, index) => (
                         <DraggableCard

@@ -51,18 +51,18 @@ import Image from "../../config/image.json";
 
 const useStyles = makeStyles({
   root: {
-    display: 'flex',
-    flexDirection: 'column'
+    display: "flex",
+    flexDirection: "column",
   },
   card: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '180px'
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "180px",
   },
   warning: {
-    display: 'flex',
-    minHeight: '80px',
-  }
+    display: "flex",
+    minHeight: "80px",
+  },
 });
 
 type LegionProps = {
@@ -81,19 +81,17 @@ type LegionProps = {
 };
 
 const Legions = () => {
-  const {
-    account,
-  } = useWeb3React();
+  const { account } = useWeb3React();
 
   const [baseUrl, setBaseUrl] = React.useState("");
-  const [sort, setSort] = React.useState('0');
+  const [sort, setSort] = React.useState("0");
   const [legions, setLegions] = React.useState<LegionProps[]>(Array);
   const [onlyMyLegion, setOnlyMyLegion] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [openUpdate, setOpenUpdate] = React.useState(false);
   const [price, setPrice] = React.useState(0);
   const [selectedLegion, setSelectedLegion] = React.useState(0);
-  const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
+  const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
   const [loading, setLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([2000, 100000]);
@@ -107,7 +105,11 @@ const Legions = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    setShowAnimation(localStorage.getItem('showAnimation') ? localStorage.getItem('showAnimation') : '0');
+    setShowAnimation(
+      localStorage.getItem("showAnimation")
+        ? localStorage.getItem("showAnimation")
+        : "0"
+    );
     if (account) {
       getBalance();
     }
@@ -562,7 +564,6 @@ const Legions = () => {
         <>
           <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
             <Typography variant="h4">{getTranslation("pleaseWait")}</Typography>
-
           </Grid>
           <Grid container sx={{ justifyContent: "center" }}>
             <Grid item xs={1}>
