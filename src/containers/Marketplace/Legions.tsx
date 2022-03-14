@@ -20,8 +20,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch } from "react-redux";
-
-import { meta_constant } from "../../config/meta.config";
+import { allConstants, meta_constant } from "../../config/meta.config";
 import { setReloadStatus } from "../../actions/contractActions";
 import Navigation from "../../component/Navigation/Navigation";
 import {
@@ -96,6 +95,8 @@ const Legions = () => {
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([2000, 100000]);
   const [huntsValue, setHuntsValue] = React.useState<number[]>([0, 14]);
+
+  const maxSellPrice = allConstants.maxSellPrice;
 
   const classes = useStyles();
   const legionContract = useLegion();
@@ -307,7 +308,7 @@ const Legions = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(e.target.value);
+    setPrice(+e.target.value);
   };
 
   const handleUpdatePrice = async () => {
@@ -596,6 +597,7 @@ const Legions = () => {
             fullWidth
             variant="standard"
             value={price}
+            inputProps={{ step: "0.1" }}
             onChange={handlePrice}
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>

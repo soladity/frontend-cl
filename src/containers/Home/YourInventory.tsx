@@ -245,7 +245,7 @@ const YourInventory = () => {
           {getTranslation("yourMaxAp")}:
           <span className="legionOrangeColor">
             {" "}
-            {formatNumber((parseFloat(maxAttackPower) / 100).toFixed(0))}
+            {formatNumber(Math.floor(parseInt(maxAttackPower) / 100))}
           </span>
         </Typography>
         <Typography

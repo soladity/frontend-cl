@@ -329,7 +329,7 @@ const Warriors = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(e.target.value);
+    setPrice(+e.target.value);
   };
 
   const handleSendToMarketplace = async () => {
@@ -832,18 +832,38 @@ const Warriors = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
+            color={price < maxSellPrice ? "primary" : "error"}
+            inputProps={{ step: "0.1" }}
+            sx={{
+              input: {
+                color: price < maxSellPrice ? "white" : "#f44336",
+              },
+            }}
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
           <Typography variant="subtitle1">
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        <CommonBtn
-          sx={{ fontWeight: "bold" }}
-          onClick={handleSendToMarketplace}
-        >
-          {getTranslation("sell")}
-        </CommonBtn>
+        {price && +price !== 0 && price < maxSellPrice ? (
+          <CommonBtn
+            sx={{ fontWeight: "bold" }}
+            onClick={handleSendToMarketplace}
+          >
+            {getTranslation("sell")}
+          </CommonBtn>
+        ) : (
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: 2,
+              color: "#f44336",
+              wordBreak: "break-word",
+            }}
+          >
+            {getTranslation("maxSellPrice")}
+          </Box>
+        )}
       </Dialog>
     </Box>
   );

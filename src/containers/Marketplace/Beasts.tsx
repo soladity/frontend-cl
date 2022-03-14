@@ -222,7 +222,7 @@ const Beasts = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(e.target.value);
+    setPrice(+e.target.value);
   };
 
   const handleUpdatePrice = async () => {
@@ -501,6 +501,7 @@ const Beasts = () => {
             fullWidth
             variant="standard"
             value={price}
+            inputProps={{ step: "0.1" }}
             onChange={handlePrice}
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
