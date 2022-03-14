@@ -289,6 +289,14 @@ const Warriors = () => {
 		setPrice(onlyNums)
 	}
 
+	const handleBlurPrice = (e: any) => {
+		let onlyNums = e.target.value.replace(/[^0-9]/g, '');
+		if (onlyNums === '') {
+			onlyNums = '0'
+			setPrice(onlyNums)
+		}
+	}
+
 	const handleSendToMarketplace = async () => {
 		setActionLoading(true);
 		setOpenSupply(false);
@@ -682,6 +690,7 @@ const Warriors = () => {
 					variant="standard"
 					value={price}
 					onChange={handlePrice}
+					onBlur={handleBlurPrice}
 					color={price < maxSellPrice ? 'primary' : 'error'}
 					sx={{
 						input: {
