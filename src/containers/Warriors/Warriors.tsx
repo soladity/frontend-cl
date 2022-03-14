@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { meta_constant } from '../../config/meta.config';
+import { allConstants, meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
 import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl, execute, getBloodstoneAmountToMintWarrior, getFee } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useMarketplace, useLegion, useFeeHandler, useWeb3 } from '../../hooks/useContract';
@@ -62,7 +62,7 @@ const Warriors = () => {
 	const [mintLoading, setMintLoading] = React.useState(false);
 	const [actionLoading, setActionLoading] = React.useState(false);
 
-	const maxSellPrice = 5000000
+	const maxSellPrice = allConstants.maxSellPrice
 
 	const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
 		b1: {
@@ -285,7 +285,8 @@ const Warriors = () => {
 	}
 
 	const handlePrice = (e: any) => {
-		setPrice(e.target.value);
+		const onlyNums = e.target.value.replace(/[^0-9]/g, '');
+		setPrice(onlyNums)
 	}
 
 	const handleSendToMarketplace = async () => {
@@ -677,7 +678,6 @@ const Warriors = () => {
 					margin="dense"
 					id="price"
 					label="Price in $BLST"
-					type="number"
 					fullWidth
 					variant="standard"
 					value={price}
