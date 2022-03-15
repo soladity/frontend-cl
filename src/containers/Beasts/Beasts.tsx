@@ -23,7 +23,7 @@ import { useWeb3React } from "@web3-react/core";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { meta_constant } from "../../config/meta.config";
+import { allConstants, meta_constant } from "../../config/meta.config";
 import { setReloadStatus } from "../../actions/contractActions";
 import {
   getBeastBloodstoneAllowance,
@@ -97,7 +97,7 @@ const Beasts = () => {
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-  const maxSellPrice = 5000000;
+  const maxSellPrice = allConstants.maxSellPrice;
 
   const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
     b1: {
@@ -313,7 +313,9 @@ const Beasts = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(+e.target.value);
+    if (e.target.value >= 0) {
+      setPrice(+e.target.value);
+    }
   };
 
   const handleSendToMarketplace = async () => {
@@ -649,11 +651,11 @@ const Beasts = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/beasts/" +
-                          item["type"] +
-                          ".jpg"
+                        item["type"] +
+                        ".jpg"
                         : "/assets/images/characters/gif/beasts/" +
-                          item["type"] +
-                          ".gif"
+                        item["type"] +
+                        ".gif"
                     }
                     type={item["type"]}
                     capacity={item["capacity"]}
@@ -788,7 +790,7 @@ const Beasts = () => {
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        {price && +price !== 0 && price < maxSellPrice ? (
+        {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn
             sx={{ fontWeight: "bold" }}
             onClick={handleSendToMarketplace}

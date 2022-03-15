@@ -24,7 +24,7 @@ import { useWeb3React } from "@web3-react/core";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { meta_constant } from "../../config/meta.config";
+import { allConstants, meta_constant } from "../../config/meta.config";
 import { setReloadStatus } from "../../actions/contractActions";
 import {
   getWarriorBloodstoneAllowance,
@@ -97,7 +97,7 @@ const Warriors = () => {
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-  const maxSellPrice = 5000000;
+  const maxSellPrice = allConstants.maxSellPrice;
 
   const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
     b1: {
@@ -329,7 +329,9 @@ const Warriors = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(+e.target.value);
+    if (e.target.value >= 0) {
+      setPrice(+e.target.value);
+    }
   };
 
   const handleSendToMarketplace = async () => {
@@ -698,11 +700,11 @@ const Warriors = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/warriors/" +
-                          item["type"] +
-                          ".jpg"
+                        item["type"] +
+                        ".jpg"
                         : "/assets/images/characters/gif/warriors/" +
-                          item["type"] +
-                          ".gif"
+                        item["type"] +
+                        ".gif"
                     }
                     type={item["type"]}
                     power={item["power"]}
@@ -845,7 +847,7 @@ const Warriors = () => {
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        {price && +price !== 0 && price < maxSellPrice ? (
+        {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn
             sx={{ fontWeight: "bold" }}
             onClick={handleSendToMarketplace}

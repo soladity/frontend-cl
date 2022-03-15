@@ -308,7 +308,9 @@ const Legions = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(+e.target.value);
+    if (e.target.value >= 0) {
+      setPrice(+e.target.value);
+    }
   };
 
   const handleUpdatePrice = async () => {
@@ -602,9 +604,22 @@ const Legions = () => {
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
         </DialogContent>
-        <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
-          {getTranslation("confirm")}
-        </CommonBtn>
+        {+price >= 0 && price < maxSellPrice ? (
+          <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
+            {getTranslation("confirm")}
+          </CommonBtn>
+        ) : (
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: 2,
+              color: "#f44336",
+              wordBreak: "break-word",
+            }}
+          >
+            {getTranslation("maxSellPrice")}
+          </Box>
+        )}
       </Dialog>
     </Box>
   );
