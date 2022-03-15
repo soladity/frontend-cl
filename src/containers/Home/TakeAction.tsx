@@ -464,7 +464,9 @@ const TakeAction = () => {
                         marginBottom: 3,
                     }}
                 >
-                    TAKE ACTION
+                    {getTranslation(
+                        "takeAction"
+                    )}
                 </Typography>
                 <Box>
                     <Grid container spacing={{ xs: 2, sm: 2, md: 1, lg: 2 }}>
