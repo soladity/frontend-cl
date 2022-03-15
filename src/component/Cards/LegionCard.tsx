@@ -249,7 +249,7 @@ export default function LegionCard(props: CardProps) {
         }}
         onClick={() => open(id)}
       >
-        {supplies} {getTranslation('hSymbol')}
+        {supplies} {getTranslation("hSymbol")}
       </Box>
       <Box
         sx={{
