@@ -31,6 +31,7 @@ import {
   useLegion,
   useMarketplace,
   useFeeHandler,
+  useBloodstone,
   useWeb3,
 } from "../../hooks/useContract";
 import {
@@ -40,7 +41,8 @@ import {
   getLegionToken,
   addSupply,
   getBaseUrl,
-  getLegionImage,
+  getLegionBloodstoneAllowance,
+  setLegionBloodstoneApprove,
   getHuntStatus,
   setMarketplaceApprove,
   sellToken,
@@ -107,6 +109,7 @@ const Legions = () => {
   const beastContract = useBeast();
   const warriorContract = useWarrior();
   const marketplaceContract = useMarketplace();
+  const bloodstoneContract = useBloodstone();
   const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
@@ -207,7 +210,15 @@ const Legions = () => {
   const handleSupplyClick = async (value: string) => {
     setSupplyLoading(true);
     setOpenSupply(false);
+    const allowance = await getLegionBloodstoneAllowance(
+      web3,
+      bloodstoneContract,
+      account
+    );
     try {
+      if (allowance === "0") {
+        await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
+      }
       await addSupply(
         web3,
         legionContract,
@@ -279,6 +290,34 @@ const Legions = () => {
       console.log(e);
     }
     setActionLoading(false);
+  };
+
+  const handleSort = (value: boolean) => {
+    setHighest(value);
+    handleSortValue();
+  };
+
+  const handleSortValue = () => {
+    let temp = legions;
+    temp.sort((a: any, b: any) => {
+      if (highest === true) {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return 1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return -1;
+        }
+      } else {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return -1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    setLegions(temp);
   };
 
   return (
@@ -449,7 +488,7 @@ const Legions = () => {
                   <Button
                     variant={!highest ? "contained" : "outlined"}
                     onClick={() => {
-                      setHighest(!highest);
+                      handleSort(!highest);
                     }}
                   >
                     {getTranslation("lowest")}
@@ -457,7 +496,7 @@ const Legions = () => {
                   <Button
                     variant={highest ? "contained" : "outlined"}
                     onClick={() => {
-                      setHighest(!highest);
+                      handleSort(!highest);
                     }}
                   >
                     {getTranslation("highest")}
@@ -536,9 +575,6 @@ const Legions = () => {
             spacing={4}
             sx={{
               mb: 4,
-              flexWrap: highest ? "wrap" : "wrap-reverse",
-              flexDirection: highest ? "row" : "row-reverse",
-              justifyContent: highest ? "flex-start" : "flex-end",
             }}
           >
             {legions
