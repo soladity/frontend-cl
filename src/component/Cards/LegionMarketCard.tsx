@@ -50,7 +50,7 @@ export default function LegionCard(props: CardProps) {
     price,
     handleCancel,
     handleBuy,
-    handleUpdate
+    handleUpdate,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -165,76 +165,76 @@ export default function LegionCard(props: CardProps) {
             <Grid container spacing={1} sx={{ pt: 2 }}>
               {showWarrior
                 ? warriorList.map((item: any, index) => (
-                  <Grid item xs={12} md={6} key={index}>
-                    <Box
-                      sx={{
-                        backgroundColor: "black",
-                        padding: 1,
-                        borderRadius: 1,
-                      }}
-                    >
+                    <Grid item xs={12} md={6} key={index}>
                       <Box
                         sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                          backgroundColor: "black",
+                          padding: 1,
+                          borderRadius: 1,
                         }}
                       >
-                        <Typography variant="subtitle2">
-                          {item.type}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          #{item.id}
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            {item.type}
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            #{item.id}
+                          </Typography>
+                        </Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            {formatNumber(item.power)} AP
+                          </Typography>
+                          <Box>{item.item}</Box>
+                        </Box>
                       </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">
-                          {formatNumber(item.power)} AP
-                        </Typography>
-                        <Box>{item.item}</Box>
-                      </Box>
-                    </Box>
-                  </Grid>
-                ))
+                    </Grid>
+                  ))
                 : beastList.map((item: any, index) => (
-                  <Grid item xs={12} md={6} key={index}>
-                    <Box
-                      sx={{
-                        backgroundColor: "black",
-                        padding: 1,
-                        borderRadius: 1,
-                      }}
-                    >
+                    <Grid item xs={12} md={6} key={index}>
                       <Box
                         sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                          backgroundColor: "black",
+                          padding: 1,
+                          borderRadius: 1,
                         }}
                       >
-                        <Typography variant="subtitle2">
-                          {item.type}
-                        </Typography>
-                        <Typography variant="subtitle2">
-                          #{item.id}
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            {item.type}
+                          </Typography>
+                          <Typography variant="subtitle2">
+                            #{item.id}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Typography variant="subtitle2">
+                            {item.capacity}
+                          </Typography>
+                          <img
+                            src="/assets/images/sword.png"
+                            style={{ height: "15px", marginLeft: "5px" }}
+                            alt="Sword"
+                          />
+                        </Box>
                       </Box>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography variant="subtitle2">
-                          {item.capacity}
-                        </Typography>
-                        <img
-                          src="/assets/images/sword.png"
-                          style={{ height: "15px", marginLeft: "5px" }}
-                          alt="Sword"
-                        />
-                      </Box>
-                    </Box>
-                  </Grid>
-                ))}
+                    </Grid>
+                  ))}
             </Grid>
           </CardContent>
         )}
@@ -262,8 +262,8 @@ export default function LegionCard(props: CardProps) {
               huntStatus === "green"
                 ? "green"
                 : huntStatus === "orange"
-                  ? "orange"
-                  : "red",
+                ? "orange"
+                : "red",
           }}
         >
           {supplies} H
@@ -383,13 +383,20 @@ export default function LegionCard(props: CardProps) {
       ) : (
         <Button
           variant="outlined"
-          sx={{ display: 'flex', whiteSpace: 'nowrap', mt: '10px', padding: '5px 16px', fontWeight: 'bold', fontSize: '1rem' }}
+          sx={{
+            display: "flex",
+            whiteSpace: "nowrap",
+            mt: "10px",
+            padding: "5px 16px",
+            fontWeight: "bold",
+            fontSize: "1rem",
+          }}
           onClick={() => update(id)}
         >
           {formatNumber(price)} $BLST
           <img
             src="/assets/images/updatePrice.png"
-            style={{ height: "20px", marginLeft: '10px' }}
+            style={{ height: "20px", marginLeft: "10px" }}
             alt="Update Price"
           />
         </Button>

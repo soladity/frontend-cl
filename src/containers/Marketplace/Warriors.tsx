@@ -20,7 +20,6 @@ import {
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch } from "react-redux";
-
 import { allConstants, meta_constant } from "../../config/meta.config";
 import { setReloadStatus } from "../../actions/contractActions";
 import Navigation from "../../component/Navigation/Navigation";

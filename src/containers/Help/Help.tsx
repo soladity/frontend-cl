@@ -102,7 +102,7 @@ const Help = () => {
 
     setEmailValidationText("");
 
-    var API_KEY = "jp0qrj5DTWcgBeg0L4FD";
+    var API_KEY = process.env.REACT_APP_HELP_API_KEY;
     var FD_ENDPOINT = "cryptolegions";
     var PATH = "/api/v2/tickets";
     var auth = "Basic " + new Buffer(API_KEY + ":" + "X").toString("base64");

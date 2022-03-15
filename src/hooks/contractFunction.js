@@ -190,7 +190,7 @@ export const hunt = async (web3, contract, account, legionID, monsterID) => {
     .on("receipt", function (receipt) {
       console.log(receipt.events);
     });
-  console.log(response)
+  console.log(response);
   return response;
 };
 

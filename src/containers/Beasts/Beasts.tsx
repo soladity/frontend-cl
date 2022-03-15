@@ -361,7 +361,6 @@ const Beasts = () => {
     }
     setActionLoading(false);
   };
-  console.log(price, price !== 0, typeof price);
   return (
     <Box>
       <Helmet>

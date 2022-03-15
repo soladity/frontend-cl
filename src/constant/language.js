@@ -1199,6 +1199,18 @@ export const translations = {
     pl: "Kupowanie materiałów eksploatacyjnych...",
     ph: "Pagbili ng Supplies...",
   },
+  suppliesNeeded: {
+    en: "Supplies Needed",
+    es: "Suministros necesarios",
+    cn: "所需用品",
+    pt: "Suprimentos necessários",
+    tr: "Gerekli malzemeler",
+    ru: "Необходимые материалы",
+    fr: "Fournitures nécessaires",
+    de: "Benodigde benodigdheden",
+    pl: "Potrzebne materiały",
+    ph: "Kailangan ng Mga Kagamitan",
+  },
   loadingLegions: {
     en: "Loading Legions...",
     es: "Cargando Legiones...",
