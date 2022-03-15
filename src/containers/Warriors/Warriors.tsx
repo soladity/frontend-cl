@@ -661,7 +661,9 @@ const Warriors = () => {
             </Grid>
             <Grid item xs={12} md={4}>
               <FormControl component="fieldset" sx={{ width: "90%" }}>
-                <FormLabel component="legend">Filter by AP:</FormLabel>
+                <FormLabel component="legend">
+                  {getTranslation("filterByAp")}:
+                </FormLabel>
                 <Slider
                   getAriaLabel={() => "Custom marks"}
                   // defaultValue={20}
@@ -700,11 +702,11 @@ const Warriors = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/warriors/" +
-                        item["type"] +
-                        ".jpg"
+                          item["type"] +
+                          ".jpg"
                         : "/assets/images/characters/gif/warriors/" +
-                        item["type"] +
-                        ".gif"
+                          item["type"] +
+                          ".gif"
                     }
                     type={item["type"]}
                     power={item["power"]}
@@ -828,7 +830,7 @@ const Warriors = () => {
             autoFocus
             margin="dense"
             id="price"
-            label="Price in $BLST"
+            label={`${getTranslation("priceIn")} $BLST`}
             type="number"
             fullWidth
             variant="standard"
