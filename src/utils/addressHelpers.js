@@ -1,32 +1,32 @@
 import address from "./constants";
 export const getBloodstoneAddress = () => {
-  return address.blood[process.env.REACT_APP_CHAIN_ID];
+  return address.blood[42];
 };
 
 export const getBeastAddress = () => {
-  return address.beast[process.env.REACT_APP_CHAIN_ID];
+  return address.beast[42];
 };
 
 export const getWarriorAddress = () => {
-  return address.warrior[process.env.REACT_APP_CHAIN_ID];
+  return address.warrior[42];
 };
 
 export const getLegionAddress = () => {
-  return address.legion[process.env.REACT_APP_CHAIN_ID];
+  return address.legion[42];
 };
 
 export const getMonsterAddress = () => {
-  return address.legion[process.env.REACT_APP_CHAIN_ID];
+  return address.legion[42];
 };
 
 export const getRewardPoolAddress = () => {
-  return address.rewardPool[process.env.REACT_APP_CHAIN_ID];
+  return address.rewardPool[42];
 };
 
 export const getMarketplaceAddress = () => {
-  return address.marketplace[process.env.REACT_APP_CHAIN_ID];
+  return address.marketplace[42];
 };
 
 export const getFeeHandlerAddress = () => {
-  return address.feeHandler[process.env.REACT_APP_CHAIN_ID];
+  return address.feeHandler[42];
 };
