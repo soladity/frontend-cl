@@ -311,17 +311,19 @@ const AppBarComponent = () => {
           <DialogContentText id="alert-dialog-slide-description">
             {unClaimedUSD === 0 ? (
               <>
-                There is no $BLST to claim.
+                {getTranslation("noToClaim")}
                 <br />
-                Please hunt monsters to get $BLST.
+                {getTranslation("huntMonsters")}
               </>
             ) : taxLeftDays === "0" ? (
               <>
-                You are about to claim {unClaimedUSD.toFixed(2)} $BLST tax-free.
+                {getTranslation("aboutToClaim")} {unClaimedUSD.toFixed(2)} $BLST{" "}
+                {getTranslation("taxFree")}.
                 <br />
-                You will receive {unClaimedUSD.toFixed(2)} $BLST in your wallet.
+                {getTranslation("willReceive")} {unClaimedUSD.toFixed(2)} $BLST{" "}
+                {getTranslation("inYourWallet")}.
                 <br />
-                Do you want to go ahead?
+                {getTranslation("goAhead")}
                 <br />
                 {loading && (
                   <div
@@ -337,24 +339,23 @@ const AppBarComponent = () => {
               </>
             ) : (
               <>
-                You are about to claim {unClaimedUSD.toFixed(2)} $BLST with{" "}
-                {2 * parseInt(taxLeftDays)}% tax.
+                {getTranslation("aboutToClaim")} {unClaimedUSD.toFixed(2)} $BLST{" "}
+                {getTranslation("with")} {2 * parseInt(taxLeftDays)}%{" "}
+                {getTranslation("tax")}.
                 <br />
-                You will pay{" "}
-                {((2 * parseInt(taxLeftDays) * unClaimedUSD) / 100).toFixed(
-                  2
-                )}{" "}
-                $BLST, and receive only{" "}
+                {getTranslation("willPay")}{" "}
+                {((2 * parseInt(taxLeftDays) * unClaimedUSD) / 100).toFixed(2)}{" "}
+                $BLST, {getTranslation("receiveOnly")}{" "}
                 {(
                   ((100 - 2 * parseInt(taxLeftDays)) * unClaimedUSD) /
                   100
                 ).toFixed(2)}{" "}
-                $BLST in your wallet.
+                $BLST {getTranslation("inYourWallet")}.
                 <br />
-                If you wait {taxLeftDays} days, then you will be able to claim
-                tax-free.
+                {getTranslation("youWait")} {taxLeftDays}{" "}
+                {getTranslation("willToClaim")}
                 <br />
-                Are you sure you want to go ahead now?
+                {getTranslation("sureGoAhead")}
                 <br />
                 {loading && (
                   <div
@@ -384,7 +385,7 @@ const AppBarComponent = () => {
             variant="contained"
             sx={{ color: "white", fontWeight: "bold" }}
           >
-            Cancel
+            {getTranslation("cancel")}
           </Button>
           <Button
             onClick={handleClaimReward}
@@ -392,7 +393,9 @@ const AppBarComponent = () => {
             variant="outlined"
             sx={{ fontWeight: "bold" }}
           >
-            {taxLeftDays === "0" ? "Claim tax-free" : "Claim and pay tax"}
+            {taxLeftDays === "0"
+              ? getTranslation("claimTaxFree")
+              : getTranslation("claimPayTax")}
           </Button>
         </DialogActions>
       </Dialog>
