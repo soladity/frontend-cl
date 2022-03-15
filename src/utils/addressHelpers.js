@@ -16,7 +16,7 @@ export const getLegionAddress = () => {
 };
 
 export const getMonsterAddress = () => {
-  return address.legion[42];
+  return address.monster[42];
 };
 
 export const getRewardPoolAddress = () => {

@@ -419,11 +419,11 @@ const Beasts = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/beasts/" +
-                            item["type"] +
-                            ".jpg"
+                          item["type"] +
+                          ".jpg"
                           : "/assets/images/characters/gif/beasts/" +
-                            item["type"] +
-                            ".gif"
+                          item["type"] +
+                          ".gif"
                       }
                       type={item["type"]}
                       capacity={item["capacity"]}
@@ -500,7 +500,7 @@ const Beasts = () => {
             autoFocus
             margin="dense"
             id="price"
-            label={`${getTranslation("priceIn")} $BLST`}
+            label="Price in $BLST"
             type="number"
             fullWidth
             variant="standard"
