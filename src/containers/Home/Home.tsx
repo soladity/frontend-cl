@@ -128,7 +128,7 @@ const Home = () => {
                 },
               }}
             >
-              READ INSTRUCTIONS IN WHITEPAPER
+              {getTranslation("readInstructionsInWhitePaper")}
             </Typography>
           </a>
           <Grid container spacing={2} sx={{ my: 2, marginBottom: 4 }}>

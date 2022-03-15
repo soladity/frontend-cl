@@ -24,6 +24,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import CardSm from "../../Cards/CardSm";
+import { getTranslation } from "../../../utils/translation";
 
 const FilterCards = () => {
   const [apValue, setApValue] = React.useState<number[]>([20, 37]);
@@ -74,7 +75,7 @@ const FilterCards = () => {
           <Grid item xs={12} md={3}>
             <FormControl component="fieldset">
               <FormLabel component="legend" style={{ marginBottom: 8 }}>
-                Filter by level:
+                {getTranslation("filterLevel")}:
               </FormLabel>
               <ButtonGroup
                 variant="outlined"
@@ -93,7 +94,9 @@ const FilterCards = () => {
 
           <Grid item xs={12} md={3}>
             <FormControl component="fieldset" sx={{ width: "90%" }}>
-              <FormLabel component="legend">Filter by AP:</FormLabel>
+              <FormLabel component="legend">
+                {getTranslation("filterByAp")}:
+              </FormLabel>
               <Slider
                 getAriaLabel={() => "Custom marks"}
                 // defaultValue={20}
@@ -114,7 +117,9 @@ const FilterCards = () => {
 
           <Grid item xs={12} md={3}>
             <FormControl component="fieldset" sx={{ width: "90%" }}>
-              <FormLabel component="legend">Filter by $Bloodstone:</FormLabel>
+              <FormLabel component="legend">
+                {getTranslation("filterBy")} $Bloodstone:
+              </FormLabel>
               <Slider
                 getAriaLabel={() => "Custom marks"}
                 // defaultValue={20}

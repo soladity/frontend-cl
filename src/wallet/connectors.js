@@ -1,5 +1,5 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
-import Web3 from "web3";
+import Web3 from 'web3';
 
 // Chain IDs
 // These are the IDs of the Ethereum chains that MetaMask supports by default. Consult chainid.network (opens new window)for more.
@@ -10,7 +10,7 @@ import Web3 from "web3";
 // 0x5	5	Goerli Test Network
 // 0x2a	42	Kovan Test Network
 export const injected = new InjectedConnector({
-  supportedChainIds: [parseInt(process.env.REACT_APP_CHAIN_ID)],
+  supportedChainIds: [42],
 });
 
 export const getLibrary = (provider) => new Web3(provider);
