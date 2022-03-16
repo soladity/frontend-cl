@@ -865,7 +865,7 @@ const UpdateLegions: React.FC = () => {
                         disabled={!isWDropable || mintLoading}
                       >
                         {isSmallThanSM ? (
-                          getTranslation("Update") +
+                          getTranslation("updateLegion") +
                           " (" +
                           formatNumber(totalAP) +
                           "AP)"
