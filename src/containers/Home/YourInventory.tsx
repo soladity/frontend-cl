@@ -104,8 +104,6 @@ const YourInventory = () => {
       legionContract,
       account
     );
-    setLegionTokenIds(legionTokenIds);
-    getLastHuntTimes(legionTokenIds);
 
     const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
     setTaxLeftDays(parseInt(taxLeftDays));
@@ -123,6 +121,8 @@ const YourInventory = () => {
       account
     );
     setBLSTBalance(BLSTBalance);
+    setLegionTokenIds(legionTokenIds);
+    getLastHuntTimes(legionTokenIds);
   };
 
   const getLastHuntTimes = async (legionTokenIds: any) => {
@@ -153,15 +153,18 @@ const YourInventory = () => {
         time = "00s";
       } else {
         var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
-        var hours = Math.floor(totalSecs / 3660).toFixed(0);
-        var mins = ((totalSecs % 3600) / 60).toFixed(0);
-        var secs = (totalSecs % 3600) % 60;
+        var hours = Math.floor(totalSecs / 3600).toFixed(0);
+        var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
+        var secs = Math.floor(totalSecs % 3600) % 60;
         if (parseInt(hours) > 0) {
           time = `${hours}h ${mins}m ${secs}s`;
         } else if (parseInt(mins) > 0) {
           time = `${mins}m ${secs}s`;
         } else {
           time = `${secs}s`;
+          if (secs == 0) {
+            getBalance()
+          }
         }
       }
     }
