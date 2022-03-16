@@ -392,7 +392,7 @@ const Legions = () => {
                   min={2000}
                   max={100000}
                   marks={[
-                    { value: 2000, label: "2,000" },
+                    { value: 2000, label: "2K" },
                     { value: 100000, label: "100K+" },
                   ]}
                   step={1}

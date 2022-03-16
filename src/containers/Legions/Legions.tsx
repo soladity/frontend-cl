@@ -99,7 +99,7 @@ const Legions = () => {
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
   const [loading, setLoading] = React.useState(false);
   const [supplyLoading, setSupplyLoading] = React.useState(false);
-  const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
+  const [apValue, setApValue] = React.useState<number[]>([0, 100000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
@@ -467,10 +467,10 @@ const Legions = () => {
                   // defaultValue={20}
                   value={apValue}
                   min={0}
-                  max={250000}
+                  max={100000}
                   marks={[
                     { value: 2000, label: "0" },
-                    { value: 250000, label: formatNumber("250K+") },
+                    { value: 100000, label: formatNumber("100K+") },
                   ]}
                   step={1}
                   valueLabelDisplay="auto"
@@ -581,7 +581,7 @@ const Legions = () => {
               .filter(
                 (item: any) =>
                   apValue[0] <= parseInt(item.attackPower) &&
-                  (apValue[1] === 250000
+                  (apValue[1] === 100000
                     ? true
                     : apValue[1] >= parseInt(item.attackPower))
               )
