@@ -401,10 +401,34 @@ const Monsters = () => {
     return time;
   };
 
+  const checkHuntTime = () => {
+    var lastHuntedTime = Math.max(...legions.map((item: any) => parseInt(item.lastHuntTime)))
+    if (lastHuntedTime != -Infinity) {
+      if (lastHuntedTime != 0) {
+        var diff = currentTime.getTime() - lastHuntedTime * 1000;
+        if (diff / 1000 / 3600 >= 24) {
+        } else {
+          var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
+          var hours = Math.floor(totalSecs / 3600).toFixed(0);
+          var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
+          var secs = Math.floor(totalSecs % 3600) % 60;
+          if (parseInt(hours) > 0) {
+          } else if (parseInt(mins) > 0) {
+          } else {
+            if (secs === 0) {
+              updateMonster();
+            }
+          }
+        }
+      }
+    }
+  }
+
   React.useEffect(() => {
     setTimeout(() => {
       setCurrentTime(new Date());
     }, 1000);
+    checkHuntTime()
   }, [currentTime]);
 
   return (
@@ -515,8 +539,8 @@ const Monsters = () => {
                       curLegion?.status === "1"
                         ? "#18e001"
                         : curLegion?.status === "2"
-                        ? "#ae7c00"
-                        : "#fd3742",
+                          ? "#ae7c00"
+                          : "#fd3742",
                     fontWeight: 1000,
                     fontSize: { xs: 14, sm: 16, md: 20 },
                     cursor: "pointer",
@@ -587,12 +611,10 @@ const Monsters = () => {
                   <MonsterCard
                     image={
                       showAnimation === "0"
-                        ? `/assets/images/characters/jpg/monsters/m${
-                            index + 1
-                          }.jpg`
-                        : `/assets/images/characters/gif/monsters/m${
-                            index + 1
-                          }.gif`
+                        ? `/assets/images/characters/jpg/monsters/m${index + 1
+                        }.jpg`
+                        : `/assets/images/characters/gif/monsters/m${index + 1
+                        }.gif`
                     }
                     name={monster.name}
                     tokenID={index + 1}
@@ -600,19 +622,19 @@ const Monsters = () => {
                     minAP={monster.ap}
                     bonus={
                       index < 20 &&
-                      curLegion &&
-                      monster.ap < (curLegion as LegionInterface).attackPower
+                        curLegion &&
+                        monster.ap < (curLegion as LegionInterface).attackPower
                         ? parseInt(monster.base) +
-                            ((curLegion as LegionInterface).attackPower -
-                              monster.ap) /
-                              2000 >
+                          ((curLegion as LegionInterface).attackPower -
+                            monster.ap) /
+                          2000 >
                           89
                           ? 89 - parseInt(monster.base) + ""
                           : Math.floor(
-                              ((curLegion as LegionInterface).attackPower -
-                                monster.ap) /
-                                2000
-                            ) + ""
+                            ((curLegion as LegionInterface).attackPower -
+                              monster.ap) /
+                            2000
+                          ) + ""
                         : "0"
                     }
                     price={monster.reward}
@@ -838,9 +860,8 @@ const Monsters = () => {
             onClick={() => handleSupplyClick("7")}
           >
             <ListItemText
-              primary={`7 ${getTranslation("hunts")} (${
-                curLegion && curLegion?.warriors.length * 7
-              } $BLST)`}
+              primary={`7 ${getTranslation("hunts")} (${curLegion && curLegion?.warriors.length * 7
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -849,9 +870,8 @@ const Monsters = () => {
             onClick={() => handleSupplyClick("14")}
           >
             <ListItemText
-              primary={`14 ${getTranslation("hunts")} (${
-                curLegion && curLegion?.warriors.length * 13
-              } $BLST)`}
+              primary={`14 ${getTranslation("hunts")} (${curLegion && curLegion?.warriors.length * 13
+                } $BLST)`}
             />
           </ListItem>
           <ListItem
@@ -860,9 +880,8 @@ const Monsters = () => {
             onClick={() => handleSupplyClick("28")}
           >
             <ListItemText
-              primary={`28 ${getTranslation("hunts")} (${
-                curLegion && curLegion?.warriors.length * 24
-              } $BLST)`}
+              primary={`28 ${getTranslation("hunts")} (${curLegion && curLegion?.warriors.length * 24
+                } $BLST)`}
             />
           </ListItem>
         </List>
