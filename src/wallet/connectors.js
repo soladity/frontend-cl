@@ -10,7 +10,7 @@ import Web3 from "web3";
 // 0x5	5	Goerli Test Network
 // 0x2a	42	Kovan Test Network
 export const injected = new InjectedConnector({
-  supportedChainIds: [process.env.REACT_APP_CHAIN_ID],
+  supportedChainIds: [parseInt(process.env.REACT_APP_CHAIN_ID)],
 });
 
 export const getLibrary = (provider) => new Web3(provider);
