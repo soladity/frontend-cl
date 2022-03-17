@@ -462,3 +462,7 @@ export const sellTaxDev = async (contract) => {
 export const getSummoningPrice = async (contract, amount) => {
   return await contract.methods.getSummoningPrice(amount).call();
 };
+
+export const getTrainingCost = async (contract, amount) => {
+  return await contract.methods.getTrainingCost(amount).call();
+};
