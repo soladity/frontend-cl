@@ -24,6 +24,7 @@ import {
   getLegionTokenIds,
   getLegionToken,
   getLegionLastHuntTime,
+  getBLSTAmountFromUSD
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -32,6 +33,7 @@ import {
   useLegion,
   useRewardPool,
   useWeb3,
+  useFeeHandler
 } from "../../hooks/useContract";
 import { useSelector } from "react-redux";
 import { getTranslation } from "../../utils/translation";
@@ -51,6 +53,7 @@ const YourInventory = () => {
   const [BLSTBalance, setBLSTBalance] = React.useState("0");
   const [firstHuntTime, setFirstHuntTime] = React.useState(0);
   const [currentTime, setCurrentTime] = React.useState(new Date());
+  const [usdToBlst, setUsdToBlst] = React.useState(0)
 
   //account
   const { account } = useWeb3React();
@@ -71,58 +74,67 @@ const YourInventory = () => {
   //Bloodstone Contract
   const bloodstoneContract = useBloodstone();
 
+  //FeeHandler Contract
+  const feeHandlerContract = useFeeHandler();
+
   //get all balances of your inventory
   const getBalance = async () => {
-    const beastBalance = await getBeastBalance(web3, beastContract, account);
-    setBeastBalance(beastBalance);
+    try {
 
-    const warriorBalance = await getWarriorBalance(
-      web3,
-      warriorContract,
-      account
-    );
-    setWarriorBalance(warriorBalance);
+      const beastBalance = await getBeastBalance(web3, beastContract, account);
+      setBeastBalance(beastBalance);
 
-    const unclaimedBLST = await getUnclaimedBLST(
-      web3,
-      rewardPoolContract,
-      account
-    );
-    setUnclaimedBLST(
-      (parseFloat(unclaimedBLST) / Math.pow(10, 18))
-    );
+      const warriorBalance = await getWarriorBalance(
+        web3,
+        warriorContract,
+        account
+      );
+      setWarriorBalance(warriorBalance);
 
-    const availableLegionCount = await getAvailableLegionsCount(
-      web3,
-      legionContract,
-      account
-    );
-    setAvailableLegionCount(availableLegionCount);
+      const unclaimedBLST = await getUnclaimedBLST(
+        web3,
+        rewardPoolContract,
+        account
+      );
+      setUnclaimedBLST(
+        (parseFloat(unclaimedBLST) / Math.pow(10, 18))
+      );
 
-    const legionTokenIds = await getLegionTokenIds(
-      web3,
-      legionContract,
-      account
-    );
+      const availableLegionCount = await getAvailableLegionsCount(
+        web3,
+        legionContract,
+        account
+      );
+      setAvailableLegionCount(availableLegionCount);
 
-    const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
-    setTaxLeftDays(parseInt(taxLeftDays));
+      const legionTokenIds = await getLegionTokenIds(
+        web3,
+        legionContract,
+        account
+      );
 
-    const maxAttackPower = await getMaxAttackPower(
-      web3,
-      legionContract,
-      account
-    );
-    setMaxAttackPower(maxAttackPower);
+      const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
+      setTaxLeftDays(parseInt(taxLeftDays));
 
-    const BLSTBalance = await getBloodstoneBalance(
-      web3,
-      bloodstoneContract,
-      account
-    );
-    setBLSTBalance(BLSTBalance);
-    setLegionTokenIds(legionTokenIds);
-    getLastHuntTimes(legionTokenIds);
+      const maxAttackPower = await getMaxAttackPower(
+        web3,
+        legionContract,
+        account
+      );
+      setMaxAttackPower(maxAttackPower);
+
+      const BLSTBalance = await getBloodstoneBalance(
+        web3,
+        bloodstoneContract,
+        account
+      );
+      setBLSTBalance(BLSTBalance);
+      setLegionTokenIds(legionTokenIds);
+      getLastHuntTimes(legionTokenIds);
+      setUsdToBlst(await getBLSTAmountFromUSD(feeHandlerContract, 1))
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const getLastHuntTimes = async (legionTokenIds: any) => {
@@ -291,7 +303,7 @@ const YourInventory = () => {
           {getTranslation("BLSTInYourWallet")}:
           <span className="legionOrangeColor">
             {" "}
-            {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( = xx USD )
+            {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( = {formatNumber((parseFloat(BLSTBalance) / (usdToBlst / Math.pow(10, 18))).toFixed(2))} USD )
           </span>
         </Typography>
         <Typography
@@ -299,14 +311,14 @@ const YourInventory = () => {
           variant="subtitle1"
           sx={{ fontWeight: "bold" }}
         >
-          1 USD = <span className="legionOrangeColor">xx $BLST</span>
+          1 USD = <span className="legionOrangeColor">{(usdToBlst / Math.pow(10, 18)).toFixed(2)} $BLST</span>
         </Typography>
         <Typography
           className="legionFontColor"
           variant="subtitle1"
           sx={{ fontWeight: "bold" }}
         >
-          1 BLST = <span className="legionOrangeColor">xx USD</span>
+          1 BLST = <span className="legionOrangeColor">{(1 / (usdToBlst / Math.pow(10, 18))).toFixed(2)} USD</span>
         </Typography>
       </Box>
     </Card>

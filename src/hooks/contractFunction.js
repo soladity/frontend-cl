@@ -32,16 +32,6 @@ export const setBeastBloodstoneApprove = async (web3, contract, account) => {
   return response;
 };
 
-export const getBaseGifURL = async (web3, contract) => {
-  const response = await contract.methods.baseGifUrl().call();
-  return response;
-};
-
-export const getBaseJpgURL = async (web3, contract) => {
-  const response = await contract.methods.baseJpgUrl().call();
-  return response;
-};
-
 /**
  * Beast Session
  */
@@ -204,7 +194,7 @@ export const getMonsterInfo = async (web3, contract, monsterID) => {
     name: response[0],
     base: response[1],
     ap: parseInt(response[2]) / 100,
-    reward: response[3] / 10,
+    reward: response[3] / 10000,
     // image: response[3],
     // imageAlt: response[4]
   };
@@ -461,4 +451,12 @@ export const sellTaxDev = async (contract) => {
 
 export const getSummoningPrice = async (contract, amount) => {
   return await contract.methods.getSummoningPrice(amount).call();
+};
+
+export const getBLSTAmountFromUSD = async (contract, amount) => {
+  return await contract.methods.getBLSTAmountFromUSD(amount).call();
+};
+
+export const getAllMonsters = async (contract) => {
+  return await contract.methods.getAllMonsters().call();
 };
