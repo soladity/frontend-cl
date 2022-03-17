@@ -101,46 +101,46 @@ const TakeAction = () => {
 
     const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
         b1: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b10: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b50: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b100: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b150: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
     });
 
     const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
         b1: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b10: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b50: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b100: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b150: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
     });
@@ -243,54 +243,39 @@ const TakeAction = () => {
     >(undefined);
 
     const getBlstAmountToMintWarrior = async () => {
-        var BLST_amount_1 = 0;
-        var BLST_amount_10 = 0;
-        var BLST_amount_50 = 0;
-        var BLST_amount_100 = 0;
-        var BLST_amount_150 = 0;
+        var BLST_amount_1 = "0";
+        var BLST_amount_10 = "0";
+        var BLST_amount_50 = "0";
+        var BLST_amount_100 = "0";
+        var BLST_amount_150 = "0";
 
         var BLST_per_1 = "0";
-        var BLST_per_10 = "0";
-        var BLST_per_50 = "0";
-        var BLST_per_100 = "0";
-        var BLST_per_150 = "0";
+        var BLST_per_10 = "1";
+        var BLST_per_50 = "2";
+        var BLST_per_100 = "3";
+        var BLST_per_150 = "5";
 
         try {
-            BLST_amount_1 = await getSummoningPrice(
+            BLST_amount_1 = (await getSummoningPrice(
                 feeHandlerContract,
                 1
-            );
-            BLST_amount_10 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_10 = (await getSummoningPrice(
                 feeHandlerContract,
                 10
-            );
-            BLST_amount_50 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_50 = (await getSummoningPrice(
                 feeHandlerContract,
                 50
-            );
-            BLST_amount_100 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_100 = (await getSummoningPrice(
                 feeHandlerContract,
-                200
-            );
-            BLST_amount_150 = await getSummoningPrice(
+                100
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_150 = (await getSummoningPrice(
                 feeHandlerContract,
-                500
-            );
-            BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-            BLST_per_10 = ((1 - BLST_amount_10 / (BLST_amount_1 * 10)) * 100).toFixed(
-                0
-            );
-            BLST_per_50 = ((1 - BLST_amount_50 / (BLST_amount_1 * 50)) * 100).toFixed(
-                0
-            );
-            BLST_per_100 = (
-                (1 - BLST_amount_100 / (BLST_amount_1 * 100)) *
-                100
-            ).toFixed(0);
-            BLST_per_150 = (
-                (1 - BLST_amount_150 / (BLST_amount_1 * 150)) *
-                100
-            ).toFixed(0);
+                150
+            ) / Math.pow(10, 18)).toFixed(2);
             var amount_per = {
                 b1: {
                     amount: BLST_amount_1,
@@ -313,6 +298,7 @@ const TakeAction = () => {
                     per: BLST_per_150,
                 },
             };
+            console.log(amount_per)
             setWarriorBlstAmountPer(amount_per);
         } catch (error) {
             console.log(error);
@@ -322,54 +308,40 @@ const TakeAction = () => {
     };
 
     const getBlstAmountToMintBeast = async () => {
-        var BLST_amount_1 = 0;
-        var BLST_amount_10 = 0;
-        var BLST_amount_50 = 0;
-        var BLST_amount_100 = 0;
-        var BLST_amount_150 = 0;
+        var BLST_amount_1 = "0";
+        var BLST_amount_10 = "0";
+        var BLST_amount_50 = "0";
+        var BLST_amount_100 = "0";
+        var BLST_amount_150 = "0";
 
         var BLST_per_1 = "0";
-        var BLST_per_10 = "0";
-        var BLST_per_50 = "0";
-        var BLST_per_100 = "0";
-        var BLST_per_150 = "0";
+        var BLST_per_10 = "1";
+        var BLST_per_50 = "2";
+        var BLST_per_100 = "3";
+        var BLST_per_150 = "5";
 
         try {
-            BLST_amount_1 = await getSummoningPrice(
+            BLST_amount_1 = (await getSummoningPrice(
                 feeHandlerContract,
                 1
-            );
-            BLST_amount_10 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_10 = (await getSummoningPrice(
                 feeHandlerContract,
                 10
-            );
-            BLST_amount_50 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_50 = (await getSummoningPrice(
                 feeHandlerContract,
                 50
-            );
-            BLST_amount_100 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_100 = (await getSummoningPrice(
                 feeHandlerContract,
                 100
-            );
-            BLST_amount_150 = await getSummoningPrice(
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_150 = (await getSummoningPrice(
                 feeHandlerContract,
                 150
-            );
-            BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-            BLST_per_10 = ((1 - BLST_amount_10 / (BLST_amount_1 * 10)) * 100).toFixed(
-                0
-            );
-            BLST_per_50 = ((1 - BLST_amount_50 / (BLST_amount_1 * 50)) * 100).toFixed(
-                0
-            );
-            BLST_per_100 = (
-                (1 - BLST_amount_100 / (BLST_amount_1 * 100)) *
-                100
-            ).toFixed(0);
-            BLST_per_150 = (
-                (1 - BLST_amount_150 / (BLST_amount_1 * 150)) *
-                100
-            ).toFixed(0);
+            ) / Math.pow(10, 18)).toFixed(2);
+
             var amount_per = {
                 b1: {
                     amount: BLST_amount_1,

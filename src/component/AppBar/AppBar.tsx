@@ -62,7 +62,7 @@ const AppBarComponent = () => {
 
   const [balance, setBalance] = React.useState("0");
   const [showMenu, setShowMenu] = React.useState<boolean>(false);
-  const [unClaimedUSD, setUnclaimedUSD] = React.useState(0);
+  const [unClaimedBLST, setUnclaimedBLST] = React.useState(0);
   const [taxLeftDays, setTaxLeftDays] = React.useState("0");
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -81,12 +81,12 @@ const AppBarComponent = () => {
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
-    const unClaimedUSD = await getUnclaimedBLST(
+    const unClaimedBLST = await getUnclaimedBLST(
       web3,
       rewardPoolContract,
       account
     );
-    setUnclaimedUSD(parseFloat(unClaimedUSD) / Math.pow(10, 18));
+    setUnclaimedBLST(parseFloat(unClaimedBLST) / Math.pow(10, 18));
     const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
     setTaxLeftDays(taxLeftDays);
   };
@@ -203,7 +203,7 @@ const AppBarComponent = () => {
                   <AssistantDirectionIcon />
                 </IconButton>
                 {getTranslation("claim")}{" "}
-                {formatNumber(unClaimedUSD.toFixed(2))} $
+                {formatNumber(unClaimedBLST.toFixed(2))} $
                 {getTranslation("bloodstone")}
               </CommonBtn>
               <Box
@@ -305,11 +305,11 @@ const AppBarComponent = () => {
         <DialogTitle>
           {taxLeftDays !== "0"
             ? `You will pay ${parseInt(taxLeftDays) * 2}% tax.`
-            : `Claim ${unClaimedUSD.toFixed(2)} $BLST`}
+            : `Claim ${unClaimedBLST.toFixed(2)} $BLST`}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {unClaimedUSD === 0 ? (
+            {unClaimedBLST === 0 ? (
               <>
                 {getTranslation("noToClaim")}
                 <br />
@@ -317,10 +317,10 @@ const AppBarComponent = () => {
               </>
             ) : taxLeftDays === "0" ? (
               <>
-                {getTranslation("aboutToClaim")} {unClaimedUSD.toFixed(2)} $BLST{" "}
+                {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)} $BLST{" "}
                 {getTranslation("taxFree")}.
                 <br />
-                {getTranslation("willReceive")} {unClaimedUSD.toFixed(2)} $BLST{" "}
+                {getTranslation("willReceive")} {unClaimedBLST.toFixed(2)} $BLST{" "}
                 {getTranslation("inYourWallet")}.
                 <br />
                 {getTranslation("goAhead")}
@@ -339,15 +339,15 @@ const AppBarComponent = () => {
               </>
             ) : (
               <>
-                {getTranslation("aboutToClaim")} {unClaimedUSD.toFixed(2)} $BLST{" "}
+                {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)} $BLST{" "}
                 {getTranslation("with")} {2 * parseInt(taxLeftDays)}%{" "}
                 {getTranslation("tax")}.
                 <br />
                 {getTranslation("willPay")}{" "}
-                {((2 * parseInt(taxLeftDays) * unClaimedUSD) / 100).toFixed(2)}{" "}
+                {((2 * parseInt(taxLeftDays) * unClaimedBLST) / 100).toFixed(2)}{" "}
                 $BLST, {getTranslation("receiveOnly")}{" "}
                 {(
-                  ((100 - 2 * parseInt(taxLeftDays)) * unClaimedUSD) /
+                  ((100 - 2 * parseInt(taxLeftDays)) * unClaimedBLST) /
                   100
                 ).toFixed(2)}{" "}
                 $BLST {getTranslation("inYourWallet")}.
@@ -389,7 +389,7 @@ const AppBarComponent = () => {
           </Button>
           <Button
             onClick={handleClaimReward}
-            disabled={unClaimedUSD === 0 || loading === true}
+            disabled={unClaimedBLST === 0 || loading === true}
             variant="outlined"
             sx={{ fontWeight: "bold" }}
           >
