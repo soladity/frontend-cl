@@ -1,37 +1,40 @@
 {
   "abi": [
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_rewardpool",
-          "type": "address"
-        }
-      ],
+      "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
       "inputs": [],
-      "name": "baseGifUrl",
+      "name": "getAllMonsters",
       "outputs": [
         {
-          "internalType": "string",
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "percent",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "attack_power",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "reward",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Monster.Monster[]",
           "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "baseJpgUrl",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",
@@ -72,40 +75,8 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "ap",
-          "type": "uint256"
-        }
-      ],
-      "name": "getMonsterToHunt",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "legion",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "rewardpool",
       "outputs": [
         {
           "internalType": "address",

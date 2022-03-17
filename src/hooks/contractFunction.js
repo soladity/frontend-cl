@@ -212,8 +212,8 @@ export const getMonsterInfo = async (web3, contract, monsterID) => {
 };
 
 // Reward Pool
-export const getUnclaimedUSD = async (web3, contract, account) => {
-  const response = await contract.methods.getUnclaimedUSD(account).call();
+export const getUnclaimedBLST = async (web3, contract, account) => {
+  const response = await contract.methods.getUnclaimedBLST(account).call();
   return response;
 };
 
@@ -433,4 +433,32 @@ export const updatePrice = async (web3, contract, account, type, id, price) => {
     .updatePrice(type, id, price)
     .send({ from: account });
   return response;
+};
+
+export const feeDenominator = async (contract) => {
+  return await contract.methods.feeDenominator().call();
+};
+
+export const buyTaxLiquidity = async (contract) => {
+  return await contract.methods.buyTaxLiquidity().call();
+};
+
+export const buyTaxReward = async (contract) => {
+  return await contract.methods.buyTaxReward().call();
+};
+
+export const sellTaxLiquidity = async (contract) => {
+  return await contract.methods.sellTaxLiquidity().call();
+};
+
+export const sellTaxReward = async (contract) => {
+  return await contract.methods.sellTaxReward().call();
+};
+
+export const sellTaxDev = async (contract) => {
+  return await contract.methods.sellTaxDev().call();
+};
+
+export const getSummoningPrice = async (contract, amount) => {
+  return await contract.methods.getSummoningPrice(amount).call();
 };

@@ -17,7 +17,7 @@ import {
   getBloodstoneBalance,
   getBeastBalance,
   getWarriorBalance,
-  getUnclaimedUSD,
+  getUnclaimedBLST,
   getAvailableLegionsCount,
   getTaxLeftDays,
   getMaxAttackPower,
@@ -83,7 +83,7 @@ const YourInventory = () => {
     );
     setWarriorBalance(warriorBalance);
 
-    const unclaimedBalance = await getUnclaimedUSD(
+    const unclaimedBalance = await getUnclaimedBLST(
       web3,
       rewardPoolContract,
       account

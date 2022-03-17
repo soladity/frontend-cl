@@ -24,7 +24,7 @@ import { Spinner } from "../Buttons/Spinner";
 
 import {
   getBloodstoneBalance,
-  getUnclaimedUSD,
+  getUnclaimedBLST,
   claimReward,
   getTaxLeftDays,
 } from "../../hooks/contractFunction";
@@ -81,7 +81,7 @@ const AppBarComponent = () => {
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
-    const unClaimedUSD = await getUnclaimedUSD(
+    const unClaimedUSD = await getUnclaimedBLST(
       web3,
       rewardPoolContract,
       account
@@ -118,7 +118,7 @@ const AppBarComponent = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (error) {}
+    } catch (error) { }
     setLoading(false);
     setDialogOpen(false);
   };
@@ -283,8 +283,8 @@ const AppBarComponent = () => {
                         {account === undefined || account === null
                           ? "..."
                           : account.substr(0, 6) +
-                            "..." +
-                            account.substr(account.length - 4, 4)}
+                          "..." +
+                          account.substr(account.length - 4, 4)}
                       </Typography>
                     </NavLink>
                   </Button>

@@ -149,32 +149,6 @@
     },
     {
       "inputs": [],
-      "name": "baseGifUrl",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "baseJpgUrl",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "bloodstone",
       "outputs": [
         {
@@ -213,38 +187,6 @@
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_mintingAmount",
-          "type": "uint256"
-        }
-      ],
-      "name": "getBloodstoneAmount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "getMintingPrice",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -478,19 +420,6 @@
         }
       ],
       "name": "setApprovalForAll",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_price",
-          "type": "uint256"
-        }
-      ],
-      "name": "setMintingPrice",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
