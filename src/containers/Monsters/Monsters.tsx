@@ -43,12 +43,11 @@ import {
   getLegionToken,
   getWarriorBalance,
   getMonsterInfo,
-  getBaseJpgURL,
-  getBaseGifURL,
   canHunt,
   hunt,
   getBeastToken,
   addSupply,
+  getAllMonsters
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -136,8 +135,6 @@ const Monsters = () => {
 
   const [loading, setLoading] = useState(true);
   const [showAnimation, setShowAnimation] = useState<string | null>("0");
-  const [baseJpgUrl, setBaseJpgUrl] = useState("");
-  const [baseGifUrl, setBaseGifUrl] = useState("");
   const [curComboLegionValue, setCurComboLegionValue] = useState("0");
   const [legions, setLegions] = useState(Array);
   const [legionIDs, setLegionIDs] = useState(Array);
@@ -184,17 +181,27 @@ const Monsters = () => {
 
   const initMonster = async (legions: any) => {
     let monsterTmp;
-    let monsterArraryTmp = [];
-    for (let i = 1; i < 25; i++) {
-      monsterTmp = await getMonsterInfo(web3, monsterContract, i);
-      monsterArraryTmp.push({ ...monsterTmp, id: i });
+    let monsterArrary = [];
+    try {
+      const monsterArraryTemp = await getAllMonsters(monsterContract)
+      monsterArrary = monsterArraryTemp.map((item: any) => {
+        return {
+          name: item.name,
+          base: item.percent,
+          ap: item.attack_power / 100,
+          reward: item.reward / 10000,
+        }
+      })
+    } catch (error) {
+      console.log(error)
     }
-    console.log("monsterArraryTmp", monsterArraryTmp);
-    setMonsters(monsterArraryTmp);
+    console.log("monsterArrary", monsterArrary);
+
+    setMonsters(monsterArrary);
 
     if (legions[0]) {
-      for (let i = 0; i < monsterArraryTmp.length; i++) {
-        const monster: any = monsterArraryTmp[i];
+      for (let i = 0; i < monsterArrary.length; i++) {
+        const monster: any = monsterArrary[i];
         if (parseInt(monster?.ap) <= legions[0].attackPower) {
           setStrongestMonsterToHunt(i);
         } else {
@@ -274,8 +281,6 @@ const Monsters = () => {
       });
     }
     await initMonster(legionArrayTmp);
-    setBaseJpgUrl(await getBaseJpgURL(web3, monsterContract));
-    setBaseGifUrl(await getBaseGifURL(web3, monsterContract));
     setLegionIDs(legionIDS);
     setLegions(legionArrayTmp);
     setCurLegion(legionArrayTmp[0]);
