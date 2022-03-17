@@ -43,7 +43,7 @@ const YourInventory = () => {
 
   const [beastBalance, setBeastBalance] = React.useState(0);
   const [warriorBalance, setWarriorBalance] = React.useState(0);
-  const [unclaimedBalance, setUnclaimedBalance] = React.useState(0);
+  const [unclaimedBLST, setUnclaimedBLST] = React.useState(0);
   const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
   const [legionTokenIds, setLegionTokenIds] = React.useState([]);
   const [taxLeftDays, setTaxLeftDays] = React.useState(0);
@@ -83,13 +83,13 @@ const YourInventory = () => {
     );
     setWarriorBalance(warriorBalance);
 
-    const unclaimedBalance = await getUnclaimedBLST(
+    const unclaimedBLST = await getUnclaimedBLST(
       web3,
       rewardPoolContract,
       account
     );
-    setUnclaimedBalance(
-      (parseFloat(unclaimedBalance) / Math.pow(10, 18))
+    setUnclaimedBLST(
+      (parseFloat(unclaimedBLST) / Math.pow(10, 18))
     );
 
     const availableLegionCount = await getAvailableLegionsCount(
@@ -257,9 +257,9 @@ const YourInventory = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("unClaimed")}:
-          <span className="legionOrangeColor"> {unclaimedBalance}</span>
+          <span className="legionOrangeColor"> {unclaimedBLST}</span>
         </Typography>
-        {unclaimedBalance > 0 && (
+        {unclaimedBLST > 0 && (
           <Typography
             className="legionFontColor"
             variant="subtitle1"
@@ -268,7 +268,7 @@ const YourInventory = () => {
             {getTranslation("claimTax")}:
             <span className="legionOrangeColor">
               {" "}
-              {((taxLeftDays * 2 * unclaimedBalance) / 100).toFixed(
+              {((taxLeftDays * 2 * unclaimedBLST) / 100).toFixed(
                 2
               )}{" "}
               {getTranslation("claimTaxVal")}

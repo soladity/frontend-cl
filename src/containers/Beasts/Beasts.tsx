@@ -36,7 +36,7 @@ import {
   setMarketplaceApprove,
   sellToken,
   execute,
-  getBloodstoneAmountToMintBeast,
+  getSummoningPrice,
   getFee,
 } from "../../hooks/contractFunction";
 import {
@@ -101,23 +101,23 @@ const Beasts = () => {
 
   const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
     b1: {
-      amount: 0,
-      per: "0",
-    },
-    b50: {
-      amount: 0,
+      amount: "0",
       per: "0",
     },
     b10: {
-      amount: 0,
+      amount: "0",
       per: "0",
     },
-    b200: {
-      amount: 0,
+    b50: {
+      amount: "0",
       per: "0",
     },
-    b500: {
-      amount: 0,
+    b100: {
+      amount: "0",
+      per: "0",
+    },
+    b150: {
+      amount: "0",
       per: "0",
     },
   });
@@ -145,79 +145,60 @@ const Beasts = () => {
   const openSummonBeast = Boolean(anchorElSummonBeast);
 
   const getBlstAmountToMintBeast = async () => {
-    var BLST_amount_1 = 0;
-    var BLST_amount_10 = 0;
-    var BLST_amount_50 = 0;
-    var BLST_amount_200 = 0;
-    var BLST_amount_500 = 0;
+    var BLST_amount_1 = "0";
+    var BLST_amount_10 = "0";
+    var BLST_amount_50 = "0";
+    var BLST_amount_100 = "0";
+    var BLST_amount_150 = "0";
 
     var BLST_per_1 = "0";
-    var BLST_per_10 = "0";
-    var BLST_per_50 = "0";
-    var BLST_per_200 = "0";
-    var BLST_per_500 = "0";
+    var BLST_per_10 = "1";
+    var BLST_per_50 = "2";
+    var BLST_per_100 = "3";
+    var BLST_per_150 = "5";
 
     try {
-      BLST_amount_1 = await getBloodstoneAmountToMintBeast(
-        web3,
-        beastContract,
+      BLST_amount_1 = (await getSummoningPrice(
+        feeHandlerContract,
         1
-      );
-      BLST_amount_10 = await getBloodstoneAmountToMintBeast(
-        web3,
-        beastContract,
+      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_10 = (await getSummoningPrice(
+        feeHandlerContract,
         10
-      );
-      BLST_amount_50 = await getBloodstoneAmountToMintBeast(
-        web3,
-        beastContract,
+      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_50 = (await getSummoningPrice(
+        feeHandlerContract,
         50
-      );
-      BLST_amount_200 = await getBloodstoneAmountToMintBeast(
-        web3,
-        beastContract,
-        200
-      );
-      BLST_amount_500 = await getBloodstoneAmountToMintBeast(
-        web3,
-        beastContract,
-        500
-      );
-      BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-      BLST_per_10 = ((1 - BLST_amount_10 / (BLST_amount_1 * 10)) * 100).toFixed(
-        0
-      );
-      BLST_per_50 = ((1 - BLST_amount_50 / (BLST_amount_1 * 50)) * 100).toFixed(
-        0
-      );
-      BLST_per_200 = (
-        (1 - BLST_amount_200 / (BLST_amount_1 * 200)) *
+      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_100 = (await getSummoningPrice(
+        feeHandlerContract,
         100
-      ).toFixed(0);
-      BLST_per_500 = (
-        (1 - BLST_amount_500 / (BLST_amount_1 * 500)) *
-        100
-      ).toFixed(0);
+      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_150 = (await getSummoningPrice(
+        feeHandlerContract,
+        150
+      ) / Math.pow(10, 18)).toFixed(2);
+
       var amount_per = {
         b1: {
           amount: BLST_amount_1,
           per: BLST_per_1,
         },
-        b50: {
-          amount: BLST_amount_50,
-          per: BLST_per_50,
-        },
         b10: {
           amount: BLST_amount_10,
           per: BLST_per_10,
         },
-        b200: {
-          amount: BLST_amount_200,
-          per: BLST_per_200,
+        b50: {
+          amount: BLST_amount_50,
+          per: BLST_per_50,
         },
-        b500: {
-          amount: BLST_amount_500,
-          per: BLST_per_500,
+        b100: {
+          amount: BLST_amount_100,
+          per: BLST_per_100,
+        },
+        b150: {
+          amount: BLST_amount_150,
+          per: BLST_per_150,
         },
       };
       setBeastBlstAmountPer(amount_per);
@@ -505,12 +486,12 @@ const Beasts = () => {
                         marginBottom: 1,
                       }}
                     >
-                      200 (
+                      100 (
                       {"-" +
-                        beastBlstAmountPer.b200.per +
+                        beastBlstAmountPer.b100.per +
                         "%" +
                         " | " +
-                        beastBlstAmountPer.b200?.amount}{" "}
+                        beastBlstAmountPer.b100?.amount}{" "}
                       $BLST)
                     </CommonBtn>
                     <CommonBtn
@@ -521,12 +502,12 @@ const Beasts = () => {
                         marginBottom: 1,
                       }}
                     >
-                      500 (
+                      150 (
                       {"-" +
-                        beastBlstAmountPer.b500.per +
+                        beastBlstAmountPer.b150.per +
                         "%" +
                         " | " +
-                        beastBlstAmountPer.b500?.amount}{" "}
+                        beastBlstAmountPer.b150?.amount}{" "}
                       $BLST)
                     </CommonBtn>
                   </Box>
@@ -651,11 +632,11 @@ const Beasts = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/beasts/" +
-                          item["type"] +
-                          ".jpg"
+                        item["type"] +
+                        ".jpg"
                         : "/assets/images/characters/gif/beasts/" +
-                          item["type"] +
-                          ".gif"
+                        item["type"] +
+                        ".gif"
                     }
                     type={item["type"]}
                     capacity={item["capacity"]}
