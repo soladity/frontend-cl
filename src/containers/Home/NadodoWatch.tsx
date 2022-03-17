@@ -13,19 +13,28 @@ import Typography from "@mui/material/Typography";
 import { getTranslation } from "../../utils/translation";
 import { FaGrinBeam } from "react-icons/fa";
 import CircleIcon from "@mui/icons-material/Circle";
-import { useFeeHandler } from "../../hooks/useContract";
-import { getFee } from "../../hooks/contractFunction";
+import { useBloodstone, useFeeHandler } from "../../hooks/useContract";
+import {
+  getFee,
+  feeDenominator,
+  buyTaxLiquidity,
+  buyTaxReward,
+  sellTaxDev,
+  sellTaxLiquidity,
+  sellTaxReward,
+} from "../../hooks/contractFunction";
 
 const NadodoWatch = () => {
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
   const [huntTax, setHuntTax] = React.useState("0");
-  const [buyTax, setBuyTax] = React.useState("0");
-  const [sellTax, setSellTax] = React.useState("0");
+  const [buyTax, setBuyTax] = React.useState(0);
+  const [sellTax, setSellTax] = React.useState(0);
   const [damageReduction, setDamageReduction] = React.useState("0");
   const [summonFee, setSummonFee] = React.useState("0");
   const [suppliesFee14, setSuppliesFee14] = React.useState("0");
   const [suppliesFee28, setSuppliesFee28] = React.useState("0");
   const feeHandlerContract = useFeeHandler();
+  const bloodstoneContract = useBloodstone()
 
   const getFeeValues = async () => {
     try {
@@ -33,12 +42,18 @@ const NadodoWatch = () => {
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
       setHuntTax(((await getFee(feeHandlerContract, 1)) / 100).toFixed(0));
-      // setBuyTax(((await getFee(feeHandlerContract, 2)) / 100).toFixed(0));
-      // setSellTax(
-      //     ((await getFee(feeHandlerContract, 3)) / 100).toFixed(0)
-      // );
-      setBuyTax("2");
-      setSellTax("8");
+
+
+      const feeDenominatorVal = await feeDenominator(bloodstoneContract);
+      const buyTaxLiquidityVal = await buyTaxLiquidity(bloodstoneContract);
+      const buyTaxRewardVal = await buyTaxReward(bloodstoneContract);
+      const sellTaxDevVal = await sellTaxDev(bloodstoneContract);
+      const sellTaxLiquidityVal = await sellTaxLiquidity(bloodstoneContract);
+      const sellTaxRewardVal = await sellTaxReward(bloodstoneContract);
+
+      setBuyTax((parseInt(buyTaxLiquidityVal) + parseInt(buyTaxRewardVal)) / parseInt(feeDenominatorVal) * 100);
+      setSellTax((parseInt(sellTaxLiquidityVal) + parseInt(sellTaxRewardVal) + parseInt(sellTaxDevVal)) / parseInt(feeDenominatorVal) * 100);
+
       setDamageReduction(
         ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
       );

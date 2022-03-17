@@ -459,7 +459,7 @@ const CreateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {isSmallThanSM ? "BACK" : getTranslation("btnBackToLegions")}
+              {isSmallThanSM ? getTranslation('back') : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>

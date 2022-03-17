@@ -166,7 +166,7 @@ const Help = () => {
         setAttachmentFile(null);
         setPriority("1");
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const setFile = (e: any) => {
@@ -294,10 +294,10 @@ const Help = () => {
                   </IconButton>
                   {attachmentFile
                     ? attachmentFile["name"] +
-                      " / " +
-                      (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
-                      "MB"
-                    : getTranslation("attachmentFile")}
+                    " / " +
+                    (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
+                    "MB"
+                    : getTranslation('attachmentFile')}
                 </label>
               </Grid>
               <Grid item md={6}>
