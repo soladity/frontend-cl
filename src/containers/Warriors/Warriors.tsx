@@ -9,13 +9,15 @@ import { useDispatch } from 'react-redux';
 
 import { meta_constant } from '../../config/meta.config';
 import { setReloadStatus } from '../../actions/contractActions';
-import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, getWarriorBalance, getWarriorTokenIds, getWarriorToken, sellToken, setMarketplaceApprove, getBaseUrl, execute, getBloodstoneAmountToMintWarrior, getFee } from '../../hooks/contractFunction';
+import { getWarriorBloodstoneAllowance, setWarriorBloodstoneApprove, mintWarrior, sellToken, setMarketplaceApprove, getBaseUrl, execute, getBloodstoneAmountToMintWarrior, getFee } from '../../hooks/contractFunction';
 import { useBloodstone, useWarrior, useMarketplace, useLegion, useFeeHandler, useWeb3 } from '../../hooks/useContract';
 import WarriorCard from '../../component/Cards/WarriorCard';
 import CommonBtn from '../../component/Buttons/CommonBtn';
+import Navigation from '../../component/Navigation/Navigation';
 import { getTranslation } from '../../utils/translation';
 import { formatNumber } from '../../utils/common';
 import Image from '../../config/image.json';
+import ApiService from "../../services/api.service";
 import { FaTimes } from "react-icons/fa";
 
 const useStyles = makeStyles({
@@ -56,6 +58,7 @@ const Warriors = () => {
 	const [selectedWarrior, setSelectedWarrior] = React.useState(0);
 	const [price, setPrice] = React.useState(0);
 	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
+	const [currentPage, setCurrentPage] = React.useState(1);
 	const [showAnimation, setShowAnimation] = React.useState<string | null>('0');
 	const [loading, setLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
@@ -223,38 +226,55 @@ const Warriors = () => {
 			dispatch(setReloadStatus({
 				reloadContractStatus: new Date()
 			}));
+			ApiService.updateWarrior(account).then(
+				response => {
+					if (response.data.status === 'success') {
+						setMintLoading(false);
+						getBalance();
+					}
+				},
+				error => {
+					console.log('Error!');
+					setMintLoading(false);
+				}
+			);
 		} catch (e) {
 			console.log(e);
 		}
-		getBalance();
-		setMintLoading(false);
 	}
 
 	const getBalance = async () => {
 		setLoading(true);
 		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
-		setBalance(parseInt(await getWarriorBalance(web3, warriorContract, account)));
-		const ids = await getWarriorTokenIds(web3, warriorContract, account);
-		let amount = 0;
-		let warrior;
-		let tempWarriors = [];
-		let gif = '';
-		let jpg = '';
-		for (let i = 0; i < ids.length; i++) {
-			warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-			for (let j = 0; j < Image.warriors.length; j++) {
-				if (Image.warriors[j].name === warrior.type) {
-					gif = Image.warriors[j].gif;
-					jpg = Image.warriors[j].jpg;
+		ApiService.getWarriors(account).then(
+			response => {
+				if (response.data.status === 'success') {
+					let amount = 0;
+					let tempWarriors = [];
+					let gif = '';
+					let jpg = '';
+					for (let i = 0; i < response.data.data.length; i++) {
+						for (let j = 0; j < Image.warriors.length; j++) {
+							if (Image.warriors[j].name === response.data.data[i].type) {
+								gif = Image.warriors[j].gif;
+								jpg = Image.warriors[j].jpg;
+							}
+						}
+						tempWarriors.push({ id: response.data.data[i].mintId, type: response.data.data[i].type, strength: response.data.data[i].strength, power: response.data.data[i].power, gif: gif, jpg: jpg });
+						amount += parseInt(response.data.data[i].power);
+					}
+					setMaxPower(amount);
+					setWarriors(tempWarriors);
+					setBalance(tempWarriors.length);
 				}
+				setLoading(false);
+			},
+			error => {
+				console.log('Error!');
+				setLoading(false);
 			}
-			tempWarriors.push({ ...warrior, id: ids[i], gif: gif, jpg: jpg });
-			amount += parseInt(warrior.power);
-		}
-		setMaxPower(amount);
-		setWarriors(tempWarriors);
-		setLoading(false);
+		);
 	}
 
 	const handleChangeAp = (
@@ -319,6 +339,10 @@ const Warriors = () => {
 			console.log(e);
 		}
 		setActionLoading(false);
+	}
+
+	const handlePage = (value: any) => {
+		setCurrentPage(value);
 	}
 
 	return <Box>
@@ -600,6 +624,10 @@ const Warriors = () => {
 						</Grid>
 					}
 				</Grid>
+				{
+					warriors.length > 0 &&
+					<Navigation totalCount={warriors.length} cPage={currentPage} handlePage={handlePage} perPage={20} />
+				}
 			</React.Fragment>
 		}
 		{
@@ -665,7 +693,7 @@ const Warriors = () => {
 				</>
 			)}
 		<Dialog onClose={handleSupplyClose} open={openSupply}>
-			<DialogTitle sx={{display: 'flex', justifyContent: 'space-between'}}>
+			<DialogTitle sx={{ display: 'flex', justifyContent: 'space-between' }}>
 				{getTranslation('listOnMarketplace')}
 				<span className='close-button' onClick={handleSupplyClose}>x</span>
 			</DialogTitle>

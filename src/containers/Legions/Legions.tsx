@@ -46,6 +46,7 @@ import {
 	sellToken,
 	getFee
 } from "../../hooks/contractFunction";
+import Navigation from '../../component/Navigation/Navigation';
 import { meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -95,6 +96,7 @@ const Legions = () => {
 	const [openShopping, setOpenShopping] = React.useState(false);
 	const [price, setPrice] = React.useState(0);
 	const [marketplaceTax, setMarketplaceTax] = React.useState('0');
+	const [currentPage, setCurrentPage] = React.useState(1);
 	const [loading, setLoading] = React.useState(false);
 	const [supplyLoading, setSupplyLoading] = React.useState(false);
 	const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
@@ -240,6 +242,10 @@ const Legions = () => {
 			console.log(e);
 		}
 		setActionLoading(false);
+	}
+
+	const handlePage = (value: any) => {
+		setCurrentPage(value);
 	}
 
 	return (
@@ -533,6 +539,10 @@ const Legions = () => {
 								</Grid>
 							))}
 					</Grid>
+					{
+						legions.length > 0 &&
+						<Navigation totalCount={legions.length} cPage={currentPage} handlePage={handlePage} perPage={10} />
+					}
 				</div>
 			)}
 			{loading === true && (
