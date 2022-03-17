@@ -210,7 +210,7 @@ const Help = () => {
             paddingBottom: 2,
           }}
         >
-          {getTranslation('helpText')}
+          {getTranslation("helpText")}
         </Typography>
         <Box sx={{ p: 4 }}>
           <form
@@ -221,8 +221,8 @@ const Help = () => {
             <Grid container spacing={2} sx={{ marginBottom: 4 }}>
               <Grid item md={6}>
                 <TextField
-                  label={getTranslation('email')}
-                  placeholder={getTranslation('yourEmail')}
+                  label={getTranslation("email")}
+                  placeholder={getTranslation("yourEmail")}
                   onChange={(e: any) => setEmail(e.target.value)}
                   name="email"
                   value={email}
@@ -237,8 +237,8 @@ const Help = () => {
               <Grid item md={6}>
                 <TextField
                   id="outlined-basic"
-                  label={getTranslation('discordId')}
-                  placeholder={getTranslation('yourDiscord')}
+                  label={getTranslation("discordId")}
+                  placeholder={getTranslation("yourDiscord")}
                   value={discordID}
                   sx={{ width: "100%" }}
                   onChange={(e) => setDiscordID(e.target.value)}
@@ -248,8 +248,8 @@ const Help = () => {
             <Grid container spacing={2} sx={{ marginBottom: 4 }}>
               <Grid item xs={12}>
                 <TextField
-                  label={getTranslation('title')}
-                  placeholder={getTranslation('titleIssue')}
+                  label={getTranslation("title")}
+                  placeholder={getTranslation("titleIssue")}
                   onChange={(e: any) => setSubject(e.target.value)}
                   name="subject"
                   value={subject}
@@ -262,8 +262,8 @@ const Help = () => {
             <Grid container spacing={2} sx={{ marginBottom: 4 }}>
               <Grid item xs={12}>
                 <TextField
-                  label={getTranslation('description')}
-                  placeholder={getTranslation('descriptionText')}
+                  label={getTranslation("description")}
+                  placeholder={getTranslation("descriptionText")}
                   onChange={(e: any) => setDescription(e.target.value)}
                   name="description"
                   value={description}
@@ -297,23 +297,23 @@ const Help = () => {
                       " / " +
                       (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
                       "MB"
-                    : getTranslation('attachmentFile')}
+                    : getTranslation("attachmentFile")}
                 </label>
               </Grid>
               <Grid item md={6}>
                 <TextField
                   id="outlined-select"
                   select
-                  label={getTranslation('priority')}
+                  label={getTranslation("priority")}
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  helperText={getTranslation('selectPriority')}
+                  helperText={getTranslation("selectPriority")}
                   sx={{ width: "100%" }}
                 >
-                  <MenuItem value={"1"}>{getTranslation('low')}</MenuItem>
-                  <MenuItem value={"2"}>{getTranslation('medium')}</MenuItem>
-                  <MenuItem value={"3"}>{getTranslation('high')}</MenuItem>
-                  <MenuItem value={"4"}>{getTranslation('urgent')}</MenuItem>
+                  <MenuItem value={"1"}>{getTranslation("low")}</MenuItem>
+                  <MenuItem value={"2"}>{getTranslation("medium")}</MenuItem>
+                  <MenuItem value={"3"}>{getTranslation("high")}</MenuItem>
+                  <MenuItem value={"4"}>{getTranslation("urgent")}</MenuItem>
                 </TextField>
               </Grid>
             </Grid>
@@ -324,7 +324,7 @@ const Help = () => {
                 variant="contained"
                 type="submit"
               >
-                {getTranslation('createTicket')}
+                {getTranslation("createTicket")}
               </Button>
             </Box>
           </form>
