@@ -130,22 +130,31 @@ const Beasts = () => {
 
 	const handleSortBlst = (value: boolean) => {
 		setSortBlst(value);
-		handleSort('blst');
+		handleSort();
 	}
 
-	const handleSort = (type: string) => {
+	const handleSort = () => {
 		let temp = beasts;
 		temp.sort((a: any, b: any) => {
-			if (parseInt(a.price) > parseInt(b.price)) {
-				return 1;
-			}
-			if (parseInt(a.price) < parseInt(b.price)) {
-				return -1;
+			if (sortBlst === true) {
+				if (parseInt(a.price) > parseInt(b.price)) {
+					return 1;
+				}
+				if (parseInt(a.price) < parseInt(b.price)) {
+					return -1;
+				}
+			} else {
+				if (parseInt(a.price) > parseInt(b.price)) {
+					return -1;
+				}
+				if (parseInt(a.price) < parseInt(b.price)) {
+					return 1;
+				}
 			}
 			return 0;
 		});
 		setBeasts(temp);
-	}
+	};
 
 	const handlePage = (value: any) => {
 		setCurrentPage(value);

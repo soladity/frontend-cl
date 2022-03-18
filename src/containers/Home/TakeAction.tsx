@@ -942,7 +942,7 @@ const TakeAction = () => {
                                                 marginBottom: 1,
                                             }}
                                         >
-                                            {getTranslation("takeActionPoocoin")}
+                                            {getTranslation("takeActionDextools")}
                                         </CommonBtn>
                                     </a>
                                     <a href="https://pancakeswap.com" target='_blank'>

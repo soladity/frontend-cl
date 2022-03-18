@@ -8,7 +8,7 @@ on:
         branches:
             - main
             - staging
-            - development
+            - dev
 
 jobs:
     build_and_deploy:
@@ -21,6 +21,11 @@ jobs:
               run: |
                   echo "NODE_ENV=${GITHUB_REF/refs\/heads\//}" >> $GITHUB_ENV
 
+            - name: Set NODE_ENV
+              run: |
+                  NODE_ENV=$(echo ${GITHUB_REF#refs/heads/} | tr / -)
+                  [ "$NODE_ENV" = "main" ] && echo "NODE_ENV=main" >> $GITHUB_ENV || [ "$NODE_ENV" = "staging" ] && echo "NODE_ENV=staging" >> $GITHUB_ENV || echo "NODE_ENV=development" >> $GITHUB_ENV
+
             - name: Set env variables for secrets
               run: |
                   echo "AWS_ACCESS_KEY_ID=${NODE_ENV}_AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
@@ -32,12 +37,12 @@ jobs:
               uses: actions/setup-node@v2
               with:
                   node-version: ${{ env.NODE_VERSION }}
-                  cache: "npm"
+                  cache: 'npm'
 
             - run: npm i -g yarn
             - run: yarn install
             - run: npm run build
-            # - run: npm test
+            #            - run: npm test
 
             - name: Deploy
               uses: Reggionick/s3-deploy@v3.1.1
