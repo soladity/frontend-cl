@@ -20,6 +20,10 @@ import {
   ListItem,
   ListItemText,
   LinearProgress,
+  Button,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
@@ -36,6 +40,9 @@ import {
   useWarrior,
   useMonster,
   useWeb3,
+  useFeeHandler,
+  useBloodstone,
+  useRewardPool,
 } from "../../hooks/useContract";
 import {
   getBeastBalance,
@@ -47,7 +54,10 @@ import {
   hunt,
   getBeastToken,
   addSupply,
-  getAllMonsters
+  getAllMonsters,
+  getSupplyCost,
+  getUnclaimedBLST,
+  getBloodstoneBalance,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -132,6 +142,9 @@ const Monsters = () => {
   const beastContract = useBeast();
   const warriorContract = useWarrior();
   const monsterContract = useMonster();
+  const feeHandlerContract = useFeeHandler();
+  const bloodstoneContract = useBloodstone();
+  const rewardPoolContract = useRewardPool();
 
   const [loading, setLoading] = useState(true);
   const [showAnimation, setShowAnimation] = useState<string | null>("0");
@@ -157,6 +170,13 @@ const Monsters = () => {
 
   const [strongestMonsterToHunt, setStrongestMonsterToHunt] = React.useState(0);
 
+  const [supplyValues, setSupplyValues] = React.useState([0, 0, 0]);
+  const [supplyOrder, setSupplyOrder] = React.useState(0);
+  const [supplyCostLoading, setSupplyCostLoading] = React.useState(false);
+
+  const [blstBalance, setBlstBalance] = React.useState(0);
+  const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
+
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -174,26 +194,21 @@ const Monsters = () => {
     );
   }, []);
 
-  let options = {
-    address: ["0xc960D5645BD7Be251D3679C6e43993BAeEf99239"],
-    topics: [],
-  };
-
   const initMonster = async (legions: any) => {
     let monsterTmp;
     let monsterArrary = [];
     try {
-      const monsterArraryTemp = await getAllMonsters(monsterContract)
+      const monsterArraryTemp = await getAllMonsters(monsterContract);
       monsterArrary = monsterArraryTemp.map((item: any) => {
         return {
           name: item.name,
           base: item.percent,
           ap: item.attack_power / 100,
           reward: item.reward / 10000,
-        }
-      })
+        };
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     console.log("monsterArrary", monsterArrary);
 
@@ -255,6 +270,10 @@ const Monsters = () => {
 
   const initialize = async () => {
     setLoading(true);
+    setBlstBalance(
+      await getBloodstoneBalance(web3, bloodstoneContract, account)
+    );
+    setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
     const legionIDS = await getLegionTokenIds(web3, legionContract, account);
     let legionTmp;
     let legionArrayTmp = [];
@@ -361,7 +380,7 @@ const Monsters = () => {
     setOpenSupply(false);
   };
 
-  const handleSupplyClick = async (value: string) => {
+  const handleSupplyClick = async (fromWallet: boolean) => {
     setLoadingText(getTranslation("buyingSupplies"));
     setSupplyLoading(true);
     setOpenSupply(false);
@@ -371,9 +390,15 @@ const Monsters = () => {
         legionContract,
         account,
         curLegion?.id,
-        parseInt(value)
+        supplyOrder == 0 ? 7 : (supplyOrder == 1 ? 14 : 28),
+        fromWallet
       );
       setLoadingText(getTranslation("loadingLegions"));
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
       await updateMonster();
     } catch (e) {
       console.log(e);
@@ -407,13 +432,17 @@ const Monsters = () => {
   };
 
   const checkHuntTime = () => {
-    var lastHuntedTime = Math.max(...legions.map((item: any) => parseInt(item.lastHuntTime)))
+    var lastHuntedTime = Math.max(
+      ...legions.map((item: any) => parseInt(item.lastHuntTime))
+    );
     if (lastHuntedTime != -Infinity) {
       if (lastHuntedTime != 0) {
         var diff = currentTime.getTime() - lastHuntedTime * 1000;
         if (diff / 1000 / 3600 >= 24) {
         } else {
-          var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
+          var totalSecs = parseInt(
+            ((24 * 1000 * 3600 - diff) / 1000).toFixed(2)
+          );
           var hours = Math.floor(totalSecs / 3600).toFixed(0);
           var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
           var secs = Math.floor(totalSecs % 3600) % 60;
@@ -427,13 +456,34 @@ const Monsters = () => {
         }
       }
     }
-  }
+  };
+
+  const getSupplyValues = async () => {
+    setSupplyCostLoading(true);
+    try {
+      setOpenSupply(true);
+      var tempArr = [];
+      tempArr.push(
+        await getSupplyCost(feeHandlerContract, curLegion?.warriors.length, 7)
+      );
+      tempArr.push(
+        await getSupplyCost(feeHandlerContract, curLegion?.warriors.length, 14)
+      );
+      tempArr.push(
+        await getSupplyCost(feeHandlerContract, curLegion?.warriors.length, 28)
+      );
+      setSupplyValues(tempArr);
+    } catch (error) {
+      console.log(error);
+    }
+    setSupplyCostLoading(false);
+  };
 
   React.useEffect(() => {
     setTimeout(() => {
       setCurrentTime(new Date());
     }, 1000);
-    checkHuntTime()
+    checkHuntTime();
   }, [currentTime]);
 
   return (
@@ -550,9 +600,10 @@ const Monsters = () => {
                     fontSize: { xs: 14, sm: 16, md: 20 },
                     cursor: "pointer",
                   }}
-                  onClick={() => setOpenSupply(true)}
+                  onClick={() => getSupplyValues()}
                 >
-                  {curLegion?.supplies}{getTranslation('hSymbol')}{" "}
+                  {curLegion?.supplies}
+                  {getTranslation("hSymbol")}{" "}
                   {curLegion?.supplies == "0" &&
                     "(" + getTranslation("suppliesNeeded") + ")"}
                 </Typography>
@@ -852,44 +903,98 @@ const Monsters = () => {
       </Snackbar>
 
       <Dialog onClose={handleSupplyClose} open={openSupply}>
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
+        <DialogTitle sx={{ textAlign: "center" }}>
           {getTranslation("buySupply")}
-          <span className="close-button" onClick={handleSupplyClose}>
-            x
-          </span>
         </DialogTitle>
-        <List sx={{ pt: 0 }}>
-          <ListItem
-            button
-            sx={{ textAlign: "center", cursor: "pointer" }}
-            onClick={() => handleSupplyClick("7")}
+        <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
+          <RadioGroup
+            sx={{ margin: "0 auto" }}
+            aria-labelledby="demo-radio-buttons-group-label"
+            name="radio-buttons-group"
+            onChange={(e) => setSupplyOrder(parseInt(e.target.value))}
+            value={supplyOrder}
           >
-            <ListItemText
-              primary={`7 ${getTranslation("hunts")} (${curLegion && curLegion?.warriors.length * 7
-                } $BLST)`}
+            <FormControlLabel
+              value={0}
+              control={<Radio />}
+              label={`7 ${getTranslation("hunts")} (${(
+                supplyValues[0] / Math.pow(10, 18)
+              ).toFixed(2)} $BLST)`}
             />
-          </ListItem>
-          <ListItem
-            button
-            sx={{ textAlign: "center", cursor: "pointer" }}
-            onClick={() => handleSupplyClick("14")}
+            <FormControlLabel
+              value={1}
+              control={<Radio />}
+              label={`14 ${getTranslation("hunts")} (${(
+                supplyValues[1] / Math.pow(10, 18)
+              ).toFixed(2)} $BLST)`}
+            />
+            <FormControlLabel
+              value={2}
+              control={<Radio />}
+              label={`28 ${getTranslation("hunts")} (${(
+                supplyValues[2] / Math.pow(10, 18)
+              ).toFixed(2)} $BLST)`}
+            />
+          </RadioGroup>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            p: 1,
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleSupplyClose}
           >
-            <ListItemText
-              primary={`14 ${getTranslation("hunts")} (${curLegion && curLegion?.warriors.length * 13
-                } $BLST)`}
-            />
-          </ListItem>
-          <ListItem
-            button
-            sx={{ textAlign: "center", cursor: "pointer" }}
-            onClick={() => handleSupplyClick("28")}
+            {getTranslation("cancel")}
+          </Button>
+          <CommonBtn
+            onClick={() => handleSupplyClick(true)}
+            sx={{ marginRight: 1, marginLeft: 1 }}
+            disabled={
+              parseFloat(blstBalance * Math.pow(10, 18) + "") <
+              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+            }
           >
-            <ListItemText
-              primary={`28 ${getTranslation("hunts")} (${curLegion && curLegion?.warriors.length * 24
-                } $BLST)`}
-            />
-          </ListItem>
-        </List>
+            Wallet
+          </CommonBtn>
+          <CommonBtn
+            onClick={() => handleSupplyClick(false)}
+            disabled={
+              parseFloat(unclaimedBlst + "") <
+              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+            }
+          >
+            Unclaimed
+          </CommonBtn>
+        </Box>
+        {supplyCostLoading && (
+          <Box
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              paddingLeft: 10,
+              paddingRight: 10,
+              display: "flex",
+              alignItems: "center",
+              background: "#222222ee",
+            }}
+          >
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ textAlign: "center", marginBottom: 1 }}>
+                {getTranslation("supplyCostLoading")}
+              </Box>
+              <LinearProgress sx={{ width: "100%" }} color="success" />
+            </Box>
+          </Box>
+        )}
       </Dialog>
     </Box>
   );
