@@ -1,1 +1,1 @@
-export {policyConstant} from './policy/policy';
+export { policyConstant } from "./policy/policy";

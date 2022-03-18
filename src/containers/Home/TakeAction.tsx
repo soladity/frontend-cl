@@ -20,8 +20,7 @@ import {
     setWarriorBloodstoneApprove,
     mintBeast,
     mintWarrior,
-    getBloodstoneAmountToMintBeast,
-    getBloodstoneAmountToMintWarrior,
+    getSummoningPrice,
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -29,6 +28,7 @@ import {
     useBeast,
     useWarrior,
     useWeb3,
+    useFeeHandler,
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
@@ -101,46 +101,46 @@ const TakeAction = () => {
 
     const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
         b1: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b10: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b50: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
-        b200: {
-            amount: 0,
+        b100: {
+            amount: "0",
             per: "0",
         },
-        b500: {
-            amount: 0,
+        b150: {
+            amount: "0",
             per: "0",
         },
     });
 
     const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
         b1: {
-            amount: 0,
-            per: "0",
-        },
-        b50: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
         b10: {
-            amount: 0,
+            amount: "0",
             per: "0",
         },
-        b200: {
-            amount: 0,
+        b50: {
+            amount: "0",
             per: "0",
         },
-        b500: {
-            amount: 0,
+        b100: {
+            amount: "0",
+            per: "0",
+        },
+        b150: {
+            amount: "0",
             per: "0",
         },
     });
@@ -177,6 +177,7 @@ const TakeAction = () => {
     const beastContract = useBeast();
     const warriorContract = useWarrior();
     const bloodstoneContract = useBloodstone();
+    const feeHandlerContract = useFeeHandler()
     const web3 = useWeb3();
 
     //Mint Beast with quantity
@@ -218,11 +219,7 @@ const TakeAction = () => {
             account
         );
         if (allowance === "0") {
-            await setWarriorBloodstoneApprove(
-                web3,
-                bloodstoneContract,
-                account
-            );
+            await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
         }
         await mintWarrior(web3, warriorContract, account, amount);
 
@@ -246,61 +243,39 @@ const TakeAction = () => {
     >(undefined);
 
     const getBlstAmountToMintWarrior = async () => {
-        var BLST_amount_1 = 0;
-        var BLST_amount_10 = 0;
-        var BLST_amount_50 = 0;
-        var BLST_amount_200 = 0;
-        var BLST_amount_500 = 0;
+        var BLST_amount_1 = "0";
+        var BLST_amount_10 = "0";
+        var BLST_amount_50 = "0";
+        var BLST_amount_100 = "0";
+        var BLST_amount_150 = "0";
 
         var BLST_per_1 = "0";
-        var BLST_per_10 = "0";
-        var BLST_per_50 = "0";
-        var BLST_per_200 = "0";
-        var BLST_per_500 = "0";
+        var BLST_per_10 = "1";
+        var BLST_per_50 = "2";
+        var BLST_per_100 = "3";
+        var BLST_per_150 = "5";
 
         try {
-            BLST_amount_1 = await getBloodstoneAmountToMintWarrior(
-                web3,
-                warriorContract,
+            BLST_amount_1 = (await getSummoningPrice(
+                feeHandlerContract,
                 1
-            );
-            BLST_amount_10 = await getBloodstoneAmountToMintWarrior(
-                web3,
-                warriorContract,
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_10 = (await getSummoningPrice(
+                feeHandlerContract,
                 10
-            );
-            BLST_amount_50 = await getBloodstoneAmountToMintWarrior(
-                web3,
-                warriorContract,
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_50 = (await getSummoningPrice(
+                feeHandlerContract,
                 50
-            );
-            BLST_amount_200 = await getBloodstoneAmountToMintWarrior(
-                web3,
-                warriorContract,
-                200
-            );
-            BLST_amount_500 = await getBloodstoneAmountToMintWarrior(
-                web3,
-                warriorContract,
-                500
-            );
-            BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-            BLST_per_10 = (
-                (1 - BLST_amount_10 / (BLST_amount_1 * 10)) *
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_100 = (await getSummoningPrice(
+                feeHandlerContract,
                 100
-            ).toFixed(0);
-            BLST_per_50 = (
-                (1 - BLST_amount_50 / (BLST_amount_1 * 50)) *
-                100
-            ).toFixed(0);
-            BLST_per_200 = (
-                (1 - BLST_amount_200 / (BLST_amount_1 * 200)) *
-                100
-            ).toFixed(0);
-            BLST_per_500 = (
-                (1 - BLST_amount_500 / (BLST_amount_1 * 500)) *
-                100
-            ).toFixed(0);
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_150 = (await getSummoningPrice(
+                feeHandlerContract,
+                150
+            ) / Math.pow(10, 18)).toFixed(2);
             var amount_per = {
                 b1: {
                     amount: BLST_amount_1,
@@ -314,15 +289,16 @@ const TakeAction = () => {
                     amount: BLST_amount_50,
                     per: BLST_per_50,
                 },
-                b200: {
-                    amount: BLST_amount_200,
-                    per: BLST_per_200,
+                b100: {
+                    amount: BLST_amount_100,
+                    per: BLST_per_100,
                 },
-                b500: {
-                    amount: BLST_amount_500,
-                    per: BLST_per_500,
+                b150: {
+                    amount: BLST_amount_150,
+                    per: BLST_per_150,
                 },
             };
+            console.log(amount_per)
             setWarriorBlstAmountPer(amount_per);
         } catch (error) {
             console.log(error);
@@ -332,81 +308,60 @@ const TakeAction = () => {
     };
 
     const getBlstAmountToMintBeast = async () => {
-        var BLST_amount_1 = 0;
-        var BLST_amount_10 = 0;
-        var BLST_amount_50 = 0;
-        var BLST_amount_200 = 0;
-        var BLST_amount_500 = 0;
+        var BLST_amount_1 = "0";
+        var BLST_amount_10 = "0";
+        var BLST_amount_50 = "0";
+        var BLST_amount_100 = "0";
+        var BLST_amount_150 = "0";
 
         var BLST_per_1 = "0";
-        var BLST_per_10 = "0";
-        var BLST_per_50 = "0";
-        var BLST_per_200 = "0";
-        var BLST_per_500 = "0";
+        var BLST_per_10 = "1";
+        var BLST_per_50 = "2";
+        var BLST_per_100 = "3";
+        var BLST_per_150 = "5";
 
         try {
-            BLST_amount_1 = await getBloodstoneAmountToMintBeast(
-                web3,
-                beastContract,
+            BLST_amount_1 = (await getSummoningPrice(
+                feeHandlerContract,
                 1
-            );
-            BLST_amount_10 = await getBloodstoneAmountToMintBeast(
-                web3,
-                beastContract,
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_10 = (await getSummoningPrice(
+                feeHandlerContract,
                 10
-            );
-            BLST_amount_50 = await getBloodstoneAmountToMintBeast(
-                web3,
-                beastContract,
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_50 = (await getSummoningPrice(
+                feeHandlerContract,
                 50
-            );
-            BLST_amount_200 = await getBloodstoneAmountToMintBeast(
-                web3,
-                beastContract,
-                200
-            );
-            BLST_amount_500 = await getBloodstoneAmountToMintBeast(
-                web3,
-                beastContract,
-                500
-            );
-            BLST_per_1 = ((1 - BLST_amount_1 / BLST_amount_1) * 100).toFixed(0);
-            BLST_per_10 = (
-                (1 - BLST_amount_10 / (BLST_amount_1 * 10)) *
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_100 = (await getSummoningPrice(
+                feeHandlerContract,
                 100
-            ).toFixed(0);
-            BLST_per_50 = (
-                (1 - BLST_amount_50 / (BLST_amount_1 * 50)) *
-                100
-            ).toFixed(0);
-            BLST_per_200 = (
-                (1 - BLST_amount_200 / (BLST_amount_1 * 200)) *
-                100
-            ).toFixed(0);
-            BLST_per_500 = (
-                (1 - BLST_amount_500 / (BLST_amount_1 * 500)) *
-                100
-            ).toFixed(0);
+            ) / Math.pow(10, 18)).toFixed(2);
+            BLST_amount_150 = (await getSummoningPrice(
+                feeHandlerContract,
+                150
+            ) / Math.pow(10, 18)).toFixed(2);
+
             var amount_per = {
                 b1: {
                     amount: BLST_amount_1,
                     per: BLST_per_1,
                 },
-                b50: {
-                    amount: BLST_amount_50,
-                    per: BLST_per_50,
-                },
                 b10: {
                     amount: BLST_amount_10,
                     per: BLST_per_10,
                 },
-                b200: {
-                    amount: BLST_amount_200,
-                    per: BLST_per_200,
+                b50: {
+                    amount: BLST_amount_50,
+                    per: BLST_per_50,
                 },
-                b500: {
-                    amount: BLST_amount_500,
-                    per: BLST_per_500,
+                b100: {
+                    amount: BLST_amount_100,
+                    per: BLST_per_100,
+                },
+                b150: {
+                    amount: BLST_amount_150,
+                    per: BLST_per_150,
                 },
             };
             setBeastBlstAmountPer(amount_per);
@@ -464,7 +419,7 @@ const TakeAction = () => {
                         marginBottom: 3,
                     }}
                 >
-                    TAKE ACTION
+                    {getTranslation("takeAction")}
                 </Typography>
                 <Box>
                     <Grid container spacing={{ xs: 2, sm: 2, md: 1, lg: 2 }}>
@@ -477,15 +432,13 @@ const TakeAction = () => {
                                     height: "100%",
                                 }}
                             >
-                                <Box
-                                    sx={{ textAlign: "center", width: "100%" }}
-                                >
+                                <Box sx={{ textAlign: "center", width: "100%" }}>
                                     <CommonBtn
                                         aria-describedby={"summon-warrior-id"}
                                         onClick={handlePopoverOpenSummonWarrior}
                                         sx={{
                                             fontWeight: "bold",
-                                            wordBreak: 'break-word',
+                                            wordBreak: "break-word",
                                             fontSize: 14,
                                             width: "100%",
                                             marginBottom: 1,
@@ -497,9 +450,7 @@ const TakeAction = () => {
                                         id={"summon-warrior-id"}
                                         open={openSummonWarrior}
                                         anchorEl={anchorElSummonWarrior}
-                                        onClose={
-                                            handlePopoverCloseSummonWarrior
-                                        }
+                                        onClose={handlePopoverCloseSummonWarrior}
                                         anchorOrigin={{
                                             vertical: "center",
                                             horizontal: "left",
@@ -513,23 +464,17 @@ const TakeAction = () => {
                                             <Box
                                                 sx={{
                                                     marginLeft: "auto",
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     cursor: "pointer",
                                                     marginRight: 1,
                                                     marginTop: 1,
                                                 }}
                                             >
-                                                <FaTimes
-                                                    onClick={
-                                                        handlePopoverCloseSummonWarrior
-                                                    }
-                                                />
+                                                <FaTimes onClick={handlePopoverCloseSummonWarrior} />
                                             </Box>
                                         </Box>
                                         <DialogTitle>
-                                            {getTranslation(
-                                                "takeActionSummonWarriorQuantity"
-                                            )}
+                                            {getTranslation("takeActionSummonWarriorQuantity")}
                                         </DialogTitle>
                                         <Box
                                             sx={{
@@ -539,33 +484,21 @@ const TakeAction = () => {
                                             }}
                                         >
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleWarriorMint(
-                                                        1,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleWarriorMint(1, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
-                                                1 (
-                                                {warriorBlstAmountPer.b1?.amount}{" "}
-                                                $BLST)
+                                                1 ({warriorBlstAmountPer.b1?.amount} $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleWarriorMint(
-                                                        10,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleWarriorMint(10, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -575,20 +508,14 @@ const TakeAction = () => {
                                                     warriorBlstAmountPer.b10.per +
                                                     "%" +
                                                     " | " +
-                                                    warriorBlstAmountPer.b10
-                                                        ?.amount}{" "}
+                                                    warriorBlstAmountPer.b10?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleWarriorMint(
-                                                        50,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleWarriorMint(50, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -598,55 +525,41 @@ const TakeAction = () => {
                                                     warriorBlstAmountPer.b50.per +
                                                     "%" +
                                                     " | " +
-                                                    warriorBlstAmountPer.b50
-                                                        ?.amount}{" "}
+                                                    warriorBlstAmountPer.b50?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleWarriorMint(
-                                                        200,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleWarriorMint(200, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
-                                                200 (
+                                                100 (
                                                 {"-" +
-                                                    warriorBlstAmountPer.b200.per +
+                                                    warriorBlstAmountPer.b100.per +
                                                     "%" +
                                                     " | " +
-                                                    warriorBlstAmountPer.b200
-                                                        ?.amount}{" "}
+                                                    warriorBlstAmountPer.b100?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleWarriorMint(
-                                                        500,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleWarriorMint(500, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
-                                                500 (
+                                                150 (
                                                 {"-" +
-                                                    warriorBlstAmountPer.b500
-                                                        .per +
+                                                    warriorBlstAmountPer.b150.per +
                                                     "%" +
                                                     " | " +
-                                                    warriorBlstAmountPer.b500
-                                                        ?.amount}{" "}
+                                                    warriorBlstAmountPer.b150?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                         </Box>
@@ -657,7 +570,7 @@ const TakeAction = () => {
                                         sx={{
                                             fontSize: 14,
                                             fontWeight: "bold",
-                                            wordBreak: 'break-word',
+                                            wordBreak: "break-word",
                                             width: "100%",
                                             marginBottom: 1,
                                         }}
@@ -687,17 +600,11 @@ const TakeAction = () => {
                                                     marginTop: 1,
                                                 }}
                                             >
-                                                <FaTimes
-                                                    onClick={
-                                                        handlePopoverCloseSummonBeast
-                                                    }
-                                                />
+                                                <FaTimes onClick={handlePopoverCloseSummonBeast} />
                                             </Box>
                                         </Box>
                                         <DialogTitle>
-                                            {getTranslation(
-                                                "takeActionSummonBeastQuantity"
-                                            )}
+                                            {getTranslation("takeActionSummonBeastQuantity")}
                                         </DialogTitle>
                                         <Box
                                             sx={{
@@ -707,56 +614,37 @@ const TakeAction = () => {
                                             }}
                                         >
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleBeastMint(
-                                                        1,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleBeastMint(1, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
-                                                1 (
-                                                {beastBlstAmountPer.b1?.amount}{" "}
-                                                $BLST)
+                                                1 ({beastBlstAmountPer.b1?.amount} $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleBeastMint(
-                                                        10,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleBeastMint(10, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
                                                 10 (
                                                 {"-" +
-                                                    beastBlstAmountPer.b10
-                                                        .per +
+                                                    beastBlstAmountPer.b10.per +
                                                     "%" +
                                                     " | " +
-                                                    beastBlstAmountPer.b10
-                                                        ?.amount}{" "}
+                                                    beastBlstAmountPer.b10?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleBeastMint(
-                                                        50,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleBeastMint(50, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
@@ -766,54 +654,41 @@ const TakeAction = () => {
                                                     beastBlstAmountPer.b50.per +
                                                     "%" +
                                                     " | " +
-                                                    beastBlstAmountPer.b50
-                                                        ?.amount}{" "}
+                                                    beastBlstAmountPer.b50?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleBeastMint(
-                                                        200,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleBeastMint(200, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
-                                                200 (
+                                                100 (
                                                 {"-" +
-                                                    beastBlstAmountPer.b200.per +
+                                                    beastBlstAmountPer.b100.per +
                                                     "%" +
                                                     " | " +
-                                                    beastBlstAmountPer.b200
-                                                        ?.amount}{" "}
+                                                    beastBlstAmountPer.b100?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() =>
-                                                    handleBeastMint(
-                                                        500,
-                                                        TransitionUp
-                                                    )
-                                                }
+                                                onClick={() => handleBeastMint(500, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
-                                                    wordBreak: 'break-word',
+                                                    wordBreak: "break-word",
                                                     fontWeight: "bold",
                                                     marginBottom: 1,
                                                 }}
                                             >
-                                                500 (
+                                                150 (
                                                 {"-" +
-                                                    beastBlstAmountPer.b500.per +
+                                                    beastBlstAmountPer.b150.per +
                                                     "%" +
                                                     " | " +
-                                                    beastBlstAmountPer.b500
-                                                        ?.amount}{" "}
+                                                    beastBlstAmountPer.b150?.amount}{" "}
                                                 $BLST)
                                             </CommonBtn>
                                         </Box>
@@ -821,29 +696,21 @@ const TakeAction = () => {
                                     <CommonBtn
                                         sx={{
                                             fontWeight: "bold",
-                                            wordBreak: 'break-word',
+                                            wordBreak: "break-word",
                                             fontSize: 14,
                                             width: "100%",
                                             marginBottom: 1,
                                         }}
                                     >
-                                        <NavLink
-                                            to="/createlegions"
-                                            className="non-style"
-                                        >
-                                            {getTranslation(
-                                                "takeActionCreateLegion"
-                                            )}
+                                        <NavLink to="/createlegions" className="non-style">
+                                            {getTranslation("takeActionCreateLegion")}
                                         </NavLink>
                                     </CommonBtn>
-                                    <NavLink
-                                        to="/hunt"
-                                        className="non-style"
-                                    >
+                                    <NavLink to="/hunt" className="non-style">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
@@ -852,14 +719,11 @@ const TakeAction = () => {
                                             {getTranslation("hunt")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <NavLink
-                                        to="/hunt"
-                                        className="non-style"
-                                    >
+                                    <NavLink to="/hunt" className="non-style">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                             }}
@@ -879,35 +743,25 @@ const TakeAction = () => {
                                     height: "100%",
                                 }}
                             >
-                                <Box
-                                    sx={{ textAlign: "center", width: "100%" }}
-                                >
-                                    <NavLink
-                                        to="/warriorsMarketplace"
-                                        className="non-style"
-                                    >
+                                <Box sx={{ textAlign: "center", width: "100%" }}>
+                                    <NavLink to="/warriorsMarketplace" className="non-style">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
                                             }}
                                         >
-                                            {getTranslation(
-                                                "takeActionBuyWarriors"
-                                            )}
+                                            {getTranslation("takeActionBuyWarriors")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <NavLink
-                                        to="/beastsMarketplace"
-                                        className="non-style"
-                                    >
+                                    <NavLink to="/beastsMarketplace" className="non-style">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
@@ -916,14 +770,11 @@ const TakeAction = () => {
                                             {getTranslation("takeActionBuyBeasts")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <NavLink
-                                        to="/legionsMarketplace"
-                                        className="non-style"
-                                    >
+                                    <NavLink to="/legionsMarketplace" className="non-style">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
@@ -932,11 +783,11 @@ const TakeAction = () => {
                                             {getTranslation("takeActionBuyLegions")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <a href="https://poocoin.app" target='_blank'>
+                                    <a href="https://poocoin.app" target="_blank">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                                 marginBottom: 1,
@@ -945,11 +796,11 @@ const TakeAction = () => {
                                             {getTranslation("takeActionDextools")}
                                         </CommonBtn>
                                     </a>
-                                    <a href="https://pancakeswap.com" target='_blank'>
+                                    <a href="https://pancakeswap.com" target="_blank">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
-                                                wordBreak: 'break-word',
+                                                wordBreak: "break-word",
                                                 fontSize: 14,
                                                 width: "100%",
                                             }}

@@ -1,18 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 import ButtonUnstyled, {
   ButtonUnstyledProps,
   buttonUnstyledClasses,
-} from '@mui/base/ButtonUnstyled';
-import { styled, Theme } from '@mui/system';
-import {
-  FaVideo,
-  FaVideoSlash
-} from 'react-icons/fa';
-
+} from "@mui/base/ButtonUnstyled";
+import { styled, Theme } from "@mui/system";
+import { FaVideo, FaVideoSlash } from "react-icons/fa";
 
 const ButtonRoot = React.forwardRef(function ButtonRoot(
   props: React.PropsWithChildren<{}>,
-  ref: React.ForwardedRef<any>,
+  ref: React.ForwardedRef<any>
 ) {
   const { children, ...other } = props;
 
@@ -28,23 +24,23 @@ const ButtonRoot = React.forwardRef(function ButtonRoot(
 });
 
 const blue = {
-  50: '#F0F7FF',
-  100: '#C2E0FF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  800: '#004C99',
-  900: '#623313',
+  50: "#F0F7FF",
+  100: "#C2E0FF",
+  200: "#99CCF3",
+  400: "#3399FF",
+  500: "#007FFF",
+  600: "#0072E5",
+  800: "#004C99",
+  900: "#623313",
 };
 
 const CustomButtonRoot = styled(ButtonRoot)(
   ({ theme }: { theme: Theme }) => `
   overflow: visible;
   cursor: pointer;
-  --main-color: ${theme.palette.mode === 'light' ? blue[600] : blue[100]};
-  --hover-color: ${theme.palette.mode === 'light' ? blue[50] : blue[900]};
-  --active-color: ${theme.palette.mode === 'light' ? blue[100] : blue[800]};
+  --main-color: ${theme.palette.mode === "light" ? blue[600] : blue[100]};
+  --hover-color: ${theme.palette.mode === "light" ? blue[50] : blue[900]};
+  --active-color: ${theme.palette.mode === "light" ? blue[100] : blue[800]};
 
   & polygon {
     fill: transparent;
@@ -80,7 +76,7 @@ const CustomButtonRoot = styled(ButtonRoot)(
 
   &:focus,
   &.${buttonUnstyledClasses.focusVisible} {
-    outline: 2px solid ${theme.palette.mode === 'dark' ? blue[900] : blue[200]};
+    outline: 2px solid ${theme.palette.mode === "dark" ? blue[900] : blue[200]};
     outline-offset: 2px;
   }
 
@@ -110,35 +106,35 @@ const CustomButtonRoot = styled(ButtonRoot)(
     & svg {
       margin: 0 5px;
     }
-  }`,
+  }`
 );
 
 const SvgButton = React.forwardRef(function SvgButton(
   props: ButtonUnstyledProps,
-  ref: React.ForwardedRef<any>,
+  ref: React.ForwardedRef<any>
 ) {
   return <ButtonUnstyled {...props} component={CustomButtonRoot} ref={ref} />;
 });
 
 export default function UnstyledButtonCustom(props: any) {
-  const [showAnimation, setShowAnimation] = React.useState(localStorage.getItem('showAnimation') === '1' ? true : false)
+  const [showAnimation, setShowAnimation] = React.useState(
+    localStorage.getItem("showAnimation") === "1" ? true : false
+  );
   if (showAnimation) {
     return (
       <a>
         <SvgButton
           style={{ margin: 10 }}
           onClick={() => {
-            setShowAnimation(false)
-            localStorage.setItem('showAnimation', '0')
+            setShowAnimation(false);
+            localStorage.setItem("showAnimation", "0");
           }}
         >
-          <div style={{ color: '#caa959' }}>
-            <div style={{ textAlign: 'center', fontSize: 32 }}>
+          <div style={{ color: "#caa959" }}>
+            <div style={{ textAlign: "center", fontSize: 32 }}>
               <FaVideo />
             </div>
-            <div style={{ textAlign: 'center' }}>
-              NFT Videos
-            </div>
+            <div style={{ textAlign: "center" }}>NFT Videos</div>
           </div>
         </SvgButton>
       </a>
@@ -149,17 +145,15 @@ export default function UnstyledButtonCustom(props: any) {
         <SvgButton
           style={{ margin: 10 }}
           onClick={() => {
-            setShowAnimation(true)
-            localStorage.setItem('showAnimation', '1')
+            setShowAnimation(true);
+            localStorage.setItem("showAnimation", "1");
           }}
         >
-          <div style={{ color: '#caa959' }}>
-            <div style={{ textAlign: 'center', fontSize: 32 }}>
+          <div style={{ color: "#caa959" }}>
+            <div style={{ textAlign: "center", fontSize: 32 }}>
               <FaVideoSlash />
             </div>
-            <div style={{ textAlign: 'center' }}>
-              NFT Images
-            </div>
+            <div style={{ textAlign: "center" }}>NFT Images</div>
           </div>
         </SvgButton>
       </a>

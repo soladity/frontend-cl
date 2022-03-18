@@ -1,7 +1,13 @@
 {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_feehandler",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
@@ -22,6 +28,44 @@
         }
       ],
       "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "RewardChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "RewardClaimed",
       "type": "event"
     },
     {
@@ -48,24 +92,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_address",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "addUnclaimedUSD",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "bloodstone",
       "outputs": [
@@ -79,21 +105,21 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "getEarlyClaimTax",
-      "outputs": [
+      "inputs": [
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "taxStartDay",
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "name": "claimReward",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -104,7 +130,7 @@
           "type": "address"
         }
       ],
-      "name": "getUnclaimedUSD",
+      "name": "getUnclaimedBLST",
       "outputs": [
         {
           "internalType": "uint256",
@@ -169,17 +195,17 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_tax",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "_startTax",
+          "name": "_reward",
           "type": "uint256"
         }
       ],
-      "name": "setEarlyClaimTax",
+      "name": "subReward",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -224,19 +250,6 @@
         }
       ],
       "name": "withdrawBNB",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawBNBOwner",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

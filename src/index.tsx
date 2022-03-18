@@ -1,21 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from '@emotion/react';
-import CssBaseline from '@mui/material/CssBaseline';
-import { themeConfig } from './config';
-import { BrowserRouter } from 'react-router-dom';
-import { Web3ReactProvider } from '@web3-react/core';
-import { getLibrary } from './wallet';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { ThemeProvider } from "@emotion/react";
+import CssBaseline from "@mui/material/CssBaseline";
+import { themeConfig } from "./config";
+import { BrowserRouter } from "react-router-dom";
+import { Web3ReactProvider } from "@web3-react/core";
+import { getLibrary } from "./wallet";
 
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import rootReducer from './reducers'
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import rootReducer from "./reducers";
 
-const store = createStore(rootReducer, composeWithDevTools())
-
+const store = createStore(rootReducer, composeWithDevTools());
 
 ReactDOM.render(
   <React.StrictMode>
@@ -30,7 +29,7 @@ ReactDOM.render(
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
