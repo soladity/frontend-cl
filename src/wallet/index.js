@@ -1,11 +1,8 @@
-export { 
-    injected,
-    getLibrary 
-} from './connectors';
+export { injected, getLibrary } from "./connectors";
 
 export {
-    ethereumConnect,
-    isEthereumConnected,
-    isEthereumMetaMask,
-    ethereumSendTransaction
-} from './ethereum';
+  ethereumConnect,
+  isEthereumConnected,
+  isEthereumMetaMask,
+  ethereumSendTransaction,
+} from "./ethereum";

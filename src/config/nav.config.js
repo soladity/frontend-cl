@@ -19,28 +19,23 @@ export const navConfig = {
   routes: () => [
     {
       path: "/",
-      // element: React.lazy(() => import('./../containers/Home/Home')),
       element: <Home />,
       children: [],
     },
     {
       path: "/hunt",
-      // element: React.lazy(() => import('./../containers/Monsters/Monsters'))
       element: <Monsters />,
     },
     {
       path: "/beasts",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Beasts />,
     },
     {
       path: "/warriors",
-      // element: React.lazy(() => import('./../containers/Monsters/Monsters'))
       element: <Warriors />,
     },
     {
       path: "/legions",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Legions />,
     },
     {
@@ -65,12 +60,10 @@ export const navConfig = {
     },
     {
       path: "/profile",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Profile />,
     },
     {
       path: "/policy",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Policy />,
     },
     {
@@ -156,6 +149,7 @@ export const navConfig = {
         title: "whitepaper",
         icon: "whitepaper.png",
         path: "https://docs.cryptolegions.app/",
+        esPath: "https://docs-es.cryptolegions.app/"
       },
       {
         type: "navlink",

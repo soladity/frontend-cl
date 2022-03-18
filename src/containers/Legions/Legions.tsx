@@ -31,6 +31,7 @@ import {
   useLegion,
   useMarketplace,
   useFeeHandler,
+  useBloodstone,
   useWeb3,
 } from "../../hooks/useContract";
 import {
@@ -40,13 +41,15 @@ import {
   getLegionToken,
   addSupply,
   getBaseUrl,
-  getLegionImage,
+  getLegionBloodstoneAllowance,
+  setLegionBloodstoneApprove,
   getHuntStatus,
   setMarketplaceApprove,
   sellToken,
   getFee,
 } from "../../hooks/contractFunction";
-import { meta_constant } from "../../config/meta.config";
+import { allConstants, meta_constant } from "../../config/meta.config";
+import Navigation from '../../component/Navigation/Navigation';
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
@@ -81,7 +84,6 @@ type LegionProps = {
 const Legions = () => {
   const { account } = useWeb3React();
   const navigate = useNavigate();
-
   const [beastBalance, setBeastBalance] = React.useState("0");
   const [warriorBalance, setWarriorBalance] = React.useState("0");
   const [baseUrl, setBaseUrl] = React.useState("");
@@ -97,14 +99,17 @@ const Legions = () => {
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
   const [loading, setLoading] = React.useState(false);
   const [supplyLoading, setSupplyLoading] = React.useState(false);
-  const [apValue, setApValue] = React.useState<number[]>([0, 250000]);
+  const [apValue, setApValue] = React.useState<number[]>([0, 100000]);
   const [actionLoading, setActionLoading] = React.useState(false);
+
+  const maxSellPrice = allConstants.maxSellPrice;
 
   const classes = useStyles();
   const legionContract = useLegion();
   const beastContract = useBeast();
   const warriorContract = useWarrior();
   const marketplaceContract = useMarketplace();
+  const bloodstoneContract = useBloodstone();
   const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
@@ -205,7 +210,15 @@ const Legions = () => {
   const handleSupplyClick = async (value: string) => {
     setSupplyLoading(true);
     setOpenSupply(false);
+    const allowance = await getLegionBloodstoneAllowance(
+      web3,
+      bloodstoneContract,
+      account
+    );
     try {
+      if (allowance === "0") {
+        await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
+      }
       await addSupply(
         web3,
         legionContract,
@@ -239,7 +252,9 @@ const Legions = () => {
   };
 
   const handlePrice = (e: any) => {
-    setPrice(e.target.value);
+    if (e.target.value >= 0) {
+      setPrice(+e.target.value);
+    }
   };
 
   const handleSendToMarketplace = async () => {
@@ -275,6 +290,34 @@ const Legions = () => {
       console.log(e);
     }
     setActionLoading(false);
+  };
+
+  const handleSort = (value: boolean) => {
+    setHighest(value);
+    handleSortValue();
+  };
+
+  const handleSortValue = () => {
+    let temp = legions;
+    temp.sort((a: any, b: any) => {
+      if (highest === true) {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return 1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return -1;
+        }
+      } else {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return -1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    setLegions(temp);
   };
 
   return (
@@ -424,10 +467,10 @@ const Legions = () => {
                   // defaultValue={20}
                   value={apValue}
                   min={0}
-                  max={250000}
+                  max={100000}
                   marks={[
                     { value: 2000, label: "0" },
-                    { value: 250000, label: formatNumber("250K+") },
+                    { value: 100000, label: formatNumber("100K+") },
                   ]}
                   step={1}
                   valueLabelDisplay="auto"
@@ -445,7 +488,7 @@ const Legions = () => {
                   <Button
                     variant={!highest ? "contained" : "outlined"}
                     onClick={() => {
-                      setHighest(!highest);
+                      handleSort(!highest);
                     }}
                   >
                     {getTranslation("lowest")}
@@ -453,7 +496,7 @@ const Legions = () => {
                   <Button
                     variant={highest ? "contained" : "outlined"}
                     onClick={() => {
-                      setHighest(!highest);
+                      handleSort(!highest);
                     }}
                   >
                     {getTranslation("highest")}
@@ -532,15 +575,13 @@ const Legions = () => {
             spacing={4}
             sx={{
               mb: 4,
-              flexDirection: highest ? "row" : "row-reverse",
-              justifyContent: highest ? "flex-start" : "flex-end",
             }}
           >
             {legions
               .filter(
                 (item: any) =>
                   apValue[0] <= parseInt(item.attackPower) &&
-                  (apValue[1] === 250000
+                  (apValue[1] === 100000
                     ? true
                     : apValue[1] >= parseInt(item.attackPower))
               )
@@ -646,7 +687,7 @@ const Legions = () => {
             onClick={() => handleSupplyClick("7")}
           >
             <ListItemText
-              primary={`7 Hunts (${
+              primary={`7 ${getTranslation("hunts")} (${
                 selectedLegion === -1
                   ? 0
                   : legions.filter(
@@ -661,7 +702,7 @@ const Legions = () => {
             onClick={() => handleSupplyClick("14")}
           >
             <ListItemText
-              primary={`14 Hunts (${
+              primary={`14 ${getTranslation("hunts")} (${
                 selectedLegion === -1
                   ? 0
                   : legions.filter(
@@ -676,7 +717,7 @@ const Legions = () => {
             onClick={() => handleSupplyClick("28")}
           >
             <ListItemText
-              primary={`28 Hunts (${
+              primary={`28 ${getTranslation("hunts")} (${
                 selectedLegion === -1
                   ? 0
                   : legions.filter(
@@ -699,24 +740,44 @@ const Legions = () => {
             autoFocus
             margin="dense"
             id="price"
-            label="Price in $BLST"
             type="number"
+            label={`${getTranslation("priceIn")} $BLST`}
             fullWidth
             variant="standard"
             value={price}
             onChange={handlePrice}
+            color={price < maxSellPrice ? "primary" : "error"}
+            inputProps={{ step: "0.1" }}
+            sx={{
+              input: {
+                color: price < maxSellPrice ? "white" : "#f44336",
+              },
+            }}
           />
           <Typography variant="subtitle1">(= XXX USD)</Typography>
           <Typography variant="subtitle1">
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
         </DialogContent>
-        <CommonBtn
-          sx={{ fontWeight: "bold" }}
-          onClick={handleSendToMarketplace}
-        >
-          {getTranslation("sell")}
-        </CommonBtn>
+        {+price >= 0 && price < maxSellPrice ? (
+          <CommonBtn
+            sx={{ fontWeight: "bold" }}
+            onClick={handleSendToMarketplace}
+          >
+            {getTranslation("sell")}
+          </CommonBtn>
+        ) : (
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: 2,
+              color: "#f44336",
+              wordBreak: "break-word",
+            }}
+          >
+            {getTranslation("maxSellPrice")}
+          </Box>
+        )}
       </Dialog>
     </Box>
   );
