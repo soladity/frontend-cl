@@ -230,9 +230,16 @@ export const getLegionLastHuntTime = async (web3, contract, tokenId) => {
   return response;
 };
 
-export const addSupply = async (web3, contract, account, tokenId, supply) => {
+export const addSupply = async (
+  web3,
+  contract,
+  account,
+  tokenId,
+  supply,
+  fromWallet
+) => {
   const response = await contract.methods
-    .addSupply(tokenId, supply, true)
+    .addSupply(tokenId, supply, fromWallet)
     .send({ from: account });
   return response;
 };
@@ -459,4 +466,8 @@ export const getBLSTAmountFromUSD = async (contract, amount) => {
 
 export const getAllMonsters = async (contract) => {
   return await contract.methods.getAllMonsters().call();
+};
+
+export const getSupplyCost = async (contract, warriorCnt, supplyDate) => {
+  return await contract.methods.getSupplyCost(warriorCnt, supplyDate).call();
 };
