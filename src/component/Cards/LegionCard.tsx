@@ -102,8 +102,8 @@ export default function LegionCard(props: CardProps) {
     setLoaded(true);
   };
 
-  const open = (id: string) => {
-    handleOpenSupply(parseInt(id));
+  const open = (id: string, warriorCnt: number) => {
+    handleOpenSupply(parseInt(id), warriorCnt);
   };
 
   const openShopping = (id: string) => {
@@ -155,68 +155,68 @@ export default function LegionCard(props: CardProps) {
           <Grid container spacing={1} sx={{ pt: 2 }}>
             {showWarrior
               ? warriorList.map((item: any, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                <Grid item xs={12} md={6} key={index}>
+                  <Box
+                    sx={{
+                      backgroundColor: "black",
+                      padding: 1,
+                      borderRadius: 1,
+                    }}
+                  >
                     <Box
                       sx={{
-                        backgroundColor: "black",
-                        padding: 1,
-                        borderRadius: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">{item.type}</Typography>
-                        <Typography variant="subtitle2">#{item.id}</Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">
-                          {formatNumber(item.power)} AP
-                        </Typography>
-                        <Box>{item.item}</Box>
-                      </Box>
+                      <Typography variant="subtitle2">{item.type}</Typography>
+                      <Typography variant="subtitle2">#{item.id}</Typography>
                     </Box>
-                  </Grid>
-                ))
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography variant="subtitle2">
+                        {formatNumber(item.power)} AP
+                      </Typography>
+                      <Box>{item.item}</Box>
+                    </Box>
+                  </Box>
+                </Grid>
+              ))
               : beastList.map((item: any, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                <Grid item xs={12} md={6} key={index}>
+                  <Box
+                    sx={{
+                      backgroundColor: "black",
+                      padding: 1,
+                      borderRadius: 1,
+                    }}
+                  >
                     <Box
                       sx={{
-                        backgroundColor: "black",
-                        padding: 1,
-                        borderRadius: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">{item.type}</Typography>
-                        <Typography variant="subtitle2">#{item.id}</Typography>
-                      </Box>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography variant="subtitle2">
-                          {item.capacity}
-                        </Typography>
-                        <img
-                          src="/assets/images/sword.png"
-                          style={{ height: "15px", marginLeft: "5px" }}
-                          alt="Sword"
-                        />
-                      </Box>
+                      <Typography variant="subtitle2">{item.type}</Typography>
+                      <Typography variant="subtitle2">#{item.id}</Typography>
                     </Box>
-                  </Grid>
-                ))}
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Typography variant="subtitle2">
+                        {item.capacity}
+                      </Typography>
+                      <img
+                        src="/assets/images/sword.png"
+                        style={{ height: "15px", marginLeft: "5px" }}
+                        alt="Sword"
+                      />
+                    </Box>
+                  </Box>
+                </Grid>
+              ))}
           </Grid>
         </CardContent>
       )}
@@ -244,10 +244,10 @@ export default function LegionCard(props: CardProps) {
             huntStatus === "green"
               ? "green"
               : huntStatus === "orange"
-              ? "orange"
-              : "red",
+                ? "orange"
+                : "red",
         }}
-        onClick={() => open(id)}
+        onClick={() => open(id, warriors.length)}
       >
         {supplies} {getTranslation("hSymbol")}
       </Box>
