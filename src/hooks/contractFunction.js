@@ -475,3 +475,7 @@ export const getAllMonsters = async (contract) => {
 export const getSupplyCost = async (contract, warriorCnt, supplyDate) => {
   return await contract.methods.getSupplyCost(warriorCnt, supplyDate).call();
 };
+
+export const getCostForAddingWarrior = async (contract, amount, supply) => {
+  return await contract.methods.getCostForAddingWarrior(amount, supply).call();
+};

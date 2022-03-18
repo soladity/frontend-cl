@@ -147,7 +147,7 @@ const CreateLegions: React.FC = () => {
   const [legionName, setLegionName] = React.useState("");
   const [isWDropable, setIsWDropable] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
-  const [mintFee, setMintFee] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState("0");
   const [comboFilterValue, setComboFilterValue] = React.useState("");
   const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
     []
@@ -230,13 +230,7 @@ const CreateLegions: React.FC = () => {
   }, [beasts, warriors, dropItemList, legionName]);
 
   const setFee = async () => {
-    setMintFee(
-      Math.floor(
-        parseInt(
-          await getTrainingCost(feeHandlerContract, dropItemList.length)
-        ) / Math.pow(10, 18)
-      )
-    );
+    setMintFee((await getTrainingCost(feeHandlerContract, dropItemList.length) / Math.pow(10, 18)).toFixed(3));
   };
 
   const getBalance = async () => {
