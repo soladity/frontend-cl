@@ -18,6 +18,10 @@ import {
   ListItemText,
   DialogContent,
   TextField,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  LinearProgress,
 } from "@mui/material";
 import Helmet from "react-helmet";
 import { makeStyles } from "@mui/styles";
@@ -33,6 +37,7 @@ import {
   useFeeHandler,
   useBloodstone,
   useWeb3,
+  useRewardPool,
 } from "../../hooks/useContract";
 import {
   getBeastBalance,
@@ -47,11 +52,16 @@ import {
   setMarketplaceApprove,
   sellToken,
   getFee,
+  getBloodstoneBalance,
+  getUnclaimedBLST,
+  getSupplyCost,
 } from "../../hooks/contractFunction";
 import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
+import { useDispatch } from "react-redux";
+import { setReloadStatus } from "../../actions/contractActions";
 
 const useStyles = makeStyles({
   root: {
@@ -83,6 +93,7 @@ type LegionProps = {
 const Legions = () => {
   const { account } = useWeb3React();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [beastBalance, setBeastBalance] = React.useState("0");
   const [warriorBalance, setWarriorBalance] = React.useState("0");
@@ -102,6 +113,14 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([0, 100000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
+
+  const [supplyValues, setSupplyValues] = React.useState([0, 0, 0]);
+  const [supplyOrder, setSupplyOrder] = React.useState(0);
+  const [supplyCostLoading, setSupplyCostLoading] = React.useState(false);
+
+  const [blstBalance, setBlstBalance] = React.useState(0);
+  const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
+
   const maxSellPrice = allConstants.maxSellPrice;
 
   const classes = useStyles();
@@ -111,6 +130,7 @@ const Legions = () => {
   const marketplaceContract = useMarketplace();
   const bloodstoneContract = useBloodstone();
   const feeHandlerContract = useFeeHandler();
+  const rewardPoolContract = useRewardPool();
   const web3 = useWeb3();
 
   React.useEffect(() => {
@@ -151,6 +171,11 @@ const Legions = () => {
 
   const getBalance = async () => {
     setLoading(true);
+
+    setBlstBalance(
+      await getBloodstoneBalance(web3, bloodstoneContract, account)
+    )
+    setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
     setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
     setBaseUrl(await getBaseUrl());
     setBeastBalance(await getBeastBalance(web3, beastContract, account));
@@ -207,7 +232,7 @@ const Legions = () => {
     setOpenSupply(false);
   };
 
-  const handleSupplyClick = async (value: string) => {
+  const handleSupplyClick = async (fromWallet: boolean) => {
     setSupplyLoading(true);
     setOpenSupply(false);
     const allowance = await getLegionBloodstoneAllowance(
@@ -224,7 +249,13 @@ const Legions = () => {
         legionContract,
         account,
         selectedLegion,
-        parseInt(value)
+        supplyOrder == 0 ? 7 : (supplyOrder == 1 ? 14 : 28),
+        fromWallet
+      );
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
       );
     } catch (e) {
       console.log(e);
@@ -233,9 +264,26 @@ const Legions = () => {
     getBalance();
   };
 
-  const handleOpenSupply = (id: number) => {
-    setSelectedLegion(id);
-    setOpenSupply(true);
+  const handleOpenSupply = async (id: number, warriorCnt: any) => {
+    setSelectedLegion(id)
+    setSupplyCostLoading(true);
+    try {
+      setOpenSupply(true);
+      var tempArr = [];
+      tempArr.push(
+        await getSupplyCost(feeHandlerContract, warriorCnt, 7)
+      );
+      tempArr.push(
+        await getSupplyCost(feeHandlerContract, warriorCnt, 14)
+      );
+      tempArr.push(
+        await getSupplyCost(feeHandlerContract, warriorCnt, 28)
+      );
+      setSupplyValues(tempArr);
+    } catch (error) {
+      console.log(error);
+    }
+    setSupplyCostLoading(false);
   };
 
   const handleUpdateLegoin = (id: number) => {
@@ -442,8 +490,8 @@ const Legions = () => {
                           item.huntStatus === "green"
                             ? "green"
                             : item.huntStatus === "orange"
-                            ? "orange"
-                            : "red",
+                              ? "orange"
+                              : "red",
                       }}
                     >
                       {formatNumber(item.attackPower)} AP
@@ -673,61 +721,6 @@ const Legions = () => {
           </Grid>
         </>
       )}
-      <Dialog onClose={handleSupplyClose} open={openSupply}>
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
-          {getTranslation("buySupply")}
-          <span className="close-button" onClick={handleSupplyClose}>
-            x
-          </span>
-        </DialogTitle>
-        <List sx={{ pt: 0 }}>
-          <ListItem
-            button
-            sx={{ textAlign: "center" }}
-            onClick={() => handleSupplyClick("7")}
-          >
-            <ListItemText
-              primary={`7 ${getTranslation("hunts")} (${
-                selectedLegion === -1
-                  ? 0
-                  : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 7
-              } $BLST)`}
-            />
-          </ListItem>
-          <ListItem
-            button
-            sx={{ textAlign: "center" }}
-            onClick={() => handleSupplyClick("14")}
-          >
-            <ListItemText
-              primary={`14 ${getTranslation("hunts")} (${
-                selectedLegion === -1
-                  ? 0
-                  : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 13
-              } $BLST)`}
-            />
-          </ListItem>
-          <ListItem
-            button
-            sx={{ textAlign: "center" }}
-            onClick={() => handleSupplyClick("28")}
-          >
-            <ListItemText
-              primary={`28 ${getTranslation("hunts")} (${
-                selectedLegion === -1
-                  ? 0
-                  : legions.filter(
-                      (item) => parseInt(item.id) === selectedLegion
-                    )[0]["warriors"].length * 24
-              } $BLST)`}
-            />
-          </ListItem>
-        </List>
-      </Dialog>
       <Dialog onClose={handleShoppingClose} open={openShopping}>
         <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
           {getTranslation("listOnMarketplace")}
@@ -776,6 +769,101 @@ const Legions = () => {
             }}
           >
             {getTranslation("maxSellPrice")}
+          </Box>
+        )}
+      </Dialog>
+
+      <Dialog onClose={handleSupplyClose} open={openSupply}>
+        <DialogTitle sx={{ textAlign: "center" }}>
+          {getTranslation("buySupply")}
+        </DialogTitle>
+        <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
+          <RadioGroup
+            sx={{ margin: "0 auto" }}
+            aria-labelledby="demo-radio-buttons-group-label"
+            name="radio-buttons-group"
+            onChange={(e) => setSupplyOrder(parseInt(e.target.value))}
+            value={supplyOrder}
+          >
+            <FormControlLabel
+              value={0}
+              control={<Radio />}
+              label={`7 ${getTranslation("hunts")} (${(
+                supplyValues[0] / Math.pow(10, 18)
+              ).toFixed(2)} $BLST)`}
+            />
+            <FormControlLabel
+              value={1}
+              control={<Radio />}
+              label={`14 ${getTranslation("hunts")} (${(
+                supplyValues[1] / Math.pow(10, 18)
+              ).toFixed(2)} $BLST)`}
+            />
+            <FormControlLabel
+              value={2}
+              control={<Radio />}
+              label={`28 ${getTranslation("hunts")} (${(
+                supplyValues[2] / Math.pow(10, 18)
+              ).toFixed(2)} $BLST)`}
+            />
+          </RadioGroup>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            p: 1,
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleSupplyClose}
+          >
+            {getTranslation("cancel")}
+          </Button>
+          <CommonBtn
+            onClick={() => handleSupplyClick(true)}
+            sx={{ marginRight: 1, marginLeft: 1 }}
+            disabled={
+              parseFloat(blstBalance * Math.pow(10, 18) + "") <
+              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+            }
+          >
+            Wallet
+          </CommonBtn>
+          <CommonBtn
+            onClick={() => handleSupplyClick(false)}
+            disabled={
+              parseFloat(unclaimedBlst + "") <
+              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+            }
+          >
+            Unclaimed
+          </CommonBtn>
+        </Box>
+        {supplyCostLoading && (
+          <Box
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              paddingLeft: 10,
+              paddingRight: 10,
+              display: "flex",
+              alignItems: "center",
+              background: "#222222ee",
+            }}
+          >
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ textAlign: "center", marginBottom: 1 }}>
+                {getTranslation("supplyCostLoading")}
+              </Box>
+              <LinearProgress sx={{ width: "100%" }} color="success" />
+            </Box>
           </Box>
         )}
       </Dialog>
