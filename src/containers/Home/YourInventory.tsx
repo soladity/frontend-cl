@@ -24,7 +24,7 @@ import {
   getLegionTokenIds,
   getLegionToken,
   getLegionLastHuntTime,
-  getBLSTAmountFromUSD
+  getBLSTAmountFromUSD,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -33,7 +33,7 @@ import {
   useLegion,
   useRewardPool,
   useWeb3,
-  useFeeHandler
+  useFeeHandler,
 } from "../../hooks/useContract";
 import { useSelector } from "react-redux";
 import { getTranslation } from "../../utils/translation";
@@ -53,7 +53,7 @@ const YourInventory = () => {
   const [BLSTBalance, setBLSTBalance] = React.useState("0");
   const [firstHuntTime, setFirstHuntTime] = React.useState(0);
   const [currentTime, setCurrentTime] = React.useState(new Date());
-  const [usdToBlst, setUsdToBlst] = React.useState(0)
+  const [usdToBlst, setUsdToBlst] = React.useState(0);
 
   //account
   const { account } = useWeb3React();
@@ -80,7 +80,6 @@ const YourInventory = () => {
   //get all balances of your inventory
   const getBalance = async () => {
     try {
-
       const beastBalance = await getBeastBalance(web3, beastContract, account);
       setBeastBalance(beastBalance);
 
@@ -96,9 +95,7 @@ const YourInventory = () => {
         rewardPoolContract,
         account
       );
-      setUnclaimedBLST(
-        (parseFloat(unclaimedBLST) / Math.pow(10, 18))
-      );
+      setUnclaimedBLST(parseFloat(unclaimedBLST) / Math.pow(10, 18));
 
       const availableLegionCount = await getAvailableLegionsCount(
         web3,
@@ -131,9 +128,9 @@ const YourInventory = () => {
       setBLSTBalance(BLSTBalance);
       setLegionTokenIds(legionTokenIds);
       getLastHuntTimes(legionTokenIds);
-      setUsdToBlst(await getBLSTAmountFromUSD(feeHandlerContract, 1))
+      setUsdToBlst(await getBLSTAmountFromUSD(feeHandlerContract, 1));
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -157,30 +154,21 @@ const YourInventory = () => {
     }
   };
 
-  const calcHuntTime = (firstHuntTime: any) => {
-    var time = "~";
-    if (firstHuntTime != 0) {
-      var diff = currentTime.getTime() - firstHuntTime * 1000;
-      if (diff / 1000 / 3600 >= 24) {
-        time = "00s";
-      } else {
-        var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
-        var hours = Math.floor(totalSecs / 3600).toFixed(0);
-        var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
-        var secs = Math.floor(totalSecs % 3600) % 60;
-        if (parseInt(hours) > 0) {
-          time = `${hours}h ${mins}m ${secs}s`;
-        } else if (parseInt(mins) > 0) {
-          time = `${mins}m ${secs}s`;
-        } else {
-          time = `${secs}s`;
-          if (secs == 0) {
-            getBalance()
-          }
-        }
+  const calcHuntTime = (firstHuntTime: number) => {
+    const date = new Date(firstHuntTime * 1000);
+    const diff = currentTime.getTime() - date.getTime();
+    const diffSecs = (24 * 3600 * 1000 - diff) / 1000;
+    const diff_in_hours = Math.floor(diffSecs / 3600).toFixed(0);
+    const diff_in_mins = Math.floor((diffSecs % 3600) / 60).toFixed(0);
+    const diff_in_secs = Math.floor(diffSecs % 3600) % 60;
+    if (firstHuntTime !== 0) {
+      if (diff / (1000 * 3600 * 24) >= 1) {
+        return "00h 00m 00s";
       }
+    } else if (firstHuntTime === 0) {
+      return "00h 00m 00s";
     }
-    return time;
+    return `${diff_in_hours}h ${diff_in_mins}m ${diff_in_secs}s`;
   };
 
   React.useEffect(() => {
@@ -280,9 +268,7 @@ const YourInventory = () => {
             {getTranslation("claimTax")}:
             <span className="legionOrangeColor">
               {" "}
-              {((taxLeftDays * 2 * unclaimedBLST) / 100).toFixed(
-                2
-              )}{" "}
+              {((taxLeftDays * 2 * unclaimedBLST) / 100).toFixed(2)}{" "}
               {getTranslation("claimTaxVal")}
             </span>
           </Typography>
@@ -303,7 +289,14 @@ const YourInventory = () => {
           {getTranslation("BLSTInYourWallet")}:
           <span className="legionOrangeColor">
             {" "}
-            {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( = {formatNumber((parseFloat(BLSTBalance) / (usdToBlst / Math.pow(10, 18))).toFixed(2))} USD )
+            {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( ={" "}
+            {formatNumber(
+              (
+                parseFloat(BLSTBalance) /
+                (usdToBlst / Math.pow(10, 18))
+              ).toFixed(2)
+            )}{" "}
+            USD )
           </span>
         </Typography>
         <Typography
@@ -311,14 +304,20 @@ const YourInventory = () => {
           variant="subtitle1"
           sx={{ fontWeight: "bold" }}
         >
-          1 USD = <span className="legionOrangeColor">{(usdToBlst / Math.pow(10, 18)).toFixed(2)} $BLST</span>
+          1 USD ={" "}
+          <span className="legionOrangeColor">
+            {(usdToBlst / Math.pow(10, 18)).toFixed(2)} $BLST
+          </span>
         </Typography>
         <Typography
           className="legionFontColor"
           variant="subtitle1"
           sx={{ fontWeight: "bold" }}
         >
-          1 BLST = <span className="legionOrangeColor">{(1 / (usdToBlst / Math.pow(10, 18))).toFixed(2)} USD</span>
+          1 BLST ={" "}
+          <span className="legionOrangeColor">
+            {(1 / (usdToBlst / Math.pow(10, 18))).toFixed(2)} USD
+          </span>
         </Typography>
       </Box>
     </Card>
