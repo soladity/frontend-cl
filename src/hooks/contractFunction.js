@@ -453,6 +453,10 @@ export const getSummoningPrice = async (contract, amount) => {
   return await contract.methods.getSummoningPrice(amount).call();
 };
 
+export const getTrainingCost = async (contract, amount) => {
+  return await contract.methods.getTrainingCost(amount).call();
+};
+
 export const getBLSTAmountFromUSD = async (contract, amount) => {
   return await contract.methods.getBLSTAmountFromUSD(amount).call();
 };
