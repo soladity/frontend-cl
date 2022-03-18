@@ -61,6 +61,18 @@
         {
           "indexed": false,
           "internalType": "uint256",
+          "name": "legionId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "monsterId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
           "name": "roll",
           "type": "uint256"
         },

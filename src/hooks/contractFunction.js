@@ -238,6 +238,7 @@ export const addSupply = async (
   supply,
   fromWallet
 ) => {
+  console.log(fromWallet);
   const response = await contract.methods
     .addSupply(tokenId, supply, fromWallet)
     .send({ from: account });

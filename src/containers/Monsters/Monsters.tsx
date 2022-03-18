@@ -177,6 +177,18 @@ const Monsters = () => {
   const [blstBalance, setBlstBalance] = React.useState(0);
   const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
 
+  legionContract.events.Hunted({
+  }).on('connected', function (subscriptionId: any) {
+    // console.log(subscriptionId)
+  }).on('data', function (event: any) {
+    console.log(event)
+  }).on('changed', function (event: any) {
+    console.log(event)
+  }).on('error', function (error: any, receipt: any) {
+    console.log(error)
+    console.log(receipt)
+  })
+
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -199,6 +211,7 @@ const Monsters = () => {
     let monsterArrary = [];
     try {
       const monsterArraryTemp = await getAllMonsters(monsterContract);
+      console.log(monsterArraryTemp)
       monsterArrary = monsterArraryTemp.map((item: any) => {
         return {
           name: item.name,
@@ -340,9 +353,10 @@ const Monsters = () => {
         curLegion?.id,
         monsterTokenID
       );
+      console.log(response)
       const keys = Object.keys(response.events);
       console.log(keys);
-      const result = response.events[keys[0]].returnValues;
+      const result = response.events['Hunted'].returnValues;
       console.log(result);
       setHuntedRoll(result.roll);
       setHuntAvailablePercent(result.percent);

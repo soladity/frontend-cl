@@ -129,6 +129,7 @@ const Warriors = () => {
         }
       }
       marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
+      console.log(marketItem)
       tempWarriors.push({
         ...warrior,
         id: ids[i],
@@ -503,11 +504,11 @@ const Warriors = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/warriors/" +
-                            item["type"] +
-                            ".jpg"
+                          item["type"] +
+                          ".jpg"
                           : "/assets/images/characters/gif/warriors/" +
-                            item["type"] +
-                            ".gif"
+                          item["type"] +
+                          ".gif"
                       }
                       type={item["type"]}
                       power={item["power"]}
