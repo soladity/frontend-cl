@@ -404,7 +404,7 @@ const Monsters = () => {
         legionContract,
         account,
         curLegion?.id,
-        supplyOrder == 0 ? 7 : (supplyOrder == 1 ? 14 : 28),
+        supplyOrder == 0 ? 7 : supplyOrder == 1 ? 14 : 28,
         fromWallet
       );
       setLoadingText(getTranslation("loadingLegions"));
@@ -420,29 +420,21 @@ const Monsters = () => {
     setSupplyLoading(false);
   };
 
-  const calcHuntTime = (huntTime: any) => {
-    var time = "~";
-    if (huntTime != 0) {
-      var diff = currentTime.getTime() - huntTime * 1000;
-      if (diff / 1000 / 3600 >= 24) {
-        time = "00s";
-      } else {
-        var totalSecs = parseInt(((24 * 1000 * 3600 - diff) / 1000).toFixed(2));
-        var hours = Math.floor(totalSecs / 3600).toFixed(0);
-        var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
-        var secs = Math.floor(totalSecs % 3600) % 60;
-        if (parseInt(hours) > 0) {
-          time = `${hours}h ${mins}m ${secs}s`;
-        } else if (parseInt(mins) > 0) {
-          time = `${mins}m ${secs}s`;
-        } else {
-          time = `${secs}s`;
-        }
+  const calcHuntTime = (firstHuntTime: number) => {
+    const date = new Date(firstHuntTime * 1000);
+    const diff = currentTime.getTime() - date.getTime();
+    const diffSecs = (24 * 3600 * 1000 - diff) / 1000;
+    const diff_in_hours = Math.floor(diffSecs / 3600).toFixed(0);
+    const diff_in_mins = Math.floor((diffSecs % 3600) / 60).toFixed(0);
+    const diff_in_secs = Math.floor(diffSecs % 3600) % 60;
+    if (firstHuntTime !== 0) {
+      if (diff / (1000 * 3600 * 24) >= 1) {
+        return "00h 00m 00s";
       }
-    } else if (curLegion?.supplies != "0") {
-      var time = "00s";
+    } else if (firstHuntTime === 0) {
+      return "00h 00m 00s";
     }
-    return time;
+    return `${diff_in_hours}h ${diff_in_mins}m ${diff_in_secs}s`;
   };
 
   const checkHuntTime = () => {
@@ -608,8 +600,8 @@ const Monsters = () => {
                       curLegion?.status === "1"
                         ? "#18e001"
                         : curLegion?.status === "2"
-                          ? "#ae7c00"
-                          : "#fd3742",
+                        ? "#ae7c00"
+                        : "#fd3742",
                     fontWeight: 1000,
                     fontSize: { xs: 14, sm: 16, md: 20 },
                     cursor: "pointer",
@@ -681,10 +673,12 @@ const Monsters = () => {
                   <MonsterCard
                     image={
                       showAnimation === "0"
-                        ? `/assets/images/characters/jpg/monsters/m${index + 1
-                        }.jpg`
-                        : `/assets/images/characters/gif/monsters/m${index + 1
-                        }.gif`
+                        ? `/assets/images/characters/jpg/monsters/m${
+                            index + 1
+                          }.jpg`
+                        : `/assets/images/characters/gif/monsters/m${
+                            index + 1
+                          }.gif`
                     }
                     name={monster.name}
                     tokenID={index + 1}
@@ -692,19 +686,19 @@ const Monsters = () => {
                     minAP={monster.ap}
                     bonus={
                       index < 20 &&
-                        curLegion &&
-                        monster.ap < (curLegion as LegionInterface).attackPower
+                      curLegion &&
+                      monster.ap < (curLegion as LegionInterface).attackPower
                         ? parseInt(monster.base) +
-                          ((curLegion as LegionInterface).attackPower -
-                            monster.ap) /
-                          2000 >
+                            ((curLegion as LegionInterface).attackPower -
+                              monster.ap) /
+                              2000 >
                           89
                           ? 89 - parseInt(monster.base) + ""
                           : Math.floor(
-                            ((curLegion as LegionInterface).attackPower -
-                              monster.ap) /
-                            2000
-                          ) + ""
+                              ((curLegion as LegionInterface).attackPower -
+                                monster.ap) /
+                                2000
+                            ) + ""
                         : "0"
                     }
                     price={monster.reward}
@@ -971,7 +965,7 @@ const Monsters = () => {
             sx={{ marginRight: 1, marginLeft: 1 }}
             disabled={
               parseFloat(blstBalance * Math.pow(10, 18) + "") <
-              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
             Wallet
@@ -980,7 +974,7 @@ const Monsters = () => {
             onClick={() => handleSupplyClick(false)}
             disabled={
               parseFloat(unclaimedBlst + "") <
-              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
             Unclaimed

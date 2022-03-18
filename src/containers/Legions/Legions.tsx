@@ -831,7 +831,7 @@ const Legions = () => {
               parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
-            Wallet
+            {getTranslation('wallet')}
           </CommonBtn>
           <CommonBtn
             onClick={() => handleSupplyClick(false)}
@@ -840,7 +840,7 @@ const Legions = () => {
               parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
-            Unclaimed
+            {getTranslation('unclaimed')}
           </CommonBtn>
         </Box>
         {supplyCostLoading && (
