@@ -35,6 +35,7 @@ import {
   getLegionToken,
   updateLegion,
   getTrainingCost,
+  getCostForAddingWarrior,
 } from "../../hooks/contractFunction";
 import {
   getBeastTokenIds,
@@ -163,7 +164,7 @@ const UpdateLegions: React.FC = () => {
   const [tempAP, setTempAP] = React.useState(0);
   const [tempBeastsCnt, setTempBeastsCnt] = React.useState(0);
   const [tempWarriorsCnt, setTempWarriorsCnt] = React.useState(0);
-  const [mintFee, setMintFee] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState("0");
   const [curLegionSupply, setCurLegionSupply] = React.useState(0);
   const [comboFilterValue, setComboFilterValue] = React.useState("");
   const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
@@ -283,13 +284,21 @@ const UpdateLegions: React.FC = () => {
 
   const setFee = async () => {
     setMintFee(
-      Math.floor(
+      (parseInt(
+        await getTrainingCost(
+          feeHandlerContract,
+          dropItemList.filter((item) => item.w5b === false).length
+        )
+      ) /
+        Math.pow(10, 18) +
         parseInt(
-          await getTrainingCost(feeHandlerContract, dropItemList.length)
-        ) / Math.pow(10, 18)
-      ) +
-        dropItemList.filter((item) => item.w5b === true).length *
-          curLegionSupply
+          await getCostForAddingWarrior(
+            feeHandlerContract,
+            dropItemList.filter((item) => item.w5b === true).length,
+            curLegionSupply
+          )
+        ) /
+          Math.pow(10, 18)).toFixed(3)
     );
   };
 
