@@ -484,3 +484,7 @@ export const getCostForAddingWarrior = async (contract, amount, supply) => {
 export const massHunt = async (contract, account) => {
   return await contract.methods.massHunt().send({ from: account });
 };
+
+export const getUSDAmountFromBLST = async (contract, amount) => {
+  return await contract.methods.getUSDAmountFromBLST(amount).call();
+};
