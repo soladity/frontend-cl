@@ -52,8 +52,6 @@ import BeastCard from "../../component/Cards/BeastCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
 import Image from "../../config/image.json";
-import ApiService from "../../services/api.service";
-import Navigation from '../../component/Navigation/Navigation';
 import { FaTimes } from "react-icons/fa";
 import { formatNumber } from "../../utils/common";
 
@@ -95,7 +93,6 @@ const Beasts = () => {
   const [price, setPrice] = React.useState(0);
   const [filter, setFilter] = React.useState("all");
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
-  const [currentPage, setCurrentPage] = React.useState(1);
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
   const [loading, setLoading] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
@@ -234,69 +231,64 @@ const Beasts = () => {
     setShowMint(false);
   };
 
-	const handleMint = async (amount: Number) => {
-		handlePopoverCloseSummonBeast();
-		setMintLoading(true);
-		setLoading(false);
-		const allowance = await getBeastBloodstoneAllowance(web3, bloodstoneContract, account);
-		try {
-			if (allowance === '0') {
-				await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
-			}
-			await mintBeast(web3, beastContract, account, amount);
-			dispatch(setReloadStatus({
-				reloadContractStatus: new Date()
-			}));
-			ApiService.updateBeast(account).then(
-				response => {
-					if (response.data.status === 'success') {
-						setMintLoading(false);
-						getBalance();
-					}
-				},
-				error => {
-					console.log('Error!');
-					setMintLoading(false);
-				}
-			);
-		} catch (e) {
-			console.log(e);
-		}
-	}
+  const handleMint = async (amount: Number) => {
+    handlePopoverCloseSummonBeast();
+    setMintLoading(true);
+    setLoading(false);
+    const allowance = await getBeastBloodstoneAllowance(
+      web3,
+      bloodstoneContract,
+      account
+    );
+    try {
+      if (allowance === "0") {
+        await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
+      }
+      await mintBeast(web3, beastContract, account, amount);
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    getBalance();
+    setMintLoading(false);
+  };
 
-	const getBalance = async () => {
-		setLoading(true);
-		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
-		setBaseUrl(await getBaseUrl());
-		ApiService.getBeasts(account).then(
-			response => {
-				if (response.data.status === 'success') {
-					let amount = 0;
-					let tempBeasts = [];
-					let gif = '';
-					let jpg = '';
-					for (let i = 0; i < response.data.data.length; i++) {
-						for (let j = 0; j < Image.beasts.length; j++) {
-							if (Image.beasts[j].name === response.data.data[i].type) {
-								gif = Image.beasts[j].gif;
-								jpg = Image.beasts[j].jpg;
-							}
-						}
-						tempBeasts.push({ id: response.data.data[i].mintId, type: response.data.data[i].type, strength: response.data.data[i].strength, capacity: response.data.data[i].capacity, gif: gif, jpg: jpg });
-						amount += parseInt(response.data.data[i].capacity);
-					}
-					setMaxWarrior(amount);
-					setBeasts(tempBeasts);
-					setBalance(tempBeasts.length);
-				}
-				setLoading(false);
-			},
-			error => {
-				console.log('Error!');
-				setLoading(false);
-			}
-		);
-	}
+  const getBalance = async () => {
+    setLoading(true);
+    setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+    setBaseUrl(await getBaseUrl());
+    setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
+    const ids = await getBeastTokenIds(web3, beastContract, account);
+    let amount = 0;
+    let beast;
+    let tempBeasts = [];
+    let gif = "";
+    let jpg = "";
+    for (let i = 0; i < ids.length; i++) {
+      beast = await getBeastToken(web3, beastContract, ids[i]);
+      console.log(beast);
+      for (let j = 0; j < Image.beasts.length; j++) {
+        if (Image.beasts[j].name === beast.type) {
+          gif = Image.beasts[j].gif;
+          jpg = Image.beasts[j].jpg;
+        }
+      }
+      tempBeasts.push({ ...beast, id: ids[i], gif: gif, jpg: jpg });
+      amount += parseInt(beast.capacity);
+    }
+    console.log(tempBeasts);
+    setMaxWarrior(amount);
+    setBeasts(tempBeasts);
+    setLoading(false);
+  };
+
+  const handleSupplyClose = () => {
+    setOpenSupply(false);
+  };
 
   const handleOpenSupply = (id: number) => {
     setSelectedBeast(id);
@@ -350,10 +342,6 @@ const Beasts = () => {
     setActionLoading(false);
   };
 
-  const handlePage = (value: any) => {
-		setCurrentPage(value);
-	}
-
   const handleExecute = async (id: number) => {
     setActionLoading(true);
     try {
@@ -369,11 +357,6 @@ const Beasts = () => {
     }
     setActionLoading(false);
   };
-  
-  const handleSupplyClose = () => {
-    setOpenSupply(false);
-  };
-
   return (
     <Box>
       <Helmet>
@@ -707,10 +690,6 @@ const Beasts = () => {
                 </Grid>
               )}
           </Grid>
-          {
-					beasts.length > 0 &&
-					<Navigation totalCount={beasts.length} cPage={currentPage} handlePage={handlePage} perPage={20} />
-				}
         </React.Fragment>
       )}
       {loading === true && (

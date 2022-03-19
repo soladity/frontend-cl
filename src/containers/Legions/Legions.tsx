@@ -58,7 +58,6 @@ import {
   getUSDAmountFromBLST
 } from "../../hooks/contractFunction";
 import { allConstants, meta_constant } from "../../config/meta.config";
-import Navigation from '../../component/Navigation/Navigation';
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
@@ -96,6 +95,7 @@ const Legions = () => {
   const { account } = useWeb3React();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [beastBalance, setBeastBalance] = React.useState("0");
   const [warriorBalance, setWarriorBalance] = React.useState("0");
   const [baseUrl, setBaseUrl] = React.useState("");
