@@ -208,6 +208,10 @@ const Monsters = () => {
   }, []);
 
   useEffect(() => {
+    console.log(massHuntResult)
+  }, [massHuntResult])
+
+  useEffect(() => {
     const huntEvent = legionContract.events.Hunted({
     }).on('connected', function (subscriptionId: any) {
       // console.log(subscriptionId)
@@ -215,12 +219,12 @@ const Monsters = () => {
       console.log(event)
       var huntResult = {
         legionId: event.returnValues.legionId,
-        monsterId: event.returnValues.monsterId
+        monsterId: event.returnValues.monsterId,
+        percent: event.returnValues.percent,
+        roll: event.returnValues.roll,
+        success: event.returnValues.success
       }
-      var massHuntResultTemp = massHuntResult
-      console.log(massHuntResult)
-      console.log(massHuntResultTemp)
-      setMassHuntResult(massHuntResultTemp.push(huntResult))
+      setMassHuntResult([...massHuntResult, huntResult])
     }).on('changed', function (event: any) {
       console.log(event)
     }).on('error', function (error: any, receipt: any) {
@@ -255,7 +259,6 @@ const Monsters = () => {
       const monsterVal = await getAllMonsters(monsterContract);
       const monsterArraryTemp = monsterVal[0]
       const rewardArray = monsterVal[1]
-      console.log(monsterArraryTemp)
       monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
         return {
           name: item.name,
@@ -296,9 +299,6 @@ const Monsters = () => {
         legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
         var warriorCapacity = 0;
         for (let j = 0; j < legionTmp.beasts.length; j++) {
-          console.log(
-            await getBeastToken(web3, beastContract, legionTmp.beasts[j])
-          );
           warriorCapacity += parseInt(
             (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
               .capacity
@@ -348,9 +348,6 @@ const Monsters = () => {
         console.log(legionTmp, legionStatus);
         var warriorCapacity = 0;
         for (let j = 0; j < legionTmp.beasts.length; j++) {
-          console.log(
-            await getBeastToken(web3, beastContract, legionTmp.beasts[j])
-          );
           warriorCapacity += parseInt(
             (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
               .capacity
@@ -541,6 +538,7 @@ const Monsters = () => {
     try {
       await massHunt(legionContract, account)
     } catch (error) {
+      setOpenMassHunt(false)
       console.log(error)
     }
     setMassHuntLoading(false)
@@ -698,7 +696,7 @@ const Monsters = () => {
                   }}
                 >
                   <CommonBtn onClick={() => massHunting()}>
-                    Mass Hunt
+                    {getTranslation('takeActionMassHunt')}
                   </CommonBtn>
                 </Typography>
               </Grid>
@@ -1044,7 +1042,7 @@ const Monsters = () => {
               parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
-            Wallet
+            {getTranslation('wallet')}
           </CommonBtn>
           <CommonBtn
             onClick={() => handleSupplyClick(false)}
@@ -1053,7 +1051,7 @@ const Monsters = () => {
               parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
-            Unclaimed
+            {getTranslation('unclaimed')}
           </CommonBtn>
         </Box>
         {supplyCostLoading && (
@@ -1082,7 +1080,7 @@ const Monsters = () => {
       </Dialog>
       <Dialog onClose={handleMassHuntClose} open={openMassHunt} sx={{ p: 1 }}>
         <DialogTitle sx={{ textAlign: "center" }}>
-          Result of Mass Hunt
+          {getTranslation('takeActionMassHunt')}
         </DialogTitle>
         {
           massHuntLoading && (
@@ -1092,22 +1090,18 @@ const Monsters = () => {
           )
         }
         <Box sx={{ p: 1, display: 'flex', flexWrap: 'wrap', maxHeight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
-          {
+          {/* {
             massHuntResult.map((item: any, index: any) => (
-              <Box className={index % 2 == 0 ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
+              <Box key={index} className={item.success ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
                 <img src={`/assets/images/characters/jpg/monsters_dying/m${item['monsterId']}.jpg`} style={{ width: '100%' }} />
                 <Box sx={{ wordBreak: 'break-word' }}>
-                  {
-                    item['legionId']
-                  }
-                  {/* {legions.filter((legion: any) => parseInt(legion['id']) == parseInt(item['legionId']))[0].name} */}
                 </Box>
                 <Box sx={{ p: 1, fontSize: 12 }}>
                   Chance: 90, RolL: 50
                 </Box>
               </Box>
             ))
-          }
+          } */}
         </Box>
         <Box sx={{ display: 'flex', p: 1, justifyContent: 'space-between' }}>
           <Button variant='outlined' color="primary" onClick={() => setOpenMassHunt(false)}>

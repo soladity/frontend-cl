@@ -485,7 +485,7 @@ const Beasts = () => {
                       $BLST)
                     </CommonBtn>
                     <CommonBtn
-                      onClick={() => handleMint(200)}
+                      onClick={() => handleMint(100)}
                       sx={{
                         fontSize: 14,
                         fontWeight: "bold",
@@ -501,7 +501,7 @@ const Beasts = () => {
                       $BLST)
                     </CommonBtn>
                     <CommonBtn
-                      onClick={() => handleMint(500)}
+                      onClick={() => handleMint(150)}
                       sx={{
                         fontSize: 14,
                         fontWeight: "bold",

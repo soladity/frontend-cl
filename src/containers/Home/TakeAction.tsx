@@ -529,7 +529,7 @@ const TakeAction = () => {
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(200, TransitionUp)}
+                                                onClick={() => handleWarriorMint(100, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
                                                     wordBreak: "break-word",
@@ -546,7 +546,7 @@ const TakeAction = () => {
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleWarriorMint(500, TransitionUp)}
+                                                onClick={() => handleWarriorMint(150, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
                                                     wordBreak: "break-word",
@@ -658,7 +658,7 @@ const TakeAction = () => {
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(200, TransitionUp)}
+                                                onClick={() => handleBeastMint(100, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
                                                     wordBreak: "break-word",
@@ -675,7 +675,7 @@ const TakeAction = () => {
                                                 $BLST)
                                             </CommonBtn>
                                             <CommonBtn
-                                                onClick={() => handleBeastMint(500, TransitionUp)}
+                                                onClick={() => handleBeastMint(150, TransitionUp)}
                                                 sx={{
                                                     fontSize: 14,
                                                     wordBreak: "break-word",
