@@ -114,6 +114,8 @@ const Legions = () => {
     if (account) {
       getBalance();
     }
+    return () => {
+    }
   }, []);
 
   const getLegionImageUrl = (ap: number) => {
