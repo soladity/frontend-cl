@@ -688,7 +688,7 @@ const Monsters = () => {
                   {calcHuntTime(curLegion?.lastHuntTime)}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
+              {/* <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -699,7 +699,7 @@ const Monsters = () => {
                     {getTranslation('takeActionMassHunt')}
                   </CommonBtn>
                 </Typography>
-              </Grid>
+              </Grid> */}
             </Grid>
             {supplyLoading && (
               <Box
@@ -1104,9 +1104,6 @@ const Monsters = () => {
           } */}
         </Box>
         <Box sx={{ display: 'flex', p: 1, justifyContent: 'space-between' }}>
-          <Button variant='outlined' color="primary" onClick={() => setOpenMassHunt(false)}>
-            {getTranslation('cancel')}
-          </Button>
           <CommonBtn
             onClick={() => handleContinue()}
             disabled={continueLoading || massHuntLoading}
