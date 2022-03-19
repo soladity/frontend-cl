@@ -104,8 +104,8 @@ export default function LegionCard(props: CardProps) {
     handleCancel(parseInt(id));
   };
 
-  const buy = (id: string) => {
-    handleBuy(parseInt(id));
+  const buy = (id: string, price: string) => {
+    handleBuy(parseInt(id), parseInt(price));
   };
 
   const update = (id: string) => {
@@ -165,76 +165,76 @@ export default function LegionCard(props: CardProps) {
             <Grid container spacing={1} sx={{ pt: 2 }}>
               {showWarrior
                 ? warriorList.map((item: any, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                  <Grid item xs={12} md={6} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "black",
-                          padding: 1,
-                          borderRadius: 1,
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {item.type}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            #{item.id}
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {formatNumber(item.power)} AP
-                          </Typography>
-                          <Box>{item.item}</Box>
-                        </Box>
+                        <Typography variant="subtitle2">
+                          {item.type}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          #{item.id}
+                        </Typography>
                       </Box>
-                    </Grid>
-                  ))
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {formatNumber(item.power)} AP
+                        </Typography>
+                        <Box>{item.item}</Box>
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))
                 : beastList.map((item: any, index) => (
-                    <Grid item xs={12} md={6} key={index}>
+                  <Grid item xs={12} md={6} key={index}>
+                    <Box
+                      sx={{
+                        backgroundColor: "black",
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
                       <Box
                         sx={{
-                          backgroundColor: "black",
-                          padding: 1,
-                          borderRadius: 1,
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            {item.type}
-                          </Typography>
-                          <Typography variant="subtitle2">
-                            #{item.id}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Typography variant="subtitle2">
-                            {item.capacity}
-                          </Typography>
-                          <img
-                            src="/assets/images/sword.png"
-                            style={{ height: "15px", marginLeft: "5px" }}
-                            alt="Sword"
-                          />
-                        </Box>
+                        <Typography variant="subtitle2">
+                          {item.type}
+                        </Typography>
+                        <Typography variant="subtitle2">
+                          #{item.id}
+                        </Typography>
                       </Box>
-                    </Grid>
-                  ))}
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography variant="subtitle2">
+                          {item.capacity}
+                        </Typography>
+                        <img
+                          src="/assets/images/sword.png"
+                          style={{ height: "15px", marginLeft: "5px" }}
+                          alt="Sword"
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
             </Grid>
           </CardContent>
         )}
@@ -262,8 +262,8 @@ export default function LegionCard(props: CardProps) {
               huntStatus === "green"
                 ? "green"
                 : huntStatus === "orange"
-                ? "orange"
-                : "red",
+                  ? "orange"
+                  : "red",
           }}
         >
           {supplies} H
@@ -376,9 +376,9 @@ export default function LegionCard(props: CardProps) {
       {owner === false ? (
         <CommonBtn
           sx={{ fontWeight: "bold", marginTop: "10px", fontSize: "1rem" }}
-          onClick={() => buy(id)}
+          onClick={() => buy(id, price)}
         >
-          {formatNumber(price)} $BLST
+          {formatNumber((parseFloat(price) / Math.pow(10, 18)).toFixed(2))} $BLST
         </CommonBtn>
       ) : (
         <Button
@@ -393,7 +393,7 @@ export default function LegionCard(props: CardProps) {
           }}
           onClick={() => update(id)}
         >
-          {formatNumber(price)} $BLST
+          {formatNumber((parseFloat(price) / Math.pow(10, 18)).toFixed(2))} $BLST
           <img
             src="/assets/images/updatePrice.png"
             style={{ height: "20px", marginLeft: "10px" }}

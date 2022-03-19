@@ -1,9 +1,28 @@
 {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_feehandler",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "feehandler",
+      "outputs": [
+        {
+          "internalType": "contract IFeeHandler",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "inputs": [],
@@ -35,6 +54,11 @@
           "internalType": "struct Monster.Monster[]",
           "name": "",
           "type": "tuple[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
         }
       ],
       "stateMutability": "view",
@@ -75,13 +99,19 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "legion",
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "ap",
+          "type": "uint256"
+        }
+      ],
+      "name": "getMonsterToHunt",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "uint8",
           "name": "",
-          "type": "address"
+          "type": "uint8"
         }
       ],
       "stateMutability": "view",

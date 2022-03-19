@@ -160,13 +160,16 @@ const YourInventory = () => {
     const diffSecs = (24 * 3600 * 1000 - diff) / 1000;
     const diff_in_hours = Math.floor(diffSecs / 3600).toFixed(0);
     const diff_in_mins = Math.floor((diffSecs % 3600) / 60).toFixed(0);
-    const diff_in_secs = Math.floor(diffSecs % 3600) % 60;
+    const diff_in_secs = (Math.floor(diffSecs % 3600) % 60).toFixed(0);
     if (firstHuntTime !== 0) {
       if (diff / (1000 * 3600 * 24) >= 1) {
         return "00h 00m 00s";
       }
     } else if (firstHuntTime === 0) {
       return "00h 00m 00s";
+    }
+    if (parseInt(diff_in_hours) == 0 && parseInt(diff_in_mins) == 0 && parseInt(diff_in_secs) == 0) {
+      getBalance()
     }
     return `${diff_in_hours}h ${diff_in_mins}m ${diff_in_secs}s`;
   };
@@ -257,7 +260,7 @@ const YourInventory = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("unClaimed")}:
-          <span className="legionOrangeColor"> {unclaimedBLST}</span>
+          <span className="legionOrangeColor"> {unclaimedBLST.toFixed(2)}</span>
         </Typography>
         {unclaimedBLST > 0 && (
           <Typography
