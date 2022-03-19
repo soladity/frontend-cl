@@ -321,7 +321,7 @@ const Legions = () => {
         account,
         "3",
         selectedLegion,
-        price
+        price * Math.pow(10, 18)
       );
       let power = 0;
       let temp = legions;

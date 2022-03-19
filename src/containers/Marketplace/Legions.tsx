@@ -217,7 +217,7 @@ const Legions = () => {
     setActionLoading(false);
   };
 
-  const handleBuy = async (id: number) => {
+  const handleBuy = async (id: number, price: number) => {
     setActionLoading(true);
     const allowance = await getMarketplaceBloodstoneAllowance(
       web3,
@@ -232,7 +232,7 @@ const Legions = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "3", id);
+      await buyToken(web3, marketplaceContract, account, "3", id, price);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),

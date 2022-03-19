@@ -58,6 +58,7 @@ import {
   getSupplyCost,
   getUnclaimedBLST,
   getBloodstoneBalance,
+  massHunt,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -177,17 +178,7 @@ const Monsters = () => {
   const [blstBalance, setBlstBalance] = React.useState(0);
   const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
 
-  legionContract.events.Hunted({
-  }).on('connected', function (subscriptionId: any) {
-    // console.log(subscriptionId)
-  }).on('data', function (event: any) {
-    console.log(event)
-  }).on('changed', function (event: any) {
-    console.log(event)
-  }).on('error', function (error: any, receipt: any) {
-    console.log(error)
-    console.log(receipt)
-  })
+
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -196,6 +187,18 @@ const Monsters = () => {
   }, []);
 
   useEffect(() => {
+    const huntEvent = legionContract.events.Hunted({
+    }).on('connected', function (subscriptionId: any) {
+      // console.log(subscriptionId)
+    }).on('data', function (event: any) {
+      console.log(event)
+    }).on('changed', function (event: any) {
+      console.log(event)
+    }).on('error', function (error: any, receipt: any) {
+      console.log(error)
+      console.log(receipt)
+    })
+
     if (account) {
       initialize();
     }
@@ -204,20 +207,32 @@ const Monsters = () => {
         ? localStorage.getItem("showAnimation")
         : "0"
     );
+    return () => {
+      huntEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+    }
   }, []);
 
   const initMonster = async (legions: any) => {
     let monsterTmp;
     let monsterArrary = [];
     try {
-      const monsterArraryTemp = await getAllMonsters(monsterContract);
+      const monsterVal = await getAllMonsters(monsterContract);
+      const monsterArraryTemp = monsterVal[0]
+      const rewardArray = monsterVal[1]
       console.log(monsterArraryTemp)
-      monsterArrary = monsterArraryTemp.map((item: any) => {
+      monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
         return {
           name: item.name,
           base: item.percent,
           ap: item.attack_power / 100,
-          reward: item.reward / 10000,
+          reward: (rewardArray[index] / Math.pow(10, 18)).toFixed(2),
         };
       });
     } catch (error) {
@@ -240,82 +255,94 @@ const Monsters = () => {
   };
 
   const updateMonster = async () => {
-    const legionIDS = await getLegionTokenIds(web3, legionContract, account);
-    let legionTmp;
-    let legionStatus = "";
-    let legionArrayTmp = [];
-    for (let i = 0; i < legionIDS.length; i++) {
-      legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
-      legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
-      var warriorCapacity = 0;
-      for (let j = 0; j < legionTmp.beasts.length; j++) {
-        console.log(
-          await getBeastToken(web3, beastContract, legionTmp.beasts[j])
-        );
-        warriorCapacity += parseInt(
-          (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
-            .capacity
-        );
+    try {
+      setBlstBalance(
+        await getBloodstoneBalance(web3, bloodstoneContract, account)
+      );
+      setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
+      const legionIDS = await getLegionTokenIds(web3, legionContract, account);
+      let legionTmp;
+      let legionStatus = "";
+      let legionArrayTmp = [];
+      for (let i = 0; i < legionIDS.length; i++) {
+        legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
+        legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
+        var warriorCapacity = 0;
+        for (let j = 0; j < legionTmp.beasts.length; j++) {
+          console.log(
+            await getBeastToken(web3, beastContract, legionTmp.beasts[j])
+          );
+          warriorCapacity += parseInt(
+            (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+              .capacity
+          );
+        }
+        legionArrayTmp.push({
+          ...legionTmp,
+          id: legionIDS[i],
+          status: legionStatus,
+          warriorCapacity: warriorCapacity,
+        });
       }
-      legionArrayTmp.push({
-        ...legionTmp,
-        id: legionIDS[i],
-        status: legionStatus,
-        warriorCapacity: warriorCapacity,
-      });
-    }
-    setLegions(legionArrayTmp);
-    setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)]);
-    if (legionArrayTmp[parseInt(curComboLegionValue)]) {
-      for (let i = 0; i < monsters.length; i++) {
-        const monster: any = monsters[i];
-        if (
-          parseInt(monster?.ap) <=
-          legionArrayTmp[parseInt(curComboLegionValue)].attackPower
-        ) {
-          setStrongestMonsterToHunt(i);
-        } else {
-          break;
+      setLegions(legionArrayTmp);
+      setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)]);
+      if (legionArrayTmp[parseInt(curComboLegionValue)]) {
+        for (let i = 0; i < monsters.length; i++) {
+          const monster: any = monsters[i];
+          if (
+            parseInt(monster?.ap) <=
+            legionArrayTmp[parseInt(curComboLegionValue)].attackPower
+          ) {
+            setStrongestMonsterToHunt(i);
+          } else {
+            break;
+          }
         }
       }
+    } catch (error) {
+      console.log(error)
     }
   };
 
   const initialize = async () => {
-    setLoading(true);
-    setBlstBalance(
-      await getBloodstoneBalance(web3, bloodstoneContract, account)
-    );
-    setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
-    const legionIDS = await getLegionTokenIds(web3, legionContract, account);
-    let legionTmp;
-    let legionArrayTmp = [];
-    let legionStatus = "";
-    for (let i = 0; i < legionIDS.length; i++) {
-      legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
-      legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
-      console.log(legionTmp, legionStatus);
-      var warriorCapacity = 0;
-      for (let j = 0; j < legionTmp.beasts.length; j++) {
-        console.log(
-          await getBeastToken(web3, beastContract, legionTmp.beasts[j])
-        );
-        warriorCapacity += parseInt(
-          (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
-            .capacity
-        );
+    try {
+      setLoading(true);
+      setBlstBalance(
+        await getBloodstoneBalance(web3, bloodstoneContract, account)
+      );
+      setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
+      const legionIDS = await getLegionTokenIds(web3, legionContract, account);
+      let legionTmp;
+      let legionArrayTmp = [];
+      let legionStatus = "";
+      for (let i = 0; i < legionIDS.length; i++) {
+        legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
+        legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
+        console.log(legionTmp, legionStatus);
+        var warriorCapacity = 0;
+        for (let j = 0; j < legionTmp.beasts.length; j++) {
+          console.log(
+            await getBeastToken(web3, beastContract, legionTmp.beasts[j])
+          );
+          warriorCapacity += parseInt(
+            (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+              .capacity
+          );
+        }
+        legionArrayTmp.push({
+          ...legionTmp,
+          id: legionIDS[i],
+          status: legionStatus,
+          warriorCapacity: warriorCapacity,
+        });
       }
-      legionArrayTmp.push({
-        ...legionTmp,
-        id: legionIDS[i],
-        status: legionStatus,
-        warriorCapacity: warriorCapacity,
-      });
+      await initMonster(legionArrayTmp);
+      setLegionIDs(legionIDS);
+      setLegions(legionArrayTmp);
+      setCurLegion(legionArrayTmp[0]);
+    } catch (error) {
+      console.log(error)
     }
-    await initMonster(legionArrayTmp);
-    setLegionIDs(legionIDS);
-    setLegions(legionArrayTmp);
-    setCurLegion(legionArrayTmp[0]);
     setLoading(false);
   };
 
@@ -451,13 +478,9 @@ const Monsters = () => {
           );
           var hours = Math.floor(totalSecs / 3600).toFixed(0);
           var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
-          var secs = Math.floor(totalSecs % 3600) % 60;
-          if (parseInt(hours) > 0) {
-          } else if (parseInt(mins) > 0) {
-          } else {
-            if (secs === 0) {
-              updateMonster();
-            }
+          var secs = (Math.floor(totalSecs % 3600) % 60).toFixed(0);
+          if (parseInt(hours) == 0 && parseInt(mins) == 0 && parseInt(secs) == 0) {
+            updateMonster();
           }
         }
       }
@@ -484,6 +507,16 @@ const Monsters = () => {
     }
     setSupplyCostLoading(false);
   };
+
+  const massHunting = async () => {
+    console.log('start mass hunt')
+    try {
+      await massHunt(legionContract, account)
+    } catch (error) {
+      console.log(error)
+    }
+    console.log('end mass hunt')
+  }
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -600,8 +633,8 @@ const Monsters = () => {
                       curLegion?.status === "1"
                         ? "#18e001"
                         : curLegion?.status === "2"
-                        ? "#ae7c00"
-                        : "#fd3742",
+                          ? "#ae7c00"
+                          : "#fd3742",
                     fontWeight: 1000,
                     fontSize: { xs: 14, sm: 16, md: 20 },
                     cursor: "pointer",
@@ -622,6 +655,18 @@ const Monsters = () => {
                   }}
                 >
                   {calcHuntTime(curLegion?.lastHuntTime)}
+                </Typography>
+              </Grid>
+              <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontSize: { xs: 14, sm: 16, md: 20 },
+                  }}
+                >
+                  <CommonBtn onClick={() => massHunting()}>
+                    Mass Hunt
+                  </CommonBtn>
                 </Typography>
               </Grid>
             </Grid>
@@ -673,12 +718,10 @@ const Monsters = () => {
                   <MonsterCard
                     image={
                       showAnimation === "0"
-                        ? `/assets/images/characters/jpg/monsters/m${
-                            index + 1
-                          }.jpg`
-                        : `/assets/images/characters/gif/monsters/m${
-                            index + 1
-                          }.gif`
+                        ? `/assets/images/characters/jpg/monsters/m${index + 1
+                        }.jpg`
+                        : `/assets/images/characters/gif/monsters/m${index + 1
+                        }.gif`
                     }
                     name={monster.name}
                     tokenID={index + 1}
@@ -686,19 +729,19 @@ const Monsters = () => {
                     minAP={monster.ap}
                     bonus={
                       index < 20 &&
-                      curLegion &&
-                      monster.ap < (curLegion as LegionInterface).attackPower
+                        curLegion &&
+                        monster.ap < (curLegion as LegionInterface).attackPower
                         ? parseInt(monster.base) +
-                            ((curLegion as LegionInterface).attackPower -
-                              monster.ap) /
-                              2000 >
+                          ((curLegion as LegionInterface).attackPower -
+                            monster.ap) /
+                          2000 >
                           89
                           ? 89 - parseInt(monster.base) + ""
                           : Math.floor(
-                              ((curLegion as LegionInterface).attackPower -
-                                monster.ap) /
-                                2000
-                            ) + ""
+                            ((curLegion as LegionInterface).attackPower -
+                              monster.ap) /
+                            2000
+                          ) + ""
                         : "0"
                     }
                     price={monster.reward}
@@ -965,7 +1008,7 @@ const Monsters = () => {
             sx={{ marginRight: 1, marginLeft: 1 }}
             disabled={
               parseFloat(blstBalance * Math.pow(10, 18) + "") <
-                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
             Wallet
@@ -974,7 +1017,7 @@ const Monsters = () => {
             onClick={() => handleSupplyClick(false)}
             disabled={
               parseFloat(unclaimedBlst + "") <
-                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
             Unclaimed

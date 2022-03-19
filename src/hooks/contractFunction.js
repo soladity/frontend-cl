@@ -352,9 +352,9 @@ export const cancelMarketplace = async (web3, contract, account, type, id) => {
   return response;
 };
 
-export const buyToken = async (web3, contract, account, type, id) => {
+export const buyToken = async (web3, contract, account, type, id, price) => {
   const response = await contract.methods
-    .buyToken(type, id)
+    .buyToken(type, id, price)
     .send({ from: account });
   return response;
 };
@@ -479,4 +479,8 @@ export const getSupplyCost = async (contract, warriorCnt, supplyDate) => {
 
 export const getCostForAddingWarrior = async (contract, amount, supply) => {
   return await contract.methods.getCostForAddingWarrior(amount, supply).call();
+};
+
+export const massHunt = async (contract, account) => {
+  return await contract.methods.massHunt().send({ from: account });
 };

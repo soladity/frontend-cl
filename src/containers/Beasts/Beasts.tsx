@@ -310,7 +310,7 @@ const Beasts = () => {
         account,
         "1",
         selectedBeast,
-        price
+        price * Math.pow(10, 18)
       );
       let capacity = 0;
       let temp = beasts;

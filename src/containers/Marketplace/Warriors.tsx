@@ -170,7 +170,7 @@ const Warriors = () => {
     setActionLoading(false);
   };
 
-  const handleBuy = async (id: number) => {
+  const handleBuy = async (id: number, price: number) => {
     setActionLoading(true);
     const allowance = await getMarketplaceBloodstoneAllowance(
       web3,
@@ -185,7 +185,7 @@ const Warriors = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "2", id);
+      await buyToken(web3, marketplaceContract, account, "2", id, price);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -251,9 +251,7 @@ const Warriors = () => {
   const handleUpdate = (id: number) => {
     setSelectedWarrior(id);
     setPrice(
-      parseInt(
-        warriors.filter((item: any) => parseInt(item.id) === id)[0].price
-      )
+      parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
     setOpenUpdate(true);
   };
@@ -278,7 +276,7 @@ const Warriors = () => {
         account,
         "2",
         selectedWarrior,
-        price
+        price * Math.pow(10, 18)
       );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {

@@ -47,8 +47,8 @@ export default function BeastMarketCard(props: CardProps) {
     handleCancel(parseInt(id));
   };
 
-  const buy = (id: string) => {
-    handleBuy(parseInt(id));
+  const buy = (id: string, price: string) => {
+    handleBuy(parseInt(id), parseInt(price));
   };
 
   const update = (id: string) => {
@@ -137,9 +137,9 @@ export default function BeastMarketCard(props: CardProps) {
       {owner === false ? (
         <CommonBtn
           sx={{ fontWeight: "bold", marginTop: "10px", fontSize: "1rem" }}
-          onClick={() => buy(id)}
+          onClick={() => buy(id, price)}
         >
-          {formatNumber(price)} $BLST
+          {formatNumber((parseFloat(price) / Math.pow(10, 18)).toFixed(2))} $BLST
         </CommonBtn>
       ) : (
         <Button
@@ -154,7 +154,7 @@ export default function BeastMarketCard(props: CardProps) {
           }}
           onClick={() => update(id)}
         >
-          {formatNumber(price)} $BLST
+          {formatNumber((parseFloat(price) / Math.pow(10, 18)).toFixed(2))} $BLST
           <img
             src="/assets/images/updatePrice.png"
             style={{ height: "20px", marginLeft: "10px" }}

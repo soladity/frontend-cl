@@ -325,13 +325,14 @@ const Warriors = () => {
         account,
         selectedWarrior
       );
+      console.log(selectedWarrior)
       await sellToken(
         web3,
         marketplaceContract,
         account,
         "2",
         selectedWarrior,
-        price
+        price * Math.pow(10, 18)
       );
       let power = 0;
       let temp = warriors;
