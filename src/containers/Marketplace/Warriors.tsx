@@ -185,7 +185,7 @@ const Warriors = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "2", id, price);
+      await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -261,8 +261,14 @@ const Warriors = () => {
   };
 
   const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+    } else if (price >= 0) {
+      setPrice(price);
     }
   };
 
@@ -276,12 +282,12 @@ const Warriors = () => {
         account,
         "2",
         selectedWarrior,
-        price * Math.pow(10, 18)
+        BigInt(price * Math.pow(10, 18))
       );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {
         if (parseInt(warriors[i].id) === selectedWarrior)
-          temp.push({ ...warriors[i], price: price.toString() });
+          temp.push({ ...warriors[i], price: (price * Math.pow(10, 18)).toString() });
         else temp.push({ ...warriors[i] });
       }
       setWarriors([...temp]);

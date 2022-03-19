@@ -310,8 +310,14 @@ const Warriors = () => {
   };
 
   const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+    } else if (price >= 0) {
+      setPrice(price);
     }
   };
 
@@ -332,7 +338,7 @@ const Warriors = () => {
         account,
         "2",
         selectedWarrior,
-        price * Math.pow(10, 18)
+        BigInt(price * Math.pow(10, 18))
       );
       let power = 0;
       let temp = warriors;

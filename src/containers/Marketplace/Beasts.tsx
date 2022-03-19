@@ -166,7 +166,7 @@ const Beasts = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "1", id, price);
+      await buyToken(web3, marketplaceContract, account, "1", id, BigInt(price));
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -214,7 +214,7 @@ const Beasts = () => {
   const handleUpdate = (id: number) => {
     setSelectedBeast(id);
     setPrice(
-      parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price)
+      parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
     setOpenUpdate(true);
   };
@@ -224,8 +224,14 @@ const Beasts = () => {
   };
 
   const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+    } else if (price >= 0) {
+      setPrice(price);
     }
   };
 
@@ -239,12 +245,12 @@ const Beasts = () => {
         account,
         "1",
         selectedBeast,
-        price
+        BigInt(price * Math.pow(10, 18))
       );
       let temp = [];
       for (let i = 0; i < beasts.length; i++) {
         if (parseInt(beasts[i].id) === selectedBeast)
-          temp.push({ ...beasts[i], price: price.toString() });
+          temp.push({ ...beasts[i], price: (price * Math.pow(10, 18)).toString() });
         else temp.push({ ...beasts[i] });
       }
       setBeasts([...temp]);

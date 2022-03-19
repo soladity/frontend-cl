@@ -73,6 +73,7 @@ import { useNavigate } from "react-router-dom";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
 import Slide, { SlideProps } from "@mui/material/Slide";
+import { maxWidth } from "@mui/system";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -103,6 +104,24 @@ const useStyles = makeStyles(() => ({
   },
   Grid: {
     paddingTop: "2%",
+  },
+  MassHuntItemLose: {
+    boxShadow: "rgb(0 0 0 / 37%) 0px 2px 4px 0px, rgb(14 30 37 / 85%) 0px 2px 16px 0px"
+  },
+  MassHuntItemWin: {
+    boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
+    animation: `$Flash linear 2s infinite`,
+  },
+  "@keyframes Flash": {
+    "0%": {
+      boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
+    },
+    "50%": {
+      boxShadow: "rgb(247 247 247 / 30%) 0px 2px 4px 0px, rgb(217 221 206 / 40%) 0px 2px 16px 0px",
+    },
+    "100%": {
+      boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
+    },
   },
 }));
 
@@ -177,8 +196,7 @@ const Monsters = () => {
 
   const [blstBalance, setBlstBalance] = React.useState(0);
   const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
-
-
+  const [openMassHunt, setOpenMassHunt] = React.useState(false);
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -510,12 +528,17 @@ const Monsters = () => {
 
   const massHunting = async () => {
     console.log('start mass hunt')
+    // setOpenMassHunt(true)
     try {
       await massHunt(legionContract, account)
     } catch (error) {
       console.log(error)
     }
     console.log('end mass hunt')
+  }
+
+  const handleMassHuntClose = () => {
+    setOpenMassHunt(false)
   }
 
   React.useEffect(() => {
@@ -1047,7 +1070,27 @@ const Monsters = () => {
           </Box>
         )}
       </Dialog>
-    </Box>
+      <Dialog onClose={handleMassHuntClose} open={openMassHunt} sx={{ p: 1 }}>
+        <DialogTitle sx={{ textAlign: "center" }}>
+          Result of Mass Hunt
+        </DialogTitle>
+        <Box sx={{ p: 1, display: 'flex', maxWidth: 1000, flexWrap: 'wrap', maxHight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
+          {
+            legions.map((legion: any, index: any) => (
+              <Box className={index % 2 == 0 ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
+                <img src={`/assets/images/characters/jpg/monsters_dying/m${1}.jpg`} style={{ width: '100%' }} />
+                <Box sx={{ wordBreak: 'break-word' }}>
+                  legionname
+                </Box>
+                <Box sx={{ p: 1 }}>
+                  Chance: 90, Role: 50
+                </Box>
+              </Box>
+            ))
+          }
+        </Box>
+      </Dialog >
+    </Box >
   );
 };
 
