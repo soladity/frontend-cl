@@ -279,11 +279,12 @@ const Beasts = () => {
     setCurrentPage(value);
   };
 
-  const handleUpdate = (id: number) => {
+  const handleUpdate = async (id: number) => {
     setSelectedBeast(id);
     setPrice(
       parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
+    setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price))))
     setOpenUpdate(true);
   };
 

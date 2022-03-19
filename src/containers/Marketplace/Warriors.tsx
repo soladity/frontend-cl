@@ -317,11 +317,12 @@ const Warriors = () => {
     setCurrentPage(value);
   };
 
-  const handleUpdate = (id: number) => {
+  const handleUpdate = async (id: number) => {
     setSelectedWarrior(id);
     setPrice(
       parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
+    setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price))))
     setOpenUpdate(true);
   };
 
