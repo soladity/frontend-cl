@@ -213,8 +213,13 @@ const Monsters = () => {
       // console.log(subscriptionId)
     }).on('data', function (event: any) {
       console.log(event)
-      var huntResult = event.returnValues
+      var huntResult = {
+        legionId: event.returnValues.legionId,
+        monsterId: event.returnValues.monsterId
+      }
       var massHuntResultTemp = massHuntResult
+      console.log(massHuntResult)
+      console.log(massHuntResultTemp)
       setMassHuntResult(massHuntResultTemp.push(huntResult))
     }).on('changed', function (event: any) {
       console.log(event)
@@ -262,8 +267,6 @@ const Monsters = () => {
     } catch (error) {
       console.log(error);
     }
-    console.log("monsterArrary", monsterArrary);
-
     setMonsters(monsterArrary);
 
     if (legions[0]) {
@@ -404,11 +407,8 @@ const Monsters = () => {
         curLegion?.id,
         monsterTokenID
       );
-      console.log(response)
       const keys = Object.keys(response.events);
-      console.log(keys);
       const result = response.events['Hunted'].returnValues;
-      console.log(result);
       setHuntedRoll(result.roll);
       setHuntAvailablePercent(result.percent);
       setHuntedStatus(result.success ? 1 : 2);
@@ -1091,16 +1091,19 @@ const Monsters = () => {
             </Box>
           )
         }
-        <Box sx={{ p: 1, display: 'flex', maxWidth: 1000, flexWrap: 'wrap', maxHight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
+        <Box sx={{ p: 1, display: 'flex', flexWrap: 'wrap', maxHeight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
           {
-            massHuntResult.map((result: any, index: any) => (
+            massHuntResult.map((item: any, index: any) => (
               <Box className={index % 2 == 0 ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
-                <img src={`/assets/images/characters/jpg/monsters_dying/m${1}.jpg`} style={{ width: '100%' }} />
+                <img src={`/assets/images/characters/jpg/monsters_dying/m${item['monsterId']}.jpg`} style={{ width: '100%' }} />
                 <Box sx={{ wordBreak: 'break-word' }}>
-                  {/* {legions.filter((legion: any) => parseInt(legion.id) == parseInt(result.legionId))[0].name} */}
+                  {
+                    item['legionId']
+                  }
+                  {/* {legions.filter((legion: any) => parseInt(legion['id']) == parseInt(item['legionId']))[0].name} */}
                 </Box>
                 <Box sx={{ p: 1, fontSize: 12 }}>
-                  Chance: 90, Role: 50
+                  Chance: 90, RolL: 50
                 </Box>
               </Box>
             ))
@@ -1112,7 +1115,7 @@ const Monsters = () => {
           </Button>
           <CommonBtn
             onClick={() => handleContinue()}
-            disabled={continueLoading && massHuntLoading}
+            disabled={continueLoading || massHuntLoading}
             sx={{ marginLeft: 'auto', fontWeight: "bold" }}
           >
             {continueLoading ? (
