@@ -214,7 +214,6 @@ const Monsters = () => {
   useEffect(() => {
     const huntEvent = legionContract.events.Hunted({
     }).on('connected', function (subscriptionId: any) {
-      // console.log(subscriptionId)
     }).on('data', function (event: any) {
       console.log(event)
       var huntResult = {
@@ -225,13 +224,7 @@ const Monsters = () => {
         success: event.returnValues.success
       }
       setMassHuntResult([...massHuntResult, huntResult])
-    }).on('changed', function (event: any) {
-      console.log(event)
-    }).on('error', function (error: any, receipt: any) {
-      console.log(error)
-      console.log(receipt)
     })
-
     if (account) {
       initialize();
     }
