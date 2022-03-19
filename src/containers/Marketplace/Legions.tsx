@@ -114,6 +114,8 @@ const Legions = () => {
     if (account) {
       getBalance();
     }
+    return () => {
+    }
   }, []);
 
   const getLegionImageUrl = (ap: number) => {
@@ -217,7 +219,7 @@ const Legions = () => {
     setActionLoading(false);
   };
 
-  const handleBuy = async (id: number) => {
+  const handleBuy = async (id: number, price: number) => {
     setActionLoading(true);
     const allowance = await getMarketplaceBloodstoneAllowance(
       web3,
@@ -232,7 +234,7 @@ const Legions = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "3", id);
+      await buyToken(web3, marketplaceContract, account, "3", id, BigInt(price));
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -298,7 +300,7 @@ const Legions = () => {
   const handleUpdate = (id: number) => {
     setSelectedLegion(id);
     setPrice(
-      parseInt(legions.filter((item: any) => parseInt(item.id) === id)[0].price)
+      parseInt(legions.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
     setOpenUpdate(true);
   };
@@ -308,8 +310,14 @@ const Legions = () => {
   };
 
   const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+    } else if (price >= 0) {
+      setPrice(price);
     }
   };
 
@@ -323,12 +331,12 @@ const Legions = () => {
         account,
         "3",
         selectedLegion,
-        price
+        BigInt(price * Math.pow(10, 18))
       );
       let temp = [];
       for (let i = 0; i < legions.length; i++) {
         if (parseInt(legions[i].id) === selectedLegion)
-          temp.push({ ...legions[i], price: price.toString() });
+          temp.push({ ...legions[i], price: (price * Math.pow(10, 18)).toString() });
         else temp.push({ ...legions[i] });
       }
       setLegions([...temp]);

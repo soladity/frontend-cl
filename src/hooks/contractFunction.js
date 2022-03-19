@@ -230,9 +230,17 @@ export const getLegionLastHuntTime = async (web3, contract, tokenId) => {
   return response;
 };
 
-export const addSupply = async (web3, contract, account, tokenId, supply) => {
+export const addSupply = async (
+  web3,
+  contract,
+  account,
+  tokenId,
+  supply,
+  fromWallet
+) => {
+  console.log(fromWallet);
   const response = await contract.methods
-    .addSupply(tokenId, supply, true)
+    .addSupply(tokenId, supply, fromWallet)
     .send({ from: account });
   return response;
 };
@@ -344,9 +352,9 @@ export const cancelMarketplace = async (web3, contract, account, type, id) => {
   return response;
 };
 
-export const buyToken = async (web3, contract, account, type, id) => {
+export const buyToken = async (web3, contract, account, type, id, price) => {
   const response = await contract.methods
-    .buyToken(type, id)
+    .buyToken(type, id, price)
     .send({ from: account });
   return response;
 };
@@ -453,10 +461,26 @@ export const getSummoningPrice = async (contract, amount) => {
   return await contract.methods.getSummoningPrice(amount).call();
 };
 
+export const getTrainingCost = async (contract, amount) => {
+  return await contract.methods.getTrainingCost(amount).call();
+};
+
 export const getBLSTAmountFromUSD = async (contract, amount) => {
   return await contract.methods.getBLSTAmountFromUSD(amount).call();
 };
 
 export const getAllMonsters = async (contract) => {
   return await contract.methods.getAllMonsters().call();
+};
+
+export const getSupplyCost = async (contract, warriorCnt, supplyDate) => {
+  return await contract.methods.getSupplyCost(warriorCnt, supplyDate).call();
+};
+
+export const getCostForAddingWarrior = async (contract, amount, supply) => {
+  return await contract.methods.getCostForAddingWarrior(amount, supply).call();
+};
+
+export const massHunt = async (contract, account) => {
+  return await contract.methods.massHunt().send({ from: account });
 };

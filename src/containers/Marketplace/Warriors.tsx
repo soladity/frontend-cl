@@ -129,6 +129,7 @@ const Warriors = () => {
         }
       }
       marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
+      console.log(marketItem)
       tempWarriors.push({
         ...warrior,
         id: ids[i],
@@ -169,7 +170,7 @@ const Warriors = () => {
     setActionLoading(false);
   };
 
-  const handleBuy = async (id: number) => {
+  const handleBuy = async (id: number, price: number) => {
     setActionLoading(true);
     const allowance = await getMarketplaceBloodstoneAllowance(
       web3,
@@ -184,7 +185,7 @@ const Warriors = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "2", id);
+      await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -250,9 +251,7 @@ const Warriors = () => {
   const handleUpdate = (id: number) => {
     setSelectedWarrior(id);
     setPrice(
-      parseInt(
-        warriors.filter((item: any) => parseInt(item.id) === id)[0].price
-      )
+      parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
     setOpenUpdate(true);
   };
@@ -262,8 +261,14 @@ const Warriors = () => {
   };
 
   const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+    } else if (price >= 0) {
+      setPrice(price);
     }
   };
 
@@ -277,12 +282,12 @@ const Warriors = () => {
         account,
         "2",
         selectedWarrior,
-        price
+        BigInt(price * Math.pow(10, 18))
       );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {
         if (parseInt(warriors[i].id) === selectedWarrior)
-          temp.push({ ...warriors[i], price: price.toString() });
+          temp.push({ ...warriors[i], price: (price * Math.pow(10, 18)).toString() });
         else temp.push({ ...warriors[i] });
       }
       setWarriors([...temp]);
@@ -503,11 +508,11 @@ const Warriors = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/warriors/" +
-                            item["type"] +
-                            ".jpg"
+                          item["type"] +
+                          ".jpg"
                           : "/assets/images/characters/gif/warriors/" +
-                            item["type"] +
-                            ".gif"
+                          item["type"] +
+                          ".gif"
                       }
                       type={item["type"]}
                       power={item["power"]}

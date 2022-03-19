@@ -31,6 +31,7 @@ import {
   setLegionBloodstoneApprove,
   getWarriorTokenIds,
   getWarriorToken,
+  getTrainingCost,
 } from "../../hooks/contractFunction";
 import {
   mintLegion,
@@ -44,6 +45,7 @@ import {
   useWarrior,
   useWeb3,
   useLegion,
+  useFeeHandler,
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { toCapitalize } from "../../utils/common";
@@ -145,7 +147,7 @@ const CreateLegions: React.FC = () => {
   const [legionName, setLegionName] = React.useState("");
   const [isWDropable, setIsWDropable] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
-  const [mintFee, setMintFee] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState("0");
   const [comboFilterValue, setComboFilterValue] = React.useState("");
   const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
     []
@@ -161,6 +163,7 @@ const CreateLegions: React.FC = () => {
   const beastContract = useBeast();
   const legionContract = useLegion();
   const bloodstoneContract = useBloodstone();
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
   const theme = useTheme();
@@ -223,8 +226,12 @@ const CreateLegions: React.FC = () => {
         sum >= createlegions.main.minAvailableAP &&
         legionName.length > 0
     );
-    setMintFee(0.5 * dropItemList.length);
+    setFee();
   }, [beasts, warriors, dropItemList, legionName]);
+
+  const setFee = async () => {
+    setMintFee((await getTrainingCost(feeHandlerContract, dropItemList.length) / Math.pow(10, 18)).toFixed(3));
+  };
 
   const getBalance = async () => {
     setLoading(true);
@@ -459,7 +466,9 @@ const CreateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {isSmallThanSM ? getTranslation('back') : getTranslation("btnBackToLegions")}
+              {isSmallThanSM
+                ? getTranslation("back")
+                : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>

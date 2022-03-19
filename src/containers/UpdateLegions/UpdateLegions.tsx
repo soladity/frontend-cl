@@ -34,6 +34,8 @@ import {
   getWarriorToken,
   getLegionToken,
   updateLegion,
+  getTrainingCost,
+  getCostForAddingWarrior,
 } from "../../hooks/contractFunction";
 import {
   getBeastTokenIds,
@@ -46,6 +48,7 @@ import {
   useWarrior,
   useWeb3,
   useLegion,
+  useFeeHandler,
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { toCapitalize } from "../../utils/common";
@@ -161,7 +164,7 @@ const UpdateLegions: React.FC = () => {
   const [tempAP, setTempAP] = React.useState(0);
   const [tempBeastsCnt, setTempBeastsCnt] = React.useState(0);
   const [tempWarriorsCnt, setTempWarriorsCnt] = React.useState(0);
-  const [mintFee, setMintFee] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState("0");
   const [curLegionSupply, setCurLegionSupply] = React.useState(0);
   const [comboFilterValue, setComboFilterValue] = React.useState("");
   const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
@@ -179,6 +182,7 @@ const UpdateLegions: React.FC = () => {
   const beastContract = useBeast();
   const legionContract = useLegion();
   const bloodstoneContract = useBloodstone();
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
   const theme = useTheme();
@@ -243,11 +247,7 @@ const UpdateLegions: React.FC = () => {
         sum + tempAP >= createlegions.main.minAvailableAP &&
         legionName.length > 0
     );
-    setMintFee(
-      0.5 * dropItemList.length +
-        dropItemList.filter((item) => item.w5b === true).length *
-          curLegionSupply
-    );
+    setFee();
   }, [beasts, warriors, dropItemList, legionName]);
 
   React.useEffect(() => {
@@ -281,6 +281,26 @@ const UpdateLegions: React.FC = () => {
       initCurLegion();
     }
   }, [curLegionID]);
+
+  const setFee = async () => {
+    setMintFee(
+      (parseInt(
+        await getTrainingCost(
+          feeHandlerContract,
+          dropItemList.filter((item) => item.w5b === false).length
+        )
+      ) /
+        Math.pow(10, 18) +
+        parseInt(
+          await getCostForAddingWarrior(
+            feeHandlerContract,
+            dropItemList.filter((item) => item.w5b === true).length,
+            curLegionSupply
+          )
+        ) /
+          Math.pow(10, 18)).toFixed(3)
+    );
+  };
 
   const getBalance = async () => {
     setLoading(true);
@@ -511,7 +531,9 @@ const UpdateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {isSmallThanSM ? getTranslation('back') : getTranslation("btnBackToLegions")}
+              {isSmallThanSM
+                ? getTranslation("back")
+                : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>
