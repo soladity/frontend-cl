@@ -260,7 +260,7 @@ const YourInventory = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("unClaimed")}:
-          <span className="legionOrangeColor"> {unclaimedBLST}</span>
+          <span className="legionOrangeColor"> {unclaimedBLST.toFixed(2)}</span>
         </Typography>
         {unclaimedBLST > 0 && (
           <Typography

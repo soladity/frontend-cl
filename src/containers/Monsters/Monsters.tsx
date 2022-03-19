@@ -198,6 +198,9 @@ const Monsters = () => {
   const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
   const [openMassHunt, setOpenMassHunt] = React.useState(false);
 
+  const [massHuntLoading, setMassHuntLoading] = React.useState(false)
+  const [massHuntResult, setMassHuntResult] = React.useState<any>([])
+
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -210,6 +213,9 @@ const Monsters = () => {
       // console.log(subscriptionId)
     }).on('data', function (event: any) {
       console.log(event)
+      var huntResult = event.returnValues
+      var massHuntResultTemp = massHuntResult
+      setMassHuntResult(massHuntResultTemp.push(huntResult))
     }).on('changed', function (event: any) {
       console.log(event)
     }).on('error', function (error: any, receipt: any) {
@@ -428,6 +434,7 @@ const Monsters = () => {
     setDialogVisible(false);
     setHuntedStatus(0);
     setContinueLoading(false);
+    setOpenMassHunt(false)
     dispatch(
       setReloadStatus({
         reloadContractStatus: new Date(),
@@ -528,12 +535,15 @@ const Monsters = () => {
 
   const massHunting = async () => {
     console.log('start mass hunt')
-    // setOpenMassHunt(true)
+    setMassHuntResult([])
+    setOpenMassHunt(true)
+    setMassHuntLoading(true)
     try {
       await massHunt(legionContract, account)
     } catch (error) {
       console.log(error)
     }
+    setMassHuntLoading(false)
     console.log('end mass hunt')
   }
 
@@ -1074,20 +1084,43 @@ const Monsters = () => {
         <DialogTitle sx={{ textAlign: "center" }}>
           Result of Mass Hunt
         </DialogTitle>
+        {
+          massHuntLoading && (
+            <Box sx={{ p: 1 }}>
+              <LinearProgress sx={{ width: "100%" }} color="success" />
+            </Box>
+          )
+        }
         <Box sx={{ p: 1, display: 'flex', maxWidth: 1000, flexWrap: 'wrap', maxHight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
           {
-            legions.map((legion: any, index: any) => (
+            massHuntResult.map((result: any, index: any) => (
               <Box className={index % 2 == 0 ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
                 <img src={`/assets/images/characters/jpg/monsters_dying/m${1}.jpg`} style={{ width: '100%' }} />
                 <Box sx={{ wordBreak: 'break-word' }}>
-                  legionname
+                  {/* {legions.filter((legion: any) => parseInt(legion.id) == parseInt(result.legionId))[0].name} */}
                 </Box>
-                <Box sx={{ p: 1 }}>
+                <Box sx={{ p: 1, fontSize: 12 }}>
                   Chance: 90, Role: 50
                 </Box>
               </Box>
             ))
           }
+        </Box>
+        <Box sx={{ display: 'flex', p: 1, justifyContent: 'space-between' }}>
+          <Button variant='outlined' color="primary" onClick={() => setOpenMassHunt(false)}>
+            {getTranslation('cancel')}
+          </Button>
+          <CommonBtn
+            onClick={() => handleContinue()}
+            disabled={continueLoading && massHuntLoading}
+            sx={{ marginLeft: 'auto', fontWeight: "bold" }}
+          >
+            {continueLoading ? (
+              <Spinner color="white" size={40} />
+            ) : (
+              getTranslation("continue")
+            )}
+          </CommonBtn>
         </Box>
       </Dialog >
     </Box >
