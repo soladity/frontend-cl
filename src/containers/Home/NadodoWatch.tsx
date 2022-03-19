@@ -22,6 +22,8 @@ import {
   sellTaxDev,
   sellTaxLiquidity,
   sellTaxReward,
+  getSummoningPrice,
+  getSupplyCost
 } from "../../hooks/contractFunction";
 
 const NadodoWatch = () => {
@@ -30,9 +32,9 @@ const NadodoWatch = () => {
   const [buyTax, setBuyTax] = React.useState(0);
   const [sellTax, setSellTax] = React.useState(0);
   const [damageReduction, setDamageReduction] = React.useState("0");
-  const [summonFee, setSummonFee] = React.useState("0");
-  const [suppliesFee14, setSuppliesFee14] = React.useState("0");
-  const [suppliesFee28, setSuppliesFee28] = React.useState("0");
+  const [summonFee, setSummonFee] = React.useState(0);
+  const [suppliesFee14, setSuppliesFee14] = React.useState(0);
+  const [suppliesFee28, setSuppliesFee28] = React.useState(0);
   const feeHandlerContract = useFeeHandler();
   const bloodstoneContract = useBloodstone()
 
@@ -41,7 +43,7 @@ const NadodoWatch = () => {
       setMarketplaceTax(
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
-      setHuntTax(((await getFee(feeHandlerContract, 1)) / 100).toFixed(0));
+      setHuntTax(((await getFee(feeHandlerContract, 1)) / 100).toFixed(1));
 
 
       const feeDenominatorVal = await feeDenominator(bloodstoneContract);
@@ -57,9 +59,9 @@ const NadodoWatch = () => {
       setDamageReduction(
         ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
       );
-      setSummonFee(await getFee(feeHandlerContract, 3));
-      setSuppliesFee14(await getFee(feeHandlerContract, 4));
-      setSuppliesFee28(await getFee(feeHandlerContract, 5));
+      setSummonFee(await getSummoningPrice(feeHandlerContract, 1));
+      setSuppliesFee14(await getSupplyCost(feeHandlerContract, 1, 14));
+      setSuppliesFee28(await getSupplyCost(feeHandlerContract, 1, 28));
     } catch (error) {
       console.log(error);
     }
@@ -136,7 +138,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("summoningFee")}:
-          <span className="legionOrangeColor"> ${summonFee}</span>
+          <span className="legionOrangeColor"> {(summonFee / Math.pow(10, 18)).toFixed(2)} $BLST</span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -144,7 +146,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("SuppliesFee14Hunts")}:
-          <span className="legionOrangeColor"> ${suppliesFee14}</span>
+          <span className="legionOrangeColor"> {(suppliesFee14 / Math.pow(10, 18)).toFixed(2)} $BLST</span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -152,7 +154,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("SuppliesFee28Hunts")}:
-          <span className="legionOrangeColor"> ${suppliesFee28}</span>
+          <span className="legionOrangeColor"> {(suppliesFee28 / Math.pow(10, 18)).toFixed(2)} $BLST</span>
         </Typography>
         <Typography
           className="legionFontColor"

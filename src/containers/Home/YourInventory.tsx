@@ -25,6 +25,7 @@ import {
   getLegionToken,
   getLegionLastHuntTime,
   getBLSTAmountFromUSD,
+  getUSDAmountFromBLST,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -54,6 +55,8 @@ const YourInventory = () => {
   const [firstHuntTime, setFirstHuntTime] = React.useState(0);
   const [currentTime, setCurrentTime] = React.useState(new Date());
   const [usdToBlst, setUsdToBlst] = React.useState(0);
+  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [totalBlstToUsd, setTotalBlstToUsd] = React.useState(0)
 
   //account
   const { account } = useWeb3React();
@@ -129,6 +132,8 @@ const YourInventory = () => {
       setLegionTokenIds(legionTokenIds);
       getLastHuntTimes(legionTokenIds);
       setUsdToBlst(await getBLSTAmountFromUSD(feeHandlerContract, 1));
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(1 * Math.pow(10, 18))))
+      setTotalBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(BLSTBalance * Math.pow(10, 18))))
     } catch (error) {
       console.log(error);
     }
@@ -295,8 +300,7 @@ const YourInventory = () => {
             {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( ={" "}
             {formatNumber(
               (
-                parseFloat(BLSTBalance) /
-                (usdToBlst / Math.pow(10, 18))
+                totalBlstToUsd / Math.pow(10, 6)
               ).toFixed(2)
             )}{" "}
             USD )
@@ -319,7 +323,7 @@ const YourInventory = () => {
         >
           1 BLST ={" "}
           <span className="legionOrangeColor">
-            {(1 / (usdToBlst / Math.pow(10, 18))).toFixed(2)} USD
+            {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD
           </span>
         </Typography>
       </Box>

@@ -35,12 +35,14 @@ import {
   getLegionImage,
   getHuntStatus,
   updatePrice,
+  getUSDAmountFromBLST
 } from "../../hooks/contractFunction";
 import {
   useLegion,
   useMarketplace,
   useBloodstone,
   useWeb3,
+  useFeeHandler,
 } from "../../hooks/useContract";
 import LegionMarketCard from "../../component/Cards/LegionMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -95,6 +97,7 @@ const Legions = () => {
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([2000, 100000]);
   const [huntsValue, setHuntsValue] = React.useState<number[]>([0, 14]);
+  const [BlstToUsd, setBlstToUsd] = React.useState(0)
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -102,8 +105,90 @@ const Legions = () => {
   const legionContract = useLegion();
   const marketplaceContract = useMarketplace();
   const bloodstoneContract = useBloodstone();
+  const feeHandlerContract = useFeeHandler()
   const web3 = useWeb3();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+
+    const buyEvent = marketplaceContract.events.BuyToken({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log('buyEvent', event)
+      console.log(legions)
+      if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        setLegions(legions.filter(legion => legion.id != event.returnValues._tokenId))
+      }
+    })
+
+    const sellEvent = marketplaceContract.events.SellToken({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log('sellEvent', event)
+      console.log(legions)
+      if (legions.filter(item => item.id == event.returnValues._tokenId).length == 0) {
+        const legion = await getLegionToken(web3, legionContract, event.returnValues._tokenId);
+        const marketItem = await getMarketItem(web3, marketplaceContract, "3", event.returnValues._tokenId);
+        const image = getLegionImageUrl(legion.attackPower);
+        const huntStatus = await getHuntStatus(web3, legionContract, event.returnValues._tokenId);
+        const newItem = {
+          ...legion,
+          id: event.returnValues._tokenId,
+          image: image,
+          owner: marketItem.owner === account ? true : false,
+          price: marketItem.price,
+          huntStatus: huntStatus,
+        }
+        setLegions([...legions, newItem])
+      }
+    })
+
+    const updateEvent = marketplaceContract.events.PriceUpdated({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log('updateEvent', event)
+      console.log(legions)
+      if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        var temp = legions.map(item => {
+          if (item.id == event.returnValues._tokenId) {
+            return {
+              ...item,
+              price: event.returnValues._price
+            }
+          } else {
+            return item
+          }
+        })
+        setLegions(temp)
+      }
+    })
+    return () => {
+      buyEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+      sellEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+      updateEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+    }
+  }, [legions])
 
   React.useEffect(() => {
     setShowAnimation(
@@ -113,8 +198,6 @@ const Legions = () => {
     );
     if (account) {
       getBalance();
-    }
-    return () => {
     }
   }, []);
 
@@ -309,17 +392,23 @@ const Legions = () => {
     setOpenUpdate(false);
   };
 
-  const handlePrice = (e: any) => {
+  const handlePrice = async (e: any) => {
     var price = e.target.value
     if (price >= 1) {
       if (price[0] == '0') {
         price = price.slice(1)
       }
       setPrice(price);
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
     } else if (price >= 0) {
       setPrice(price);
+      if (price == '') {
+        price = '0'
+      }
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
     }
   };
+
 
   const handleUpdatePrice = async () => {
     setActionLoading(true);
@@ -609,8 +698,9 @@ const Legions = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
           />
-          <Typography variant="subtitle1">(= XXX USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
