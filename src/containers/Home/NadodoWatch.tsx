@@ -59,9 +59,9 @@ const NadodoWatch = () => {
       setDamageReduction(
         ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
       );
-      setSummonFee(await getSummoningPrice(feeHandlerContract, 1));
-      setSuppliesFee14(await getSupplyCost(feeHandlerContract, 1, 14));
-      setSuppliesFee28(await getSupplyCost(feeHandlerContract, 1, 28));
+      setSummonFee(await getFee(feeHandlerContract, 3));
+      setSuppliesFee14(await getFee(feeHandlerContract, 4));
+      setSuppliesFee28(await getFee(feeHandlerContract, 5));
     } catch (error) {
       console.log(error);
     }
@@ -138,7 +138,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("summoningFee")}:
-          <span className="legionOrangeColor"> {(summonFee / Math.pow(10, 18)).toFixed(2)} $BLST</span>
+          <span className="legionOrangeColor"> ${summonFee} </span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -146,7 +146,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("SuppliesFee14Hunts")}:
-          <span className="legionOrangeColor"> {(suppliesFee14 / Math.pow(10, 18)).toFixed(2)} $BLST</span>
+          <span className="legionOrangeColor"> ${suppliesFee14} </span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -154,7 +154,7 @@ const NadodoWatch = () => {
           sx={{ fontWeight: "bold" }}
         >
           {getTranslation("SuppliesFee28Hunts")}:
-          <span className="legionOrangeColor"> {(suppliesFee28 / Math.pow(10, 18)).toFixed(2)} $BLST</span>
+          <span className="legionOrangeColor"> ${suppliesFee28} </span>
         </Typography>
         <Typography
           className="legionFontColor"
