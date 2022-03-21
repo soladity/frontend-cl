@@ -1,33 +1,19 @@
 import React from "react";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import CardsComponent from "../../component/Cards/Cards";
 import {
   Grid,
-  Card,
   Box,
-  Button,
-  Popover,
-  Checkbox,
-  Dialog,
-  DialogTitle,
 } from "@mui/material";
 import { meta_constant } from "../../config/meta.config";
 import Helmet from "react-helmet";
-import { makeStyles } from "@mui/styles";
 import { getTranslation } from "../../utils/translation";
-import YouTube from "react-youtube";
-import { Link } from "react-router-dom";
 import YourInventory from "./YourInventory";
 import NadodoWatch from "./NadodoWatch";
 import TakeAction from "./TakeAction";
 import ToSocial from "./ToSocial";
 import YourAchievements from "./YourAchievements";
-import nicahBackground from "../../assets/images/nicah_background.jpg";
 import ReactPlayer from "react-player/youtube";
 
-import { useDispatch } from "react-redux";
-import { setBeastIds } from "../../actions/contractActions";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -35,22 +21,9 @@ export interface SimpleDialogProps {
 }
 
 const Home = () => {
-  const dispatch = useDispatch();
 
-  const [anchorElYourAchievement, setAnchorElYourAchievement] =
-    React.useState<HTMLElement | null>(null);
-
-  const handlePopoverOpenYourAchievement = (
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    setAnchorElYourAchievement(event.currentTarget);
-  };
-
-  const handlePopoverCloseYourAchievement = () => {
-    setAnchorElYourAchievement(null);
-  };
-
-  const openYourAchievement = Boolean(anchorElYourAchievement);
+  const language = localStorage.getItem('lang')
+  console.log(language)
 
   return (
     <Box>
@@ -112,8 +85,8 @@ const Home = () => {
             <Grid item md={3} sm={2} xs={1}></Grid>
           </Grid>
           <a
-            href="https://docs.cryptolegions.app/"
-            target={"blank"}
+            href={language === 'es' ? "https://docs-es.cryptolegions.app/" : "https://docs.cryptolegions.app/"}
+            target="_blank"
             style={{ color: "white", border: "none" }}
           >
             <Typography
