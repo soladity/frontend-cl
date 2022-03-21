@@ -55,6 +55,7 @@ import {
   getBloodstoneBalance,
   getUnclaimedBLST,
   getSupplyCost,
+  getUSDAmountFromBLST
 } from "../../hooks/contractFunction";
 import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
@@ -120,6 +121,7 @@ const Legions = () => {
 
   const [blstBalance, setBlstBalance] = React.useState(0);
   const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
+  const [BlstToUsd, setBlstToUsd] = React.useState(0)
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -299,9 +301,20 @@ const Legions = () => {
     setOpenShopping(true);
   };
 
-  const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+  const handlePrice = async (e: any) => {
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+    } else if (price >= 0) {
+      setPrice(price);
+      if (price == '') {
+        price = '0'
+      }
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
     }
   };
 
@@ -321,7 +334,7 @@ const Legions = () => {
         account,
         "3",
         selectedLegion,
-        price
+        BigInt(price * Math.pow(10, 18))
       );
       let power = 0;
       let temp = legions;
@@ -739,6 +752,7 @@ const Legions = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{
@@ -747,7 +761,7 @@ const Legions = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= XXX USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>

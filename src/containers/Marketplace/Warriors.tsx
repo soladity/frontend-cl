@@ -33,12 +33,14 @@ import {
   buyToken,
   getMarketItem,
   updatePrice,
+  getUSDAmountFromBLST
 } from "../../hooks/contractFunction";
 import {
   useWarrior,
   useMarketplace,
   useBloodstone,
   useWeb3,
+  useFeeHandler,
 } from "../../hooks/useContract";
 import WarriorMarketCard from "../../component/Cards/WarriorMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -69,8 +71,6 @@ type WarriorProps = {
   strength: string;
   owner: boolean;
   price: string;
-  gif: string;
-  jpg: string;
 };
 
 const Warriors = () => {
@@ -89,6 +89,7 @@ const Warriors = () => {
   const [loading, setLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
+  const [BlstToUsd, setBlstToUsd] = React.useState(0)
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -96,6 +97,7 @@ const Warriors = () => {
   const warriorContract = useWarrior();
   const marketplaceContract = useMarketplace();
   const bloodstoneContract = useBloodstone();
+  const feeHandlerContract = useFeeHandler()
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -110,6 +112,83 @@ const Warriors = () => {
     );
   }, []);
 
+
+  React.useEffect(() => {
+    const buyEvent = marketplaceContract.events.BuyToken({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log('buyEvent', event)
+      console.log(warriors)
+      if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
+      }
+    })
+
+    const sellEvent = marketplaceContract.events.SellToken({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log('sellEvent', event)
+      console.log(warriors)
+      if (warriors.filter(item => item.id == event.returnValues._tokenId).length == 0) {
+        const warrior = await getWarriorToken(web3, warriorContract, event.returnValues._tokenId);
+        const marketItem = await getMarketItem(web3, marketplaceContract, "2", event.returnValues._tokenId);
+        const newItem = {
+          ...warrior,
+          id: event.returnValues._tokenId,
+          owner: marketItem.owner === account ? true : false,
+          price: marketItem.price,
+        }
+        setWarriors([...warriors, newItem])
+      }
+    })
+
+    const updateEvent = marketplaceContract.events.PriceUpdated({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log('updateEvent', event)
+      console.log(warriors)
+      if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        var temp = warriors.map(item => {
+          if (item.id == event.returnValues._tokenId) {
+            return {
+              ...item,
+              price: event.returnValues._price
+            }
+          } else {
+            return item
+          }
+        })
+        setWarriors(temp)
+      }
+    })
+    return () => {
+      buyEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+      sellEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+      updateEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+    }
+  }, [warriors])
+
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
@@ -118,24 +197,15 @@ const Warriors = () => {
     let warrior;
     let marketItem;
     let tempWarriors = [];
-    let gif = "";
-    let jpg = "";
     for (let i = 0; i < ids.length; i++) {
       warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
-        }
-      }
       marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
+      console.log(marketItem)
       tempWarriors.push({
         ...warrior,
         id: ids[i],
         owner: marketItem.owner === account ? true : false,
         price: marketItem.price,
-        gif: gif,
-        jpg: jpg,
       });
     }
     setWarriors(tempWarriors);
@@ -169,7 +239,7 @@ const Warriors = () => {
     setActionLoading(false);
   };
 
-  const handleBuy = async (id: number) => {
+  const handleBuy = async (id: number, price: number) => {
     setActionLoading(true);
     const allowance = await getMarketplaceBloodstoneAllowance(
       web3,
@@ -184,7 +254,7 @@ const Warriors = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "2", id);
+      await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -247,13 +317,12 @@ const Warriors = () => {
     setCurrentPage(value);
   };
 
-  const handleUpdate = (id: number) => {
+  const handleUpdate = async (id: number) => {
     setSelectedWarrior(id);
     setPrice(
-      parseInt(
-        warriors.filter((item: any) => parseInt(item.id) === id)[0].price
-      )
+      parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
     );
+    setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price))))
     setOpenUpdate(true);
   };
 
@@ -261,11 +330,23 @@ const Warriors = () => {
     setOpenUpdate(false);
   };
 
-  const handlePrice = (e: any) => {
-    if (e.target.value >= 0) {
-      setPrice(+e.target.value);
+  const handlePrice = async (e: any) => {
+    var price = e.target.value
+    if (price >= 1) {
+      if (price[0] == '0') {
+        price = price.slice(1)
+      }
+      setPrice(price);
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+    } else if (price >= 0) {
+      setPrice(price);
+      if (price == '') {
+        price = '0'
+      }
+      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
     }
   };
+
 
   const handleUpdatePrice = async () => {
     setActionLoading(true);
@@ -277,12 +358,12 @@ const Warriors = () => {
         account,
         "2",
         selectedWarrior,
-        price
+        BigInt(price * Math.pow(10, 18))
       );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {
         if (parseInt(warriors[i].id) === selectedWarrior)
-          temp.push({ ...warriors[i], price: price.toString() });
+          temp.push({ ...warriors[i], price: (price * Math.pow(10, 18)).toString() });
         else temp.push({ ...warriors[i] });
       }
       setWarriors([...temp]);
@@ -503,11 +584,11 @@ const Warriors = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/warriors/" +
-                            item["type"] +
-                            ".jpg"
+                          item["type"] +
+                          ".jpg"
                           : "/assets/images/characters/gif/warriors/" +
-                            item["type"] +
-                            ".gif"
+                          item["type"] +
+                          ".gif"
                       }
                       type={item["type"]}
                       power={item["power"]}
@@ -591,8 +672,9 @@ const Warriors = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
           />
-          <Typography variant="subtitle1">(= XXX USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
