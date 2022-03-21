@@ -5,17 +5,17 @@ import React from "react";
 import { scrollTo } from "../../utils";
 
 const ScrollToButton = ({
-    toId,
-    duration,
-    children,
+  toId,
+  duration,
+  children,
 }: {
-    toId: any;
-    duration: any;
-    children: any;
+  toId: any;
+  duration: any;
+  children: any;
 }) => {
-    const handleClick = () => scrollTo({ id: toId, duration });
+  const handleClick = () => scrollTo({ id: toId, duration });
 
-    return <span onClick={handleClick}>{children}</span>;
+  return <span onClick={handleClick}>{children}</span>;
 };
 
 export default ScrollToButton;
