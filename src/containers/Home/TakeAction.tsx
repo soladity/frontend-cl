@@ -23,7 +23,8 @@ import {
     mintWarrior,
     getAvailableLegionsCount,
     getSummoningPrice,
-    massHunt
+    massHunt,
+    getAllMonsters
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -33,6 +34,7 @@ import {
     useWeb3,
     useFeeHandler,
     useLegion,
+    useMonster
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
@@ -192,6 +194,7 @@ const TakeAction = () => {
     const bloodstoneContract = useBloodstone();
     const feeHandlerContract = useFeeHandler()
     const legionContract = useLegion();
+    const monsterContract = useMonster()
 
     const web3 = useWeb3();
 
@@ -447,16 +450,19 @@ const TakeAction = () => {
 
         const huntEvent = legionContract.events.Hunted({
         }).on('connected', function (subscriptionId: any) {
-        }).on('data', function (event: any) {
+        }).on('data', async function (event: any) {
             console.log(event)
             if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+                const monsterVal = await getAllMonsters(monsterContract);
+                const rewards = monsterVal[1]
                 var huntResult = {
                     legionId: event.returnValues.legionId,
                     monsterId: event.returnValues.monsterId,
                     percent: event.returnValues.percent,
                     roll: event.returnValues.roll,
                     success: event.returnValues.success,
-                    legionName: event.returnValues.name
+                    legionName: event.returnValues.name,
+                    reward: (rewards[event.returnValues.monsterId - 1] / Math.pow(10, 18)).toFixed(2)
                 }
                 massHuntResutTemp.push(huntResult)
                 console.log(huntResult)
@@ -953,7 +959,19 @@ const TakeAction = () => {
                                     {item.legionName}
                                 </Box>
                                 <Box sx={{ p: 1, fontSize: 12 }}>
-                                    <span>{getTranslation('chance')}: {item.percent}%</span> / <span>{getTranslation('roll')}: {item.roll}%</span>
+                                    <span>{getTranslation('maxRoll')}: {item.percent}</span>
+                                </Box>
+                                <Box sx={{ p: 1, fontSize: 12 }}>
+                                    <span>{getTranslation('yourRoll')}: {item.roll}</span>
+                                </Box>
+                                <Box sx={{ p: 1, fontSize: 12 }}>
+                                    {
+                                        item.success ? (
+                                            <span>{getTranslation('won')} {item.reward} $BLST</span>
+                                        ) : (
+                                            <span>{getTranslation('lost')}</span>
+                                        )
+                                    }
                                 </Box>
                             </Box>
                         ))
