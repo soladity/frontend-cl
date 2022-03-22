@@ -927,7 +927,7 @@ const TakeAction = () => {
                 open={openMassHunt} sx={{ p: 1 }}
             >
                 <DialogTitle sx={{ textAlign: "center" }}>
-                    {getTranslation('takeActionMassHunt')}
+                    {getTranslation('massHuntResult')}
                 </DialogTitle>
                 {
                     massHuntLoading && availableLegionCount > 0 && (
@@ -940,7 +940,7 @@ const TakeAction = () => {
 
                     {
                         availableLegionCount == 0 && (
-                            "There is no legion to hunt!"
+                            <span style={{ padding: '8px' }}>{getTranslation("noLegionToHunt")}</span>
                         )
                     }
                     {
@@ -955,16 +955,16 @@ const TakeAction = () => {
                                         } style={{ width: '100%' }} />)
                                         : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
                                 }
-                                <Box sx={{ wordBreak: 'break-word' }}>
+                                <Box sx={{ p: 1, wordBreak: 'break-word' }}>
                                     {item.legionName}
                                 </Box>
-                                <Box sx={{ p: 1, fontSize: 12 }}>
+                                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
                                     <span>{getTranslation('maxRoll')}: {item.percent}</span>
                                 </Box>
-                                <Box sx={{ p: 1, fontSize: 12 }}>
+                                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
                                     <span>{getTranslation('yourRoll')}: {item.roll}</span>
                                 </Box>
-                                <Box sx={{ p: 1, fontSize: 12 }}>
+                                <Box sx={{ paddingBottom: 1, fontSize: 12, fontWeight: 'bold' }}>
                                     {
                                         item.success ? (
                                             <span>{getTranslation('won')} {item.reward} $BLST</span>
@@ -987,7 +987,7 @@ const TakeAction = () => {
                     </CommonBtn>
                 </Box>
             </Dialog >
-        </Card>
+        </Card >
     );
 };
 

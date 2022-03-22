@@ -2458,4 +2458,16 @@ export const translations = {
     pl: "STRACONY",
     ph: "NAWALA",
   },
+  noLegionToHunt: {
+    en: "No legion available to hunt.",
+    es: "No hay legión disponible para cazar.",
+    cn: "没有军团可供狩猎。",
+    pt: "Nenhuma legião disponível para caçar.",
+    tr: "Avlanacak lejyon yok.",
+    ru: "Нет легиона, доступного для охоты.",
+    fr: "Aucune légion disponible pour chasser.",
+    de: "Geen legioen beschikbaar om op te jagen.",
+    pl: "Brak legionu do polowania.",
+    ph: "Walang legion na magagamit upang manghuli.",
+  },
 };
