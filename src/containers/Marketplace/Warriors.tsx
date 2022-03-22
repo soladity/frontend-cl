@@ -473,7 +473,7 @@ const Warriors = () => {
             <Grid item xs={12} md={6} lg={6} xl={3}>
               <FormControl component="fieldset" sx={{ width: "90%" }}>
                 <FormLabel component="legend">
-                  {getTranslation("filterByAp")}ilter by AP:
+                  {getTranslation("filterByAp")}:
                 </FormLabel>
                 <Slider
                   getAriaLabel={() => "Custom marks"}

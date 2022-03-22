@@ -368,6 +368,7 @@ const Warriors = () => {
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, false, id);
+      setBalance(balance - 1);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
       dispatch(
         setReloadStatus({
