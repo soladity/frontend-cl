@@ -577,6 +577,7 @@ export const translations = {
   },
   top3Legions: {
     en: "Top 3 Legions",
+    es: "Las 3 mejores legiones",
     cn: "前三名军团",
     pt: "Top 3 Legiões",
     tr: "En İyi 3 Lejyon",
