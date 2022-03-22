@@ -106,11 +106,13 @@ const useStyles = makeStyles(() => ({
     paddingTop: "2%",
   },
   MassHuntItemLose: {
-    boxShadow: "rgb(0 0 0 / 37%) 0px 2px 4px 0px, rgb(14 30 37 / 85%) 0px 2px 16px 0px"
+    boxShadow: "rgb(0 0 0 / 37%) 0px 2px 4px 0px, rgb(14 30 37 / 85%) 0px 2px 16px 0px",
+    borderRadius: 5
   },
   MassHuntItemWin: {
     boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
     animation: `$Flash linear 2s infinite`,
+    borderRadius: 5
   },
   "@keyframes Flash": {
     "0%": {
@@ -200,6 +202,7 @@ const Monsters = () => {
 
   const [massHuntLoading, setMassHuntLoading] = React.useState(false)
   const [massHuntResult, setMassHuntResult] = React.useState<any>([])
+  const [massBtnEnable, setMassBtnEnable] = React.useState(false)
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -207,24 +210,9 @@ const Monsters = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(massHuntResult)
-  }, [massHuntResult])
+  var massHuntResutTemp: any = []
 
   useEffect(() => {
-    const huntEvent = legionContract.events.Hunted({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', function (event: any) {
-      console.log(event)
-      var huntResult = {
-        legionId: event.returnValues.legionId,
-        monsterId: event.returnValues.monsterId,
-        percent: event.returnValues.percent,
-        roll: event.returnValues.roll,
-        success: event.returnValues.success
-      }
-      setMassHuntResult([...massHuntResult, huntResult])
-    })
     if (account) {
       initialize();
     }
@@ -233,6 +221,26 @@ const Monsters = () => {
         ? localStorage.getItem("showAnimation")
         : "0"
     );
+
+    const huntEvent = legionContract.events.Hunted({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', function (event: any) {
+      console.log(event)
+      if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+        var huntResult = {
+          legionId: event.returnValues.legionId,
+          monsterId: event.returnValues.monsterId,
+          percent: event.returnValues.percent,
+          roll: event.returnValues.roll,
+          success: event.returnValues.success,
+          legionName: event.returnValues.name
+        }
+        massHuntResutTemp.push(huntResult)
+        console.log(huntResult)
+        setMassHuntResult(massHuntResutTemp)
+      }
+    })
+
     return () => {
       huntEvent.unsubscribe((error: any, success: any) => {
         if (success) {
@@ -287,6 +295,7 @@ const Monsters = () => {
       let legionTmp;
       let legionStatus = "";
       let legionArrayTmp = [];
+      setMassBtnEnable(false)
       for (let i = 0; i < legionIDS.length; i++) {
         legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
         legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
@@ -297,6 +306,10 @@ const Monsters = () => {
               .capacity
           );
         }
+        if (legionStatus === '1') {
+          setMassBtnEnable(true)
+        }
+        console.log()
         legionArrayTmp.push({
           ...legionTmp,
           id: legionIDS[i],
@@ -335,6 +348,7 @@ const Monsters = () => {
       let legionTmp;
       let legionArrayTmp = [];
       let legionStatus = "";
+      setMassBtnEnable(false)
       for (let i = 0; i < legionIDS.length; i++) {
         legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
         legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
@@ -346,6 +360,10 @@ const Monsters = () => {
               .capacity
           );
         }
+        if (legionStatus === '1') {
+          setMassBtnEnable(true)
+        }
+        console.log(legionStatus)
         legionArrayTmp.push({
           ...legionTmp,
           id: legionIDS[i],
@@ -526,6 +544,7 @@ const Monsters = () => {
   const massHunting = async () => {
     console.log('start mass hunt')
     setMassHuntResult([])
+    massHuntResutTemp = []
     setOpenMassHunt(true)
     setMassHuntLoading(true)
     try {
@@ -538,7 +557,10 @@ const Monsters = () => {
     console.log('end mass hunt')
   }
 
-  const handleMassHuntClose = () => {
+  const handleMassHuntClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
     setOpenMassHunt(false)
   }
 
@@ -575,9 +597,9 @@ const Monsters = () => {
               spacing={2}
               sx={{ justifyContent: "center" }}
               alignItems="center"
-              columns={60}
+              columns={70}
             >
-              <Grid item xs={60} sm={60} md={20}>
+              <Grid item xs={70} sm={70} md={20}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     {getTranslation("legions")}
@@ -607,7 +629,7 @@ const Monsters = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={30} sm={12} md={9}>
+              <Grid item xs={35} sm={35} md={9}>
                 <ScrollToButton
                   toId={"monster" + strongestMonsterToHunt}
                   duration={1000}
@@ -628,7 +650,7 @@ const Monsters = () => {
                   </Typography>
                 </ScrollToButton>
               </Grid>
-              <Grid item xs={30} sm={12} md={7}>
+              <Grid item xs={35} sm={35} md={7}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -638,7 +660,7 @@ const Monsters = () => {
                   W {curLegion?.warriors.length}/{curLegion?.warriorCapacity}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={12} md={7}>
+              <Grid item xs={35} sm={35} md={7}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -649,7 +671,7 @@ const Monsters = () => {
                   {createlegions.main.maxAvailableDragCount}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={12} md={7}>
+              <Grid item xs={35} sm={35} md={7}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -671,7 +693,7 @@ const Monsters = () => {
                     "(" + getTranslation("suppliesNeeded") + ")"}
                 </Typography>
               </Grid>
-              <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
+              <Grid item xs={35} sm={35} md={10}>
                 <Typography
                   variant="h5"
                   sx={{
@@ -681,18 +703,18 @@ const Monsters = () => {
                   {calcHuntTime(curLegion?.lastHuntTime)}
                 </Typography>
               </Grid>
-              {/* <Grid item xs={30} sm={12} md={10} sx={{ marginRight: "auto" }}>
+              <Grid item xs={35} sm={35} md={10} sx={{ marginRight: "auto" }}>
                 <Typography
                   variant="h5"
                   sx={{
                     fontSize: { xs: 14, sm: 16, md: 20 },
                   }}
                 >
-                  <CommonBtn onClick={() => massHunting()}>
+                  <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold' }} disabled={!massBtnEnable}>
                     {getTranslation('takeActionMassHunt')}
                   </CommonBtn>
                 </Typography>
-              </Grid> */}
+              </Grid>
             </Grid>
             {supplyLoading && (
               <Box
@@ -1071,7 +1093,11 @@ const Monsters = () => {
           </Box>
         )}
       </Dialog>
-      <Dialog onClose={handleMassHuntClose} open={openMassHunt} sx={{ p: 1 }}>
+      <Dialog
+        disableEscapeKeyDown
+        onClose={(_, reason) => handleMassHuntClose(reason)}
+        open={openMassHunt} sx={{ p: 1 }}
+      >
         <DialogTitle sx={{ textAlign: "center" }}>
           {getTranslation('takeActionMassHunt')}
         </DialogTitle>
@@ -1083,18 +1109,27 @@ const Monsters = () => {
           )
         }
         <Box sx={{ p: 1, display: 'flex', flexWrap: 'wrap', maxHeight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
-          {/* {
+          {
             massHuntResult.map((item: any, index: any) => (
               <Box key={index} className={item.success ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
-                <img src={`/assets/images/characters/jpg/monsters_dying/m${item['monsterId']}.jpg`} style={{ width: '100%' }} />
+                {
+                  item.success
+                    ? (<img src={
+                      showAnimation === "0"
+                        ? `/assets/images/characters/jpg/monsters/m${item['monsterId']}.jpg`
+                        : `/assets/images/characters/gif/monsters/m${item['monsterId']}.gif`
+                    } style={{ width: '100%' }} />)
+                    : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
+                }
                 <Box sx={{ wordBreak: 'break-word' }}>
+                  {item.legionName}
                 </Box>
                 <Box sx={{ p: 1, fontSize: 12 }}>
-                  Chance: 90, RolL: 50
+                  <span>{getTranslation('chance')}: {item.percent}%</span> / <span>{getTranslation('roll')}: {item.roll}%</span>
                 </Box>
               </Box>
             ))
-          } */}
+          }
         </Box>
         <Box sx={{ display: 'flex', p: 1, justifyContent: 'space-between' }}>
           <CommonBtn
