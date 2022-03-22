@@ -346,6 +346,7 @@ const Beasts = () => {
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, true, id);
+      setBalance(balance - 1);
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
       dispatch(
         setReloadStatus({
