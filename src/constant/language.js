@@ -2458,4 +2458,16 @@ export const translations = {
     pl: "",
     ph: "",
   },
+  noLegionToHunt: {
+    en: "No legion available to hunt.",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
 };
