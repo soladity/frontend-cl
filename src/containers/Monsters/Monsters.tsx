@@ -202,7 +202,6 @@ const Monsters = () => {
 
   const [massHuntLoading, setMassHuntLoading] = React.useState(false)
   const [massHuntResult, setMassHuntResult] = React.useState<any>([])
-  const [myMassHuntResult, setMyMassHuntResult] = React.useState<any>([])
   const [massBtnEnable, setMassBtnEnable] = React.useState(false)
 
   const scrollArea = useCallback((node) => {
@@ -212,29 +211,6 @@ const Monsters = () => {
   }, []);
 
   var massHuntResutTemp: any = []
-
-  useEffect(() => {
-    var temp: any = []
-    massHuntResult.forEach((item: any) => {
-      if (legions.filter((legion: any) => legion.id == item.legionId).length > 0) {
-        var legionName = ''
-        legions.forEach((legionItem: any) => {
-          if (legionItem.id === item.legionId) {
-            legionName = legionItem.name
-          }
-        })
-        var myItem = {
-          ...item,
-          legionName: legionName
-        }
-        temp.push(myItem)
-      }
-    })
-    console.log(temp)
-    setMyMassHuntResult(temp)
-    return () => {
-    }
-  }, [massHuntResult])
 
   useEffect(() => {
     if (account) {
@@ -250,16 +226,19 @@ const Monsters = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', function (event: any) {
       console.log(event)
-      var huntResult = {
-        legionId: event.returnValues.legionId,
-        monsterId: event.returnValues.monsterId,
-        percent: event.returnValues.percent,
-        roll: event.returnValues.roll,
-        success: event.returnValues.success,
+      if (account == event.returnValues._addr) {
+        var huntResult = {
+          legionId: event.returnValues.legionId,
+          monsterId: event.returnValues.monsterId,
+          percent: event.returnValues.percent,
+          roll: event.returnValues.roll,
+          success: event.returnValues.success,
+          legionName: event.returnValues.name
+        }
+        massHuntResutTemp.push(huntResult)
+        console.log(huntResult)
+        setMassHuntResult(massHuntResutTemp)
       }
-      massHuntResutTemp.push(huntResult)
-      console.log(huntResult)
-      setMassHuntResult(massHuntResutTemp)
     })
 
     return () => {

@@ -435,6 +435,9 @@ const TakeAction = () => {
             legionContract,
             account
         );
+        if (availableLegionCount == 0) {
+            setMassHuntResult([])
+        }
         setAvailableLegionCount(availableLegionCount);
     }
 
@@ -446,16 +449,19 @@ const TakeAction = () => {
         }).on('connected', function (subscriptionId: any) {
         }).on('data', function (event: any) {
             console.log(event)
-            var huntResult = {
-                legionId: event.returnValues.legionId,
-                monsterId: event.returnValues.monsterId,
-                percent: event.returnValues.percent,
-                roll: event.returnValues.roll,
-                success: event.returnValues.success,
+            if (account == event.returnValues._addr) {
+                var huntResult = {
+                    legionId: event.returnValues.legionId,
+                    monsterId: event.returnValues.monsterId,
+                    percent: event.returnValues.percent,
+                    roll: event.returnValues.roll,
+                    success: event.returnValues.success,
+                    legionName: event.returnValues.name
+                }
+                massHuntResutTemp.push(huntResult)
+                console.log(huntResult)
+                setMassHuntResult(massHuntResutTemp)
             }
-            massHuntResutTemp.push(huntResult)
-            console.log(huntResult)
-            setMassHuntResult(massHuntResutTemp)
         })
 
         return () => {
