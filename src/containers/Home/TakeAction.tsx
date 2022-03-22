@@ -449,7 +449,7 @@ const TakeAction = () => {
         }).on('connected', function (subscriptionId: any) {
         }).on('data', function (event: any) {
             console.log(event)
-            if (account == event.returnValues._addr) {
+            if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
                 var huntResult = {
                     legionId: event.returnValues.legionId,
                     monsterId: event.returnValues.monsterId,
@@ -950,10 +950,10 @@ const TakeAction = () => {
                                         : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
                                 }
                                 <Box sx={{ wordBreak: 'break-word' }}>
-                                    Legion#{item.legionId}
+                                    {item.legionName}
                                 </Box>
                                 <Box sx={{ p: 1, fontSize: 12 }}>
-                                    <span>Chance: {item.percent}</span> / <span>Roll: {item.roll}</span>
+                                    <span>{getTranslation('chance')}: {item.percent}%</span> / <span>{getTranslation('roll')}: {item.roll}%</span>
                                 </Box>
                             </Box>
                         ))
