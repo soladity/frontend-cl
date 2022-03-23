@@ -75,6 +75,9 @@ import ScrollSection from "../../component/Scroll/Section";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import { maxWidth } from "@mui/system";
 import { FaTimes } from "react-icons/fa";
+import { toCapitalize } from "../../utils/common";
+import monstersInfo from "../../constant/monsters";
+
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -239,6 +242,7 @@ const Monsters = () => {
         }
         massHuntResutTemp.push(huntResult)
         console.log(huntResult)
+        console.log(massHuntResutTemp)
         setMassHuntResult(massHuntResutTemp)
       }
     })
@@ -1124,16 +1128,16 @@ const Monsters = () => {
                     } style={{ width: '100%' }} />)
                     : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
                 }
-                <Box sx={{ p: 1, wordBreak: 'break-word' }}>
-                  {item.legionName}
+                <Box sx={{ fontSize: 12 }}>
+                  <span>#{item.monsterId} {getTranslation('monster')}</span> - <span style={{ fontWeight: 'bold' }}>{toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
                 </Box>
-                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
+                <Box sx={{ fontSize: 12 }}>
                   <span>{getTranslation('maxRoll')}: {item.percent}</span>
                 </Box>
-                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
+                <Box sx={{ fontSize: 12 }}>
                   <span>{getTranslation('yourRoll')}: {item.roll}</span>
                 </Box>
-                <Box sx={{ paddingBottom: 1, fontSize: 12, fontWeight: 'bold' }}>
+                <Box sx={{ p: 1, fontSize: 12, fontWeight: 'bold' }}>
                   {
                     item.success ? (
                       <span>{getTranslation('won')} {item.reward} $BLST</span>

@@ -121,6 +121,11 @@ const Warriors = () => {
       console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
 
@@ -139,6 +144,11 @@ const Warriors = () => {
           price: marketItem.price,
         }
         setWarriors([...warriors, newItem])
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
 
@@ -159,6 +169,11 @@ const Warriors = () => {
           }
         })
         setWarriors(temp)
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
     return () => {
