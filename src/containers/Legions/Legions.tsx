@@ -63,6 +63,7 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
 import { useDispatch } from "react-redux";
 import { setReloadStatus } from "../../actions/contractActions";
+import { FaTimes } from "react-icons/fa";
 
 const useStyles = makeStyles({
   root: {
@@ -788,9 +789,17 @@ const Legions = () => {
       </Dialog>
 
       <Dialog onClose={handleSupplyClose} open={openSupply}>
-        <DialogTitle sx={{ textAlign: "center" }}>
-          {getTranslation("buySupply")}
-        </DialogTitle>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ p: 1, visibility: 'hidden' }}>
+            <FaTimes />
+          </Box>
+          <DialogTitle sx={{ textAlign: "center" }}>
+            {getTranslation("buySupply")}
+          </DialogTitle>
+          <Box sx={{ p: 1, cursor: 'pointer' }} onClick={handleSupplyClose}>
+            <FaTimes />
+          </Box>
+        </Box>
         <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
           <RadioGroup
             sx={{ margin: "0 auto" }}
@@ -830,13 +839,13 @@ const Legions = () => {
             p: 1,
           }}
         >
-          <Button
+          {/* <Button
             variant="outlined"
             color="primary"
             onClick={handleSupplyClose}
           >
             {getTranslation("cancel")}
-          </Button>
+          </Button> */}
           <CommonBtn
             onClick={() => handleSupplyClick(true)}
             sx={{ marginRight: 1, marginLeft: 1 }}

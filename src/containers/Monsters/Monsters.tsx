@@ -74,6 +74,7 @@ import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import { maxWidth } from "@mui/system";
+import { FaTimes } from "react-icons/fa";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -227,8 +228,6 @@ const Monsters = () => {
     }).on('data', async function (event: any) {
       console.log(event)
       if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
-        const monsterVal = await getAllMonsters(monsterContract);
-        const rewards = monsterVal[1]
         var huntResult = {
           legionId: event.returnValues.legionId,
           monsterId: event.returnValues.monsterId,
@@ -236,7 +235,7 @@ const Monsters = () => {
           roll: event.returnValues.roll,
           success: event.returnValues.success,
           legionName: event.returnValues.name,
-          reward: (rewards[event.returnValues.monsterId - 1] / Math.pow(10, 18)).toFixed(2)
+          reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
         }
         massHuntResutTemp.push(huntResult)
         console.log(huntResult)
@@ -1003,9 +1002,17 @@ const Monsters = () => {
       </Snackbar>
 
       <Dialog onClose={handleSupplyClose} open={openSupply}>
-        <DialogTitle sx={{ textAlign: "center" }}>
-          {getTranslation("buySupply")}
-        </DialogTitle>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ p: 1, visibility: 'hidden' }}>
+            <FaTimes />
+          </Box>
+          <DialogTitle sx={{ textAlign: "center" }}>
+            {getTranslation("buySupply")}
+          </DialogTitle>
+          <Box sx={{ p: 1, cursor: 'pointer' }} onClick={handleSupplyClose}>
+            <FaTimes />
+          </Box>
+        </Box>
         <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
           <RadioGroup
             sx={{ margin: "0 auto" }}
@@ -1045,13 +1052,6 @@ const Monsters = () => {
             p: 1,
           }}
         >
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleSupplyClose}
-          >
-            {getTranslation("cancel")}
-          </Button>
           <CommonBtn
             onClick={() => handleSupplyClick(true)}
             sx={{ marginRight: 1, marginLeft: 1 }}
