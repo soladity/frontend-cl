@@ -45,6 +45,8 @@ import { makeStyles } from "@mui/styles";
 import { NavLink } from "react-router-dom";
 
 import CommonBtn from "../../component/Buttons/CommonBtn";
+import { toCapitalize } from "../../utils/common";
+import monstersInfo from "../../constant/monsters";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -194,7 +196,6 @@ const TakeAction = () => {
     const bloodstoneContract = useBloodstone();
     const feeHandlerContract = useFeeHandler()
     const legionContract = useLegion();
-    const monsterContract = useMonster()
 
     const web3 = useWeb3();
 
@@ -464,6 +465,7 @@ const TakeAction = () => {
                 }
                 massHuntResutTemp.push(huntResult)
                 console.log(huntResult)
+                console.log(massHuntResutTemp)
                 setMassHuntResult(massHuntResutTemp)
             }
         })
@@ -479,6 +481,10 @@ const TakeAction = () => {
             })
         }
     }, []);
+
+    React.useEffect(() => {
+        console.log(massHuntResult)
+    }, [massHuntResult])
 
     return (
         <Card
@@ -956,13 +962,16 @@ const TakeAction = () => {
                                 <Box sx={{ p: 1, wordBreak: 'break-word' }}>
                                     {item.legionName}
                                 </Box>
-                                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
+                                <Box sx={{ fontSize: 12 }}>
+                                    <span>#{item.monsterId} {getTranslation('monster')}</span> - <span style={{ fontWeight: 'bold' }}>{toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
+                                </Box>
+                                <Box sx={{ fontSize: 12 }}>
                                     <span>{getTranslation('maxRoll')}: {item.percent}</span>
                                 </Box>
-                                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
+                                <Box sx={{ fontSize: 12 }}>
                                     <span>{getTranslation('yourRoll')}: {item.roll}</span>
                                 </Box>
-                                <Box sx={{ paddingBottom: 1, fontSize: 12, fontWeight: 'bold' }}>
+                                <Box sx={{ p: 1, fontSize: 12, fontWeight: 'bold' }}>
                                     {
                                         item.success ? (
                                             <span>{getTranslation('won')} {item.reward} $BLST</span>
