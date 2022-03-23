@@ -72,7 +72,7 @@ export const translations = {
     ph: "Kasalukuyang mga Hayop",
   },
   warriorCapacity: {
-    en: "Total Capacity of All Beasts",
+    en: "Total Capacity of All Warriors",
     es: "Capacidad máxima de guerreros",
     cn: "最大勇士总数量",
     pt: "Capacidade Máxima Total de Guerreiros",
@@ -577,6 +577,7 @@ export const translations = {
   },
   top3Legions: {
     en: "Top 3 Legions",
+    es: "Las 3 mejores legiones",
     cn: "前三名军团",
     pt: "Top 3 Legiões",
     tr: "En İyi 3 Lejyon",
@@ -2376,7 +2377,7 @@ export const translations = {
   },
   wallet: {
     en: "Use my wallet",
-    es: "Use mi Billetera",
+    es: "Usar mi billetera",
     cn: "钱包",
     pt: "Usar minha carteira",
     tr: "Cüzdanımı Kullan",
@@ -2388,12 +2389,13 @@ export const translations = {
   },
   unclaimed: {
     en: "Use unclaimed",
-    es: "No reclamado",
+
+    es: "Usar no reclamado",
     cn: "没领取的",
-    pt: "Não reclamado",
+    pt: "Usar não reclamado",
     tr: "Talep edilmemiş olanı kullan",
     ru: "Невостребованный",
-    fr: "Utilisation non revendiquée",
+    fr: "Utiliser non revendiquée",
     de: "Gebruik niet-geclaimed",
     pl: "Użyj nieodebrane",
     ph: "Gamitin ang mga hindi nakuha",
