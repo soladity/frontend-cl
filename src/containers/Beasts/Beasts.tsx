@@ -772,7 +772,7 @@ const Beasts = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{

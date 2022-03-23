@@ -587,7 +587,7 @@ const Beasts = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
           />
           <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
         </DialogContent>
