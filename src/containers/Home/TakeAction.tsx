@@ -453,8 +453,6 @@ const TakeAction = () => {
         }).on('data', async function (event: any) {
             console.log(event)
             if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
-                const monsterVal = await getAllMonsters(monsterContract);
-                const rewards = monsterVal[1]
                 var huntResult = {
                     legionId: event.returnValues.legionId,
                     monsterId: event.returnValues.monsterId,
@@ -462,7 +460,7 @@ const TakeAction = () => {
                     roll: event.returnValues.roll,
                     success: event.returnValues.success,
                     legionName: event.returnValues.name,
-                    reward: (rewards[event.returnValues.monsterId - 1] / Math.pow(10, 18)).toFixed(2)
+                    reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
                 }
                 massHuntResutTemp.push(huntResult)
                 console.log(huntResult)
