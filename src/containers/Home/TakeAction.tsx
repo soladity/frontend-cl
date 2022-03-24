@@ -38,13 +38,15 @@ import {
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
-import { useDispatch } from "react-redux";
-import { setReloadStatus } from "../../actions/contractActions";
+import { useDispatch, useSelector } from "react-redux";
+import { initMassHuntResult, setMassHuntResult, setReloadStatus } from "../../actions/contractActions";
 import { getTranslation } from "../../utils/translation";
 import { makeStyles } from "@mui/styles";
 import { NavLink } from "react-router-dom";
 
 import CommonBtn from "../../component/Buttons/CommonBtn";
+import { toCapitalize } from "../../utils/common";
+import monstersInfo from "../../constant/monsters";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -154,11 +156,10 @@ const TakeAction = () => {
     const [openMassHunt, setOpenMassHunt] = React.useState(false);
 
     const [massHuntLoading, setMassHuntLoading] = React.useState(false)
-    const [massHuntResult, setMassHuntResult] = React.useState<any>([])
+
+    const { massHuntResult } = useSelector((state: any) => state.contractReducer)
 
     const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
-
-    var massHuntResutTemp: any = []
 
     //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] =
@@ -194,7 +195,6 @@ const TakeAction = () => {
     const bloodstoneContract = useBloodstone();
     const feeHandlerContract = useFeeHandler()
     const legionContract = useLegion();
-    const monsterContract = useMonster()
 
     const web3 = useWeb3();
 
@@ -393,8 +393,7 @@ const TakeAction = () => {
 
     const massHunting = async () => {
         console.log('start mass hunt')
-        setMassHuntResult([])
-        massHuntResutTemp = []
+        dispatch(initMassHuntResult())
         setOpenMassHunt(true)
         if (availableLegionCount > 0) {
             setMassHuntLoading(true)
@@ -416,6 +415,7 @@ const TakeAction = () => {
                 reloadContractStatus: new Date(),
             })
         );
+        dispatch(initMassHuntResult())
     }
 
     const handleMassHuntClose = (reason: string) => {
@@ -451,8 +451,7 @@ const TakeAction = () => {
         const huntEvent = legionContract.events.Hunted({
         }).on('connected', function (subscriptionId: any) {
         }).on('data', async function (event: any) {
-            console.log(event)
-            if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+            if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
                 var huntResult = {
                     legionId: event.returnValues.legionId,
                     monsterId: event.returnValues.monsterId,
@@ -462,9 +461,7 @@ const TakeAction = () => {
                     legionName: event.returnValues.name,
                     reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
                 }
-                massHuntResutTemp.push(huntResult)
-                console.log(huntResult)
-                setMassHuntResult(massHuntResutTemp)
+                dispatch(setMassHuntResult(huntResult))
             }
         })
 
@@ -479,6 +476,10 @@ const TakeAction = () => {
             })
         }
     }, []);
+
+    React.useEffect(() => {
+        console.log(massHuntResult)
+    }, [massHuntResult])
 
     return (
         <Card
@@ -956,13 +957,16 @@ const TakeAction = () => {
                                 <Box sx={{ p: 1, wordBreak: 'break-word' }}>
                                     {item.legionName}
                                 </Box>
-                                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
+                                <Box sx={{ fontSize: 12 }}>
+                                    <span>#{item.monsterId} {getTranslation('monster')}</span> - <span style={{ fontWeight: 'bold' }}>{toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
+                                </Box>
+                                <Box sx={{ fontSize: 12 }}>
                                     <span>{getTranslation('maxRoll')}: {item.percent}</span>
                                 </Box>
-                                <Box sx={{ paddingBottom: 1, fontSize: 12 }}>
+                                <Box sx={{ fontSize: 12 }}>
                                     <span>{getTranslation('yourRoll')}: {item.roll}</span>
                                 </Box>
-                                <Box sx={{ paddingBottom: 1, fontSize: 12, fontWeight: 'bold' }}>
+                                <Box sx={{ p: 1, fontSize: 12, fontWeight: 'bold' }}>
                                     {
                                         item.success ? (
                                             <span>{getTranslation('won')} {item.reward} $BLST</span>

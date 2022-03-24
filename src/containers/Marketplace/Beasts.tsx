@@ -118,6 +118,11 @@ const Beasts = () => {
       console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
 
@@ -136,6 +141,11 @@ const Beasts = () => {
           price: marketItem.price,
         }
         setBeasts([...beasts, newItem])
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
 
@@ -156,6 +166,11 @@ const Beasts = () => {
           }
         })
         setBeasts(temp)
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
     return () => {

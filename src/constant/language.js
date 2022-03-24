@@ -2472,4 +2472,16 @@ export const translations = {
     pl: "Brak legionu do polowania.",
     ph: "Walang legion na magagamit upang manghuli.",
   },
+  monster: {
+    en: "Monster",
+    es: "Monstruo",
+    cn: "怪物",
+    pt: "Monstro",
+    tr: "Canavar",
+    ru: "Монстр",
+    fr: "Monstre",
+    de: "Monster",
+    pl: "Potwór",
+    ph: "Halimaw",
+  },
 };
