@@ -66,8 +66,8 @@ import RedBGMenuItem from "./RedMenuItem";
 import GreenBGMenuItem from "./GreenMenuItem";
 import OrgBGMenuItem from "./OrgMenuItem";
 import { Spinner } from "../../component/Buttons/Spinner";
-import { useDispatch } from "react-redux";
-import { setReloadStatus } from "../../actions/contractActions";
+import { useDispatch, useSelector } from "react-redux";
+import { initMassHuntResult, setMassHuntResult, setReloadStatus } from "../../actions/contractActions";
 import imageUrls from "../../constant/images";
 import { useNavigate } from "react-router-dom";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
@@ -205,7 +205,7 @@ const Monsters = () => {
   const [openMassHunt, setOpenMassHunt] = React.useState(false);
 
   const [massHuntLoading, setMassHuntLoading] = React.useState(false)
-  const [massHuntResult, setMassHuntResult] = React.useState<any>([])
+  const { massHuntResult } = useSelector((state: any) => state.contractReducer)
   const [massBtnEnable, setMassBtnEnable] = React.useState(false)
 
   const scrollArea = useCallback((node) => {
@@ -214,7 +214,6 @@ const Monsters = () => {
     }
   }, []);
 
-  var massHuntResutTemp: any = []
 
   useEffect(() => {
     if (account) {
@@ -230,7 +229,7 @@ const Monsters = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)
-      if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+      if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
         var huntResult = {
           legionId: event.returnValues.legionId,
           monsterId: event.returnValues.monsterId,
@@ -240,10 +239,7 @@ const Monsters = () => {
           legionName: event.returnValues.name,
           reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
         }
-        massHuntResutTemp.push(huntResult)
-        console.log(huntResult)
-        console.log(massHuntResutTemp)
-        setMassHuntResult(massHuntResutTemp)
+        dispatch(setMassHuntResult(huntResult))
       }
     })
 
@@ -454,6 +450,7 @@ const Monsters = () => {
         reloadContractStatus: new Date(),
       })
     );
+    dispatch(initMassHuntResult())
   };
 
   const handleSupplyClose = () => {
@@ -549,8 +546,7 @@ const Monsters = () => {
 
   const massHunting = async () => {
     console.log('start mass hunt')
-    setMassHuntResult([])
-    massHuntResutTemp = []
+    dispatch(initMassHuntResult())
     setOpenMassHunt(true)
     setMassHuntLoading(true)
     try {
@@ -1128,6 +1124,9 @@ const Monsters = () => {
                     } style={{ width: '100%' }} />)
                     : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
                 }
+                <Box sx={{ p: 1, wordBreak: 'break-word' }}>
+                  {item.legionName}
+                </Box>
                 <Box sx={{ fontSize: 12 }}>
                   <span>#{item.monsterId} {getTranslation('monster')}</span> - <span style={{ fontWeight: 'bold' }}>{toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
                 </Box>

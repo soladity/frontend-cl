@@ -38,8 +38,8 @@ import {
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
-import { useDispatch } from "react-redux";
-import { setReloadStatus } from "../../actions/contractActions";
+import { useDispatch, useSelector } from "react-redux";
+import { initMassHuntResult, setMassHuntResult, setReloadStatus } from "../../actions/contractActions";
 import { getTranslation } from "../../utils/translation";
 import { makeStyles } from "@mui/styles";
 import { NavLink } from "react-router-dom";
@@ -156,11 +156,10 @@ const TakeAction = () => {
     const [openMassHunt, setOpenMassHunt] = React.useState(false);
 
     const [massHuntLoading, setMassHuntLoading] = React.useState(false)
-    const [massHuntResult, setMassHuntResult] = React.useState<any>([])
+
+    const { massHuntResult } = useSelector((state: any) => state.contractReducer)
 
     const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
-
-    var massHuntResutTemp: any = []
 
     //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] =
@@ -394,8 +393,7 @@ const TakeAction = () => {
 
     const massHunting = async () => {
         console.log('start mass hunt')
-        setMassHuntResult([])
-        massHuntResutTemp = []
+        dispatch(initMassHuntResult())
         setOpenMassHunt(true)
         if (availableLegionCount > 0) {
             setMassHuntLoading(true)
@@ -417,6 +415,7 @@ const TakeAction = () => {
                 reloadContractStatus: new Date(),
             })
         );
+        dispatch(initMassHuntResult())
     }
 
     const handleMassHuntClose = (reason: string) => {
@@ -452,8 +451,7 @@ const TakeAction = () => {
         const huntEvent = legionContract.events.Hunted({
         }).on('connected', function (subscriptionId: any) {
         }).on('data', async function (event: any) {
-            console.log(event)
-            if (account == event.returnValues._addr && massHuntResutTemp.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+            if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
                 var huntResult = {
                     legionId: event.returnValues.legionId,
                     monsterId: event.returnValues.monsterId,
@@ -463,10 +461,7 @@ const TakeAction = () => {
                     legionName: event.returnValues.name,
                     reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
                 }
-                massHuntResutTemp.push(huntResult)
-                console.log(huntResult)
-                console.log(massHuntResutTemp)
-                setMassHuntResult(massHuntResutTemp)
+                dispatch(setMassHuntResult(huntResult))
             }
         })
 
