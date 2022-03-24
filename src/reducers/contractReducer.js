@@ -1,11 +1,12 @@
 import {
   RELOAD_CONTRACT_STATUS,
-  SET_BEAST_IDS,
+  SET_MASS_HUNT_RESULT,
+  INIT_MASS_HUNT_RESULT,
 } from "../actions/contractActions";
 
 let initalState = {
   reloadContractStatus: new Date(),
-  beastIds: [],
+  massHuntResult: [],
 };
 
 export const contractReducer = (state = initalState, action) => {
@@ -16,10 +17,16 @@ export const contractReducer = (state = initalState, action) => {
         ...action.payload,
       };
 
-    case SET_BEAST_IDS:
+    case SET_MASS_HUNT_RESULT:
       return {
         ...state,
-        beastIds: action.payload,
+        massHuntResult: [...state.massHuntResult, action.payload],
+      };
+
+    case INIT_MASS_HUNT_RESULT:
+      return {
+        ...state,
+        massHuntResult: [],
       };
 
     default:
