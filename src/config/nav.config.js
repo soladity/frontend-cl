@@ -142,7 +142,7 @@ export const navConfig = {
         type: "link",
         title: "buyBlst",
         icon: "pancake.png",
-        path: "https://pancakeswap.com",
+        path: "https://cryptolegions.app/pancake",
       },
       {
         type: "link",
