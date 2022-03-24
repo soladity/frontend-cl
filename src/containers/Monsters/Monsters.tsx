@@ -228,7 +228,6 @@ const Monsters = () => {
     const huntEvent = legionContract.events.Hunted({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log(event)
       if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
         var huntResult = {
           legionId: event.returnValues.legionId,
