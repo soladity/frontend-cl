@@ -100,6 +100,7 @@ const AskMetaLogin = () => {
   };
   React.useEffect(() => {
     if (error) {
+      console.log(error)
       if (error.toString().indexOf('NoEthereumProviderError') > -1) {
         setErrorMsg('Please Install MetaMask!')
         setOpenSnackBar(true)
