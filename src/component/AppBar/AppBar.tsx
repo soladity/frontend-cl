@@ -79,6 +79,19 @@ const AppBarComponent = () => {
     }
   }, [reloadContractStatus]);
 
+  React.useEffect(() => {
+    if (account) {
+      realTimeUpdate()
+    }
+  }, [])
+
+  const realTimeUpdate = () => {
+    setTimeout(() => {
+      getBalance()
+      realTimeUpdate()
+    }, 5000)
+  }
+
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
     const unClaimedBLST = await getUnclaimedBLST(

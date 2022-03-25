@@ -888,7 +888,7 @@ const TakeAction = () => {
                                             {getTranslation("takeActionBuyLegions")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <a href="https://poocoin.app" target="_blank">
+                                    <a href="https://www.dextools.io/app/bsc/pair-explorer/0xc60fefaa2bfa581ce86dbfc08ee7144bae43b981" target="_blank">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
@@ -901,7 +901,7 @@ const TakeAction = () => {
                                             {getTranslation("takeActionDextools")}
                                         </CommonBtn>
                                     </a>
-                                    <a href="https://pancakeswap.com" target="_blank">
+                                    <a href="https://pancakeswap.finance/swap?outputCurrency=0x340516B933597F131E827aBdf0E3f700E24e84Ff" target="_blank">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
