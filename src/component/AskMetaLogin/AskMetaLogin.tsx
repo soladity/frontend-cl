@@ -106,7 +106,7 @@ const AskMetaLogin = () => {
         setOpenSnackBar(true)
       }
       if (error.toString().indexOf('UnsupportedChainIdError') > -1) {
-        setErrorMsg('Please choose Kovan Network!')
+        setErrorMsg('Please choose BSC Test Network!')
         setOpenSnackBar(true)
         switchNetwork()
       }
