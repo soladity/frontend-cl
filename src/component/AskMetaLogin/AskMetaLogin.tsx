@@ -122,7 +122,7 @@ const AskMetaLogin = () => {
       }
       if (error.toString().indexOf("Unsupported") > -1) {
         switchNetwork();
-        setErrorMsg("Please choose Kovan Network!");
+        setErrorMsg("Please choose BSC Test Network!");
         setOpenSnackBar(true);
       }
     }
