@@ -3,6 +3,7 @@ import {
   getWarriorAddress,
   getLegionAddress,
   getMarketplaceAddress,
+  getBUSDAddress,
 } from "../utils/addressHelpers";
 
 export const getBaseUrl = async () => {

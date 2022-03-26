@@ -10,6 +10,7 @@ import {
   getMonsterAddress,
   getMarketplaceAddress,
   getFeeHandlerAddress,
+  getBUSDAddress,
 } from "../utils/addressHelpers";
 import bloodstone from "../config/abis/bloodstone.json";
 import beast from "../config/abis/beast.json";
@@ -80,5 +81,5 @@ export const useFeeHandler = () => {
 
 export const useBUSD = () => {
   const abi = busd.abi;
-  return useContract(abi, getFeeHandlerAddress());
+  return useContract(abi, getBUSDAddress());
 };

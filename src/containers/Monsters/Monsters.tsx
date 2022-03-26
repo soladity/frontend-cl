@@ -419,6 +419,9 @@ const Monsters = () => {
       account
     );
 
+    console.log(allowance)
+    // const allowance = 0
+
     try {
       if (allowance == 0) {
         await setLegionBUSDApprove(web3, busdContract, account)
