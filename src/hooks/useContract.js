@@ -20,6 +20,7 @@ import rewardpool from "../config/abis/rewardpool.json";
 import marketplace from "../config/abis/marketplace.json";
 import getRpcUrl from "../utils/getRpcUrl";
 import feehandler from "../config/abis/feehandler.json";
+import busd from "../config/abis/busd.json";
 
 const RPC_URL = getRpcUrl();
 const httpProvider = new Web3.providers.HttpProvider(RPC_URL, {
@@ -74,5 +75,10 @@ export const useMarketplace = () => {
 
 export const useFeeHandler = () => {
   const abi = feehandler.abi;
+  return useContract(abi, getFeeHandlerAddress());
+};
+
+export const useBUSD = () => {
+  const abi = busd.abi;
   return useContract(abi, getFeeHandlerAddress());
 };

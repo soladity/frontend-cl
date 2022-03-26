@@ -31,6 +31,10 @@ const address = {
     97: "0xff00ccd5241760b149025b19d26e1228b7c65ada",
     56: "",
   },
+  busd: {
+    97: "0x78867bbeef44f2326bf8ddd1941a4439382ef2a7",
+    56: "",
+  },
 };
 
 export default address;
