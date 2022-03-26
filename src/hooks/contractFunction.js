@@ -505,3 +505,11 @@ export const getLegionBUSDAllowance = async (web3, contract, account) => {
     .call();
   return web3.utils.fromWei(response, "ether").toString();
 };
+
+export const getMonster23Hunted = async (contract, account) => {
+  return await contract.methods.monster23Hunted(account).call();
+};
+
+export const getMonster24Hunted = async (contract, account) => {
+  return await contract.methods.monster24Hunted(account).call();
+};
