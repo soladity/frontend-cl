@@ -3,6 +3,7 @@ import {
   getWarriorAddress,
   getLegionAddress,
   getMarketplaceAddress,
+  getBUSDAddress,
 } from "../utils/addressHelpers";
 
 export const getBaseUrl = async () => {
@@ -487,4 +488,29 @@ export const massHunt = async (contract, account) => {
 
 export const getUSDAmountFromBLST = async (contract, amount) => {
   return await contract.methods.getUSDAmountFromBLST(amount).call();
+};
+
+export const setLegionBUSDApprove = async (web3, contract, account) => {
+  const response = await contract.methods
+    .approve(
+      getLegionAddress(),
+      web3.utils.toWei("1000000000", "ether").toString()
+    )
+    .send({ from: account });
+  return response;
+};
+
+export const getLegionBUSDAllowance = async (web3, contract, account) => {
+  const response = await contract.methods
+    .allowance(account, getLegionAddress())
+    .call();
+  return web3.utils.fromWei(response, "ether").toString();
+};
+
+export const getMonster23Hunted = async (contract, account) => {
+  return await contract.methods.monster23Hunted(account).call();
+};
+
+export const getMonster24Hunted = async (contract, account) => {
+  return await contract.methods.monster24Hunted(account).call();
 };

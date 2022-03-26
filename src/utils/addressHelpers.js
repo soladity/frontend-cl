@@ -30,3 +30,7 @@ export const getMarketplaceAddress = () => {
 export const getFeeHandlerAddress = () => {
   return address.feeHandler[process.env.REACT_APP_CHAIN_ID];
 };
+
+export const getBUSDAddress = () => {
+  return address.busd[process.env.REACT_APP_CHAIN_ID];
+};

@@ -43,6 +43,7 @@ import {
   useFeeHandler,
   useBloodstone,
   useRewardPool,
+  useBUSD,
 } from "../../hooks/useContract";
 import {
   getBeastBalance,
@@ -59,6 +60,8 @@ import {
   getUnclaimedBLST,
   getBloodstoneBalance,
   massHunt,
+  setLegionBUSDApprove,
+  getLegionBUSDAllowance,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -171,6 +174,7 @@ const Monsters = () => {
   const feeHandlerContract = useFeeHandler();
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
+  const busdContract = useBUSD();
 
   const [loading, setLoading] = useState(true);
   const [showAnimation, setShowAnimation] = useState<string | null>("0");
@@ -408,7 +412,20 @@ const Monsters = () => {
     setDialogVisible(true);
     setCurMonsterID(monsterTokenID);
     setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
+
+    const allowance = await getLegionBUSDAllowance(
+      web3,
+      busdContract,
+      account
+    );
+
+    console.log(allowance)
+    // const allowance = 0
+
     try {
+      if (allowance == 0) {
+        await setLegionBUSDApprove(web3, busdContract, account)
+      }
       let response = await hunt(
         web3,
         legionContract,

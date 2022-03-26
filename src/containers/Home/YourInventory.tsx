@@ -300,7 +300,7 @@ const YourInventory = () => {
             {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( ={" "}
             {formatNumber(
               (
-                totalBlstToUsd / Math.pow(10, 6)
+                totalBlstToUsd / Math.pow(10, 18)
               ).toFixed(2)
             )}{" "}
             USD )
@@ -323,7 +323,7 @@ const YourInventory = () => {
         >
           1 BLST ={" "}
           <span className="legionOrangeColor">
-            {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD
+            {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD
           </span>
         </Typography>
       </Box>
