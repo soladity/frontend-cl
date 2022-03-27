@@ -514,3 +514,7 @@ export const getMonster23Hunted = async (contract, account) => {
 export const getMonster24Hunted = async (contract, account) => {
   return await contract.methods.monster24Hunted(account).call();
 };
+
+export const getBUSDBalance = async (contract, account) => {
+  return await contract.methods.balanceOf(account).call();
+}
