@@ -347,6 +347,13 @@ const Beasts = () => {
     try {
       await execute(web3, legionContract, account, true, id);
       setBalance(balance - 1);
+      let capacity = 0;
+      let temp = beasts;
+      for (let i = 0; i < temp.length; i++) {
+        if (parseInt(temp[i]["id"]) === id)
+          capacity = parseInt(temp[i]["capacity"]);
+      }
+      setMaxWarrior(maxWarrior - capacity);
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
       dispatch(
         setReloadStatus({
