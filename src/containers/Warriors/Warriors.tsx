@@ -205,7 +205,6 @@ const Warriors = () => {
           per: BLST_per_150,
         },
       };
-      console.log(amount_per)
       setWarriorBlstAmountPer(amount_per);
     } catch (error) {
       console.log(error);
@@ -268,7 +267,7 @@ const Warriors = () => {
 		setLoading(true);
 		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
-		ApiService.getWarriors(account).then(
+		ApiService.getWarriors(account, 0).then(
 			response => {
 				if (response.data.status === 'success') {
 					let amount = 0;
@@ -350,7 +349,6 @@ const Warriors = () => {
         account,
         selectedWarrior
       );
-      console.log(selectedWarrior)
       await sellToken(
         web3,
         marketplaceContract,
@@ -359,6 +357,16 @@ const Warriors = () => {
         selectedWarrior,
         BigInt(price * Math.pow(10, 18))
       );
+      ApiService.sendWarriorMarket(selectedWarrior, (price * Math.pow(10, 18)).toString()).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
       let power = 0;
       let temp = warriors;
       for (let i = 0; i < temp.length; i++) {
@@ -380,7 +388,18 @@ const Warriors = () => {
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, false, id);
+      ApiService.executeWarrior(id).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
+      setBalance(balance - 1);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),

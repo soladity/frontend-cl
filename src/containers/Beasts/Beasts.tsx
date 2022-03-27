@@ -268,7 +268,7 @@ const Beasts = () => {
 		setLoading(true);
 		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
 		setBaseUrl(await getBaseUrl());
-		ApiService.getBeasts(account).then(
+		ApiService.getBeasts(account, 0).then(
 			response => {
 				if (response.data.status === 'success') {
 					let amount = 0;
@@ -337,6 +337,16 @@ const Beasts = () => {
         selectedBeast,
         BigInt(price * Math.pow(10, 18))
       );
+      ApiService.sendBeastMarket(selectedBeast, (price * Math.pow(10, 18)).toString()).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
       let capacity = 0;
       let temp = beasts;
       for (let i = 0; i < temp.length; i++) {
@@ -358,7 +368,18 @@ const Beasts = () => {
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, true, id);
+      ApiService.executeBeast(id).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
+      setBalance(balance - 1);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),

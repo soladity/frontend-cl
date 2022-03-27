@@ -127,8 +127,6 @@ export const getWarriorToken = async (web3, contract, tokenId) => {
     type: response[0],
     strength: response[1],
     power: response[2],
-    // image: response[3],
-    // imageAlt: response[4]
   };
   return beast;
 };
