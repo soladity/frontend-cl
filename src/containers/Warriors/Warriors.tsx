@@ -369,6 +369,13 @@ const Warriors = () => {
     try {
       await execute(web3, legionContract, account, false, id);
       setBalance(balance - 1);
+      let power = 0;
+      let temp = warriors;
+      for (let i = 0; i < temp.length; i++) {
+        if (parseInt(temp[i]["id"]) === id)
+          power = parseInt(temp[i]["power"]);
+      }
+      setMaxPower(maxPower - power);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
       dispatch(
         setReloadStatus({
