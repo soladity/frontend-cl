@@ -62,6 +62,7 @@ import {
   massHunt,
   setLegionBUSDApprove,
   getLegionBUSDAllowance,
+  getBUSDBalance,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -142,6 +143,7 @@ interface MonsterInterface {
   image: string;
   imageAlt: string;
   name: string;
+  BUSDReward: number;
 }
 
 interface LegionInterface {
@@ -263,6 +265,7 @@ const Monsters = () => {
     let monsterArrary = [];
     try {
       const monsterVal = await getAllMonsters(monsterContract);
+      console.log(monsterVal)
       const monsterArraryTemp = monsterVal[0]
       const rewardArray = monsterVal[1]
       monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
@@ -271,11 +274,13 @@ const Monsters = () => {
           base: item.percent,
           ap: item.attack_power / 100,
           reward: (rewardArray[index] / Math.pow(10, 18)).toFixed(2),
+          BUSDReward: item.reward / Math.pow(10, 4)
         };
       });
     } catch (error) {
       console.log(error);
     }
+    console.log(monsterArrary)
     setMonsters(monsterArrary);
 
     if (legions[0]) {
@@ -409,49 +414,57 @@ const Monsters = () => {
   };
 
   const handleHunt = async (monsterTokenID: number) => {
-    setDialogVisible(true);
-    setCurMonsterID(monsterTokenID);
-    setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
-
-    const allowance = await getLegionBUSDAllowance(
-      web3,
-      busdContract,
-      account
-    );
-
-    console.log(allowance)
-    // const allowance = 0
-
     try {
-      if (allowance == 0) {
-        await setLegionBUSDApprove(web3, busdContract, account)
-      }
-      let response = await hunt(
-        web3,
-        legionContract,
-        account,
-        curLegion?.id,
-        monsterTokenID
-      );
-      const keys = Object.keys(response.events);
-      const result = response.events['Hunted'].returnValues;
-      setHuntedRoll(result.roll);
-      setHuntAvailablePercent(result.percent);
-      setHuntedStatus(result.success ? 1 : 2);
-      dispatch(
-        setReloadStatus({
-          reloadContractStatus: new Date(),
-        })
-      );
-    } catch (e: any) {
-      console.log("hunt result", e, "hunt result");
-      setDialogVisible(false);
-      if (e.code == 4001) {
+      const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
+      if (BUSD >= (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward) {
+        console.log(BUSD)
+        setDialogVisible(true);
+        setCurMonsterID(monsterTokenID);
+        setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
+        try {
+          const allowance = await getLegionBUSDAllowance(
+            web3,
+            busdContract,
+            account
+          );
+          if (allowance == 0) {
+            await setLegionBUSDApprove(web3, busdContract, account)
+          }
+          let response = await hunt(
+            web3,
+            legionContract,
+            account,
+            curLegion?.id,
+            monsterTokenID
+          );
+          const keys = Object.keys(response.events);
+          const result = response.events['Hunted'].returnValues;
+          setHuntedRoll(result.roll);
+          setHuntAvailablePercent(result.percent);
+          setHuntedStatus(result.success ? 1 : 2);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        } catch (e: any) {
+          console.log("hunt result", e, "hunt result");
+          setDialogVisible(false);
+          if (e.code == 4001) {
+          } else {
+            setSnackBarMessage(getTranslation("huntTransactionFailed"));
+            setOpenSnackBar(true);
+          }
+        }
       } else {
-        setSnackBarMessage(getTranslation("huntTransactionFailed"));
-        setOpenSnackBar(true);
+        setSnackBarMessage(getTranslation('addBUSD'))
+        setOpenSnackBar(true)
       }
+    } catch (error) {
+
     }
+
+
   };
 
   const handleContinue = async () => {

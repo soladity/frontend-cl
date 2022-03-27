@@ -2484,4 +2484,16 @@ export const translations = {
     pl: "Potwór",
     ph: "Halimaw",
   },
+  addBUSD: {
+    en: "Add more BUSD to your wallet to hunt.",
+    es: "Agregue más BUSD a su billetera para cazar.",
+    cn: "将更多 BUSD 添加到您的钱包中以进行狩猎。",
+    pt: "Adicione mais BUSD à sua carteira para caçar.",
+    tr: "Avlanmak için cüzdanınıza daha fazla BUSD ekleyin.",
+    ru: "Добавьте больше BUSD в свой кошелек, чтобы охотиться.",
+    fr: "Ajoutez plus de BUSD à votre portefeuille pour chasser.",
+    de: "Voeg meer BUSD toe aan uw portemonnee om te jagen.",
+    pl: "Dodaj więcej BUSD do swojego portfela, aby polować.",
+    ph: "Magdagdag ng higit pang BUSD sa iyong wallet upang manghuli.",
+  },
 };
