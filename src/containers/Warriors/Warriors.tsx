@@ -53,6 +53,8 @@ import WarriorCard from "../../component/Cards/WarriorCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
+import Navigation from '../../component/Navigation/Navigation';
+import ApiService from "../../services/api.service";
 import Image from "../../config/image.json";
 import { FaTimes } from "react-icons/fa";
 
@@ -93,6 +95,7 @@ const Warriors = () => {
   const [price, setPrice] = React.useState(0);
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
+  const [currentPage, setCurrentPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
   const [mintLoading, setMintLoading] = React.useState(false);
@@ -202,7 +205,6 @@ const Warriors = () => {
           per: BLST_per_150,
         },
       };
-      console.log(amount_per)
       setWarriorBlstAmountPer(amount_per);
     } catch (error) {
       console.log(error);
@@ -232,59 +234,68 @@ const Warriors = () => {
   };
 
   const handleMint = async (amount: Number) => {
-    handlePopoverCloseSummonWarrior();
-    setMintLoading(true);
-    setLoading(false);
-    const allowance = await getWarriorBloodstoneAllowance(
-      web3,
-      bloodstoneContract,
-      account
-    );
-    try {
-      if (allowance === "0") {
-        await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
-      }
-      await mintWarrior(web3, warriorContract, account, amount);
-      dispatch(
-        setReloadStatus({
-          reloadContractStatus: new Date(),
-        })
-      );
-    } catch (e) {
-      console.log(e);
-    }
-    getBalance();
-    setMintLoading(false);
-  };
+		handlePopoverCloseSummonWarrior()
+		setMintLoading(true);
+		setLoading(false);
+		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
+		try {
+			if (allowance === '0') {
+				await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
+			}
+			await mintWarrior(web3, warriorContract, account, amount);
+			dispatch(setReloadStatus({
+				reloadContractStatus: new Date()
+			}));
+			ApiService.updateWarrior(account).then(
+				response => {
+					if (response.data.status === 'success') {
+						setMintLoading(false);
+						getBalance();
+					}
+				},
+				error => {
+					console.log('Error!');
+					setMintLoading(false);
+				}
+			);
+		} catch (e) {
+			console.log(e);
+		}
+	}
 
   const getBalance = async () => {
-    setLoading(true);
-    setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
-    setBaseUrl(await getBaseUrl());
-    setBalance(
-      parseInt(await getWarriorBalance(web3, warriorContract, account))
-    );
-    const ids = await getWarriorTokenIds(web3, warriorContract, account);
-    let amount = 0;
-    let warrior;
-    let tempWarriors = [];
-    let gif = "";
-    let jpg = "";
-    for (let i = 0; i < ids.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
-        }
-      }
-      tempWarriors.push({ ...warrior, id: ids[i], gif: gif, jpg: jpg });
-      amount += parseInt(warrior.power);
-    }
-    setMaxPower(amount);
-    setWarriors(tempWarriors);
-    setLoading(false);
-  };
+		setLoading(true);
+		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+		setBaseUrl(await getBaseUrl());
+		ApiService.getWarriors(account, 0).then(
+			response => {
+				if (response.data.status === 'success') {
+					let amount = 0;
+					let tempWarriors = [];
+					let gif = '';
+					let jpg = '';
+					for (let i = 0; i < response.data.data.length; i++) {
+						for (let j = 0; j < Image.warriors.length; j++) {
+							if (Image.warriors[j].name === response.data.data[i].type) {
+								gif = Image.warriors[j].gif;
+								jpg = Image.warriors[j].jpg;
+							}
+						}
+						tempWarriors.push({ id: response.data.data[i].mintId, type: response.data.data[i].type, strength: response.data.data[i].strength, power: response.data.data[i].power, gif: gif, jpg: jpg });
+						amount += parseInt(response.data.data[i].power);
+					}
+					setMaxPower(amount);
+					setWarriors(tempWarriors);
+					setBalance(tempWarriors.length);
+				}
+				setLoading(false);
+			},
+			error => {
+				console.log('Error!');
+				setLoading(false);
+			}
+		);
+	}
 
   const handleChangeAp = (
     event: Event,
@@ -338,7 +349,6 @@ const Warriors = () => {
         account,
         selectedWarrior
       );
-      console.log(selectedWarrior)
       await sellToken(
         web3,
         marketplaceContract,
@@ -347,6 +357,16 @@ const Warriors = () => {
         selectedWarrior,
         BigInt(price * Math.pow(10, 18))
       );
+      ApiService.sendWarriorMarket(selectedWarrior, (price * Math.pow(10, 18)).toString()).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
       let power = 0;
       let temp = warriors;
       for (let i = 0; i < temp.length; i++) {
@@ -368,6 +388,16 @@ const Warriors = () => {
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, false, id);
+      ApiService.executeWarrior(id).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
       setBalance(balance - 1);
       let power = 0;
       let temp = warriors;
@@ -377,6 +407,7 @@ const Warriors = () => {
       }
       setMaxPower(maxPower - power);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
+      setBalance(balance - 1);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -387,6 +418,10 @@ const Warriors = () => {
     }
     setActionLoading(false);
   };
+
+  const handlePage = (value: any) => {
+		setCurrentPage(value);
+	}
 
   return (
     <Box>
@@ -758,6 +793,10 @@ const Warriors = () => {
                 </Grid>
               )}
           </Grid>
+          {
+            warriors.length > 0 &&
+            <Navigation totalCount={warriors.length} cPage={currentPage} handlePage={handlePage} perPage={20} />
+          }
         </React.Fragment>
       )}
       {loading === true && (

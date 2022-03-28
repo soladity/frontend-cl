@@ -47,6 +47,7 @@ import {
   useLegion,
   useFeeHandler,
 } from "../../hooks/useContract";
+import ApiService from "../../services/api.service";
 import { getTranslation } from "../../utils/translation";
 import { toCapitalize } from "../../utils/common";
 import { formatNumber } from "../../utils/common";
@@ -236,55 +237,75 @@ const CreateLegions: React.FC = () => {
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
-    const beastIds = await getBeastTokenIds(web3, beastContract, account);
-    const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
-    let beast;
     let tempBeasts: IItem[] = [];
     let gif = "";
     let jpg = "";
-    for (let i = 0; i < beastIds.length; i++) {
-      beast = await getBeastToken(web3, beastContract, beastIds[i]);
-      for (let j = 0; j < Image.beasts.length; j++) {
-        if (Image.beasts[j].name === beast.type) {
-          gif = Image.beasts[j].gif;
-          jpg = Image.beasts[j].jpg;
-        }
-      }
-      tempBeasts.push({
-        id: beastIds[i],
-        type: beast.type,
-        strength: beast.strength,
-        capacity: beast.capacity,
-        power: "",
-        w5b: false,
-        jpg: jpg,
-        gif: gif,
-      });
-    }
-    let warrior;
+
+    ApiService.getBeasts(account, 0).then(
+			response => {
+				if (response.data.status === 'success') {
+					for (let i = 0; i < response.data.data.length; i++) {
+						for (let j = 0; j < Image.beasts.length; j++) {
+							if (Image.beasts[j].name === response.data.data[i].type) {
+								gif = Image.beasts[j].gif;
+								jpg = Image.beasts[j].jpg;
+							}
+						}
+            tempBeasts.push({
+              id: response.data.data[i].mintId,
+              type: response.data.data[i].type,
+              strength: response.data.data[i].strength,
+              capacity: response.data.data[i].capacity,
+              power: "",
+              w5b: false,
+              jpg: jpg,
+              gif: gif,
+            });
+					}
+          setBeasts(tempBeasts);
+				}
+			},
+			error => {
+				console.log('Error!');
+			}
+		);
+
     let tempWarriors: IItem[] = [];
-    for (let i = 0; i < warriorIds.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
-        }
-      }
-      tempWarriors.push({
-        id: warriorIds[i],
-        type: warrior.type,
-        strength: warrior.strength,
-        capacity: "",
-        power: warrior.power,
-        w5b: true,
-        jpg: jpg,
-        gif: gif,
-      });
-    }
-    setBeasts(tempBeasts);
-    setWarriors(tempWarriors);
-    setLoading(false);
+
+    ApiService.getWarriors(account, 0).then(
+			response => {
+				if (response.data.status === 'success') {
+					let amount = 0;
+					let tempWarriors = [];
+					let gif = '';
+					let jpg = '';
+					for (let i = 0; i < response.data.data.length; i++) {
+						for (let j = 0; j < Image.warriors.length; j++) {
+							if (Image.warriors[j].name === response.data.data[i].type) {
+								gif = Image.warriors[j].gif;
+								jpg = Image.warriors[j].jpg;
+							}
+						}
+            tempWarriors.push({
+              id: response.data.data[i].mintId,
+              type: response.data.data[i].type,
+              strength: response.data.data[i].strength,
+              capacity: "",
+              power: response.data.data[i].power,
+              w5b: true,
+              jpg: jpg,
+              gif: gif,
+            });
+					}
+        setWarriors(tempWarriors);
+        setLoading(false);
+				}
+			},
+			error => {
+				console.log('Error!');
+        setLoading(false);
+			}
+		);
   };
 
   const moveToLeft = (index: number, w5b: boolean) => {
@@ -343,6 +364,24 @@ const CreateLegions: React.FC = () => {
             return parseInt(fitem["id"]);
           })
       );
+      ApiService.createLegion(JSON.stringify(dropItemList
+        .filter((item) => item.w5b === true)
+        .map((fitem: any) => {
+          return parseInt(fitem["id"]);
+        })), JSON.stringify(dropItemList
+          .filter((item) => item.w5b === false)
+          .map((fitem: any) => {
+            return parseInt(fitem["id"]);
+          }))).then(
+				response => {
+					if (response.data.status !== 'success') {
+						console.log('Fail')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			);
     } catch (e) {
       setMintLoading(false);
       return;
