@@ -43,6 +43,7 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
+  useMarketplaceEvent,
 } from "../../hooks/useContract";
 import LegionMarketCard from "../../component/Cards/LegionMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -104,6 +105,7 @@ const Legions = () => {
   const classes = useStyles();
   const legionContract = useLegion();
   const marketplaceContract = useMarketplace();
+  const marketplaceEventContract = useMarketplaceEvent()
   const bloodstoneContract = useBloodstone();
   const feeHandlerContract = useFeeHandler()
   const web3 = useWeb3();
@@ -111,7 +113,7 @@ const Legions = () => {
 
   React.useEffect(() => {
 
-    const buyEvent = marketplaceContract.events.BuyToken({
+    const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log('buyEvent', event)
@@ -126,7 +128,7 @@ const Legions = () => {
       }
     })
 
-    const sellEvent = marketplaceContract.events.SellToken({
+    const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log('sellEvent', event)
@@ -153,7 +155,7 @@ const Legions = () => {
       }
     })
 
-    const updateEvent = marketplaceContract.events.PriceUpdated({
+    const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log('updateEvent', event)

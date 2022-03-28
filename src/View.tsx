@@ -7,7 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import { makeStyles } from "@mui/styles";
 
 import { navConfig } from "./config";
-import { useLegion, useRewardPool, useWeb3 } from "./hooks/useContract";
+import { useLegion, useRewardPool, useRewardPoolEvent, useWeb3 } from "./hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
 
 const useStyle = makeStyles({
@@ -33,13 +33,14 @@ const View = () => {
   const classes = useStyle();
 
   const rewardContract = useRewardPool()
+  const rewardEventContract = useRewardPoolEvent()
   const legionContract = useLegion()
   const { account } = useWeb3React();
   const web3 = useWeb3();
 
   React.useEffect(() => {
     console.log('view event')
-    const rewardChangedEvent = rewardContract.events.RewardChanged({
+    const rewardChangedEvent = rewardEventContract.events.RewardChanged({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)

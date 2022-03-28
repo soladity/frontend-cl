@@ -41,6 +41,7 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
+  useMarketplaceEvent
 } from "../../hooks/useContract";
 import ApiService from "../../services/api.service";
 import WarriorMarketCard from "../../component/Cards/WarriorMarketCard";
@@ -97,6 +98,7 @@ const Warriors = () => {
   const classes = useStyles();
   const warriorContract = useWarrior();
   const marketplaceContract = useMarketplace();
+  const marketplaceEventContract = useMarketplaceEvent();
   const bloodstoneContract = useBloodstone();
   const feeHandlerContract = useFeeHandler()
   const web3 = useWeb3();
@@ -115,7 +117,7 @@ const Warriors = () => {
 
 
   React.useEffect(() => {
-    const buyEvent = marketplaceContract.events.BuyToken({
+    const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log('buyEvent', event)
@@ -130,7 +132,7 @@ const Warriors = () => {
       }
     })
 
-    const sellEvent = marketplaceContract.events.SellToken({
+    const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log('sellEvent', event)
@@ -138,6 +140,7 @@ const Warriors = () => {
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const warrior = await getWarriorToken(web3, warriorContract, event.returnValues._tokenId);
         const marketItem = await getMarketItem(web3, marketplaceContract, "2", event.returnValues._tokenId);
+        console.log(marketItem)
         const newItem = {
           ...warrior,
           id: event.returnValues._tokenId,
@@ -153,7 +156,7 @@ const Warriors = () => {
       }
     })
 
-    const updateEvent = marketplaceContract.events.PriceUpdated({
+    const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log('updateEvent', event)
