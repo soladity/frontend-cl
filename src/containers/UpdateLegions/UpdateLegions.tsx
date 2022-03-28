@@ -323,7 +323,7 @@ const UpdateLegions: React.FC = () => {
               id: response.data.data[i].mintId,
               type: response.data.data[i].type,
               strength: response.data.data[i].strength,
-              capacity: response.data.data[i].capacity,
+              capacity: response.data.data[i].capacity.toString(),
               power: "",
               w5b: false,
               jpg: jpg,
