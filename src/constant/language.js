@@ -2377,6 +2377,7 @@ export const translations = {
   },
   wallet: {
     en: "Use my wallet",
+
     es: "Usar mi billetera",
     cn: "钱包",
     pt: "Usar minha carteira",
