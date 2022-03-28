@@ -19,12 +19,18 @@ import legion from "../config/abis/legion.json";
 import monster from "../config/abis/monster.json";
 import rewardpool from "../config/abis/rewardpool.json";
 import marketplace from "../config/abis/marketplace.json";
-import getRpcUrl from "../utils/getRpcUrl";
+import getRpcUrls from "../utils/getRpcUrl";
 import feehandler from "../config/abis/feehandler.json";
 import busd from "../config/abis/busd.json";
 
-const RPC_URL = getRpcUrl();
+const RPC_URL = getRpcUrls.getRpcUrl();
+const RPC_WS_URL = getRpcUrls.getRpcWsUrl();
+
 const httpProvider = new Web3.providers.HttpProvider(RPC_URL, {
+  timeout: 10000,
+});
+
+const eventProvider = new Web3.providers.WebsocketProvider(RPC_WS_URL, {
   timeout: 10000,
 });
 
@@ -36,6 +42,12 @@ export const useWeb3 = () => {
 const useContract = (abi, address) => {
   const { library } = useWeb3React();
   const web3 = new Web3(library.currentProvider || httpProvider);
+  // const web3 = new Web3(httpProvider);
+  return new web3.eth.Contract(abi, address);
+};
+
+const useContractForEvent = (abi, address) => {
+  const web3 = new Web3(eventProvider);
   return new web3.eth.Contract(abi, address);
 };
 
@@ -82,4 +94,19 @@ export const useFeeHandler = () => {
 export const useBUSD = () => {
   const abi = busd.abi;
   return useContract(abi, getBUSDAddress());
+};
+
+export const useLegionEvent = () => {
+  const abi = legion.abi;
+  return useContractForEvent(abi, getLegionAddress());
+};
+
+export const useMarketplaceEvent = () => {
+  const abi = marketplace.abi;
+  return useContractForEvent(abi, getMarketplaceAddress());
+};
+
+export const useRewardPoolEvent = () => {
+  const abi = rewardpool.abi;
+  return useContractForEvent(abi, getRewardPoolAddress());
 };

@@ -45,6 +45,7 @@ import {
     useLegion,
     useMonster,
     useBUSD,
+    useLegionEvent,
 
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
@@ -215,6 +216,7 @@ const TakeAction = () => {
     const legionContract = useLegion();
     const monsterContract = useMonster();
     const busdContract = useBUSD()
+    const legionEventContract = useLegionEvent()
 
     const web3 = useWeb3();
 
@@ -519,7 +521,7 @@ const TakeAction = () => {
     React.useEffect(() => {
         getInitInfo()
 
-        const huntEvent = legionContract.events.Hunted({
+        const huntEvent = legionEventContract.events.Hunted({
         }).on('connected', function (subscriptionId: any) {
         }).on('data', async function (event: any) {
             console.log(event)
