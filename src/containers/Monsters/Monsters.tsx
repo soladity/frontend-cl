@@ -63,6 +63,8 @@ import {
   setLegionBUSDApprove,
   getLegionBUSDAllowance,
   getBUSDBalance,
+  getMonsterToHunt,
+  getFee,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -156,6 +158,7 @@ interface LegionInterface {
   status: string;
   lastHuntTime: any;
   warriorCapacity: number;
+  realPower: number;
 }
 
 const Monsters = () => {
@@ -213,6 +216,11 @@ const Monsters = () => {
   const [massHuntLoading, setMassHuntLoading] = React.useState(false)
   const { massHuntResult } = useSelector((state: any) => state.contractReducer)
   const [massBtnEnable, setMassBtnEnable] = React.useState(false)
+
+  const [warriorCapacity, setWarriorCapacity] = React.useState(0)
+  const [checkingMassHuntBUSD, setCheckingMassHuntBUSD] = React.useState(false)
+
+  const [huntTax, setHuntTax] = React.useState(0);
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -295,6 +303,22 @@ const Monsters = () => {
     }
   };
 
+  const calcWarriorCapacity = async (legionId: any) => {
+    try {
+      let legionTmp = await getLegionToken(web3, legionContract, legionId);
+      var warriorCapacity = 0;
+      for (let j = 0; j < legionTmp.beasts.length; j++) {
+        warriorCapacity += parseInt(
+          (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
+            .capacity
+        );
+      }
+      setWarriorCapacity(warriorCapacity)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const updateMonster = async () => {
     try {
       setBlstBalance(
@@ -309,13 +333,6 @@ const Monsters = () => {
       for (let i = 0; i < legionIDS.length; i++) {
         legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
         legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
-        var warriorCapacity = 0;
-        for (let j = 0; j < legionTmp.beasts.length; j++) {
-          warriorCapacity += parseInt(
-            (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
-              .capacity
-          );
-        }
         if (legionStatus === '1') {
           setMassBtnEnable(true)
         }
@@ -329,6 +346,7 @@ const Monsters = () => {
       }
       setLegions(legionArrayTmp);
       setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)]);
+      calcWarriorCapacity(legionArrayTmp[parseInt(curComboLegionValue)].id)
       if (legionArrayTmp[parseInt(curComboLegionValue)]) {
         for (let i = 0; i < monsters.length; i++) {
           const monster: any = monsters[i];
@@ -350,6 +368,8 @@ const Monsters = () => {
   const initialize = async () => {
     try {
       setLoading(true);
+      setHuntTax((await getFee(feeHandlerContract, 1) / 10000));
+
       setBlstBalance(
         await getBloodstoneBalance(web3, bloodstoneContract, account)
       );
@@ -362,24 +382,16 @@ const Monsters = () => {
       for (let i = 0; i < legionIDS.length; i++) {
         legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
         legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
-        console.log(legionTmp, legionStatus);
-        var warriorCapacity = 0;
-        for (let j = 0; j < legionTmp.beasts.length; j++) {
-          warriorCapacity += parseInt(
-            (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
-              .capacity
-          );
-        }
         if (legionStatus === '1') {
           setMassBtnEnable(true)
         }
-        console.log(legionStatus)
         legionArrayTmp.push({
           ...legionTmp,
           id: legionIDS[i],
           status: legionStatus,
           warriorCapacity: warriorCapacity,
         });
+        calcWarriorCapacity(legionIDS[0])
       }
       await initMonster(legionArrayTmp);
       setLegionIDs(legionIDS);
@@ -409,6 +421,7 @@ const Monsters = () => {
         break;
       }
     }
+    calcWarriorCapacity(curLegionTmp.id)
     setCurComboLegionValue(e.target.value as string);
     setCurLegion(curLegionTmp);
   };
@@ -416,7 +429,7 @@ const Monsters = () => {
   const handleHunt = async (monsterTokenID: number) => {
     try {
       const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
-      if (BUSD >= (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward) {
+      if (BUSD >= (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax) {
         console.log(BUSD)
         setDialogVisible(true);
         setCurMonsterID(monsterTokenID);
@@ -463,8 +476,6 @@ const Monsters = () => {
     } catch (error) {
 
     }
-
-
   };
 
   const handleContinue = async () => {
@@ -575,16 +586,26 @@ const Monsters = () => {
 
   const massHunting = async () => {
     console.log('start mass hunt')
-    dispatch(initMassHuntResult())
-    setOpenMassHunt(true)
-    setMassHuntLoading(true)
-    try {
-      await massHunt(legionContract, account)
-    } catch (error) {
-      setOpenMassHunt(false)
-      console.log(error)
+    setCheckingMassHuntBUSD(true)
+    const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
+    const totalBUSD = await checkMassHuntBUSD()
+    if (BUSD >= totalBUSD * huntTax) {
+      console.log(totalBUSD)
+      dispatch(initMassHuntResult())
+      setOpenMassHunt(true)
+      setMassHuntLoading(true)
+      try {
+        await massHunt(legionContract, account)
+      } catch (error) {
+        setOpenMassHunt(false)
+        console.log(error)
+      }
+      setMassHuntLoading(false)
+    } else {
+      setSnackBarMessage(getTranslation('addBUSD'))
+      setOpenSnackBar(true)
     }
-    setMassHuntLoading(false)
+    setCheckingMassHuntBUSD(false)
     console.log('end mass hunt')
   }
 
@@ -593,6 +614,23 @@ const Monsters = () => {
       return;
     }
     setOpenMassHunt(false)
+  }
+
+  const checkMassHuntBUSD = async () => {
+    let totalBUSD = 0
+    const legionIDS = await getLegionTokenIds(web3, legionContract, account);
+    for (let i = 0; i < legionIDS.length; i++) {
+      const huntStatus = await canHunt(web3, legionContract, legionIDS[i])
+      if (huntStatus == '1') {
+        const legion = await getLegionToken(web3, legionContract, legionIDS[i])
+        console.log(huntStatus, legion)
+        const monsterId = await getMonsterToHunt(monsterContract, legion.realPower)
+        console.log(monsterId)
+        totalBUSD += (monsters[parseInt(monsterId) - 1] as MonsterInterface).BUSDReward
+        console.log(totalBUSD)
+      }
+    }
+    return totalBUSD
   }
 
   React.useEffect(() => {
@@ -688,7 +726,7 @@ const Monsters = () => {
                     fontSize: { xs: 14, sm: 16, md: 20 },
                   }}
                 >
-                  W {curLegion?.warriors.length}/{curLegion?.warriorCapacity}
+                  W {curLegion?.warriors.length}/{warriorCapacity}
                 </Typography>
               </Grid>
               <Grid item xs={35} sm={35} md={7}>
@@ -741,9 +779,18 @@ const Monsters = () => {
                     fontSize: { xs: 14, sm: 16, md: 20 },
                   }}
                 >
-                  <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold' }} disabled={!massBtnEnable}>
-                    {getTranslation('takeActionMassHunt')}
-                  </CommonBtn>
+                  {
+                    checkingMassHuntBUSD ? (
+                      <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold' }} disabled>
+                        <Spinner color="white" size={40} />&nbsp;
+                        {getTranslation('takeActionMassHunt')}
+                      </CommonBtn>
+                    ) : (
+                      <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold' }} disabled={!massBtnEnable}>
+                        {getTranslation('takeActionMassHunt')}
+                      </CommonBtn>
+                    )
+                  }
                 </Typography>
               </Grid>
             </Grid>
