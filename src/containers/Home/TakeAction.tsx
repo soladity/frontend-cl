@@ -31,7 +31,9 @@ import {
     getLegionToken,
     getMonsterToHunt,
     getBUSDBalance,
-    getFee
+    getFee,
+    getLegionBUSDAllowance,
+    setLegionBUSDApprove
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -420,12 +422,19 @@ const TakeAction = () => {
         console.log(totalBUSD)
         console.log(huntTax)
         if (BUSD >= totalBUSD * huntTax) {
-            console.log(totalBUSD)
             dispatch(initMassHuntResult())
             setOpenMassHunt(true)
             if (availableLegionCount > 0) {
                 setMassHuntLoading(true)
                 try {
+                    const allowance = await getLegionBUSDAllowance(
+                        web3,
+                        busdContract,
+                        account
+                    );
+                    if (allowance == 0) {
+                        await setLegionBUSDApprove(web3, busdContract, account)
+                    }
                     await massHunt(legionContract, account)
                 } catch (error) {
                     setOpenMassHunt(false)
@@ -513,6 +522,7 @@ const TakeAction = () => {
         const huntEvent = legionContract.events.Hunted({
         }).on('connected', function (subscriptionId: any) {
         }).on('data', async function (event: any) {
+            console.log(event)
             if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
                 var huntResult = {
                     legionId: event.returnValues.legionId,
@@ -523,6 +533,7 @@ const TakeAction = () => {
                     legionName: event.returnValues.name,
                     reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
                 }
+                console.log(huntResult)
                 dispatch(setMassHuntResult(huntResult))
             }
         })

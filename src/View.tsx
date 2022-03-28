@@ -7,6 +7,8 @@ import Toolbar from "@mui/material/Toolbar";
 import { makeStyles } from "@mui/styles";
 
 import { navConfig } from "./config";
+import { useLegion, useRewardPool, useWeb3 } from "./hooks/useContract";
+import { useWeb3React } from "@web3-react/core";
 
 const useStyle = makeStyles({
   mainBox: {
@@ -29,6 +31,30 @@ const View = () => {
   const routing = useRoutes(navConfig.routes());
 
   const classes = useStyle();
+
+  const rewardContract = useRewardPool()
+  const legionContract = useLegion()
+  const { account } = useWeb3React();
+  const web3 = useWeb3();
+
+  React.useEffect(() => {
+    console.log('view event')
+    const rewardChangedEvent = rewardContract.events.RewardChanged({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log(event)
+    })
+    return () => {
+      rewardChangedEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+          console.log('Successfully unsubscribed!')
+        }
+        if (error) {
+          console.log('There is an error')
+        }
+      })
+    }
+  }, [])
 
   return (
     <Box
