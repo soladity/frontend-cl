@@ -11,6 +11,7 @@ import {
     Snackbar,
     Alert,
     LinearProgress,
+    AlertColor,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { FaTimes } from "react-icons/fa";
@@ -24,7 +25,13 @@ import {
     getAvailableLegionsCount,
     getSummoningPrice,
     massHunt,
-    getAllMonsters
+    getAllMonsters,
+    getLegionTokenIds,
+    canHunt,
+    getLegionToken,
+    getMonsterToHunt,
+    getBUSDBalance,
+    getFee
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -34,7 +41,9 @@ import {
     useWeb3,
     useFeeHandler,
     useLegion,
-    useMonster
+    useMonster,
+    useBUSD,
+
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
@@ -47,6 +56,7 @@ import { NavLink } from "react-router-dom";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
+import { Spinner } from "../../component/Buttons/Spinner";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -161,6 +171,12 @@ const TakeAction = () => {
 
     const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
 
+    const [checkingMassHuntBUSD, setCheckingMassHuntBUSD] = React.useState(false)
+
+    const [aletType, setAlertType] = React.useState<AlertColor | undefined>("success");
+
+    const [huntTax, setHuntTax] = React.useState(0);
+
     //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] =
         React.useState<HTMLElement | null>(null);
@@ -195,6 +211,8 @@ const TakeAction = () => {
     const bloodstoneContract = useBloodstone();
     const feeHandlerContract = useFeeHandler()
     const legionContract = useLegion();
+    const monsterContract = useMonster();
+    const busdContract = useBUSD()
 
     const web3 = useWeb3();
 
@@ -215,6 +233,7 @@ const TakeAction = () => {
         await mintBeast(web3, beastContract, account, amount);
 
         setTransition(() => Transition);
+        setAlertType("success")
         setSnackBarMessage(getTranslation("summonBeastSuccessful"));
         setSnackBarNavigation("/beasts");
         setOpenSnackBar(true);
@@ -242,6 +261,7 @@ const TakeAction = () => {
         await mintWarrior(web3, warriorContract, account, amount);
 
         setTransition(() => Transition);
+        setAlertType("success")
         setSnackBarMessage(getTranslation("summonWarriorSuccessful"));
         setSnackBarNavigation("/warriors");
         setOpenSnackBar(true);
@@ -393,18 +413,32 @@ const TakeAction = () => {
 
     const massHunting = async () => {
         console.log('start mass hunt')
-        dispatch(initMassHuntResult())
-        setOpenMassHunt(true)
-        if (availableLegionCount > 0) {
-            setMassHuntLoading(true)
-            try {
-                await massHunt(legionContract, account)
-            } catch (error) {
-                setOpenMassHunt(false)
-                console.log(error)
+        setCheckingMassHuntBUSD(true)
+        const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
+        const totalBUSD = await checkMassHuntBUSD()
+        console.log(BUSD)
+        console.log(totalBUSD)
+        console.log(huntTax)
+        if (BUSD >= totalBUSD * huntTax) {
+            console.log(totalBUSD)
+            dispatch(initMassHuntResult())
+            setOpenMassHunt(true)
+            if (availableLegionCount > 0) {
+                setMassHuntLoading(true)
+                try {
+                    await massHunt(legionContract, account)
+                } catch (error) {
+                    setOpenMassHunt(false)
+                    console.log(error)
+                }
+                setMassHuntLoading(false)
             }
-            setMassHuntLoading(false)
+        } else {
+            setAlertType("error")
+            setSnackBarMessage(getTranslation('addBUSD'))
+            setOpenSnackBar(true)
         }
+        setCheckingMassHuntBUSD(false)
         console.log('end mass hunt')
     }
 
@@ -426,6 +460,8 @@ const TakeAction = () => {
     }
 
     const getInitInfo = async () => {
+        setHuntTax((await getFee(feeHandlerContract, 1) / 10000));
+
         getBlstAmountToMintWarrior();
         getBlstAmountToMintBeast();
         setShowAnimation(
@@ -444,6 +480,32 @@ const TakeAction = () => {
         setAvailableLegionCount(availableLegionCount);
     }
 
+
+    const checkMassHuntBUSD = async () => {
+        const monsterVal = await getAllMonsters(monsterContract);
+        const monsterArraryTemp = monsterVal[0]
+        const rewardArray = monsterVal[1]
+        let monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
+            return {
+                name: item.name,
+                base: item.percent,
+                ap: item.attack_power / 100,
+                reward: (rewardArray[index] / Math.pow(10, 18)).toFixed(2),
+                BUSDReward: item.reward / Math.pow(10, 4)
+            };
+        });
+        let totalBUSD = 0
+        const legionIDS = await getLegionTokenIds(web3, legionContract, account);
+        for (let i = 0; i < legionIDS.length; i++) {
+            const huntStatus = await canHunt(web3, legionContract, legionIDS[i])
+            if (huntStatus == '1') {
+                const legion = await getLegionToken(web3, legionContract, legionIDS[i])
+                const monsterId = await getMonsterToHunt(monsterContract, legion.realPower)
+                totalBUSD += monsterArrary[parseInt(monsterId) - 1].BUSDReward
+            }
+        }
+        return totalBUSD
+    }
 
     React.useEffect(() => {
         getInitInfo()
@@ -502,7 +564,7 @@ const TakeAction = () => {
                 <Alert
                     onClose={() => setOpenSnackBar(false)}
                     variant="filled"
-                    severity="success"
+                    severity={aletType}
                     sx={{ width: "100%" }}
                 >
                     <Box
@@ -823,19 +885,18 @@ const TakeAction = () => {
                                             {getTranslation("hunt")}
                                         </CommonBtn>
                                     </NavLink>
-                                    {/* <NavLink to="/hunt" className="non-style"> */}
-                                    <CommonBtn
-                                        sx={{
-                                            fontWeight: "bold",
-                                            wordBreak: "break-word",
-                                            fontSize: 14,
-                                            width: "100%",
-                                        }}
-                                        onClick={() => massHunting()}
-                                    >
-                                        {getTranslation("takeActionMassHunt")}
-                                    </CommonBtn>
-                                    {/* </NavLink> */}
+                                    {
+                                        checkingMassHuntBUSD ? (
+                                            <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold', width: '100%' }} disabled>
+                                                <Spinner color="white" size={40} />&nbsp;
+                                                {getTranslation('takeActionMassHunt')}
+                                            </CommonBtn>
+                                        ) : (
+                                            <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold', width: '100%' }}>
+                                                {getTranslation('takeActionMassHunt')}
+                                            </CommonBtn>
+                                        )
+                                    }
                                 </Box>
                             </Box>
                         </Grid>

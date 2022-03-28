@@ -222,6 +222,7 @@ export const getLegionToken = async (web3, contract, tokenId) => {
     supplies: response[3],
     attackPower: Math.floor(parseInt(response[4]) / 100),
     lastHuntTime: response[5],
+    realPower: parseFloat(response[4]),
   };
   return legion;
 };
@@ -517,4 +518,8 @@ export const getMonster24Hunted = async (contract, account) => {
 
 export const getBUSDBalance = async (contract, account) => {
   return await contract.methods.balanceOf(account).call();
-}
+};
+
+export const getMonsterToHunt = async (contract, ap) => {
+  return await contract.methods.getMonsterToHunt(ap).call();
+};
