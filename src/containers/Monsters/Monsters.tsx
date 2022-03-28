@@ -44,6 +44,7 @@ import {
   useBloodstone,
   useRewardPool,
   useBUSD,
+  useLegionEvent
 } from "../../hooks/useContract";
 import {
   getBeastBalance,
@@ -180,6 +181,7 @@ const Monsters = () => {
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
   const busdContract = useBUSD();
+  const legionEventContract = useLegionEvent()
 
   const [loading, setLoading] = useState(true);
   const [showAnimation, setShowAnimation] = useState<string | null>("0");
@@ -238,10 +240,10 @@ const Monsters = () => {
         ? localStorage.getItem("showAnimation")
         : "0"
     );
-
-    const huntEvent = legionContract.events.Hunted({
+    const huntEvent = legionEventContract.events.Hunted({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
+      console.log(event)
       if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
         var huntResult = {
           legionId: event.returnValues.legionId,
