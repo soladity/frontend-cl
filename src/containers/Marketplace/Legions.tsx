@@ -716,7 +716,7 @@ const Legions = () => {
             onChange={handlePrice}
             onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>

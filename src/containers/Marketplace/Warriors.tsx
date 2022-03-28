@@ -210,11 +210,11 @@ const Warriors = () => {
     setBaseUrl(await getBaseUrl());
 
     ApiService.getWarriors(account, 1).then(
-			response => {
-				if (response.data.status === 'success') {
+      response => {
+        if (response.data.status === 'success') {
           let tempWarriors = [];
-					for (let i = 0; i < response.data.data.length; i++) {
-						tempWarriors.push({
+          for (let i = 0; i < response.data.data.length; i++) {
+            tempWarriors.push({
               id: response.data.data[i].mintId,
               type: response.data.data[i].type,
               strength: response.data.data[i].strength,
@@ -222,16 +222,16 @@ const Warriors = () => {
               owner: response.data.data[i].account === account ? true : false,
               price: response.data.data[i].price,
             });
-					}
-					setWarriors(tempWarriors);
-				}
-				setLoading(false);
-			},
-			error => {
-				console.log('Error!');
-				setLoading(false);
-			}
-		);
+          }
+          setWarriors(tempWarriors);
+        }
+        setLoading(false);
+      },
+      error => {
+        console.log('Error!');
+        setLoading(false);
+      }
+    );
   };
 
   const handleChangeAp = (
@@ -255,15 +255,15 @@ const Warriors = () => {
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "2", id);
       ApiService.cancelWarrior(id).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
       console.log(e);
@@ -288,15 +288,15 @@ const Warriors = () => {
       }
       await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
       ApiService.buyWarrior(id, (price * Math.pow(10, 18)).toString()).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -403,15 +403,15 @@ const Warriors = () => {
         BigInt(price * Math.pow(10, 18))
       );
       ApiService.updateWarriorPrice(selectedWarrior, (price * Math.pow(10, 18)).toString()).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {
         if (parseInt(warriors[i].id) === selectedWarrior)
@@ -726,7 +726,7 @@ const Warriors = () => {
             onChange={handlePrice}
             onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>

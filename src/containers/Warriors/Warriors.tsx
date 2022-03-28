@@ -234,68 +234,68 @@ const Warriors = () => {
   };
 
   const handleMint = async (amount: Number) => {
-		handlePopoverCloseSummonWarrior()
-		setMintLoading(true);
-		setLoading(false);
-		const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
-		try {
-			if (allowance === '0') {
-				await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
-			}
-			await mintWarrior(web3, warriorContract, account, amount);
-			dispatch(setReloadStatus({
-				reloadContractStatus: new Date()
-			}));
-			ApiService.updateWarrior(account).then(
-				response => {
-					if (response.data.status === 'success') {
-						setMintLoading(false);
-						getBalance();
-					}
-				},
-				error => {
-					console.log('Error!');
-					setMintLoading(false);
-				}
-			);
-		} catch (e) {
-			console.log(e);
-		}
-	}
+    handlePopoverCloseSummonWarrior()
+    setMintLoading(true);
+    setLoading(false);
+    const allowance = await getWarriorBloodstoneAllowance(web3, bloodstoneContract, account);
+    try {
+      if (allowance === '0') {
+        await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
+      }
+      await mintWarrior(web3, warriorContract, account, amount);
+      dispatch(setReloadStatus({
+        reloadContractStatus: new Date()
+      }));
+      ApiService.updateWarrior(account).then(
+        response => {
+          if (response.data.status === 'success') {
+            setMintLoading(false);
+            getBalance();
+          }
+        },
+        error => {
+          console.log('Error!');
+          setMintLoading(false);
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const getBalance = async () => {
-		setLoading(true);
-		setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
-		setBaseUrl(await getBaseUrl());
-		ApiService.getWarriors(account, 0).then(
-			response => {
-				if (response.data.status === 'success') {
-					let amount = 0;
-					let tempWarriors = [];
-					let gif = '';
-					let jpg = '';
-					for (let i = 0; i < response.data.data.length; i++) {
-						for (let j = 0; j < Image.warriors.length; j++) {
-							if (Image.warriors[j].name === response.data.data[i].type) {
-								gif = Image.warriors[j].gif;
-								jpg = Image.warriors[j].jpg;
-							}
-						}
-						tempWarriors.push({ id: response.data.data[i].mintId, type: response.data.data[i].type, strength: response.data.data[i].strength, power: response.data.data[i].power, gif: gif, jpg: jpg });
-						amount += parseInt(response.data.data[i].power);
-					}
-					setMaxPower(amount);
-					setWarriors(tempWarriors);
-					setBalance(tempWarriors.length);
-				}
-				setLoading(false);
-			},
-			error => {
-				console.log('Error!');
-				setLoading(false);
-			}
-		);
-	}
+    setLoading(true);
+    setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+    setBaseUrl(await getBaseUrl());
+    ApiService.getWarriors(account, 0).then(
+      response => {
+        if (response.data.status === 'success') {
+          let amount = 0;
+          let tempWarriors = [];
+          let gif = '';
+          let jpg = '';
+          for (let i = 0; i < response.data.data.length; i++) {
+            for (let j = 0; j < Image.warriors.length; j++) {
+              if (Image.warriors[j].name === response.data.data[i].type) {
+                gif = Image.warriors[j].gif;
+                jpg = Image.warriors[j].jpg;
+              }
+            }
+            tempWarriors.push({ id: response.data.data[i].mintId, type: response.data.data[i].type, strength: response.data.data[i].strength, power: response.data.data[i].power, gif: gif, jpg: jpg });
+            amount += parseInt(response.data.data[i].power);
+          }
+          setMaxPower(amount);
+          setWarriors(tempWarriors);
+          setBalance(tempWarriors.length);
+        }
+        setLoading(false);
+      },
+      error => {
+        console.log('Error!');
+        setLoading(false);
+      }
+    );
+  }
 
   const handleChangeAp = (
     event: Event,
@@ -358,15 +358,15 @@ const Warriors = () => {
         BigInt(price * Math.pow(10, 18))
       );
       ApiService.sendWarriorMarket(selectedWarrior, (price * Math.pow(10, 18)).toString()).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       let power = 0;
       let temp = warriors;
       for (let i = 0; i < temp.length; i++) {
@@ -389,15 +389,15 @@ const Warriors = () => {
     try {
       await execute(web3, legionContract, account, false, id);
       ApiService.executeWarrior(id).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       setBalance(balance - 1);
       let power = 0;
       let temp = warriors;
@@ -420,8 +420,8 @@ const Warriors = () => {
   };
 
   const handlePage = (value: any) => {
-		setCurrentPage(value);
-	}
+    setCurrentPage(value);
+  }
 
   return (
     <Box>
@@ -887,7 +887,7 @@ const Warriors = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>
