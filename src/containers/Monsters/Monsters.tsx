@@ -595,6 +595,14 @@ const Monsters = () => {
       setOpenMassHunt(true)
       setMassHuntLoading(true)
       try {
+        const allowance = await getLegionBUSDAllowance(
+          web3,
+          busdContract,
+          account
+        );
+        if (allowance == 0) {
+          await setLegionBUSDApprove(web3, busdContract, account)
+        }
         await massHunt(legionContract, account)
       } catch (error) {
         setOpenMassHunt(false)
