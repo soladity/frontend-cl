@@ -762,7 +762,7 @@ const Legions = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
             If sold, you will pay {marketplaceTax}% marketplace tax.
           </Typography>

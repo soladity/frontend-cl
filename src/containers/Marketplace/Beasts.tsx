@@ -206,11 +206,11 @@ const Beasts = () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
     ApiService.getBeasts(account, 1).then(
-			response => {
-				if (response.data.status === 'success') {
+      response => {
+        if (response.data.status === 'success') {
           let tempBeasts = [];
-					for (let i = 0; i < response.data.data.length; i++) {
-						tempBeasts.push({
+          for (let i = 0; i < response.data.data.length; i++) {
+            tempBeasts.push({
               id: response.data.data[i].mintId,
               type: response.data.data[i].type,
               strength: response.data.data[i].strength,
@@ -218,16 +218,16 @@ const Beasts = () => {
               owner: response.data.data[i].account === account ? true : false,
               price: response.data.data[i].price,
             });
-					}
-					setBeasts(tempBeasts);
-				}
-				setLoading(false);
-			},
-			error => {
-				console.log('Error!');
-				setLoading(false);
-			}
-		);
+          }
+          setBeasts(tempBeasts);
+        }
+        setLoading(false);
+      },
+      error => {
+        console.log('Error!');
+        setLoading(false);
+      }
+    );
   };
 
   const handleCancel = async (id: number) => {
@@ -235,15 +235,15 @@ const Beasts = () => {
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "1", id);
       ApiService.cancelBeast(id).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
       console.log(e);
@@ -268,15 +268,15 @@ const Beasts = () => {
       }
       await buyToken(web3, marketplaceContract, account, "1", id, BigInt(price));
       ApiService.buyBeast(id, account).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -364,15 +364,15 @@ const Beasts = () => {
         BigInt(price * Math.pow(10, 18))
       );
       ApiService.updateBeastPrice(selectedBeast, (price * Math.pow(10, 18)).toString()).then(
-				response => {
-					if (response.data.status !== 'success') {
-						console.log('Fail')
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			);
+        response => {
+          if (response.data.status !== 'success') {
+            console.log('Fail')
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
       let temp = [];
       for (let i = 0; i < beasts.length; i++) {
         if (parseInt(beasts[i].id) === selectedBeast)
@@ -641,7 +641,7 @@ const Beasts = () => {
             onChange={handlePrice}
             onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
