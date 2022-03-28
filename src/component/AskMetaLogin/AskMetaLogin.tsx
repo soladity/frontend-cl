@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../wallet';
 import Slide, { SlideProps } from '@mui/material/Slide';
 import { makeStyles } from '@mui/styles';
-import { switchNetwork } from '../../wallet/ethereum';
+import { addNetwork, switchNetwork } from '../../wallet/ethereum';
 
 const useStyles = makeStyles({
   loginToWhitePaperBtn: {
@@ -98,32 +98,36 @@ const AskMetaLogin = () => {
     setLoading(true);
     activate(injected);
   };
-  React.useEffect(() => {
-    if (error) {
-      if (error.toString().indexOf('NoEthereumProviderError') > -1) {
-        setErrorMsg('Please Install MetaMask!')
-        setOpenSnackBar(true)
-      }
-      if (error.toString().indexOf('UnsupportedChainIdError') > -1) {
-        setErrorMsg('Please choose Kovan Network!')
-        setOpenSnackBar(true)
-        switchNetwork()
-      }
-    }
-    setLoading(false);
-  }, [active, error])
+  // React.useEffect(() => {
+  //   if (error) {
+  //     console.log(error)
+  //     if (error.toString().indexOf('NoEthereumProviderError') > -1) {
+  //       setErrorMsg('Please Install MetaMask!')
+  //       setOpenSnackBar(true)
+  //     }
+  //     if (error.toString().indexOf('UnsupportedChainIdError') > -1) {
+  //       setErrorMsg('Please choose BSC Test Network!')
+  //       setOpenSnackBar(true)
+  //       switchNetwork()
+  //     }
+  //   }
+  //   setLoading(false);
+  // }, [active, error])
 
   React.useEffect(() => {
     if (error) {
+      console.log(error)
       if (error.toString().indexOf("No Ethereum") > -1) {
         setErrorMsg("Please Install MetaMask!");
         setOpenSnackBar(true);
       }
       if (error.toString().indexOf("Unsupported") > -1) {
+        addNetwork()
         switchNetwork();
-        setErrorMsg("Please choose Kovan Network!");
+        setErrorMsg("Please choose BSC Test Network!");
         setOpenSnackBar(true);
       }
+
     }
     setLoading(false);
   }, [active, activate, error]);

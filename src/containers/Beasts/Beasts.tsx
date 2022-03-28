@@ -378,6 +378,14 @@ const Beasts = () => {
 					console.log(error);
 				}
 			);
+      setBalance(balance - 1);
+      let capacity = 0;
+      let temp = beasts;
+      for (let i = 0; i < temp.length; i++) {
+        if (parseInt(temp[i]["id"]) === id)
+          capacity = parseInt(temp[i]["capacity"]);
+      }
+      setMaxWarrior(maxWarrior - capacity);
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
       setBalance(balance - 1);
       dispatch(
@@ -813,7 +821,7 @@ const Beasts = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{

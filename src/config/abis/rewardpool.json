@@ -77,11 +77,6 @@
         },
         {
           "internalType": "uint256",
-          "name": "_monster_id",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
           "name": "_reward",
           "type": "uint256"
         }
@@ -89,19 +84,6 @@
       "name": "addReward",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "bloodstone",
-      "outputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -136,19 +118,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "legion",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -211,19 +180,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "totalHuntedCount",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -239,19 +195,20 @@
     {
       "inputs": [
         {
-          "internalType": "address payable",
-          "name": "_addr",
+          "internalType": "address",
+          "name": "",
           "type": "address"
-        },
+        }
+      ],
+      "name": "unclaimedUSD",
+      "outputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "withdrawBNB",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     }
   ]

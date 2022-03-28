@@ -118,6 +118,11 @@ const Legions = () => {
       console.log(legions)
       if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setLegions(legions.filter(legion => legion.id != event.returnValues._tokenId))
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
 
@@ -140,6 +145,11 @@ const Legions = () => {
           huntStatus: huntStatus,
         }
         setLegions([...legions, newItem])
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
 
@@ -160,6 +170,11 @@ const Legions = () => {
           }
         })
         setLegions(temp)
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
       }
     })
     return () => {
@@ -699,7 +714,7 @@ const Legions = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
+            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
           />
           <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 6)).toFixed(2)} USD)</Typography>
         </DialogContent>

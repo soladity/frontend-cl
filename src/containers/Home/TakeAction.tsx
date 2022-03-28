@@ -10,6 +10,7 @@ import {
     DialogTitle,
     Snackbar,
     Alert,
+    LinearProgress,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { FaTimes } from "react-icons/fa";
@@ -20,7 +21,10 @@ import {
     setWarriorBloodstoneApprove,
     mintBeast,
     mintWarrior,
+    getAvailableLegionsCount,
     getSummoningPrice,
+    massHunt,
+    getAllMonsters
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -29,16 +33,20 @@ import {
     useWarrior,
     useWeb3,
     useFeeHandler,
+    useLegion,
+    useMonster
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
-import { useDispatch } from "react-redux";
-import { setReloadStatus } from "../../actions/contractActions";
+import { useDispatch, useSelector } from "react-redux";
+import { initMassHuntResult, setMassHuntResult, setReloadStatus } from "../../actions/contractActions";
 import { getTranslation } from "../../utils/translation";
 import { makeStyles } from "@mui/styles";
 import { NavLink } from "react-router-dom";
 
 import CommonBtn from "../../component/Buttons/CommonBtn";
+import { toCapitalize } from "../../utils/common";
+import monstersInfo from "../../constant/monsters";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -69,26 +77,24 @@ const useStyles = makeStyles({
         minHeight: "180px",
         height: "100%",
     },
-    achievementBtn: {
-        background: "red",
-        padding: 10,
-        borderRadius: 5,
-        cursor: "pointer",
-        color: "black",
-        animation: `$Flash linear 1s infinite`,
+    MassHuntItemLose: {
+        boxShadow: "rgb(0 0 0 / 37%) 0px 2px 4px 0px, rgb(14 30 37 / 85%) 0px 2px 16px 0px",
+        borderRadius: 5
+    },
+    MassHuntItemWin: {
+        boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
+        animation: `$Flash linear 2s infinite`,
+        borderRadius: 5
     },
     "@keyframes Flash": {
         "0%": {
-            background: "#19aa6f",
-            boxShadow: "0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset",
+            boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
         },
         "50%": {
-            background: "#24f39f",
-            boxShadow: "0 0 4px 4px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset",
+            boxShadow: "rgb(247 247 247 / 30%) 0px 2px 4px 0px, rgb(217 221 206 / 40%) 0px 2px 16px 0px",
         },
         "100%": {
-            background: "#19aa6f",
-            boxShadow: "0 0 1px 1px #a7a2a2, 0px 0px 1px 2px #a7a2a2 inset",
+            boxShadow: "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
         },
     },
 });
@@ -145,6 +151,16 @@ const TakeAction = () => {
         },
     });
 
+    const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
+
+    const [openMassHunt, setOpenMassHunt] = React.useState(false);
+
+    const [massHuntLoading, setMassHuntLoading] = React.useState(false)
+
+    const { massHuntResult } = useSelector((state: any) => state.contractReducer)
+
+    const [availableLegionCount, setAvailableLegionCount] = React.useState(0);
+
     //Popover for Summon Beast
     const [anchorElSummonBeast, setAnchorElSummonBeast] =
         React.useState<HTMLElement | null>(null);
@@ -178,6 +194,8 @@ const TakeAction = () => {
     const warriorContract = useWarrior();
     const bloodstoneContract = useBloodstone();
     const feeHandlerContract = useFeeHandler()
+    const legionContract = useLegion();
+
     const web3 = useWeb3();
 
     //Mint Beast with quantity
@@ -372,10 +390,96 @@ const TakeAction = () => {
         return BLST_amount_1;
     };
 
-    React.useEffect(() => {
+
+    const massHunting = async () => {
+        console.log('start mass hunt')
+        dispatch(initMassHuntResult())
+        setOpenMassHunt(true)
+        if (availableLegionCount > 0) {
+            setMassHuntLoading(true)
+            try {
+                await massHunt(legionContract, account)
+            } catch (error) {
+                setOpenMassHunt(false)
+                console.log(error)
+            }
+            setMassHuntLoading(false)
+        }
+        console.log('end mass hunt')
+    }
+
+    const updateState = () => {
+        setOpenMassHunt(false)
+        dispatch(
+            setReloadStatus({
+                reloadContractStatus: new Date(),
+            })
+        );
+        dispatch(initMassHuntResult())
+    }
+
+    const handleMassHuntClose = (reason: string) => {
+        if (reason === "backdropClick" || reason === "escapeKeyDown") {
+            return;
+        }
+        setOpenMassHunt(false)
+    }
+
+    const getInitInfo = async () => {
         getBlstAmountToMintWarrior();
         getBlstAmountToMintBeast();
+        setShowAnimation(
+            localStorage.getItem("showAnimation")
+                ? localStorage.getItem("showAnimation")
+                : "0"
+        );
+        const availableLegionCount = await getAvailableLegionsCount(
+            web3,
+            legionContract,
+            account
+        );
+        if (availableLegionCount == 0) {
+            setMassHuntResult([])
+        }
+        setAvailableLegionCount(availableLegionCount);
+    }
+
+
+    React.useEffect(() => {
+        getInitInfo()
+
+        const huntEvent = legionContract.events.Hunted({
+        }).on('connected', function (subscriptionId: any) {
+        }).on('data', async function (event: any) {
+            if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+                var huntResult = {
+                    legionId: event.returnValues.legionId,
+                    monsterId: event.returnValues.monsterId,
+                    percent: event.returnValues.percent,
+                    roll: event.returnValues.roll,
+                    success: event.returnValues.success,
+                    legionName: event.returnValues.name,
+                    reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
+                }
+                dispatch(setMassHuntResult(huntResult))
+            }
+        })
+
+        return () => {
+            huntEvent.unsubscribe((error: any, success: any) => {
+                if (success) {
+                    console.log('Successfully unsubscribed!')
+                }
+                if (error) {
+                    console.log('There is an error')
+                }
+            })
+        }
     }, []);
+
+    React.useEffect(() => {
+        console.log(massHuntResult)
+    }, [massHuntResult])
 
     return (
         <Card
@@ -719,18 +823,19 @@ const TakeAction = () => {
                                             {getTranslation("hunt")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <NavLink to="/hunt" className="non-style">
-                                        <CommonBtn
-                                            sx={{
-                                                fontWeight: "bold",
-                                                wordBreak: "break-word",
-                                                fontSize: 14,
-                                                width: "100%",
-                                            }}
-                                        >
-                                            {getTranslation("takeActionMassHunt")}
-                                        </CommonBtn>
-                                    </NavLink>
+                                    {/* <NavLink to="/hunt" className="non-style"> */}
+                                    <CommonBtn
+                                        sx={{
+                                            fontWeight: "bold",
+                                            wordBreak: "break-word",
+                                            fontSize: 14,
+                                            width: "100%",
+                                        }}
+                                        onClick={() => massHunting()}
+                                    >
+                                        {getTranslation("takeActionMassHunt")}
+                                    </CommonBtn>
+                                    {/* </NavLink> */}
                                 </Box>
                             </Box>
                         </Grid>
@@ -783,7 +888,7 @@ const TakeAction = () => {
                                             {getTranslation("takeActionBuyLegions")}
                                         </CommonBtn>
                                     </NavLink>
-                                    <a href="https://poocoin.app" target="_blank">
+                                    <a href="https://www.dextools.io/app/bsc/pair-explorer/0xc60fefaa2bfa581ce86dbfc08ee7144bae43b981" target="_blank">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
@@ -796,7 +901,7 @@ const TakeAction = () => {
                                             {getTranslation("takeActionDextools")}
                                         </CommonBtn>
                                     </a>
-                                    <a href="https://pancakeswap.com" target="_blank">
+                                    <a href="https://pancakeswap.finance/swap?outputCurrency=0x340516B933597F131E827aBdf0E3f700E24e84Ff" target="_blank">
                                         <CommonBtn
                                             sx={{
                                                 fontWeight: "bold",
@@ -814,7 +919,77 @@ const TakeAction = () => {
                     </Grid>
                 </Box>
             </Box>
-        </Card>
+
+            <Dialog
+                disableEscapeKeyDown
+                onClose={(_, reason) => handleMassHuntClose(reason)}
+                open={openMassHunt} sx={{ p: 1 }}
+            >
+                <DialogTitle sx={{ textAlign: "center" }}>
+                    {getTranslation('massHuntResult')}
+                </DialogTitle>
+                {
+                    massHuntLoading && availableLegionCount > 0 && (
+                        <Box sx={{ p: 1 }}>
+                            <LinearProgress sx={{ width: "100%" }} color="success" />
+                        </Box>
+                    )
+                }
+                <Box sx={{ p: 1, display: 'flex', flexWrap: 'wrap', maxHeight: 500, overflowY: 'auto', justifyContent: 'space-around' }}>
+
+                    {
+                        availableLegionCount == 0 && (
+                            <span style={{ padding: '8px' }}>{getTranslation("noLegionToHunt")}</span>
+                        )
+                    }
+                    {
+                        massHuntResult.map((item: any, index: any) => (
+                            <Box key={index} className={item.success ? classes.MassHuntItemWin : classes.MassHuntItemLose} sx={{ textAlign: 'center', margin: 1, width: 170, p: 1 }}>
+                                {
+                                    item.success
+                                        ? (<img src={
+                                            showAnimation === "0"
+                                                ? `/assets/images/characters/jpg/monsters/m${item['monsterId']}.jpg`
+                                                : `/assets/images/characters/gif/monsters/m${item['monsterId']}.gif`
+                                        } style={{ width: '100%' }} />)
+                                        : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
+                                }
+                                <Box sx={{ p: 1, wordBreak: 'break-word' }}>
+                                    {item.legionName}
+                                </Box>
+                                <Box sx={{ fontSize: 12 }}>
+                                    <span>#{item.monsterId} {getTranslation('monster')}</span> - <span style={{ fontWeight: 'bold' }}>{toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
+                                </Box>
+                                <Box sx={{ fontSize: 12 }}>
+                                    <span>{getTranslation('maxRoll')}: {item.percent}</span>
+                                </Box>
+                                <Box sx={{ fontSize: 12 }}>
+                                    <span>{getTranslation('yourRoll')}: {item.roll}</span>
+                                </Box>
+                                <Box sx={{ p: 1, fontSize: 12, fontWeight: 'bold' }}>
+                                    {
+                                        item.success ? (
+                                            <span>{getTranslation('won')} {item.reward} $BLST</span>
+                                        ) : (
+                                            <span>{getTranslation('lost')}</span>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                        ))
+                    }
+                </Box>
+                <Box sx={{ display: 'flex', p: 1, justifyContent: 'space-between' }}>
+                    <CommonBtn
+                        disabled={massHuntLoading}
+                        sx={{ marginLeft: 'auto', fontWeight: "bold" }}
+                        onClick={() => updateState()}
+                    >
+                        {getTranslation("continue")}
+                    </CommonBtn>
+                </Box>
+            </Dialog >
+        </Card >
     );
 };
 

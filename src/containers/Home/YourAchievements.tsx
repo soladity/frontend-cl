@@ -12,6 +12,8 @@ import {
   getWarriorToken,
   getLegionTokenIds,
   getLegionToken,
+  getMonster23Hunted,
+  getMonster24Hunted,
 } from "../../hooks/contractFunction";
 import {
   useBeast,
@@ -159,6 +161,7 @@ const YourAchievements = () => {
 
   const getMonsterStatus = async () => {
     try {
+      setMonsterConqueror(await getMonster23Hunted(legionContract, account))
     } catch (error) {
       console.log(error);
     }
@@ -166,6 +169,7 @@ const YourAchievements = () => {
 
   const getKingStatus = async () => {
     try {
+      setKingOfNicah(await getMonster24Hunted(legionContract, account))
     } catch (error) {
       console.log(error);
     }
