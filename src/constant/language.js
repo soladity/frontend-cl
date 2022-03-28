@@ -72,7 +72,7 @@ export const translations = {
     ph: "Kasalukuyang mga Hayop",
   },
   warriorCapacity: {
-    en: "Total Capacity of All Warriors",
+    en: "Total Capacity of All Beasts",
     es: "Capacidad máxima de guerreros",
     cn: "最大勇士总数量",
     pt: "Capacidade Máxima Total de Guerreiros",
@@ -2389,7 +2389,6 @@ export const translations = {
   },
   unclaimed: {
     en: "Use unclaimed",
-
     es: "Usar no reclamado",
     cn: "没领取的",
     pt: "Usar não reclamado",
