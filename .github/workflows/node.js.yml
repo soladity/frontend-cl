@@ -24,7 +24,7 @@ jobs:
       - name: Set NODE_ENV
         run: |
           NODE_ENV=$(echo ${GITHUB_REF#refs/heads/} | tr / -)
-          [ "$NODE_ENV" = "main" ] && echo "NODE_ENV=main" >> $GITHUB_ENV || [ "$NODE_ENV" = "staging" ] && echo "NODE_ENV=staging" >> $GITHUB_ENV || echo "NODE_ENV=development" >> $GITHUB_ENV
+          [ "$NODE_ENV" = "play" ] && echo "NODE_ENV=main" >> $GITHUB_ENV || ([ "$NODE_ENV" = "staging" ] && echo "NODE_ENV=staging" >> $GITHUB_ENV || echo "NODE_ENV=development" >> $GITHUB_ENV)
 
       - name: Set env variables for secrets
         run: |
