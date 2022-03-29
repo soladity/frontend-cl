@@ -9,6 +9,7 @@ import { makeStyles } from "@mui/styles";
 import { navConfig } from "./config";
 import { useLegion, useRewardPool, useRewardPoolEvent, useWeb3 } from "./hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
+import { getTaxStartDay, getUnclaimedUSD } from "./hooks/contractFunction";
 
 const useStyle = makeStyles({
   mainBox: {
@@ -44,6 +45,14 @@ const View = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)
+      const userAddress = event.returnValues._address
+      console.log(userAddress)
+      try {
+        const taxStartDay = await getTaxStartDay(legionContract, userAddress)
+        console.log(taxStartDay)
+      } catch (error) {
+        console.log(error)
+      }
     })
     return () => {
       rewardChangedEvent.unsubscribe((error: any, success: any) => {
