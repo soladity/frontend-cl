@@ -2496,4 +2496,16 @@ export const translations = {
     pl: "Dodaj więcej BUSD do swojego portfela, aby polować.",
     ph: "Magdagdag ng higit pang BUSD sa iyong wallet upang manghuli.",
   },
+  payMarketplaceTax: {
+    en: "If you sold, you will pay marketplace tax.",
+    es: "Si vendió, pagará el impuesto de mercado.",
+    cn: "如果您出售，您将支付市场税。",
+    pt: "Se você vendeu, pagará imposto de mercado.",
+    tr: "Sattıysanız, pazar vergisi ödersiniz.",
+    ru: "Если вы продали, вы будете платить рыночный налог.",
+    fr: "Si vous avez vendu, vous paierez la taxe de marché.",
+    de: "Als je verkocht, betaal je marktplaatsbelasting.",
+    pl: "Jeśli sprzedałeś, zapłacisz podatek od rynku.",
+    ph: "Kung nagbebenta ka, magbabayad ka ng buwis sa pamilihan.",
+  },
 };
