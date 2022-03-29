@@ -243,6 +243,10 @@ const Beasts = () => {
       if (allowance === '0') {
         await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
       }
+      await mintBeast(web3, beastContract, account, amount);
+      dispatch(setReloadStatus({
+        reloadContractStatus: new Date()
+      }));
       ApiService.updateBeast(account).then(
         response => {
           if (response.data.status === 'success') {
@@ -255,10 +259,6 @@ const Beasts = () => {
           setMintLoading(false);
         }
       );
-      await mintBeast(web3, beastContract, account, amount);
-      dispatch(setReloadStatus({
-        reloadContractStatus: new Date()
-      }));
     } catch (e) {
       console.log(e);
     }
