@@ -46,7 +46,6 @@ import {
     useMonster,
     useBUSD,
     useLegionEvent,
-
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";

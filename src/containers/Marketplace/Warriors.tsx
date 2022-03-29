@@ -41,9 +41,8 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
-  useMarketplaceEvent
+  useMarketplaceEvent,
 } from "../../hooks/useContract";
-import ApiService from "../../services/api.service";
 import WarriorMarketCard from "../../component/Cards/WarriorMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
@@ -139,8 +138,7 @@ const Warriors = () => {
       console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const warrior = await getWarriorToken(web3, warriorContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceContract, "2", event.returnValues._tokenId);
-        console.log(marketItem)
+        const marketItem = await getMarketItem(web3, marketplaceEventContract, "2", event.returnValues._tokenId);
         const newItem = {
           ...warrior,
           id: event.returnValues._tokenId,
@@ -212,29 +210,23 @@ const Warriors = () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
 
-    ApiService.getWarriors(account, 1).then(
-      response => {
-        if (response.data.status === 'success') {
-          let tempWarriors = [];
-          for (let i = 0; i < response.data.data.length; i++) {
-            tempWarriors.push({
-              id: response.data.data[i].mintId,
-              type: response.data.data[i].type,
-              strength: response.data.data[i].strength,
-              power: response.data.data[i].power,
-              owner: response.data.data[i].account === account ? true : false,
-              price: response.data.data[i].price,
-            });
-          }
-          setWarriors(tempWarriors);
-        }
-        setLoading(false);
-      },
-      error => {
-        console.log('Error!');
-        setLoading(false);
-      }
-    );
+    const ids = await getOnMarketplace(web3, warriorContract);
+    let warrior;
+    let marketItem;
+    let tempWarriors = [];
+    for (let i = 0; i < ids.length; i++) {
+      warrior = await getWarriorToken(web3, warriorContract, ids[i]);
+      marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
+      console.log(marketItem)
+      tempWarriors.push({
+        ...warrior,
+        id: ids[i],
+        owner: marketItem.owner === account ? true : false,
+        price: marketItem.price,
+      });
+    }
+    setWarriors(tempWarriors);
+    setLoading(false);
   };
 
   const handleChangeAp = (
@@ -257,16 +249,6 @@ const Warriors = () => {
     setActionLoading(true);
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "2", id);
-      ApiService.cancelWarrior(id).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
       console.log(e);
@@ -290,16 +272,6 @@ const Warriors = () => {
         );
       }
       await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
-      ApiService.buyWarrior(id, (price * Math.pow(10, 18)).toString()).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -404,16 +376,6 @@ const Warriors = () => {
         "2",
         selectedWarrior,
         BigInt(price * Math.pow(10, 18))
-      );
-      ApiService.updateWarriorPrice(selectedWarrior, (price * Math.pow(10, 18)).toString()).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
       );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {

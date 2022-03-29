@@ -361,6 +361,7 @@ export const buyToken = async (web3, contract, account, type, id, price) => {
 
 export const getMarketItem = async (web3, contract, type, id) => {
   const response = await contract.methods.getMarketItem(type, id).call();
+  console.log(type, id);
   const item = {
     price: response[0],
     owner: response[1],
@@ -528,4 +529,8 @@ export const getTaxStartDay = async (contract, account) => {
 
 export const getUnclaimedUSD = async (contract, account) => {
   return await contract.methods.unclaimedUSD(account).call();
+};
+
+export const getAllBeasts = async (contract, account) => {
+  return await contract.methods.getAllBeasts(account).call();
 };
