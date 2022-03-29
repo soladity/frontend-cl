@@ -260,7 +260,7 @@ const Beasts = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    console.log(await getAllBeasts(beastContract, account))
+    // console.log(await getAllBeasts(beastContract, account))
     setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
     setBaseUrl(await getBaseUrl());
     setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
