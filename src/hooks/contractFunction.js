@@ -521,3 +521,11 @@ export const getBUSDBalance = async (contract, account) => {
 export const getMonsterToHunt = async (contract, ap) => {
   return await contract.methods.getMonsterToHunt(ap).call();
 };
+
+export const getTaxStartDay = async (contract, account) => {
+  return await contract.methods.taxStartDay(account).call();
+};
+
+export const getUnclaimedUSD = async (contract, account) => {
+  return await contract.methods.unclaimedUSD(account).call();
+};

@@ -13,19 +13,6 @@
     },
     {
       "inputs": [],
-      "name": "feehandler",
-      "outputs": [
-        {
-          "internalType": "contract IFeeHandler",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "getAllMonsters",
       "outputs": [
         {

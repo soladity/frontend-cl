@@ -137,6 +137,7 @@ const Beasts = () => {
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const beast = await getBeastToken(web3, beastContract, event.returnValues._tokenId);
         const marketItem = await getMarketItem(web3, marketplaceContract, "1", event.returnValues._tokenId);
+        console.log(marketItem)
         const newItem = {
           ...beast,
           id: event.returnValues._tokenId,
