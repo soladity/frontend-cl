@@ -785,7 +785,7 @@ const Beasts = () => {
           />
           <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
-            If sold, you will pay {marketplaceTax}% marketplace tax.
+            {getTranslation('payMarketplaceTax')} {marketplaceTax}%
           </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
