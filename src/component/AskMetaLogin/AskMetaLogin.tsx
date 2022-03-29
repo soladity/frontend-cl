@@ -98,21 +98,6 @@ const AskMetaLogin = () => {
     setLoading(true);
     activate(injected);
   };
-  // React.useEffect(() => {
-  //   if (error) {
-  //     console.log(error)
-  //     if (error.toString().indexOf('NoEthereumProviderError') > -1) {
-  //       setErrorMsg('Please Install MetaMask!')
-  //       setOpenSnackBar(true)
-  //     }
-  //     if (error.toString().indexOf('UnsupportedChainIdError') > -1) {
-  //       setErrorMsg('Please choose BSC Test Network!')
-  //       setOpenSnackBar(true)
-  //       switchNetwork()
-  //     }
-  //   }
-  //   setLoading(false);
-  // }, [active, error])
 
   React.useEffect(() => {
     if (error) {

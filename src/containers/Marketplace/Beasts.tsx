@@ -41,9 +41,8 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
-  useMarketplaceEvent
+  useMarketplaceEvent,
 } from "../../hooks/useContract";
-import ApiService from "../../services/api.service";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import BeastMarketCard from "../../component/Cards/BeastMarketCard";
 import { getTranslation } from "../../utils/translation";
@@ -136,7 +135,7 @@ const Beasts = () => {
       console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const beast = await getBeastToken(web3, beastContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceContract, "1", event.returnValues._tokenId);
+        const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues._tokenId);
         console.log(marketItem)
         const newItem = {
           ...beast,
@@ -208,45 +207,30 @@ const Beasts = () => {
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
-    ApiService.getBeasts(account, 1).then(
-      response => {
-        if (response.data.status === 'success') {
-          let tempBeasts = [];
-          for (let i = 0; i < response.data.data.length; i++) {
-            tempBeasts.push({
-              id: response.data.data[i].mintId,
-              type: response.data.data[i].type,
-              strength: response.data.data[i].strength,
-              capacity: response.data.data[i].capacity,
-              owner: response.data.data[i].account === account ? true : false,
-              price: response.data.data[i].price,
-            });
-          }
-          setBeasts(tempBeasts);
-        }
-        setLoading(false);
-      },
-      error => {
-        console.log('Error!');
-        setLoading(false);
-      }
-    );
+
+    const ids = await getOnMarketplace(web3, beastContract);
+    let beast;
+    let marketItem;
+    let tempBeasts = [];
+    for (let i = 0; i < ids.length; i++) {
+      beast = await getBeastToken(web3, beastContract, ids[i]);
+      marketItem = await getMarketItem(web3, marketplaceContract, "1", ids[i]);
+      console.log(marketItem)
+      tempBeasts.push({
+        ...beast,
+        id: ids[i],
+        owner: marketItem.owner === account ? true : false,
+        price: marketItem.price,
+      });
+    }
+    setBeasts(tempBeasts);
+    setLoading(false);
   };
 
   const handleCancel = async (id: number) => {
     setActionLoading(true);
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "1", id);
-      ApiService.cancelBeast(id).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
       console.log(e);
@@ -270,16 +254,6 @@ const Beasts = () => {
         );
       }
       await buyToken(web3, marketplaceContract, account, "1", id, BigInt(price));
-      ApiService.buyBeast(id, account).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -365,16 +339,6 @@ const Beasts = () => {
         "1",
         selectedBeast,
         BigInt(price * Math.pow(10, 18))
-      );
-      ApiService.updateBeastPrice(selectedBeast, (price * Math.pow(10, 18)).toString()).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
       );
       let temp = [];
       for (let i = 0; i < beasts.length; i++) {

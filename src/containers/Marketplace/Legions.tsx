@@ -43,7 +43,7 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
-  useMarketplaceEvent,
+  useMarketplaceEvent
 } from "../../hooks/useContract";
 import LegionMarketCard from "../../component/Cards/LegionMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -105,7 +105,7 @@ const Legions = () => {
   const classes = useStyles();
   const legionContract = useLegion();
   const marketplaceContract = useMarketplace();
-  const marketplaceEventContract = useMarketplaceEvent()
+  const marketplaceEventContract = useMarketplaceEvent();
   const bloodstoneContract = useBloodstone();
   const feeHandlerContract = useFeeHandler()
   const web3 = useWeb3();
@@ -135,7 +135,7 @@ const Legions = () => {
       console.log(legions)
       if (legions.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const legion = await getLegionToken(web3, legionContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceContract, "3", event.returnValues._tokenId);
+        const marketItem = await getMarketItem(web3, marketplaceEventContract, "3", event.returnValues._tokenId);
         const image = getLegionImageUrl(legion.attackPower);
         const huntStatus = await getHuntStatus(web3, legionContract, event.returnValues._tokenId);
         const newItem = {
