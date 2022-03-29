@@ -31,39 +31,7 @@ const useStyle = makeStyles({
 const View = () => {
   const routing = useRoutes(navConfig.routes());
 
-  const classes = useStyle();
-
-  const rewardContract = useRewardPool()
-  const rewardEventContract = useRewardPoolEvent()
-  const legionContract = useLegion()
-  const { account } = useWeb3React();
-  const web3 = useWeb3();
-
   React.useEffect(() => {
-    console.log('view event')
-    const rewardChangedEvent = rewardEventContract.events.RewardChanged({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      console.log(event)
-      const userAddress = event.returnValues._address
-      console.log(userAddress)
-      try {
-        const taxStartDay = await getTaxStartDay(legionContract, userAddress)
-        console.log(taxStartDay)
-      } catch (error) {
-        console.log(error)
-      }
-    })
-    return () => {
-      rewardChangedEvent.unsubscribe((error: any, success: any) => {
-        if (success) {
-          console.log('Successfully unsubscribed!')
-        }
-        if (error) {
-          console.log('There is an error')
-        }
-      })
-    }
   }, [])
 
   return (
@@ -102,7 +70,6 @@ const View = () => {
       </Box>
       <Box
         component="main"
-        // className={classes.mainBox}
         id="main"
         sx={{
           flexGrow: 1,
