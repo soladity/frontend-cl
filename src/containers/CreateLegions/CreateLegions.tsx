@@ -26,19 +26,21 @@ import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 
 import { meta_constant, createlegions } from "../../config/meta.config";
+
 import {
   getLegionBloodstoneAllowance,
   setLegionBloodstoneApprove,
   getWarriorTokenIds,
   getWarriorToken,
   getTrainingCost,
-} from "../../hooks/contractFunction";
-import {
   mintLegion,
   getBeastTokenIds,
   getBeastToken,
   getBaseUrl,
+  getAllWarriors,
+  getAllBeasts
 } from "../../hooks/contractFunction";
+
 import {
   useBloodstone,
   useBeast,
@@ -47,6 +49,7 @@ import {
   useLegion,
   useFeeHandler,
 } from "../../hooks/useContract";
+
 import { getTranslation } from "../../utils/translation";
 import { toCapitalize } from "../../utils/common";
 import { formatNumber } from "../../utils/common";
@@ -55,6 +58,7 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
 import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
+import warriorInfo from "../../constant/warriors";
 
 const useStyles = makeStyles({
   root: {
@@ -235,57 +239,64 @@ const CreateLegions: React.FC = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    setBaseUrl(await getBaseUrl());
-    const beastIds = await getBeastTokenIds(web3, beastContract, account);
-    const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
-    let beast;
-    let tempBeasts: IItem[] = [];
-    let gif = "";
-    let jpg = "";
-    for (let i = 0; i < beastIds.length; i++) {
-      beast = await getBeastToken(web3, beastContract, beastIds[i]);
-      for (let j = 0; j < Image.beasts.length; j++) {
-        if (Image.beasts[j].name === beast.type) {
-          gif = Image.beasts[j].gif;
-          jpg = Image.beasts[j].jpg;
+    await getWarriors()
+    await getBeasts()
+    setLoading(false);
+  }
+
+  const getWarriors = async () => {
+    var tempWarriors: any[] = []
+    try {
+      const warriorsInfo = await getAllWarriors(warriorContract, account)
+      console.log(warriorsInfo)
+      let ids = warriorsInfo[0]
+      let strengths = warriorsInfo[1]
+      let powers = warriorsInfo[2]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: warriorInfo[parseInt(strengths[index]) - 1],
+          strength: strengths[index],
+          capacity: "",
+          power: powers[index],
+          w5b: true,
+          jpg: "",
+          gif: "",
         }
-      }
-      tempBeasts.push({
-        id: beastIds[i],
-        type: beast.type,
-        strength: beast.strength,
-        capacity: beast.capacity,
-        power: "",
-        w5b: false,
-        jpg: jpg,
-        gif: gif,
-      });
+        tempWarriors.push(temp)
+      })
+    } catch (error) {
+      console.log(error)
     }
-    let warrior;
-    let tempWarriors: IItem[] = [];
-    for (let i = 0; i < warriorIds.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
+    setWarriors(tempWarriors);
+  }
+
+  const getBeasts = async () => {
+    var tempBeasts: any[] = []
+    try {
+      const beastsInfo = await getAllBeasts(beastContract, account)
+      console.log(beastsInfo)
+      let ids = beastsInfo[0]
+      let types = beastsInfo[1]
+      let capacities = beastsInfo[2]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: types[index],
+          strength: capacities[index],
+          capacity: capacities[index],
+          power: "",
+          w5b: false,
+          jpg: "",
+          gif: "",
         }
-      }
-      tempWarriors.push({
-        id: warriorIds[i],
-        type: warrior.type,
-        strength: warrior.strength,
-        capacity: "",
-        power: warrior.power,
-        w5b: true,
-        jpg: jpg,
-        gif: gif,
-      });
+        tempBeasts.push(temp)
+      })
+    } catch (error) {
+      console.log(error)
     }
     setBeasts(tempBeasts);
-    setWarriors(tempWarriors);
-    setLoading(false);
-  };
+  }
 
   const moveToLeft = (index: number, w5b: boolean) => {
     const dropItemClone = [...dropItemList];
