@@ -242,6 +242,10 @@ const Warriors = () => {
       if (allowance === '0') {
         await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
       }
+      await mintWarrior(web3, warriorContract, account, amount);
+      dispatch(setReloadStatus({
+        reloadContractStatus: new Date()
+      }));
       ApiService.updateWarrior(account).then(
         response => {
           if (response.data.status === 'success') {
@@ -254,10 +258,6 @@ const Warriors = () => {
           setMintLoading(false);
         }
       );
-      await mintWarrior(web3, warriorContract, account, amount);
-      dispatch(setReloadStatus({
-        reloadContractStatus: new Date()
-      }));
     } catch (e) {
       console.log(e);
     }
