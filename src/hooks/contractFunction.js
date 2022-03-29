@@ -534,3 +534,7 @@ export const getUnclaimedUSD = async (contract, account) => {
 export const getAllBeasts = async (contract, account) => {
   return await contract.methods.getAllBeasts(account).call();
 };
+
+export const getAllWarriors = async (contract, account) => {
+  return await contract.methods.getAllWarriors(account).call();
+};

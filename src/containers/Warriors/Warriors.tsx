@@ -39,7 +39,8 @@ import {
   execute,
   getSummoningPrice,
   getFee,
-  getUSDAmountFromBLST
+  getUSDAmountFromBLST,
+  getAllWarriors
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -55,6 +56,7 @@ import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
 import Image from "../../config/image.json";
 import { FaTimes } from "react-icons/fa";
+import warriorInfo from "../../constant/warriors";
 
 const useStyles = makeStyles({
   root: {
@@ -259,32 +261,35 @@ const Warriors = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
-    setBaseUrl(await getBaseUrl());
-    setBalance(
-      parseInt(await getWarriorBalance(web3, warriorContract, account))
-    );
-    const ids = await getWarriorTokenIds(web3, warriorContract, account);
-    let amount = 0;
-    let warrior;
-    let tempWarriors = [];
-    let gif = "";
-    let jpg = "";
-    for (let i = 0; i < ids.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
+    var tempWarriors: any[] = []
+    var amount = 0
+    try {
+      setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+      setBalance(
+        parseInt(await getWarriorBalance(web3, warriorContract, account))
+      );
+      const warriorsInfo = await getAllWarriors(warriorContract, account)
+      console.log(warriorsInfo)
+      let ids = warriorsInfo[0]
+      let strengths = warriorsInfo[1]
+      let powers = warriorsInfo[2]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: warriorInfo[parseInt(strengths[index]) - 1],
+          strength: strengths[index],
+          power: powers[index]
         }
-      }
-      tempWarriors.push({ ...warrior, id: ids[i], gif: gif, jpg: jpg });
-      amount += parseInt(warrior.power);
+        tempWarriors.push(temp)
+        amount += parseInt(powers[index])
+      })
+    } catch (error) {
+      console.log(error)
     }
     setMaxPower(amount);
     setWarriors(tempWarriors);
     setLoading(false);
-  };
+  }
 
   const handleChangeAp = (
     event: Event,

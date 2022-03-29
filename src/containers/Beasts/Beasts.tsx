@@ -259,34 +259,34 @@ const Beasts = () => {
   };
 
   const getBalance = async () => {
-    setLoading(true);
-    // console.log(await getAllBeasts(beastContract, account))
-    setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
-    setBaseUrl(await getBaseUrl());
-    setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
-    const ids = await getBeastTokenIds(web3, beastContract, account);
-    let amount = 0;
-    let beast;
-    let tempBeasts = [];
-    let gif = "";
-    let jpg = "";
-    for (let i = 0; i < ids.length; i++) {
-      beast = await getBeastToken(web3, beastContract, ids[i]);
-      console.log(beast);
-      for (let j = 0; j < Image.beasts.length; j++) {
-        if (Image.beasts[j].name === beast.type) {
-          gif = Image.beasts[j].gif;
-          jpg = Image.beasts[j].jpg;
+    setLoading(true)
+    var tempBeasts: any[] = []
+    var amount = 0
+    try {
+      setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+      setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
+      const beastsInfo = await getAllBeasts(beastContract, account)
+      console.log(beastsInfo)
+      let ids = beastsInfo[0]
+      let types = beastsInfo[1]
+      let capacities = beastsInfo[2]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: types[index],
+          capacity: capacities[index],
+          strength: capacities[index]
         }
-      }
-      tempBeasts.push({ ...beast, id: ids[i], gif: gif, jpg: jpg });
-      amount += parseInt(beast.capacity);
+        tempBeasts.push(temp)
+        amount += parseInt(capacities[index])
+      })
+    } catch (error) {
+      console.log(error)
     }
-    console.log(tempBeasts);
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
     setLoading(false);
-  };
+  }
 
   const handleSupplyClose = () => {
     setOpenSupply(false);
