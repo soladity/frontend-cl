@@ -17,7 +17,7 @@ const address = {
   },
   monster: {
     97: "0x47a2e55ac176b3276e74693d94ef93c04f075cb5",
-    56: "0xf9cb034fcdc1824d41e0744bac8d6f04987afb73 ",
+    56: "0xf9cb034fcdc1824d41e0744bac8d6f04987afb73",
   },
   rewardPool: {
     97: "0x23ab0b269fd923164a88c9745f9000114bcdc277",

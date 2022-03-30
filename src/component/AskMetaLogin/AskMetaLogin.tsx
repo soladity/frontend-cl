@@ -108,7 +108,7 @@ const AskMetaLogin = () => {
       if (error.toString().indexOf("Unsupported") > -1) {
         addNetwork()
         switchNetwork();
-        setErrorMsg("Please choose BSC Test Network!");
+        setErrorMsg("Please choose BSC Network!");
         setOpenSnackBar(true);
       }
 
