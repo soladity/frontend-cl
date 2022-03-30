@@ -209,6 +209,19 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_period",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetMinSyncPeriod",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "from",
@@ -649,6 +662,19 @@
     },
     {
       "inputs": [],
+      "name": "lastSyncTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "marketplace",
       "outputs": [
         {
@@ -670,6 +696,19 @@
     {
       "inputs": [],
       "name": "maxBeasts",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "minSyncPeriod",
       "outputs": [
         {
           "internalType": "uint256",
@@ -947,6 +986,19 @@
         }
       ],
       "name": "setMaxBeastNumber",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_period",
+          "type": "uint256"
+        }
+      ],
+      "name": "setMinSyncPeriod",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

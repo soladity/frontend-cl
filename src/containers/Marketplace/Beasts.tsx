@@ -116,8 +116,6 @@ const Beasts = () => {
     const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('buyEvent', event)
-      console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
         dispatch(
@@ -131,12 +129,9 @@ const Beasts = () => {
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('sellEvent', event)
-      console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const beast = await getBeastToken(web3, beastContract, event.returnValues._tokenId);
         const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues._tokenId);
-        console.log(marketItem)
         const newItem = {
           ...beast,
           id: event.returnValues._tokenId,
@@ -155,8 +150,6 @@ const Beasts = () => {
     const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('updateEvent', event)
-      console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         var temp = beasts.map(item => {
           if (item.id == event.returnValues._tokenId) {
@@ -179,26 +172,20 @@ const Beasts = () => {
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
     }
@@ -215,7 +202,6 @@ const Beasts = () => {
     for (let i = 0; i < ids.length; i++) {
       beast = await getBeastToken(web3, beastContract, ids[i]);
       marketItem = await getMarketItem(web3, marketplaceContract, "1", ids[i]);
-      console.log(marketItem)
       tempBeasts.push({
         ...beast,
         id: ids[i],
@@ -233,7 +219,6 @@ const Beasts = () => {
       await cancelMarketplace(web3, marketplaceContract, account, "1", id);
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -261,7 +246,6 @@ const Beasts = () => {
       );
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -348,7 +332,6 @@ const Beasts = () => {
       }
       setBeasts([...temp]);
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };

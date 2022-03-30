@@ -206,7 +206,6 @@ const Beasts = () => {
       };
       setBeastBlstAmountPer(amount_per);
     } catch (error) {
-      console.log(error);
     }
 
     return BLST_amount_1;
@@ -252,7 +251,6 @@ const Beasts = () => {
         })
       );
     } catch (e) {
-      console.log(e);
     }
     getBalance();
     setMintLoading(false);
@@ -266,7 +264,6 @@ const Beasts = () => {
       setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
       setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
       const beastsInfo = await getAllBeasts(beastContract, account)
-      console.log(beastsInfo)
       let ids = beastsInfo[0]
       let types = beastsInfo[1]
       let capacities = beastsInfo[2]
@@ -281,7 +278,6 @@ const Beasts = () => {
         amount += parseInt(capacities[index])
       })
     } catch (error) {
-      console.log(error)
     }
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
@@ -339,7 +335,6 @@ const Beasts = () => {
         beasts.filter((item: any) => parseInt(item.id) !== selectedBeast)
       );
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -356,7 +351,6 @@ const Beasts = () => {
         })
       );
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };

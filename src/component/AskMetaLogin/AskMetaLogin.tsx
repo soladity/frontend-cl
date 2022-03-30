@@ -101,7 +101,6 @@ const AskMetaLogin = () => {
 
   React.useEffect(() => {
     if (error) {
-      console.log(error)
       if (error.toString().indexOf("No Ethereum") > -1) {
         setErrorMsg("Please Install MetaMask!");
         setOpenSnackBar(true);
@@ -109,7 +108,7 @@ const AskMetaLogin = () => {
       if (error.toString().indexOf("Unsupported") > -1) {
         addNetwork()
         switchNetwork();
-        setErrorMsg("Please choose BSC Test Network!");
+        setErrorMsg("Please choose BSC Network!");
         setOpenSnackBar(true);
       }
 

@@ -248,7 +248,6 @@ const CreateLegions: React.FC = () => {
     var tempWarriors: any[] = []
     try {
       const warriorsInfo = await getAllWarriors(warriorContract, account)
-      console.log(warriorsInfo)
       let ids = warriorsInfo[0]
       let strengths = warriorsInfo[1]
       let powers = warriorsInfo[2]
@@ -266,7 +265,6 @@ const CreateLegions: React.FC = () => {
         tempWarriors.push(temp)
       })
     } catch (error) {
-      console.log(error)
     }
     setWarriors(tempWarriors);
   }
@@ -275,7 +273,6 @@ const CreateLegions: React.FC = () => {
     var tempBeasts: any[] = []
     try {
       const beastsInfo = await getAllBeasts(beastContract, account)
-      console.log(beastsInfo)
       let ids = beastsInfo[0]
       let types = beastsInfo[1]
       let capacities = beastsInfo[2]
@@ -293,7 +290,6 @@ const CreateLegions: React.FC = () => {
         tempBeasts.push(temp)
       })
     } catch (error) {
-      console.log(error)
     }
     setBeasts(tempBeasts);
   }
