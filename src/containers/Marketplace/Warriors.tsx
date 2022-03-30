@@ -119,8 +119,6 @@ const Warriors = () => {
     const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('buyEvent', event)
-      console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
         dispatch(
@@ -134,8 +132,6 @@ const Warriors = () => {
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('sellEvent', event)
-      console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const warrior = await getWarriorToken(web3, warriorContract, event.returnValues._tokenId);
         const marketItem = await getMarketItem(web3, marketplaceEventContract, "2", event.returnValues._tokenId);
@@ -157,8 +153,6 @@ const Warriors = () => {
     const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('updateEvent', event)
-      console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         var temp = warriors.map(item => {
           if (item.id == event.returnValues._tokenId) {
@@ -181,26 +175,20 @@ const Warriors = () => {
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
     }
@@ -217,7 +205,6 @@ const Warriors = () => {
     for (let i = 0; i < ids.length; i++) {
       warrior = await getWarriorToken(web3, warriorContract, ids[i]);
       marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
-      console.log(marketItem)
       tempWarriors.push({
         ...warrior,
         id: ids[i],
@@ -251,7 +238,6 @@ const Warriors = () => {
       await cancelMarketplace(web3, marketplaceContract, account, "2", id);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -279,7 +265,6 @@ const Warriors = () => {
       );
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -385,7 +370,6 @@ const Warriors = () => {
       }
       setWarriors([...temp]);
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };

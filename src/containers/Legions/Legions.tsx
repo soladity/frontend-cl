@@ -261,7 +261,6 @@ const Legions = () => {
         })
       );
     } catch (e) {
-      console.log(e);
     }
     setSupplyLoading(false);
     getBalance();
@@ -284,7 +283,6 @@ const Legions = () => {
       );
       setSupplyValues(tempArr);
     } catch (error) {
-      console.log(error);
     }
     setSupplyCostLoading(false);
   };
@@ -349,7 +347,6 @@ const Legions = () => {
         legions.filter((item: any) => parseInt(item.id) !== selectedLegion)
       );
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };

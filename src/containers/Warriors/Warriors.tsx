@@ -204,10 +204,10 @@ const Warriors = () => {
           per: BLST_per_150,
         },
       };
-      console.log(amount_per)
+
       setWarriorBlstAmountPer(amount_per);
     } catch (error) {
-      console.log(error);
+
     }
 
     return BLST_amount_1;
@@ -253,7 +253,7 @@ const Warriors = () => {
         })
       );
     } catch (e) {
-      console.log(e);
+
     }
     getBalance();
     setMintLoading(false);
@@ -269,7 +269,7 @@ const Warriors = () => {
         parseInt(await getWarriorBalance(web3, warriorContract, account))
       );
       const warriorsInfo = await getAllWarriors(warriorContract, account)
-      console.log(warriorsInfo)
+
       let ids = warriorsInfo[0]
       let strengths = warriorsInfo[1]
       let powers = warriorsInfo[2]
@@ -284,7 +284,7 @@ const Warriors = () => {
         amount += parseInt(powers[index])
       })
     } catch (error) {
-      console.log(error)
+
     }
     setMaxPower(amount);
     setWarriors(tempWarriors);
@@ -343,7 +343,7 @@ const Warriors = () => {
         account,
         selectedWarrior
       );
-      console.log(selectedWarrior)
+
       await sellToken(
         web3,
         marketplaceContract,
@@ -364,7 +364,7 @@ const Warriors = () => {
         warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior)
       );
     } catch (e) {
-      console.log(e);
+
     }
     setActionLoading(false);
   };
@@ -381,7 +381,7 @@ const Warriors = () => {
         })
       );
     } catch (e) {
-      console.log(e);
+
     }
     setActionLoading(false);
   };

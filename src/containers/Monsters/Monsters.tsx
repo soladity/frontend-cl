@@ -243,7 +243,6 @@ const Monsters = () => {
     const huntEvent = legionEventContract.events.Hunted({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log(event)
       if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
         var huntResult = {
           legionId: event.returnValues.legionId,
@@ -261,10 +260,8 @@ const Monsters = () => {
     return () => {
       huntEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
     }
@@ -275,7 +272,6 @@ const Monsters = () => {
     let monsterArrary = [];
     try {
       const monsterVal = await getAllMonsters(monsterContract);
-      console.log(monsterVal)
       const monsterArraryTemp = monsterVal[0]
       const rewardArray = monsterVal[1]
       monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
@@ -288,9 +284,7 @@ const Monsters = () => {
         };
       });
     } catch (error) {
-      console.log(error);
     }
-    console.log(monsterArrary)
     setMonsters(monsterArrary);
 
     if (legions[0]) {
@@ -317,7 +311,6 @@ const Monsters = () => {
       }
       setWarriorCapacity(warriorCapacity)
     } catch (error) {
-      console.log(error)
     }
   }
 
@@ -338,7 +331,6 @@ const Monsters = () => {
         if (legionStatus === '1') {
           setMassBtnEnable(true)
         }
-        console.log()
         legionArrayTmp.push({
           ...legionTmp,
           id: legionIDS[i],
@@ -363,7 +355,6 @@ const Monsters = () => {
         }
       }
     } catch (error) {
-      console.log(error)
     }
   };
 
@@ -400,7 +391,6 @@ const Monsters = () => {
       setLegions(legionArrayTmp);
       setCurLegion(legionArrayTmp[0]);
     } catch (error) {
-      console.log(error)
     }
     setLoading(false);
   };
@@ -432,7 +422,6 @@ const Monsters = () => {
     try {
       const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
       if (BUSD >= (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax) {
-        console.log(BUSD)
         setDialogVisible(true);
         setCurMonsterID(monsterTokenID);
         setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
@@ -463,7 +452,7 @@ const Monsters = () => {
             })
           );
         } catch (e: any) {
-          console.log("hunt result", e, "hunt result");
+
           setDialogVisible(false);
           if (e.code == 4001) {
           } else {
@@ -520,7 +509,7 @@ const Monsters = () => {
       );
       await updateMonster();
     } catch (e) {
-      console.log(e);
+
     }
     setSupplyLoading(false);
   };
@@ -581,18 +570,18 @@ const Monsters = () => {
       );
       setSupplyValues(tempArr);
     } catch (error) {
-      console.log(error);
+
     }
     setSupplyCostLoading(false);
   };
 
   const massHunting = async () => {
-    console.log('start mass hunt')
+
     setCheckingMassHuntBUSD(true)
     const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
     const totalBUSD = await checkMassHuntBUSD()
     if (BUSD >= totalBUSD * huntTax) {
-      console.log(totalBUSD)
+
       dispatch(initMassHuntResult())
       setOpenMassHunt(true)
       setMassHuntLoading(true)
@@ -608,7 +597,7 @@ const Monsters = () => {
         await massHunt(legionContract, account)
       } catch (error) {
         setOpenMassHunt(false)
-        console.log(error)
+
       }
       setMassHuntLoading(false)
     } else {
@@ -616,7 +605,7 @@ const Monsters = () => {
       setOpenSnackBar(true)
     }
     setCheckingMassHuntBUSD(false)
-    console.log('end mass hunt')
+
   }
 
   const handleMassHuntClose = (reason: string) => {
@@ -633,11 +622,11 @@ const Monsters = () => {
       const huntStatus = await canHunt(web3, legionContract, legionIDS[i])
       if (huntStatus == '1') {
         const legion = await getLegionToken(web3, legionContract, legionIDS[i])
-        console.log(huntStatus, legion)
+
         const monsterId = await getMonsterToHunt(monsterContract, legion.realPower)
-        console.log(monsterId)
+
         totalBUSD += (monsters[parseInt(monsterId) - 1] as MonsterInterface).BUSDReward
-        console.log(totalBUSD)
+
       }
     }
     return totalBUSD

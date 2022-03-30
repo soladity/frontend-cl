@@ -149,10 +149,8 @@ const Help = () => {
             }
           )
           .then((r) => {
-            console.log(r);
           })
           .catch((err) => {
-            console.log(err);
           });
         if (res.status === 201) {
           setSnackbarType("success");

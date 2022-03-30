@@ -63,7 +63,6 @@ const NadodoWatch = () => {
       setSuppliesFee14(await getFee(feeHandlerContract, 4));
       setSuppliesFee28(await getFee(feeHandlerContract, 5));
     } catch (error) {
-      console.log(error);
     }
   };
 

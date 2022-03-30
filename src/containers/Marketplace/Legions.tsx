@@ -116,8 +116,6 @@ const Legions = () => {
     const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('buyEvent', event)
-      console.log(legions)
       if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setLegions(legions.filter(legion => legion.id != event.returnValues._tokenId))
         dispatch(
@@ -131,8 +129,6 @@ const Legions = () => {
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('sellEvent', event)
-      console.log(legions)
       if (legions.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const legion = await getLegionToken(web3, legionContract, event.returnValues._tokenId);
         const marketItem = await getMarketItem(web3, marketplaceEventContract, "3", event.returnValues._tokenId);
@@ -158,8 +154,6 @@ const Legions = () => {
     const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('updateEvent', event)
-      console.log(legions)
       if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         var temp = legions.map(item => {
           if (item.id == event.returnValues._tokenId) {
@@ -182,26 +176,20 @@ const Legions = () => {
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
     }
@@ -314,7 +302,6 @@ const Legions = () => {
       await cancelMarketplace(web3, marketplaceContract, account, "3", id);
       setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -342,7 +329,6 @@ const Legions = () => {
       );
       setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -448,7 +434,6 @@ const Legions = () => {
       }
       setLegions([...temp]);
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };

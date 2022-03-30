@@ -135,7 +135,6 @@ const YourInventory = () => {
       setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(1 * Math.pow(10, 18))))
       setTotalBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(BLSTBalance * Math.pow(10, 18))))
     } catch (error) {
-      console.log(error);
     }
   };
 
