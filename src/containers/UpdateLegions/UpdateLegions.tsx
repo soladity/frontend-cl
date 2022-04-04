@@ -61,6 +61,7 @@ import { Spinner } from "../../component/Buttons/Spinner";
 import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
 import warriorInfo from "../../constant/warriors";
+import beastsTypeInfo from "../../constant/beasts";
 
 const useStyles = makeStyles({
   root: {
@@ -346,12 +347,11 @@ const UpdateLegions: React.FC = () => {
       const beastsInfo = await getAllBeasts(beastContract, account)
 
       let ids = beastsInfo[0]
-      let types = beastsInfo[1]
-      let capacities = beastsInfo[2]
+      let capacities = beastsInfo[1]
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: types[index],
+          type: beastsTypeInfo[capacities[index] == 20 ? 5 : capacities[index] - 1],
           strength: capacities[index],
           capacity: capacities[index],
           power: "",

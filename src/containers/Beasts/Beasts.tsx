@@ -55,6 +55,7 @@ import { getTranslation } from "../../utils/translation";
 import Image from "../../config/image.json";
 import { FaTimes } from "react-icons/fa";
 import { formatNumber } from "../../utils/common";
+import beastsTypeInfo from "../../constant/beasts";
 
 const useStyles = makeStyles({
   root: {
@@ -264,13 +265,13 @@ const Beasts = () => {
       setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
       setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
       const beastsInfo = await getAllBeasts(beastContract, account)
+      console.log(beastsInfo)
       let ids = beastsInfo[0]
-      let types = beastsInfo[1]
-      let capacities = beastsInfo[2]
+      let capacities = beastsInfo[1]
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: types[index],
+          type: beastsTypeInfo[capacities[index] == 20 ? 5 : capacities[index] - 1],
           capacity: capacities[index],
           strength: capacities[index]
         }
@@ -279,6 +280,7 @@ const Beasts = () => {
       })
     } catch (error) {
     }
+    console.log(tempBeasts)
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
     setLoading(false);
