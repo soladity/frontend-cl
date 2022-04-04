@@ -251,6 +251,7 @@ const Warriors = () => {
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
+
       );
     } catch (e) {
 
