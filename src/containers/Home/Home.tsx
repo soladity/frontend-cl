@@ -23,7 +23,6 @@ export interface SimpleDialogProps {
 const Home = () => {
 
   const language = localStorage.getItem('lang')
-  console.log(language)
 
   return (
     <Box>

@@ -46,7 +46,6 @@ import {
     useMonster,
     useBUSD,
     useLegionEvent,
-
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
@@ -340,10 +339,8 @@ const TakeAction = () => {
                     per: BLST_per_150,
                 },
             };
-            console.log(amount_per)
             setWarriorBlstAmountPer(amount_per);
         } catch (error) {
-            console.log(error);
         }
 
         return BLST_amount_1;
@@ -408,7 +405,6 @@ const TakeAction = () => {
             };
             setBeastBlstAmountPer(amount_per);
         } catch (error) {
-            console.log(error);
         }
 
         return BLST_amount_1;
@@ -416,13 +412,9 @@ const TakeAction = () => {
 
 
     const massHunting = async () => {
-        console.log('start mass hunt')
         setCheckingMassHuntBUSD(true)
         const BUSD = await getBUSDBalance(busdContract, account) / Math.pow(10, 18)
         const totalBUSD = await checkMassHuntBUSD()
-        console.log(BUSD)
-        console.log(totalBUSD)
-        console.log(huntTax)
         if (BUSD >= totalBUSD * huntTax) {
             dispatch(initMassHuntResult())
             setOpenMassHunt(true)
@@ -440,7 +432,6 @@ const TakeAction = () => {
                     await massHunt(legionContract, account)
                 } catch (error) {
                     setOpenMassHunt(false)
-                    console.log(error)
                 }
                 setMassHuntLoading(false)
             }
@@ -450,7 +441,6 @@ const TakeAction = () => {
             setOpenSnackBar(true)
         }
         setCheckingMassHuntBUSD(false)
-        console.log('end mass hunt')
     }
 
     const updateState = () => {
@@ -524,7 +514,6 @@ const TakeAction = () => {
         const huntEvent = legionEventContract.events.Hunted({
         }).on('connected', function (subscriptionId: any) {
         }).on('data', async function (event: any) {
-            console.log(event)
             if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
                 var huntResult = {
                     legionId: event.returnValues.legionId,
@@ -535,7 +524,6 @@ const TakeAction = () => {
                     legionName: event.returnValues.name,
                     reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
                 }
-                console.log(huntResult)
                 dispatch(setMassHuntResult(huntResult))
             }
         })
@@ -543,17 +531,14 @@ const TakeAction = () => {
         return () => {
             huntEvent.unsubscribe((error: any, success: any) => {
                 if (success) {
-                    console.log('Successfully unsubscribed!')
                 }
                 if (error) {
-                    console.log('There is an error')
                 }
             })
         }
     }, []);
 
     React.useEffect(() => {
-        console.log(massHuntResult)
     }, [massHuntResult])
 
     return (

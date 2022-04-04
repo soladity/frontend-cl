@@ -41,9 +41,8 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
-  useMarketplaceEvent
+  useMarketplaceEvent,
 } from "../../hooks/useContract";
-import ApiService from "../../services/api.service";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import BeastMarketCard from "../../component/Cards/BeastMarketCard";
 import { getTranslation } from "../../utils/translation";
@@ -117,8 +116,6 @@ const Beasts = () => {
     const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('buyEvent', event)
-      console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
         dispatch(
@@ -132,12 +129,9 @@ const Beasts = () => {
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('sellEvent', event)
-      console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const beast = await getBeastToken(web3, beastContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceContract, "1", event.returnValues._tokenId);
-        console.log(marketItem)
+        const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues._tokenId);
         const newItem = {
           ...beast,
           id: event.returnValues._tokenId,
@@ -156,8 +150,6 @@ const Beasts = () => {
     const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('updateEvent', event)
-      console.log(beasts)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         var temp = beasts.map(item => {
           if (item.id == event.returnValues._tokenId) {
@@ -180,26 +172,20 @@ const Beasts = () => {
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
     }
@@ -208,48 +194,31 @@ const Beasts = () => {
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
-    ApiService.getBeasts(account, 1).then(
-      response => {
-        if (response.data.status === 'success') {
-          let tempBeasts = [];
-          for (let i = 0; i < response.data.data.length; i++) {
-            tempBeasts.push({
-              id: response.data.data[i].mintId,
-              type: response.data.data[i].type,
-              strength: response.data.data[i].strength,
-              capacity: response.data.data[i].capacity,
-              owner: response.data.data[i].account === account ? true : false,
-              price: response.data.data[i].price,
-            });
-          }
-          setBeasts(tempBeasts);
-        }
-        setLoading(false);
-      },
-      error => {
-        console.log('Error!');
-        setLoading(false);
-      }
-    );
+
+    const ids = await getOnMarketplace(web3, beastContract);
+    let beast;
+    let marketItem;
+    let tempBeasts = [];
+    for (let i = 0; i < ids.length; i++) {
+      beast = await getBeastToken(web3, beastContract, ids[i]);
+      marketItem = await getMarketItem(web3, marketplaceContract, "1", ids[i]);
+      tempBeasts.push({
+        ...beast,
+        id: ids[i],
+        owner: marketItem.owner === account ? true : false,
+        price: marketItem.price,
+      });
+    }
+    setBeasts(tempBeasts);
+    setLoading(false);
   };
 
   const handleCancel = async (id: number) => {
     setActionLoading(true);
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "1", id);
-      ApiService.cancelBeast(id).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -270,16 +239,6 @@ const Beasts = () => {
         );
       }
       await buyToken(web3, marketplaceContract, account, "1", id, BigInt(price));
-      ApiService.buyBeast(id, account).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -287,7 +246,6 @@ const Beasts = () => {
       );
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -366,16 +324,6 @@ const Beasts = () => {
         selectedBeast,
         BigInt(price * Math.pow(10, 18))
       );
-      ApiService.updateBeastPrice(selectedBeast, (price * Math.pow(10, 18)).toString()).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       let temp = [];
       for (let i = 0; i < beasts.length; i++) {
         if (parseInt(beasts[i].id) === selectedBeast)
@@ -384,7 +332,6 @@ const Beasts = () => {
       }
       setBeasts([...temp]);
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };

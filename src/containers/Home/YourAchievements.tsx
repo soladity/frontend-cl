@@ -121,7 +121,6 @@ const YourAchievements = () => {
         }
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -136,7 +135,6 @@ const YourAchievements = () => {
         }
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -155,7 +153,6 @@ const YourAchievements = () => {
         }
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -163,7 +160,6 @@ const YourAchievements = () => {
     try {
       setMonsterConqueror(await getMonster23Hunted(legionContract, account))
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -171,7 +167,6 @@ const YourAchievements = () => {
     try {
       setKingOfNicah(await getMonster24Hunted(legionContract, account))
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -183,7 +178,6 @@ const YourAchievements = () => {
       )
         .then((res) => {
           if (res.data.hasAlready) {
-            console.log("already-----", res);
             window.open(
               baseInviteUrl + res.data.hasAlready.random_string,
               "_blank"
@@ -193,16 +187,13 @@ const YourAchievements = () => {
               `https://www.cryptolegions.link/api/get-roles/${role}/12/${account}`
             )
               .then((res) => {
-                console.log("new-----", res);
                 window.open(res.data.link, "_blank");
               })
               .catch((err) => {
-                console.log(err);
               });
           }
         })
         .catch((err) => {
-          console.log(err);
         });
     }
   };

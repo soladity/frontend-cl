@@ -1,7 +1,7 @@
 const address = {
   blood: {
     97: "0xab2f797028b05b938aaa7636fcb57d083817628a",
-    56: "",
+    56: "0x340516b933597f131e827abdf0e3f700e24e84ff",
   },
   beast: {
     97: "0x350ba7555119d3a04c8b3da1ae4879c45289bab4",
@@ -33,7 +33,7 @@ const address = {
   },
   busd: {
     97: "0x78867bbeef44f2326bf8ddd1941a4439382ef2a7",
-    56: "",
+    56: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
   },
 };
 

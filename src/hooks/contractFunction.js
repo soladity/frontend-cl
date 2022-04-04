@@ -176,10 +176,8 @@ export const hunt = async (web3, contract, account, legionID, monsterID) => {
   const response = await contract.methods
     .hunt(legionID, monsterID)
     .send({ from: account })
-    .on("receipt", function (receipt) {
-      console.log(receipt.events);
-    });
-  console.log(response);
+    .on("receipt", function (receipt) {});
+
   return response;
 };
 
@@ -238,7 +236,6 @@ export const addSupply = async (
   supply,
   fromWallet
 ) => {
-  console.log(fromWallet);
   const response = await contract.methods
     .addSupply(tokenId, supply, fromWallet)
     .send({ from: account });
@@ -361,6 +358,7 @@ export const buyToken = async (web3, contract, account, type, id, price) => {
 
 export const getMarketItem = async (web3, contract, type, id) => {
   const response = await contract.methods.getMarketItem(type, id).call();
+
   const item = {
     price: response[0],
     owner: response[1],
@@ -528,4 +526,12 @@ export const getTaxStartDay = async (contract, account) => {
 
 export const getUnclaimedUSD = async (contract, account) => {
   return await contract.methods.unclaimedUSD(account).call();
+};
+
+export const getAllBeasts = async (contract, account) => {
+  return await contract.methods.getAllBeasts(account).call();
+};
+
+export const getAllWarriors = async (contract, account) => {
+  return await contract.methods.getAllWarriors(account).call();
 };

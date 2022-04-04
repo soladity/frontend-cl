@@ -41,9 +41,8 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
-  useMarketplaceEvent
+  useMarketplaceEvent,
 } from "../../hooks/useContract";
-import ApiService from "../../services/api.service";
 import WarriorMarketCard from "../../component/Cards/WarriorMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
@@ -120,8 +119,6 @@ const Warriors = () => {
     const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('buyEvent', event)
-      console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
         dispatch(
@@ -135,12 +132,9 @@ const Warriors = () => {
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('sellEvent', event)
-      console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const warrior = await getWarriorToken(web3, warriorContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceContract, "2", event.returnValues._tokenId);
-        console.log(marketItem)
+        const marketItem = await getMarketItem(web3, marketplaceEventContract, "2", event.returnValues._tokenId);
         const newItem = {
           ...warrior,
           id: event.returnValues._tokenId,
@@ -159,8 +153,6 @@ const Warriors = () => {
     const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
-      console.log('updateEvent', event)
-      console.log(warriors)
       if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         var temp = warriors.map(item => {
           if (item.id == event.returnValues._tokenId) {
@@ -183,26 +175,20 @@ const Warriors = () => {
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
-          console.log('Successfully unsubscribed!')
         }
         if (error) {
-          console.log('There is an error')
         }
       })
     }
@@ -212,29 +198,22 @@ const Warriors = () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
 
-    ApiService.getWarriors(account, 1).then(
-      response => {
-        if (response.data.status === 'success') {
-          let tempWarriors = [];
-          for (let i = 0; i < response.data.data.length; i++) {
-            tempWarriors.push({
-              id: response.data.data[i].mintId,
-              type: response.data.data[i].type,
-              strength: response.data.data[i].strength,
-              power: response.data.data[i].power,
-              owner: response.data.data[i].account === account ? true : false,
-              price: response.data.data[i].price,
-            });
-          }
-          setWarriors(tempWarriors);
-        }
-        setLoading(false);
-      },
-      error => {
-        console.log('Error!');
-        setLoading(false);
-      }
-    );
+    const ids = await getOnMarketplace(web3, warriorContract);
+    let warrior;
+    let marketItem;
+    let tempWarriors = [];
+    for (let i = 0; i < ids.length; i++) {
+      warrior = await getWarriorToken(web3, warriorContract, ids[i]);
+      marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
+      tempWarriors.push({
+        ...warrior,
+        id: ids[i],
+        owner: marketItem.owner === account ? true : false,
+        price: marketItem.price,
+      });
+    }
+    setWarriors(tempWarriors);
+    setLoading(false);
   };
 
   const handleChangeAp = (
@@ -257,19 +236,8 @@ const Warriors = () => {
     setActionLoading(true);
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "2", id);
-      ApiService.cancelWarrior(id).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -290,16 +258,6 @@ const Warriors = () => {
         );
       }
       await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
-      ApiService.buyWarrior(id, (price * Math.pow(10, 18)).toString()).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -307,7 +265,6 @@ const Warriors = () => {
       );
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
@@ -405,16 +362,6 @@ const Warriors = () => {
         selectedWarrior,
         BigInt(price * Math.pow(10, 18))
       );
-      ApiService.updateWarriorPrice(selectedWarrior, (price * Math.pow(10, 18)).toString()).then(
-        response => {
-          if (response.data.status !== 'success') {
-            console.log('Fail')
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {
         if (parseInt(warriors[i].id) === selectedWarrior)
@@ -423,7 +370,6 @@ const Warriors = () => {
       }
       setWarriors([...temp]);
     } catch (e) {
-      console.log(e);
     }
     setActionLoading(false);
   };
