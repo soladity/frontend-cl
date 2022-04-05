@@ -330,10 +330,10 @@ const CreateLegions: React.FC = () => {
       bloodstoneContract,
       account
     );
-    if (allowance === "0") {
-      await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
-    }
     try {
+      if (allowance === "0") {
+        await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
+      }
       await mintLegion(
         web3,
         legionContract,
