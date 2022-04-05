@@ -271,7 +271,7 @@ const Beasts = () => {
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: beastsTypeInfo[capacities[index] == 20 ? 5 : capacities[index] - 1],
+          type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
           capacity: capacities[index],
           strength: capacities[index]
         }
