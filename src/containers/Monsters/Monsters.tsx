@@ -240,7 +240,23 @@ const Monsters = () => {
         ? localStorage.getItem("showAnimation")
         : "0"
     );
-    const huntEvent = legionEventContract.events.Hunted({
+    const huntEvent = legionContract.events.Hunted({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
+        var huntResult = {
+          legionId: event.returnValues.legionId,
+          monsterId: event.returnValues.monsterId,
+          percent: event.returnValues.percent,
+          roll: event.returnValues.roll,
+          success: event.returnValues.success,
+          legionName: event.returnValues.name,
+          reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(2)
+        }
+        dispatch(setMassHuntResult(huntResult))
+      }
+    })
+    const huntEvent1 = legionEventContract.events.Hunted({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       if (account == event.returnValues._addr && massHuntResult.filter((item: any) => item.legionId == event.returnValues.legionId).length == 0) {
@@ -259,6 +275,12 @@ const Monsters = () => {
 
     return () => {
       huntEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+        }
+        if (error) {
+        }
+      })
+      huntEvent1.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {

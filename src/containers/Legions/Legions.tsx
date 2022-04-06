@@ -55,7 +55,8 @@ import {
   getBloodstoneBalance,
   getUnclaimedBLST,
   getSupplyCost,
-  getUSDAmountFromBLST
+  getUSDAmountFromBLST,
+  getAllLegions
 } from "../../hooks/contractFunction";
 import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
@@ -174,6 +175,7 @@ const Legions = () => {
   };
 
   const getBalance = async () => {
+    console.log(await getAllLegions(legionContract, account))
     setLoading(true);
 
     setBlstBalance(
@@ -203,6 +205,7 @@ const Legions = () => {
       amount += legion.attackPower;
     }
     setTotalPower(amount);
+    console.log(tempLegions)
     let sortedArray = tempLegions.sort((a, b) => {
       if (a.attackPower > b.attackPower) {
         return -1;
@@ -213,7 +216,7 @@ const Legions = () => {
       return 0;
     });
     setLegions(sortedArray);
-    setTop3Lgions(sortedArray.slice(0,3));
+    setTop3Lgions(sortedArray.slice(0, 3));
     setLoading(false);
   };
 

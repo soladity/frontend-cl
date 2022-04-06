@@ -425,6 +425,52 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getAllLegions",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "beast_ids",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "warrior_ids",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "supplies",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "attack_power",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ILegionNFT.Legion[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
