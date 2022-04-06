@@ -537,9 +537,13 @@ export const getAllWarriors = async (contract, account) => {
 };
 
 export const getAllBeastMarketItems = async (contract) => {
-  return await contract.methods.getAllBeastItems().call()
-}
+  return await contract.methods.getAllBeastItems().call();
+};
 
 export const getAllWarriorMarketItems = async (contract) => {
-  return await contract.methods.getAllWarriorItems().call()
-}
+  return await contract.methods.getAllWarriorItems().call();
+};
+
+export const getAllLegions = async (contract, account) => {
+  return await contract.methods.getAllLegions(account).call();
+};

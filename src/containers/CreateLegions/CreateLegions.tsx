@@ -291,6 +291,7 @@ const CreateLegions: React.FC = () => {
       })
     } catch (error) {
     }
+    console.log(tempBeasts)
     setBeasts(tempBeasts);
   }
 
