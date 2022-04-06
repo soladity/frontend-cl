@@ -102,6 +102,7 @@ const Legions = () => {
   const [baseUrl, setBaseUrl] = React.useState("");
   const [totalPower, setTotalPower] = React.useState(0);
   const [legions, setLegions] = React.useState<LegionProps[]>(Array);
+  const [top3Legions, setTop3Lgions] = React.useState<LegionProps[]>(Array);
   const [highest, setHighest] = React.useState(true);
   const [huntStatus, setHuntStatus] = React.useState("all");
   const [hideWeak, setHideWeak] = React.useState(false);
@@ -212,6 +213,7 @@ const Legions = () => {
       return 0;
     });
     setLegions(sortedArray);
+    setTop3Lgions(sortedArray.slice(0,3));
     setLoading(false);
   };
 
@@ -488,7 +490,7 @@ const Legions = () => {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {getTranslation("top3Legions")}
               </Typography>
-              {legions
+              {top3Legions
                 .filter((item: any, index) => index < 3)
                 .map((item: any, index) => (
                   <Box sx={{ display: "flex" }} key={index}>
