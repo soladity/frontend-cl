@@ -52,6 +52,7 @@ import {
 } from "../../hooks/useContract";
 import WarriorCard from "../../component/Cards/WarriorCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
+import Navigation from "../../component/Navigation/Navigation";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
 import Image from "../../config/image.json";
@@ -94,6 +95,7 @@ const Warriors = () => {
   const [selectedWarrior, setSelectedWarrior] = React.useState(0);
   const [price, setPrice] = React.useState(0);
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
+  const [currentPage, setCurrentPage] = React.useState(1);
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
   const [loading, setLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
@@ -374,6 +376,13 @@ const Warriors = () => {
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, false, id);
+      let power = 0;
+      let temp = warriors;
+      for (let i = 0; i < temp.length; i++) {
+        if (parseInt(temp[i]["id"]) === id)
+          power = parseInt(temp[i]["power"]);
+      }
+      setMaxPower(maxPower - power);
       setBalance(balance - 1);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
       dispatch(
@@ -385,6 +394,10 @@ const Warriors = () => {
 
     }
     setActionLoading(false);
+  };
+
+  const handlePage = (value: any) => {
+    setCurrentPage(value);
   };
 
   return (
@@ -698,6 +711,7 @@ const Warriors = () => {
                     ? true
                     : apValue[1] >= parseInt(item.power))
               )
+              .slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20)
               .map((item: any, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <WarriorCard
@@ -757,6 +771,14 @@ const Warriors = () => {
                 </Grid>
               )}
           </Grid>
+          {warriors.length > 0 && (
+            <Navigation
+              totalCount={warriors.length}
+              cPage={currentPage}
+              handlePage={handlePage}
+              perPage={20}
+            />
+          )}
         </React.Fragment>
       )}
       {loading === true && (
