@@ -33,7 +33,8 @@ import {
   buyToken,
   getMarketItem,
   updatePrice,
-  getUSDAmountFromBLST
+  getUSDAmountFromBLST,
+  getAllWarriorMarketItems
 } from "../../hooks/contractFunction";
 import {
   useWarrior,
@@ -48,6 +49,7 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber } from "../../utils/common";
 import Image from "../../config/image.json";
+import warriorInfo from "../../constant/warriors";
 
 const useStyles = makeStyles({
   root: {
@@ -197,22 +199,45 @@ const Warriors = () => {
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
+    let allWarriors;
+    let tempAllWarriors: any[] = []
 
-    const ids = await getOnMarketplace(web3, warriorContract);
-    let warrior;
-    let marketItem;
-    let tempWarriors = [];
-    for (let i = 0; i < ids.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-      marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
-      tempWarriors.push({
-        ...warrior,
-        id: ids[i],
-        owner: marketItem.owner === account ? true : false,
-        price: marketItem.price,
-      });
-    }
-    setWarriors(tempWarriors);
+    allWarriors = await getAllWarriorMarketItems(marketplaceContract)
+    console.log(allWarriors)
+    let ids = allWarriors[0]
+    let strengths = allWarriors[1]
+    let aps = allWarriors[2]
+    let prices = allWarriors[3]
+    let sellers = allWarriors[4]
+
+    ids.forEach((id: any, index: number) => {
+      tempAllWarriors.push({
+        id: ids,
+        strength: strengths[index],
+        power: aps[index],
+        price: prices[index],
+        owner: sellers[index] === account ? true : false,
+        type: warriorInfo[parseInt(strengths[index]) - 1],
+      })
+    })
+
+    // const ids = await getOnMarketplace(web3, warriorContract);
+    // let warrior;
+    // let marketItem;
+    // let tempWarriors = [];
+    // for (let i = 0; i < ids.length; i++) {
+    //   warrior = await getWarriorToken(web3, warriorContract, ids[i]);
+    //   marketItem = await getMarketItem(web3, marketplaceContract, "2", ids[i]);
+    //   tempWarriors.push({
+    //     ...warrior,
+    //     id: ids[i],
+    //     owner: marketItem.owner === account ? true : false,
+    //     price: marketItem.price,
+    //   });
+    //   console.log(tempWarriors)
+    // }
+    console.log(tempAllWarriors)
+    setWarriors(tempAllWarriors);
     setLoading(false);
   };
 

@@ -4,31 +4,31 @@ const address = {
     56: "0x340516b933597f131e827abdf0e3f700e24e84ff",
   },
   beast: {
-    97: "0xdf080d8c030535ab7d82a637fb90601edaaaa0f0",
+    97: "0x1d3954aab4142c3c09c1f16efaf32bbb579b2161",
     56: "",
   },
   warrior: {
-    97: "0xca0b15295c88f29a00a83a16954abce87498a97d",
+    97: "0x2609015ac6f4c7e6566ac546e7df7fb219ddb171",
     56: "",
   },
   legion: {
-    97: "0xFdA7Dc9cD164fc2C5F7187492EbD3291c1651a26",
+    97: "0xA6C69a93A5994600421603Ac9e479641A71af9c3",
     56: "",
   },
   monster: {
-    97: "0xa14f4f9d957db0ed4ba98c5f9752abd15160588c",
+    97: "0x644abeff3425dcfb3fcffc0039750678c288ea32",
     56: "",
   },
   rewardPool: {
-    97: "0x76c7605404d028ebb8462a069d3cd5b5df5cff6b",
+    97: "0x3c99cbdbb543e25cc853d0c73dfcc73ff119162b",
     56: "",
   },
   marketplace: {
-    97: "0x1f84a04d9fd927d01da136b946a788fddd0e5071",
+    97: "0x49beef3a76f42797e3b27de9591ffec138dc8a6c",
     56: "",
   },
   feeHandler: {
-    97: "0x04bc7f2dd1a63d4929abca1ad3bec7f723fa8e16",
+    97: "0x083ab640d43ec15bb79d71f2b459d312026d4476",
     56: "",
   },
   busd: {

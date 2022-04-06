@@ -33,7 +33,8 @@ import {
   buyToken,
   getMarketItem,
   updatePrice,
-  getUSDAmountFromBLST
+  getUSDAmountFromBLST,
+  getAllBeastMarketItems
 } from "../../hooks/contractFunction";
 import {
   useBeast,
@@ -47,6 +48,7 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import BeastMarketCard from "../../component/Cards/BeastMarketCard";
 import { getTranslation } from "../../utils/translation";
 import Image from "../../config/image.json";
+import beastsTypeInfo from "../../constant/beasts";
 
 const useStyles = makeStyles({
   root: {
@@ -194,22 +196,26 @@ const Beasts = () => {
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
+    let allBeasts;
+    let tempAllBeasts: any[] = []
 
-    const ids = await getOnMarketplace(web3, beastContract);
-    let beast;
-    let marketItem;
-    let tempBeasts = [];
-    for (let i = 0; i < ids.length; i++) {
-      beast = await getBeastToken(web3, beastContract, ids[i]);
-      marketItem = await getMarketItem(web3, marketplaceContract, "1", ids[i]);
-      tempBeasts.push({
-        ...beast,
-        id: ids[i],
-        owner: marketItem.owner === account ? true : false,
-        price: marketItem.price,
-      });
-    }
-    setBeasts(tempBeasts);
+    allBeasts = await getAllBeastMarketItems(marketplaceContract)
+    let ids = allBeasts[0]
+    let capacities = allBeasts[1]
+    let prices = allBeasts[2]
+    let sellers = allBeasts[3]
+    ids.forEach((id: any, index: number) => {
+      tempAllBeasts.push({
+        id: id,
+        owner: sellers[index] === account ? true : false,
+        price: prices[index],
+        capacity: capacities[index],
+        strength: capacities[index],
+        type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+      })
+    })
+    console.log(tempAllBeasts)
+    setBeasts(tempAllBeasts);
     setLoading(false);
   };
 

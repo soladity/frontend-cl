@@ -535,3 +535,11 @@ export const getAllBeasts = async (contract, account) => {
 export const getAllWarriors = async (contract, account) => {
   return await contract.methods.getAllWarriors(account).call();
 };
+
+export const getAllBeastMarketItems = async (contract) => {
+  return await contract.methods.getAllBeastItems().call()
+}
+
+export const getAllWarriorMarketItems = async (contract) => {
+  return await contract.methods.getAllWarriorItems().call()
+}
