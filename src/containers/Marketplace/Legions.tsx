@@ -35,7 +35,8 @@ import {
   getLegionImage,
   getHuntStatus,
   updatePrice,
-  getUSDAmountFromBLST
+  getUSDAmountFromBLST,
+  getAllLegionMarketItems
 } from "../../hooks/contractFunction";
 import {
   useLegion,
@@ -85,7 +86,6 @@ type LegionProps = {
 const Legions = () => {
   const { account } = useWeb3React();
 
-  const [baseUrl, setBaseUrl] = React.useState("");
   const [sort, setSort] = React.useState("0");
   const [legions, setLegions] = React.useState<LegionProps[]>(Array);
   const [onlyMyLegion, setOnlyMyLegion] = React.useState(false);
@@ -238,29 +238,50 @@ const Legions = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    setBaseUrl(await getBaseUrl());
+    console.log(await getAllLegionMarketItems(marketplaceContract))
 
-    const ids = await getOnMarketplace(web3, legionContract);
-    let legion;
-    let marketItem;
-    let image;
-    let huntStatus;
-    var tempLegions = [];
-    for (let i = 0; i < ids.length; i++) {
-      legion = await getLegionToken(web3, legionContract, ids[i]);
-      marketItem = await getMarketItem(web3, marketplaceContract, "3", ids[i]);
-      image = getLegionImageUrl(legion.attackPower);
-      huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
-      tempLegions.push({
-        ...legion,
-        id: ids[i],
-        image: image,
-        owner: marketItem.owner === account ? true : false,
-        price: marketItem.price,
-        huntStatus: huntStatus,
-      });
-    }
-    setLegions(tempLegions);
+    const allLegions = await getAllLegionMarketItems(marketplaceContract)
+    let amount = 0;
+    const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
+      amount += parseInt(legion.attack_power) / 100
+      return {
+        name: legion.name,
+        beasts: legion.beast_ids,
+        warriors: legion.warrior_ids,
+        attackPower: parseInt((parseInt(legion.attack_power) / 100).toFixed(0)),
+        image: getLegionImageUrl(parseInt(legion.attack_power) / 100),
+        supplies: legion.supplies,
+        realPower: parseFloat(legion.attack_power),
+        id: allLegions[1][index],
+        huntStatus: allLegions[2][index] ? 'green' : legion.supplies == "0" ? "red" : "orange",
+        owner: allLegions[4][index] === account ? true : false,
+        price: allLegions[3][index]
+      }
+    })
+    console.log(tempAllLegions)
+
+    // const ids = await getOnMarketplace(web3, legionContract);
+    // let legion;
+    // let marketItem;
+    // let image;
+    // let huntStatus;
+    // var tempLegions = [];
+    // for (let i = 0; i < ids.length; i++) {
+    //   legion = await getLegionToken(web3, legionContract, ids[i]);
+    //   marketItem = await getMarketItem(web3, marketplaceContract, "3", ids[i]);
+    //   image = getLegionImageUrl(legion.attackPower);
+    //   huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
+    //   tempLegions.push({
+    //     ...legion,
+    //     id: ids[i],
+    //     image: image,
+    //     owner: marketItem.owner === account ? true : false,
+    //     price: marketItem.price,
+    //     huntStatus: huntStatus,
+    //   });
+    // }
+    // console.log(tempLegions)
+    setLegions(tempAllLegions);
     setLoading(false);
   };
 
