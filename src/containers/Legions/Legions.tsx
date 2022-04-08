@@ -186,27 +186,24 @@ const Legions = () => {
     setBaseUrl(await getBaseUrl());
     setBeastBalance(await getBeastBalance(web3, beastContract, account));
     setWarriorBalance(await getWarriorBalance(web3, warriorContract, account));
-    const ids = await getLegionTokenIds(web3, legionContract, account);
+    const allLegions = await getAllLegions(legionContract, account)
     let amount = 0;
-    let legion;
-    let image;
-    let huntStatus;
-    let tempLegions = [];
-    for (let i = 0; i < ids.length; i++) {
-      legion = await getLegionToken(web3, legionContract, ids[i]);
-      image = getLegionImageUrl(legion.attackPower);
-      huntStatus = await getHuntStatus(web3, legionContract, ids[i]);
-      tempLegions.push({
-        ...legion,
-        id: ids[i],
-        image: image,
-        huntStatus: huntStatus,
-      });
-      amount += legion.attackPower;
-    }
-    setTotalPower(amount);
-    console.log(tempLegions)
-    let sortedArray = tempLegions.sort((a, b) => {
+    const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
+      amount += parseInt(legion.attack_power) / 100
+      return {
+        name: legion.name,
+        beasts: legion.beast_ids,
+        warriors: legion.warrior_ids,
+        attackPower: (parseInt(legion.attack_power) / 100).toFixed(0),
+        image: getLegionImageUrl(parseInt(legion.attack_power) / 100),
+        supplies: legion.supplies,
+        realPower: legion.attack_power,
+        id: allLegions[1][index],
+        huntStatus: allLegions[2][index] ? 'green' : legion.supplies == "0" ? "red" : "orange"
+      }
+    })
+    setTotalPower(parseInt(amount.toFixed(0)));
+    let sortedArray = tempAllLegions.sort((a: any, b: any) => {
       if (a.attackPower > b.attackPower) {
         return -1;
       }
