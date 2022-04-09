@@ -126,6 +126,19 @@ const Legions = () => {
       }
     })
 
+    const cancelEvent = marketplaceEventContract.events.CancelSelling({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        setLegions(legions.filter(legion => legion.id != event.returnValues._tokenId))
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
+      }
+    })
+
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
@@ -175,6 +188,12 @@ const Legions = () => {
     })
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+        }
+        if (error) {
+        }
+      })
+      cancelEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
