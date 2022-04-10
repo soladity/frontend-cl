@@ -131,6 +131,19 @@ const Warriors = () => {
       }
     })
 
+    const cancelEvent = marketplaceEventContract.events.CancelSelling({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
+      }
+    })
+
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
@@ -176,6 +189,12 @@ const Warriors = () => {
     })
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+        }
+        if (error) {
+        }
+      })
+      cancelEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {

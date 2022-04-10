@@ -118,6 +118,7 @@ const Beasts = () => {
     const buyEvent = marketplaceEventContract.events.BuyToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
+      console.log(event)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
         dispatch(
@@ -128,9 +129,25 @@ const Beasts = () => {
       }
     })
 
+    const cancelEvent = marketplaceEventContract.events.CancelSelling({
+    }).on('connected', function (subscriptionId: any) {
+    }).on('data', async function (event: any) {
+      console.log(event)
+      if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+        setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
+      }
+    })
+
+
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
+      console.log(event)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length == 0) {
         const beast = await getBeastToken(web3, beastContract, event.returnValues._tokenId);
         const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues._tokenId);
@@ -152,6 +169,7 @@ const Beasts = () => {
     const updateEvent = marketplaceEventContract.events.PriceUpdated({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
+      console.log(event)
       if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
         var temp = beasts.map(item => {
           if (item.id == event.returnValues._tokenId) {
@@ -173,6 +191,12 @@ const Beasts = () => {
     })
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
+        if (success) {
+        }
+        if (error) {
+        }
+      })
+      cancelEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
