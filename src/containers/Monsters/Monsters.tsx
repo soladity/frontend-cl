@@ -414,6 +414,7 @@ const Monsters = () => {
       }
       const huntableLegions = legionArrayTmp.filter((item: any) => item.attackPower >= 2000)
       console.log(legionArrayTmp)
+      console.log('hi')
       await initMonster(huntableLegions);
       setLegionIDs(legionIDS);
       setLegions(huntableLegions);
