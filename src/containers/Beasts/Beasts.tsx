@@ -53,9 +53,8 @@ import BeastCard from "../../component/Cards/BeastCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import Navigation from "../../component/Navigation/Navigation";
 import { getTranslation } from "../../utils/translation";
-import Image from "../../config/image.json";
 import { FaTimes } from "react-icons/fa";
-import { formatNumber } from "../../utils/common";
+import { getBeastGif } from "../../utils/common";
 import beastsTypeInfo from "../../constant/beasts";
 
 const useStyles = makeStyles({
@@ -267,7 +266,6 @@ const Beasts = () => {
       setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
       setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
       const beastsInfo = await getAllBeasts(beastContract, account)
-      console.log(beastsInfo)
       let ids = beastsInfo[0]
       let capacities = beastsInfo[1]
       ids.forEach((id: any, index: number) => {
@@ -275,14 +273,15 @@ const Beasts = () => {
           id: id,
           type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
           capacity: capacities[index],
-          strength: capacities[index]
+          strength: capacities[index],
+          gif: getBeastGif(parseInt(capacities[index]))
         }
         tempBeasts.push(temp)
         amount += parseInt(capacities[index])
       })
     } catch (error) {
+      console.log(error)
     }
-    console.log(tempBeasts)
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
     setLoading(false);
@@ -369,6 +368,11 @@ const Beasts = () => {
   const handlePage = (value: any) => {
     setCurrentPage(value);
   };
+
+  const handleFilter = (value: string) => {
+    setFilter(value);
+    setCurrentPage(1);
+  }
 
   return (
     <Box>
@@ -601,43 +605,43 @@ const Beasts = () => {
                 >
                   <Button
                     variant={`${filter === "all" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("all")}
+                    onClick={() => handleFilter("all")}
                   >
                     {getTranslation("all")}
                   </Button>
                   <Button
                     variant={`${filter === "1" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("1")}
+                    onClick={() => handleFilter("1")}
                   >
                     1
                   </Button>
                   <Button
                     variant={`${filter === "2" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("2")}
+                    onClick={() => handleFilter("2")}
                   >
                     2
                   </Button>
                   <Button
                     variant={`${filter === "3" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("3")}
+                    onClick={() => handleFilter("3")}
                   >
                     3
                   </Button>
                   <Button
                     variant={`${filter === "4" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("4")}
+                    onClick={() => handleFilter("4")}
                   >
                     4
                   </Button>
                   <Button
                     variant={`${filter === "5" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("5")}
+                    onClick={() => handleFilter("5")}
                   >
                     5
                   </Button>
                   <Button
                     variant={`${filter === "20" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("20")}
+                    onClick={() => handleFilter("20")}
                   >
                     20
                   </Button>
@@ -662,8 +666,7 @@ const Beasts = () => {
                         item["type"] +
                         ".jpg"
                         : "/assets/images/characters/gif/beasts/" +
-                        item["type"] +
-                        ".gif"
+                        item["gif"]
                     }
                     type={item["type"]}
                     capacity={item["capacity"]}
@@ -704,9 +707,17 @@ const Beasts = () => {
                 </Grid>
               )}
           </Grid>
-          {beasts.length > 0 && (
+          {beasts.filter((item: any) =>
+                filter === "all"
+                  ? parseInt(item.capacity) >= 0
+                  : item.capacity === filter
+              ).length > 0 && (
             <Navigation
-              totalCount={beasts.length}
+              totalCount={beasts.filter((item: any) =>
+                filter === "all"
+                  ? parseInt(item.capacity) >= 0
+                  : item.capacity === filter
+              ).length}
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}

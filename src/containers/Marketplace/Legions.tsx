@@ -318,6 +318,7 @@ const Legions = () => {
     } else {
       setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
     }
+    setCurrentPage(1);
   };
 
   const handleChangeHunts = (
@@ -334,6 +335,7 @@ const Legions = () => {
     } else {
       setHuntsValue([huntsValue[0], Math.max(newValue[1], huntsValue[0] + 1)]);
     }
+    setCurrentPage(1);
   };
 
   const handleCancel = async (id: number) => {
@@ -626,6 +628,7 @@ const Legions = () => {
                 checked={onlyMyLegion}
                 onChange={() => {
                   setOnlyMyLegion(!onlyMyLegion);
+                  setCurrentPage(1);
                 }}
                 inputProps={{ "aria-label": "controlled" }}
               />
@@ -674,7 +677,23 @@ const Legions = () => {
           </Grid>
           {legions.length > 0 && (
             <Navigation
-              totalCount={legions.length}
+              totalCount={legions.filter(
+                (item: any) =>
+                  apValue[0] <= parseInt(item.attackPower) &&
+                  (apValue[1] === 100000
+                    ? true
+                    : apValue[1] >= parseInt(item.attackPower))
+              )
+              .filter(
+                (item: any) =>
+                  huntsValue[0] <= parseInt(item.supplies) &&
+                  (huntsValue[1] === 14
+                    ? true
+                    : huntsValue[1] >= parseInt(item.supplies))
+              )
+              .filter((item: any) =>
+                onlyMyLegion === true ? item.owner === true : true
+              ).length}
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
