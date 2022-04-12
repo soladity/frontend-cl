@@ -47,6 +47,7 @@ import {
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import BeastMarketCard from "../../component/Cards/BeastMarketCard";
 import { getTranslation } from "../../utils/translation";
+import { getBeastGif } from "../../utils/common";
 import Image from "../../config/image.json";
 import beastsTypeInfo from "../../constant/beasts";
 
@@ -143,7 +144,6 @@ const Beasts = () => {
       }
     })
 
-
     const sellEvent = marketplaceEventContract.events.SellToken({
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
@@ -236,6 +236,7 @@ const Beasts = () => {
         capacity: capacities[index],
         strength: capacities[index],
         type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+        gif: getBeastGif(parseInt(capacities[index]))
       })
     })
     console.log(tempAllBeasts)
@@ -366,6 +367,11 @@ const Beasts = () => {
     setActionLoading(false);
   };
 
+  const handleFilter = (value: string) => {
+    setFilter(value);
+    setCurrentPage(1);
+  }
+
   return (
     <Box>
       <Helmet>
@@ -420,43 +426,43 @@ const Beasts = () => {
                 >
                   <Button
                     variant={`${filter === "all" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("all")}
+                    onClick={() => handleFilter("all")}
                   >
                     {getTranslation("all")}
                   </Button>
                   <Button
                     variant={`${filter === "1" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("1")}
+                    onClick={() => handleFilter("1")}
                   >
                     1
                   </Button>
                   <Button
                     variant={`${filter === "2" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("2")}
+                    onClick={() => handleFilter("2")}
                   >
                     2
                   </Button>
                   <Button
                     variant={`${filter === "3" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("3")}
+                    onClick={() => handleFilter("3")}
                   >
                     3
                   </Button>
                   <Button
                     variant={`${filter === "4" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("4")}
+                    onClick={() => handleFilter("4")}
                   >
                     4
                   </Button>
                   <Button
                     variant={`${filter === "5" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("5")}
+                    onClick={() => handleFilter("5")}
                   >
                     5
                   </Button>
                   <Button
                     variant={`${filter === "20" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("20")}
+                    onClick={() => handleFilter("20")}
                   >
                     20
                   </Button>
@@ -508,6 +514,7 @@ const Beasts = () => {
                 checked={onlyMyBeast}
                 onChange={() => {
                   setOnlyMyBeast(!onlyMyBeast);
+                  setCurrentPage(1);
                 }}
                 inputProps={{ "aria-label": "controlled" }}
               />
@@ -534,8 +541,7 @@ const Beasts = () => {
                           item["type"] +
                           ".jpg"
                           : "/assets/images/characters/gif/beasts/" +
-                          item["type"] +
-                          ".gif"
+                          item["gif"]
                       }
                       type={item["type"]}
                       capacity={item["capacity"]}
@@ -550,9 +556,20 @@ const Beasts = () => {
                   </Grid>
                 ))}
           </Grid>
-          {beasts.length > 0 && (
+          {beasts.filter((item: any) =>
+                filter === "all"
+                  ? parseInt(item.capacity) >= 0
+                  : item.capacity === filter
+              ).length > 0 && (
             <Navigation
-              totalCount={beasts.length}
+              totalCount={beasts.filter((item: any) =>
+                filter === "all"
+                  ? parseInt(item.capacity) >= 0
+                  : item.capacity === filter
+              )
+              .filter((item: any) =>
+                onlyMyBeast === true ? item.owner === true : true
+              ).length}
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
