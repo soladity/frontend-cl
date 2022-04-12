@@ -1223,16 +1223,20 @@ const Monsters = () => {
                   item.success
                     ? (<img src={
                       showAnimation === "0"
+                        ? `/assets/images/characters/jpg/monsters_dying/m${item['monsterId']}.jpg`
+                        : `/assets/images/characters/gif/monsters_dying/m${item['monsterId']}.gif`
+                    } style={{ width: '100%' }} />)
+                    : (<img src={
+                      showAnimation === "0"
                         ? `/assets/images/characters/jpg/monsters/m${item['monsterId']}.jpg`
                         : `/assets/images/characters/gif/monsters/m${item['monsterId']}.gif`
                     } style={{ width: '100%' }} />)
-                    : (<img src={`/assets/images/loosing.gif`} style={{ width: '100%' }} />)
                 }
                 <Box sx={{ p: 1, wordBreak: 'break-word' }}>
                   {item.legionName}
                 </Box>
                 <Box sx={{ fontSize: 12 }}>
-                  <span>#{item.monsterId} {getTranslation('monster')}</span> - <span style={{ fontWeight: 'bold' }}>{toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
+                  <span style={{ fontWeight: 'bold' }}>#{item.monsterId} {toCapitalize(monstersInfo[parseInt(item.monsterId) - 1].name)}</span>
                 </Box>
                 <Box sx={{ fontSize: 12 }}>
                   <span>{getTranslation('maxRoll')}: {item.percent}</span>
