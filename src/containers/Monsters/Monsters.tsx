@@ -360,19 +360,23 @@ const Monsters = () => {
           warriorCapacity: warriorCapacity,
         });
       }
-      setLegions(legionArrayTmp);
-      setCurLegion(legionArrayTmp[parseInt(curComboLegionValue)]);
-      calcWarriorCapacity(legionArrayTmp[parseInt(curComboLegionValue)].id)
-      if (legionArrayTmp[parseInt(curComboLegionValue)]) {
-        for (let i = 0; i < monsters.length; i++) {
-          const monster: any = monsters[i];
-          if (
-            parseInt(monster?.ap) <=
-            legionArrayTmp[parseInt(curComboLegionValue)].attackPower
-          ) {
-            setStrongestMonsterToHunt(i);
-          } else {
-            break;
+      const huntableLegions = legionArrayTmp.filter((item: any) => item.attackPower >= 2000)
+      setLegions(huntableLegions);
+      if (huntableLegions.length > 0) {
+        const legionIndex = (huntableLegions.length - 1 >= parseInt(curComboLegionValue)) ? parseInt(curComboLegionValue) : parseInt(curComboLegionValue) - 1
+        setCurLegion(huntableLegions[legionIndex]);
+        calcWarriorCapacity(huntableLegions[legionIndex].id)
+        if (huntableLegions[legionIndex]) {
+          for (let i = 0; i < monsters.length; i++) {
+            const monster: any = monsters[i];
+            if (
+              parseInt(monster?.ap) <=
+              huntableLegions[legionIndex].attackPower
+            ) {
+              setStrongestMonsterToHunt(i);
+            } else {
+              break;
+            }
           }
         }
       }
@@ -408,10 +412,13 @@ const Monsters = () => {
         });
         calcWarriorCapacity(legionIDS[0])
       }
-      await initMonster(legionArrayTmp);
+      const huntableLegions = legionArrayTmp.filter((item: any) => item.attackPower >= 2000)
+      console.log(legionArrayTmp)
+      console.log('hi')
+      await initMonster(huntableLegions);
       setLegionIDs(legionIDS);
-      setLegions(legionArrayTmp);
-      setCurLegion(legionArrayTmp[0]);
+      setLegions(huntableLegions);
+      setCurLegion(huntableLegions[0]);
     } catch (error) {
     }
     setLoading(false);
