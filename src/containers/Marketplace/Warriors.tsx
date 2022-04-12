@@ -47,7 +47,7 @@ import {
 import WarriorMarketCard from "../../component/Cards/WarriorMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
-import { formatNumber } from "../../utils/common";
+import { formatNumber, getWarriorGif } from "../../utils/common";
 import Image from "../../config/image.json";
 import warriorInfo from "../../constant/warriors";
 
@@ -237,6 +237,7 @@ const Warriors = () => {
         price: prices[index],
         owner: sellers[index] === account ? true : false,
         type: warriorInfo[parseInt(strengths[index]) - 1],
+        gif: getWarriorGif(warriorInfo[parseInt(strengths[index]) - 1], parseInt(aps[index]))
       })
     })
 
@@ -274,6 +275,7 @@ const Warriors = () => {
     } else {
       setApValue([apValue[0], Math.max(newValue[1], apValue[0] + 1)]);
     }
+    setCurrentPage(1);
   };
 
   const handleCancel = async (id: number) => {
@@ -418,6 +420,11 @@ const Warriors = () => {
     setActionLoading(false);
   };
 
+  const handleFilter = (value: string) => {
+    setFilter(value);
+    setCurrentPage(1);
+  }
+
   return (
     <Box>
       <Helmet>
@@ -472,43 +479,43 @@ const Warriors = () => {
                 >
                   <Button
                     variant={`${filter === "all" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("all")}
+                    onClick={() => handleFilter("all")}
                   >
                     {getTranslation("all")}
                   </Button>
                   <Button
                     variant={`${filter === "1" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("1")}
+                    onClick={() => handleFilter("1")}
                   >
                     1
                   </Button>
                   <Button
                     variant={`${filter === "2" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("2")}
+                    onClick={() => handleFilter("2")}
                   >
                     2
                   </Button>
                   <Button
                     variant={`${filter === "3" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("3")}
+                    onClick={() => handleFilter("3")}
                   >
                     3
                   </Button>
                   <Button
                     variant={`${filter === "4" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("4")}
+                    onClick={() => handleFilter("4")}
                   >
                     4
                   </Button>
                   <Button
                     variant={`${filter === "5" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("5")}
+                    onClick={() => handleFilter("5")}
                   >
                     5
                   </Button>
                   <Button
                     variant={`${filter === "6" ? "contained" : "outlined"}`}
-                    onClick={() => setFilter("6")}
+                    onClick={() => handleFilter("6")}
                   >
                     6
                   </Button>
@@ -599,6 +606,7 @@ const Warriors = () => {
                 checked={onlyMyWarrior}
                 onChange={() => {
                   setOnlyMyWarrior(!onlyMyWarrior);
+                  setCurrentPage(1);
                 }}
                 inputProps={{ "aria-label": "controlled" }}
               />
@@ -632,8 +640,7 @@ const Warriors = () => {
                           item["type"] +
                           ".jpg"
                           : "/assets/images/characters/gif/warriors/" +
-                          item["type"] +
-                          ".gif"
+                          item["gif"]
                       }
                       type={item["type"]}
                       power={item["power"]}
@@ -650,7 +657,21 @@ const Warriors = () => {
           </Grid>
           {warriors.length > 0 && (
             <Navigation
-              totalCount={warriors.length}
+              totalCount={warriors.filter((item: any) =>
+                filter === "all"
+                  ? parseInt(item.strength) >= 0
+                  : item.strength === filter
+              )
+              .filter(
+                (item: any) =>
+                  apValue[0] <= parseInt(item.power) &&
+                  (apValue[1] === 6000
+                    ? true
+                    : apValue[1] >= parseInt(item.power))
+              )
+              .filter((item: any) =>
+                onlyMyWarrior === true ? item.owner === true : true
+              ).length}
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
