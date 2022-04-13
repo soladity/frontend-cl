@@ -13,7 +13,8 @@ import TakeAction from "./TakeAction";
 import ToSocial from "./ToSocial";
 import YourAchievements from "./YourAchievements";
 import ReactPlayer from "react-player/youtube";
-
+import Quotes from '../../constant/Quotes'
+import Sparkles from "../../component/UI/Sparkless/Sparkles";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -23,6 +24,10 @@ export interface SimpleDialogProps {
 const Home = () => {
 
   const language = localStorage.getItem('lang')
+  const quoteIndex = Math.floor(new Date().getTime() / 1000 / 3600 / 24) % 20
+  console.log(parseInt("0.2"))
+  console.log(quoteIndex)
+  console.log(Quotes[quoteIndex])
 
   return (
     <Box>
@@ -50,6 +55,11 @@ const Home = () => {
         </Grid>
       </Grid>
       <ToSocial />
+      <Box sx={{ p: 2, textAlign: 'center', px: 10, fontSize: '18px', fontWeight: 'bold' }} className="legionFontColor">
+        <Sparkles>
+          {Quotes[quoteIndex]}
+        </Sparkles>
+      </Box>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Box sx={{ width: "100%" }}>
           <Grid spacing={2} container>
