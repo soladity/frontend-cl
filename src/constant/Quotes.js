@@ -19,7 +19,6 @@ const Quotes = [
   `"A warrior does not give up what he loves, he finds the love in what he does."`,
   `"The greatest warriors know when to retreat."`,
   `"A warrior seeks to act rather than talk."`,
-  `"Test Quote - by Author."`,
 ]
 
 export default Quotes
