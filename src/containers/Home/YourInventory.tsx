@@ -146,7 +146,8 @@ const YourInventory = () => {
         legionContract,
         legionTokenIds[i]
       );
-      if (legion.lastHuntTime != "0" && legion.supplies > 0) {
+      console.log(legion)
+      if (legion.attackPower >= 2000 && legion.lastHuntTime != "0" && legion.supplies > 0) {
         remainTimes.push(parseInt(legion.lastHuntTime));
       }
     }
