@@ -208,13 +208,22 @@ const AppBarComponent = () => {
                 }}
                 onClick={() => setDialogOpen(true)}
               >
-                <IconButton
+                {/* <IconButton
                   aria-label="claim"
                   component="span"
                   sx={{ p: 0, mr: 1, color: "black" }}
                 >
                   <AssistantDirectionIcon />
-                </IconButton>
+                </IconButton> */}
+                <img
+                  src={`/assets/images/claimExit.png`}
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    marginRight: '10px'
+                  }}
+                  alt="icon"
+                />
                 {getTranslation("claim")}{" "}
                 {formatNumber(unClaimedBLST.toFixed(2))} $
                 {getTranslation("bloodstone")}

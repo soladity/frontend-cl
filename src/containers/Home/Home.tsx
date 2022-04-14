@@ -24,10 +24,7 @@ export interface SimpleDialogProps {
 const Home = () => {
 
   const language = localStorage.getItem('lang')
-  const quoteIndex = Math.floor(new Date().getTime() / 1000 / 3600 / 24) % 20
-  console.log(parseInt("0.2"))
-  console.log(quoteIndex)
-  console.log(Quotes[quoteIndex])
+  const quoteIndex = Math.floor(new Date().getTime() / 1000 / 3600 / 24) % Quotes.length
 
   return (
     <Box>
