@@ -84,6 +84,7 @@ import { maxWidth } from "@mui/system";
 import { FaTimes } from "react-icons/fa";
 import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
+import Present from "./SundayPresent";
 
 
 type TransitionProps = Omit<SlideProps, "direction">;
@@ -223,6 +224,8 @@ const Monsters = () => {
   const [checkingMassHuntBUSD, setCheckingMassHuntBUSD] = React.useState(false)
 
   const [huntTax, setHuntTax] = React.useState(0);
+
+  const [presentDialogOpen, setPresentDialogOpen] = React.useState(false)
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -421,6 +424,7 @@ const Monsters = () => {
       setCurLegion(huntableLegions[0]);
     } catch (error) {
     }
+    setPresentDialogOpen(true)
     setLoading(false);
   };
 
@@ -1271,6 +1275,7 @@ const Monsters = () => {
           </CommonBtn>
         </Box>
       </Dialog >
+      <Present presentDialogOpen={presentDialogOpen} setPresentDialogOpen={setPresentDialogOpen}></Present>
     </Box >
   );
 };

@@ -53,7 +53,7 @@ const Home = () => {
       </Grid>
       <ToSocial />
       <Box sx={{ p: 2, textAlign: 'center', px: 10, fontSize: '18px', fontWeight: 'bold' }} className="legionFontColor">
-        <Sparkles>
+        <Sparkles minDelay={6000} maxDelay={10000}>
           {Quotes[quoteIndex]}
         </Sparkles>
       </Box>
