@@ -24,10 +24,7 @@ export interface SimpleDialogProps {
 const Home = () => {
 
   const language = localStorage.getItem('lang')
-  const quoteIndex = Math.floor(new Date().getTime() / 1000 / 3600 / 24) % 20
-  console.log(parseInt("0.2"))
-  console.log(quoteIndex)
-  console.log(Quotes[quoteIndex])
+  const quoteIndex = Math.floor(new Date().getTime() / 1000 / 3600 / 24) % Quotes.length
 
   return (
     <Box>
@@ -56,7 +53,7 @@ const Home = () => {
       </Grid>
       <ToSocial />
       <Box sx={{ p: 2, textAlign: 'center', px: 10, fontSize: '18px', fontWeight: 'bold' }} className="legionFontColor">
-        <Sparkles>
+        <Sparkles minDelay={6000} maxDelay={10000}>
           {Quotes[quoteIndex]}
         </Sparkles>
       </Box>

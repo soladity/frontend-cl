@@ -56,6 +56,7 @@ import { getTranslation } from "../../utils/translation";
 import { FaTimes } from "react-icons/fa";
 import { getBeastGif } from "../../utils/common";
 import beastsTypeInfo from "../../constant/beasts";
+import MassExecute from "../MassExecute/MassExecute";
 
 const useStyles = makeStyles({
   root: {
@@ -101,6 +102,7 @@ const Beasts = () => {
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
   const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [executeDialogOpen, setExecuteDialogOpen] = React.useState(true)
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -708,21 +710,21 @@ const Beasts = () => {
               )}
           </Grid>
           {beasts.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.capacity) >= 0
-                  : item.capacity === filter
-              ).length > 0 && (
-            <Navigation
-              totalCount={beasts.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.capacity) >= 0
-                  : item.capacity === filter
-              ).length}
-              cPage={currentPage}
-              handlePage={handlePage}
-              perPage={20}
-            />
-          )}
+            filter === "all"
+              ? parseInt(item.capacity) >= 0
+              : item.capacity === filter
+          ).length > 0 && (
+              <Navigation
+                totalCount={beasts.filter((item: any) =>
+                  filter === "all"
+                    ? parseInt(item.capacity) >= 0
+                    : item.capacity === filter
+                ).length}
+                cPage={currentPage}
+                handlePage={handlePage}
+                perPage={20}
+              />
+            )}
         </React.Fragment>
       )}
       {loading === true && (

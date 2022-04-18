@@ -13,6 +13,7 @@ import UpdateLegions from "../containers/UpdateLegions";
 import Profile from "../containers/Profile/Profile";
 import Policy from "../containers/Policy/Policy";
 import Help from "../containers/Help/Help";
+import MassExecute from "../containers/MassExecute/MassExecute";
 
 export const navConfig = {
   drawerWidth: 250,
@@ -57,6 +58,10 @@ export const navConfig = {
     {
       path: "/updatelegions/:id",
       element: <UpdateLegions />,
+    },
+    {
+      path: "/massexecute",
+      element: <MassExecute />,
     },
     {
       path: "/profile",
@@ -149,7 +154,7 @@ export const navConfig = {
         title: "whitepaper",
         icon: "whitepaper.png",
         path: "https://docs.cryptolegions.app/",
-        esPath: "https://docs-es.cryptolegions.app/"
+        esPath: "https://docs-es.cryptolegions.app/",
       },
       {
         type: "navlink",

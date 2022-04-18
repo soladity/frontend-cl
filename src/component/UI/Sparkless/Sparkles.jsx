@@ -89,11 +89,11 @@ const DEFAULT_COLOR = "hsl(50deg, 100%, 50%)";
 
 const generateSparkle = (color = DEFAULT_COLOR) => {
   return {
-    id: String(random(10000, 99999)),
+    id: String(random(10, 99)),
     createdAt: Date.now(),
     // Bright yellow color:
     color,
-    size: random(10, 20),
+    size: random(15, 20),
     style: {
       // Pick a random spot in the available space
       position: "absolute",
@@ -106,7 +106,7 @@ const generateSparkle = (color = DEFAULT_COLOR) => {
   };
 };
 
-function Sparkles({ children }) {
+function Sparkles({ children, minDelay, maxDelay }) {
   const [sparkles, setSparkles] = React.useState([]);
   const classes = useStyles();
 
@@ -124,8 +124,8 @@ function Sparkles({ children }) {
       nextSparkles.push(sparkle);
       setSparkles(nextSparkles);
     },
-    50,
-    1000
+    minDelay,
+    maxDelay
   );
 
   return (

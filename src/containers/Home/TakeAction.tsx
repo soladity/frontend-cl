@@ -634,6 +634,15 @@ const TakeAction = () => {
                                             marginBottom: 1,
                                         }}
                                     >
+                                        <img
+                                            src={`/assets/images/warrior.png`}
+                                            style={{
+                                                width: "15px",
+                                                height: "15px",
+                                                marginRight: '5px'
+                                            }}
+                                            alt="icon"
+                                        />
                                         {getTranslation("summonWarrior")}
                                     </CommonBtn>
                                     <Popover
@@ -765,6 +774,15 @@ const TakeAction = () => {
                                             marginBottom: 1,
                                         }}
                                     >
+                                        <img
+                                            src={`/assets/images/beast.png`}
+                                            style={{
+                                                width: "15px",
+                                                height: "15px",
+                                                marginRight: '5px'
+                                            }}
+                                            alt="icon"
+                                        />
                                         {getTranslation("summonBeast")}
                                     </CommonBtn>
                                     <Popover
@@ -892,6 +910,15 @@ const TakeAction = () => {
                                             marginBottom: 1,
                                         }}
                                     >
+                                        <img
+                                            src={`/assets/images/legion.png`}
+                                            style={{
+                                                width: "15px",
+                                                height: "15px",
+                                                marginRight: '5px'
+                                            }}
+                                            alt="icon"
+                                        />
                                         <NavLink to="/createlegions" className="non-style">
                                             {getTranslation("takeActionCreateLegion")}
                                         </NavLink>
@@ -906,6 +933,15 @@ const TakeAction = () => {
                                                 marginBottom: 1,
                                             }}
                                         >
+                                            <img
+                                                src={`/assets/images/hunt.png`}
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                    marginRight: '5px'
+                                                }}
+                                                alt="icon"
+                                            />
                                             {getTranslation("hunt")}
                                         </CommonBtn>
                                     </NavLink>
@@ -913,10 +949,28 @@ const TakeAction = () => {
                                         checkingMassHuntBUSD ? (
                                             <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold', width: '100%' }} disabled>
                                                 <Spinner color="white" size={40} />&nbsp;
+                                                <img
+                                                    src={`/assets/images/massHunt.png`}
+                                                    style={{
+                                                        width: "15px",
+                                                        height: "15px",
+                                                        marginRight: '5px'
+                                                    }}
+                                                    alt="icon"
+                                                />
                                                 {getTranslation('takeActionMassHunt')}
                                             </CommonBtn>
                                         ) : (
                                             <CommonBtn onClick={() => massHunting()} sx={{ fontWeight: 'bold', width: '100%' }}>
+                                                <img
+                                                    src={`/assets/images/massHunt.png`}
+                                                    style={{
+                                                        width: "15px",
+                                                        height: "15px",
+                                                        marginRight: '5px'
+                                                    }}
+                                                    alt="icon"
+                                                />
                                                 {getTranslation('takeActionMassHunt')}
                                             </CommonBtn>
                                         )
@@ -944,6 +998,15 @@ const TakeAction = () => {
                                                 marginBottom: 1,
                                             }}
                                         >
+                                            <img
+                                                src={`/assets/images/marketWarrior.png`}
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                    marginRight: '5px'
+                                                }}
+                                                alt="icon"
+                                            />
                                             {getTranslation("takeActionBuyWarriors")}
                                         </CommonBtn>
                                     </NavLink>
@@ -957,6 +1020,15 @@ const TakeAction = () => {
                                                 marginBottom: 1,
                                             }}
                                         >
+                                            <img
+                                                src={`/assets/images/marketBeast.png`}
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                    marginRight: '5px'
+                                                }}
+                                                alt="icon"
+                                            />
                                             {getTranslation("takeActionBuyBeasts")}
                                         </CommonBtn>
                                     </NavLink>
@@ -970,6 +1042,15 @@ const TakeAction = () => {
                                                 marginBottom: 1,
                                             }}
                                         >
+                                            <img
+                                                src={`/assets/images/marketLegion.png`}
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                    marginRight: '5px'
+                                                }}
+                                                alt="icon"
+                                            />
                                             {getTranslation("takeActionBuyLegions")}
                                         </CommonBtn>
                                     </NavLink>
@@ -983,6 +1064,15 @@ const TakeAction = () => {
                                                 marginBottom: 1,
                                             }}
                                         >
+                                            <img
+                                                src={`/assets/images/chart.png`}
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                    marginRight: '5px'
+                                                }}
+                                                alt="icon"
+                                            />
                                             {getTranslation("takeActionDextools")}
                                         </CommonBtn>
                                     </a>
@@ -995,6 +1085,15 @@ const TakeAction = () => {
                                                 width: "100%",
                                             }}
                                         >
+                                            <img
+                                                src={`/assets/images/pancake.png`}
+                                                style={{
+                                                    width: "15px",
+                                                    height: "15px",
+                                                    marginRight: '5px'
+                                                }}
+                                                alt="icon"
+                                            />
                                             {getTranslation("takeActionBuyBlst")}
                                         </CommonBtn>
                                     </a>
