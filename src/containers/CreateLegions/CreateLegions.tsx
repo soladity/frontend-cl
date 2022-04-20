@@ -80,7 +80,7 @@ const useStyles = makeStyles({
 });
 
 const capFilterConfigList = [
-  { id: 0, name: "all", onClick: Function },
+  { id: 0, name: getTranslation("all"), onClick: Function },
   { id: 1, name: "1", onClick: Function },
   { id: 2, name: "2", onClick: Function },
   { id: 3, name: "3", onClick: Function },
@@ -90,7 +90,7 @@ const capFilterConfigList = [
 ];
 
 const powerFilterConfigList = [
-  { id: 0, name: "ALL", min: 0, max: 10000, onClick: Function },
+  { id: 0, name: getTranslation("all"), min: 0, max: 10000, onClick: Function },
   { id: 1, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
   { id: 2, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
   { id: 3, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
@@ -795,7 +795,7 @@ const CreateLegions: React.FC = () => {
                           fontSize: isSmallThanSM ? 10 : 14,
                         }}
                         placeholder={
-                          isSmallThanSM ? "Name" : getTranslation("nameLegion")
+                          isSmallThanSM ? getTranslation("name") : getTranslation("nameLegion")
                         }
                         value={legionName}
                         onChange={handleChangedName}

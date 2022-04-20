@@ -31,11 +31,8 @@ import {
   setWarriorBloodstoneApprove,
   mintWarrior,
   getWarriorBalance,
-  getWarriorTokenIds,
-  getWarriorToken,
   sellToken,
   setMarketplaceApprove,
-  getBaseUrl,
   execute,
   getSummoningPrice,
   getFee,
@@ -55,7 +52,6 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import Navigation from "../../component/Navigation/Navigation";
 import { getTranslation } from "../../utils/translation";
 import { formatNumber, getWarriorGif } from "../../utils/common";
-import Image from "../../config/image.json";
 import { FaTimes } from "react-icons/fa";
 import warriorInfo from "../../constant/warriors";
 
@@ -85,8 +81,6 @@ type WarriorProps = {
 const Warriors = () => {
   const { account } = useWeb3React();
 
-  const [baseUrl, setBaseUrl] = React.useState("");
-  const [showMint, setShowMint] = React.useState(false);
   const [balance, setBalance] = React.useState(0);
   const [maxPower, setMaxPower] = React.useState(0);
   const [warriors, setWarriors] = React.useState<WarriorProps[]>(Array);
@@ -227,14 +221,6 @@ const Warriors = () => {
     );
   }, []);
 
-  const handleOpenMint = () => {
-    setShowMint(true);
-  };
-
-  const handleCloseMint = () => {
-    setShowMint(false);
-  };
-
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonWarrior();
     setMintLoading(true);
@@ -324,14 +310,14 @@ const Warriors = () => {
   const handlePrice = async (e: any) => {
     var price = e.target.value
     if (price >= 1) {
-      if (price[0] == '0') {
+      if (price[0] === '0') {
         price = price.slice(1)
       }
       setPrice(price);
       setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
     } else if (price >= 0) {
       setPrice(price);
-      if (price == '') {
+      if (price === '') {
         price = '0'
       }
       setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
@@ -445,8 +431,6 @@ const Warriors = () => {
                 {getTranslation("summonWarrior")}
               </Typography>
               <Box
-                onMouseOver={handleOpenMint}
-                onMouseLeave={handleCloseMint}
                 sx={{ pt: 1 }}
               >
                 <CommonBtn
