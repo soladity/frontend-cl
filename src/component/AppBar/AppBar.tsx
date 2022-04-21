@@ -326,8 +326,8 @@ const AppBarComponent = () => {
       >
         <DialogTitle>
           {taxLeftDays !== "0"
-            ? `You will pay ${parseInt(taxLeftDays) * 2}% tax.`
-            : `Claim ${unClaimedBLST.toFixed(2)} $BLST`}
+            ? `${getTranslation("willPay")} ${parseInt(taxLeftDays) * 2}% ${getTranslation("tax")}.`
+            : `${getTranslation("claim")} ${unClaimedBLST.toFixed(2)} $BLST`}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">

@@ -2508,4 +2508,16 @@ export const translations = {
     pl: "Jeśli sprzedałeś, zapłacisz podatek od rynku.",
     ph: "Kung nagbebenta ka, magbabayad ka ng buwis sa pamilihan.",
   },
+  name: {
+    en: "Name",
+    es: "nombre",
+    cn: "姓名",
+    pt: "nome",
+    tr: "isim",
+    ru: "название",
+    fr: "Nom",
+    de: "naam",
+    pl: "nazwać",
+    ph: "pangalan",
+  },
 };

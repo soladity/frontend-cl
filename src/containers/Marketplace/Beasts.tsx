@@ -239,7 +239,6 @@ const Beasts = () => {
         gif: getBeastGif(parseInt(capacities[index]))
       })
     })
-    console.log(tempAllBeasts)
     setBeasts(tempAllBeasts);
     setLoading(false);
   };
@@ -629,7 +628,7 @@ const Beasts = () => {
             autoFocus
             margin="dense"
             id="price"
-            label="Price in $BLST"
+            label={`${getTranslation("priceIn")} $BLST`}
             type="number"
             fullWidth
             variant="standard"
