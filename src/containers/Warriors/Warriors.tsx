@@ -80,6 +80,10 @@ type WarriorProps = {
   type: string;
   power: string;
   strength: string;
+  executeStatus: {
+    type: boolean,
+    default: false
+  }
 };
 
 const Warriors = () => {
@@ -282,7 +286,8 @@ const Warriors = () => {
           type: warriorInfo[parseInt(strengths[index]) - 1],
           strength: strengths[index],
           power: powers[index],
-          gif: getWarriorGif(warriorInfo[parseInt(strengths[index]) - 1], parseInt(powers[index]))
+          gif: getWarriorGif(warriorInfo[parseInt(strengths[index]) - 1], parseInt(powers[index])),
+          executeStatus: false
         }
         tempWarriors.push(temp)
         amount += parseInt(powers[index])
@@ -405,6 +410,18 @@ const Warriors = () => {
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
+  }
+
+  const setExecuteStatus = (id: String) => {
+    setWarriors(warriors.map((warrior: any, index: any) => {
+      if (warrior.id == id) {
+        return {
+          ...warrior,
+          executeStatus: !warrior.executeStatus
+        }
+      }
+      return warrior
+    }))
   }
 
   return (
@@ -619,6 +636,9 @@ const Warriors = () => {
               >
                 {formatNumber(maxPower)}
               </Typography>
+              <CommonBtn sx={{ fontWeight: "bold", mt: 1 }} disabled={warriors.filter((warrior: any) => warrior.executeStatus === true).length === 0}>
+                {getTranslation("massExecute")}
+              </CommonBtn>
             </Box>
           </Card>
         </Grid>
@@ -738,6 +758,8 @@ const Warriors = () => {
                     needButton={true}
                     handleOpenSupply={handleOpenSupply}
                     handleExecute={handleExecute}
+                    executeStatus={item["executeStatus"]}
+                    setExecuteStatus={setExecuteStatus}
                   />
                 </Grid>
               ))}
@@ -778,35 +800,35 @@ const Warriors = () => {
               )}
           </Grid>
           {warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              ).length > 0 && (
-            <Navigation
-              totalCount={warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              ).length}
-              cPage={currentPage}
-              handlePage={handlePage}
-              perPage={20}
-            />
-          )}
+            filter === "all"
+              ? parseInt(item.strength) >= 0
+              : item.strength === filter
+          )
+            .filter(
+              (item: any) =>
+                apValue[0] <= parseInt(item.power) &&
+                (apValue[1] === 6000
+                  ? true
+                  : apValue[1] >= parseInt(item.power))
+            ).length > 0 && (
+              <Navigation
+                totalCount={warriors.filter((item: any) =>
+                  filter === "all"
+                    ? parseInt(item.strength) >= 0
+                    : item.strength === filter
+                )
+                  .filter(
+                    (item: any) =>
+                      apValue[0] <= parseInt(item.power) &&
+                      (apValue[1] === 6000
+                        ? true
+                        : apValue[1] >= parseInt(item.power))
+                  ).length}
+                cPage={currentPage}
+                handlePage={handlePage}
+                perPage={20}
+              />
+            )}
         </React.Fragment>
       )}
       {loading === true && (

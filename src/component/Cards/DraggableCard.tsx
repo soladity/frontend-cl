@@ -36,6 +36,7 @@ const DraggableCard: React.FC<{
             isMobile={isSmallThanSM}
             handleExecute={Function}
             needButton={false}
+            setExecuteStatus={Function}
           />
         )}
         {w5b && (
@@ -49,6 +50,7 @@ const DraggableCard: React.FC<{
             isMobile={isSmallThanSM}
             handleExecute={Function}
             needButton={false}
+            setExecuteStatus={Function}
           />
         )}
       </Box>

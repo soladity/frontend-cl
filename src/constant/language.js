@@ -2508,4 +2508,16 @@ export const translations = {
     pl: "Jeśli sprzedałeś, zapłacisz podatek od rynku.",
     ph: "Kung nagbebenta ka, magbabayad ka ng buwis sa pamilihan.",
   },
+  massExecute: {
+    en: "Mass Execute",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
 };

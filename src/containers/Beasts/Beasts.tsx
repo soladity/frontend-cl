@@ -81,6 +81,10 @@ type BeastProps = {
   strength: string;
   gif: string;
   jpg: string;
+  executeStatus: {
+    type: boolean,
+    default: false
+  }
 };
 
 const Beasts = () => {
@@ -227,6 +231,10 @@ const Beasts = () => {
     );
   }, []);
 
+  React.useEffect(() => {
+    console.log(beasts)
+  }, [beasts])
+
   const handleOpenMint = () => {
     setShowMint(true);
   };
@@ -276,7 +284,8 @@ const Beasts = () => {
           type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
           capacity: capacities[index],
           strength: capacities[index],
-          gif: getBeastGif(parseInt(capacities[index]))
+          gif: getBeastGif(parseInt(capacities[index])),
+          executeStatus: false
         }
         tempBeasts.push(temp)
         amount += parseInt(capacities[index])
@@ -374,6 +383,18 @@ const Beasts = () => {
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
+  }
+
+  const setExecuteStatus = (id: String) => {
+    setBeasts(beasts.map((beast: any, index: any) => {
+      if (beast.id == id) {
+        return {
+          ...beast,
+          executeStatus: !beast.executeStatus
+        }
+      }
+      return beast
+    }))
   }
 
   return (
@@ -588,6 +609,9 @@ const Beasts = () => {
               >
                 {maxWarrior}
               </Typography>
+              <CommonBtn sx={{ fontWeight: "bold", mt: 1 }} disabled={beasts.filter((beast: any) => beast.executeStatus === true).length === 0}>
+                {getTranslation("massExecute")}
+              </CommonBtn>
             </Box>
           </Card>
         </Grid>
@@ -674,6 +698,8 @@ const Beasts = () => {
                     capacity={item["capacity"]}
                     strength={item["strength"]}
                     id={item["id"]}
+                    executeStatus={item["executeStatus"]}
+                    setExecuteStatus={setExecuteStatus}
                     isMobile={false}
                     needButton={true}
                     handleOpenSupply={handleOpenSupply}
