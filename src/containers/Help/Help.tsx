@@ -18,6 +18,7 @@ import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
 import { makeStyles } from "@mui/styles";
 import Helmet from "react-helmet";
 import { meta_constant } from "../../config/meta.config";
+import { getTranslation } from "../../utils/translation";
 
 const Input = styled("input")({
   display: "none",
@@ -102,7 +103,7 @@ const Help = () => {
 
     setEmailValidationText("");
 
-    var API_KEY = "jp0qrj5DTWcgBeg0L4FD";
+    var API_KEY = process.env.REACT_APP_HELP_API_KEY;
     var FD_ENDPOINT = "cryptolegions";
     var PATH = "/api/v2/tickets";
     var auth = "Basic " + new Buffer(API_KEY + ":" + "X").toString("base64");
@@ -148,10 +149,8 @@ const Help = () => {
             }
           )
           .then((r) => {
-            console.log(r);
           })
           .catch((err) => {
-            console.log(err);
           });
         if (res.status === 201) {
           setSnackbarType("success");
@@ -165,7 +164,7 @@ const Help = () => {
         setAttachmentFile(null);
         setPriority("1");
       })
-      .catch((err) => {});
+      .catch((err) => { });
   };
 
   const setFile = (e: any) => {
@@ -209,9 +208,7 @@ const Help = () => {
             paddingBottom: 2,
           }}
         >
-          Need help from our team? Send us a messages with the form below, and
-          we’ll get back to you within 24 hours if your request relates to a
-          bug/issue in the game.
+          {getTranslation("helpText")}
         </Typography>
         <Box sx={{ p: 4 }}>
           <form
@@ -222,8 +219,8 @@ const Help = () => {
             <Grid container spacing={2} sx={{ marginBottom: 4 }}>
               <Grid item md={6}>
                 <TextField
-                  label="Email"
-                  placeholder="Your Email"
+                  label={getTranslation("email")}
+                  placeholder={getTranslation("yourEmail")}
                   onChange={(e: any) => setEmail(e.target.value)}
                   name="email"
                   value={email}
@@ -238,8 +235,8 @@ const Help = () => {
               <Grid item md={6}>
                 <TextField
                   id="outlined-basic"
-                  label="DiscordID"
-                  placeholder="Your Discord(optional)"
+                  label={getTranslation("discordId")}
+                  placeholder={getTranslation("yourDiscord")}
                   value={discordID}
                   sx={{ width: "100%" }}
                   onChange={(e) => setDiscordID(e.target.value)}
@@ -249,8 +246,8 @@ const Help = () => {
             <Grid container spacing={2} sx={{ marginBottom: 4 }}>
               <Grid item xs={12}>
                 <TextField
-                  label="Title"
-                  placeholder="Title of your issue"
+                  label={getTranslation("title")}
+                  placeholder={getTranslation("titleIssue")}
                   onChange={(e: any) => setSubject(e.target.value)}
                   name="subject"
                   value={subject}
@@ -263,8 +260,8 @@ const Help = () => {
             <Grid container spacing={2} sx={{ marginBottom: 4 }}>
               <Grid item xs={12}>
                 <TextField
-                  label="Description"
-                  placeholder="Please describe your issue with as many details as possible. "
+                  label={getTranslation("description")}
+                  placeholder={getTranslation("descriptionText")}
                   onChange={(e: any) => setDescription(e.target.value)}
                   name="description"
                   value={description}
@@ -295,26 +292,26 @@ const Help = () => {
                   </IconButton>
                   {attachmentFile
                     ? attachmentFile["name"] +
-                      " / " +
-                      (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
-                      "MB"
-                    : "Attachment File (optional)"}
+                    " / " +
+                    (attachmentFile["size"] / 1024 / 1024).toFixed(3) +
+                    "MB"
+                    : getTranslation('attachmentFile')}
                 </label>
               </Grid>
               <Grid item md={6}>
                 <TextField
                   id="outlined-select"
                   select
-                  label="Priority"
+                  label={getTranslation("priority")}
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  helperText="Please select priority"
+                  helperText={getTranslation("selectPriority")}
                   sx={{ width: "100%" }}
                 >
-                  <MenuItem value={"1"}>Low</MenuItem>
-                  <MenuItem value={"2"}>Medium</MenuItem>
-                  <MenuItem value={"3"}>High</MenuItem>
-                  <MenuItem value={"4"}>Urgent</MenuItem>
+                  <MenuItem value={"1"}>{getTranslation("low")}</MenuItem>
+                  <MenuItem value={"2"}>{getTranslation("medium")}</MenuItem>
+                  <MenuItem value={"3"}>{getTranslation("high")}</MenuItem>
+                  <MenuItem value={"4"}>{getTranslation("urgent")}</MenuItem>
                 </TextField>
               </Grid>
             </Grid>
@@ -325,7 +322,7 @@ const Help = () => {
                 variant="contained"
                 type="submit"
               >
-                Create ticket
+                {getTranslation("createTicket")}
               </Button>
             </Box>
           </form>

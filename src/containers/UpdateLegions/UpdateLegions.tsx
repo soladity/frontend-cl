@@ -34,6 +34,10 @@ import {
   getWarriorToken,
   getLegionToken,
   updateLegion,
+  getTrainingCost,
+  getCostForAddingWarrior,
+  getAllWarriors,
+  getAllBeasts,
 } from "../../hooks/contractFunction";
 import {
   getBeastTokenIds,
@@ -46,6 +50,7 @@ import {
   useWarrior,
   useWeb3,
   useLegion,
+  useFeeHandler,
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { toCapitalize } from "../../utils/common";
@@ -55,6 +60,8 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
 import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
+import warriorInfo from "../../constant/warriors";
+import beastsTypeInfo from "../../constant/beasts";
 
 const useStyles = makeStyles({
   root: {
@@ -161,7 +168,7 @@ const UpdateLegions: React.FC = () => {
   const [tempAP, setTempAP] = React.useState(0);
   const [tempBeastsCnt, setTempBeastsCnt] = React.useState(0);
   const [tempWarriorsCnt, setTempWarriorsCnt] = React.useState(0);
-  const [mintFee, setMintFee] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState("0");
   const [curLegionSupply, setCurLegionSupply] = React.useState(0);
   const [comboFilterValue, setComboFilterValue] = React.useState("");
   const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
@@ -179,6 +186,7 @@ const UpdateLegions: React.FC = () => {
   const beastContract = useBeast();
   const legionContract = useLegion();
   const bloodstoneContract = useBloodstone();
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
   const theme = useTheme();
@@ -243,11 +251,7 @@ const UpdateLegions: React.FC = () => {
       sum + tempAP >= createlegions.main.minAvailableAP &&
       legionName.length > 0
     );
-    setMintFee(
-      0.5 * dropItemList.length +
-      dropItemList.filter((item) => item.w5b === true).length *
-      curLegionSupply
-    );
+    setFee();
   }, [beasts, warriors, dropItemList, legionName]);
 
   React.useEffect(() => {
@@ -267,24 +271,14 @@ const UpdateLegions: React.FC = () => {
         );
         tempCP += parseInt(beast["capacity"]);
       }
-      let warrior;
-      let tempAP = 0;
-      for (let i = 0; i < curLegionTmp?.warriors.length; i++) {
-        warrior = await getWarriorToken(
-          web3,
-          warriorContract,
-          curLegionTmp?.warriors[i]
-        );
-        tempAP += parseInt(warrior["power"]);
-      }
       setLegionName(curLegionTmp?.name);
       setTempBeastsCnt(curLegionTmp?.beasts.length);
       setTempWarriorsCnt(curLegionTmp?.warriors.length);
       setCurLegionSupply(+curLegionTmp?.supplies);
       setTempCP(tempCP);
-      setTempAP(tempAP);
+      setTempAP(curLegionTmp?.attackPower);
       setTotalCP(tempCP);
-      setTotalAP(tempAP);
+      setTotalAP(curLegionTmp?.attackPower);
       setCurLegion({ ...curLegionTmp });
     };
     if (curLegionID !== "-1") {
@@ -292,60 +286,87 @@ const UpdateLegions: React.FC = () => {
     }
   }, [curLegionID]);
 
+  const setFee = async () => {
+    setMintFee(
+      (parseInt(
+        await getTrainingCost(
+          feeHandlerContract,
+          dropItemList.filter((item) => item.w5b === false).length
+        )
+      ) /
+        Math.pow(10, 18) +
+        parseInt(
+          await getCostForAddingWarrior(
+            feeHandlerContract,
+            dropItemList.filter((item) => item.w5b === true).length,
+            curLegionSupply
+          )
+        ) /
+        Math.pow(10, 18)).toFixed(3)
+    );
+  };
+
+
   const getBalance = async () => {
     setLoading(true);
-    setBaseUrl(await getBaseUrl());
-    const beastIds = await getBeastTokenIds(web3, beastContract, account);
-    const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
-    let beast;
-    let tempBeasts: IItem[] = [];
-    let gif = "";
-    let jpg = "";
-    for (let i = 0; i < beastIds.length; i++) {
-      beast = await getBeastToken(web3, beastContract, beastIds[i]);
-      for (let j = 0; j < Image.beasts.length; j++) {
-        if (Image.beasts[j].name === beast.type) {
-          gif = Image.beasts[j].gif;
-          jpg = Image.beasts[j].jpg;
-        }
-      }
-      tempBeasts.push({
-        id: beastIds[i],
-        type: beast.type,
-        strength: beast.strength,
-        capacity: beast.capacity,
-        power: null,
-        w5b: false,
-        jpg: jpg,
-        gif: gif,
-      });
-    }
-    let warrior;
-    let tempWarriors: IItem[] = [];
-    for (let i = 0; i < warriorIds.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
-        }
-      }
-      tempWarriors.push({
-        id: warriorIds[i],
-        type: warrior.type,
-        strength: warrior.strength,
-        capacity: null,
-        power: warrior.power,
-        w5b: true,
-        jpg: jpg,
-        gif: gif,
-      });
-    }
-    // Set selected beasts and warriors to dropList
-    setBeasts(tempBeasts);
-    setWarriors(tempWarriors);
+    await getWarriors()
+    await getBeasts()
     setLoading(false);
-  };
+  }
+
+  const getWarriors = async () => {
+    var tempWarriors: any[] = []
+    try {
+      const warriorsInfo = await getAllWarriors(warriorContract, account)
+
+      let ids = warriorsInfo[0]
+      let strengths = warriorsInfo[1]
+      let powers = warriorsInfo[2]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: warriorInfo[parseInt(strengths[index]) - 1],
+          strength: strengths[index],
+          capacity: "",
+          power: powers[index],
+          w5b: true,
+          jpg: "",
+          gif: "",
+        }
+        tempWarriors.push(temp)
+      })
+    } catch (error) {
+
+    }
+    setWarriors(tempWarriors);
+  }
+
+  const getBeasts = async () => {
+    var tempBeasts: any[] = []
+    try {
+      const beastsInfo = await getAllBeasts(beastContract, account)
+
+      let ids = beastsInfo[0]
+      let capacities = beastsInfo[1]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+          strength: capacities[index],
+          capacity: capacities[index],
+          power: "",
+          w5b: false,
+          jpg: "",
+          gif: "",
+        }
+        tempBeasts.push(temp)
+      })
+    } catch (error) {
+
+    }
+    setBeasts(tempBeasts);
+  }
+
 
   const moveToLeft = (index: number, w5b: boolean) => {
     const dropItemClone = [...dropItemList];
@@ -521,7 +542,9 @@ const UpdateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {isSmallThanSM ? "BACK" : getTranslation("btnBackToLegions")}
+              {isSmallThanSM
+                ? getTranslation("back")
+                : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>
@@ -771,14 +794,24 @@ const UpdateLegions: React.FC = () => {
                   {warrior5beast &&
                     warriors
                       .filter(
-                        (fitem: any) =>
-                          apValue[0] < parseInt(fitem.power) &&
-                          apValue[1] > parseInt(fitem.power)
+                        (item: any) =>
+                          apValue[0] <= parseInt(item.power) &&
+                          (apValue[1] === 6000
+                            ? true
+                            : apValue[1] >= parseInt(item.power))
                       )
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={true}
-                          image={showAnimation === '0' ? '/assets/images/characters/jpg/warriors/' + item['type'] + '.jpg' : '/assets/images/characters/gif/warriors/' + item['type'] + '.gif'}
+                          image={
+                            showAnimation === "0"
+                              ? "/assets/images/characters/jpg/warriors/" +
+                              item["type"] +
+                              ".jpg"
+                              : "/assets/images/characters/gif/warriors/" +
+                              item["type"] +
+                              ".gif"
+                          }
                           item={item}
                           key={10000 + item.id}
                           index={+item.id}
@@ -795,7 +828,15 @@ const UpdateLegions: React.FC = () => {
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={false}
-                          image={showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif'}
+                          image={
+                            showAnimation === "0"
+                              ? "/assets/images/characters/jpg/beasts/" +
+                              item["type"] +
+                              ".jpg"
+                              : "/assets/images/characters/gif/beasts/" +
+                              item["type"] +
+                              ".gif"
+                          }
                           item={item}
                           key={item.id}
                           index={+item.id}
@@ -811,14 +852,18 @@ const UpdateLegions: React.FC = () => {
               <Card sx={{ height: "100%", fontSize: isSmallThanSM ? 10 : 14 }}>
                 <Grid item xs={12} sx={{ p: 2, textAlign: "center" }}>
                   {isSmallThanSM
-                    ? getTranslation("existingAPIs") + " " +
+                    ? getTranslation("existingAPIs") +
+                    " " +
                     formatNumber(tempAP) +
-                    " AP - " + getTranslation("ShortFeeToolTip") + " " +
+                    " AP - " +
+                    getTranslation("ShortFeeToolTip") +
+                    " " +
                     mintFee +
                     " $BLST"
-                    : getTranslation('yourOldLegionAP') +
+                    : getTranslation("yourOldLegionAP") +
                     formatNumber(tempAP) +
-                    " AP - " + getTranslation('feeToUpdate') +
+                    " AP - " +
+                    getTranslation("feeToUpdate") +
                     mintFee +
                     " $BLST"}
                 </Grid>
@@ -846,12 +891,17 @@ const UpdateLegions: React.FC = () => {
                         disabled={!isWDropable || mintLoading}
                       >
                         {isSmallThanSM ? (
-                          getTranslation("Update") + " (" + formatNumber(totalAP) + "AP)"
+                          getTranslation("updateLegion") +
+                          " (" +
+                          formatNumber(totalAP) +
+                          "AP)"
                         ) : mintLoading ? (
                           <Spinner color="white" size={40} />
                         ) : (
                           getTranslation("updateLegion") +
-                          " " + getTranslation('to') + " " +
+                          " " +
+                          getTranslation("to") +
+                          " " +
                           formatNumber(totalAP) +
                           "AP"
                         )}
@@ -873,12 +923,16 @@ const UpdateLegions: React.FC = () => {
                       item
                       sx={{
                         color:
-                          totalCP < dropItemList.filter((item) => item.w5b === true).length +
+                          totalCP <
+                            dropItemList.filter((item) => item.w5b === true)
+                              .length +
                             tempWarriorsCnt
                             ? "red"
                             : "white",
                         fontWeight:
-                          totalCP < dropItemList.filter((item) => item.w5b === true).length +
+                          totalCP <
+                            dropItemList.filter((item) => item.w5b === true)
+                              .length +
                             tempWarriorsCnt
                             ? "bold"
                             : "normal",
@@ -892,14 +946,20 @@ const UpdateLegions: React.FC = () => {
                     <Grid
                       item
                       sx={{
-                        color: createlegions.main.maxAvailableDragCount < dropItemList.filter((item) => item.w5b === false).length +
-                          tempBeastsCnt
-                          ? "red"
-                          : "white",
-                        fontWeight: createlegions.main.maxAvailableDragCount < dropItemList.filter((item) => item.w5b === false).length +
-                          tempBeastsCnt
-                          ? "bold"
-                          : "normal",
+                        color:
+                          createlegions.main.maxAvailableDragCount <
+                            dropItemList.filter((item) => item.w5b === false)
+                              .length +
+                            tempBeastsCnt
+                            ? "red"
+                            : "white",
+                        fontWeight:
+                          createlegions.main.maxAvailableDragCount <
+                            dropItemList.filter((item) => item.w5b === false)
+                              .length +
+                            tempBeastsCnt
+                            ? "bold"
+                            : "normal",
                       }}
                     >
                       {isSmallThanSM ? "B" : getTranslation("beasts")}:{" "}

@@ -64,7 +64,7 @@ export default function LegionCard(props: CardProps) {
 
   React.useEffect(() => {
     getBalance();
-  }, []);
+  }, [beasts, warriors]);
 
   const getBalance = async () => {
     let beast;
@@ -102,8 +102,8 @@ export default function LegionCard(props: CardProps) {
     setLoaded(true);
   };
 
-  const open = (id: string) => {
-    handleOpenSupply(parseInt(id));
+  const open = (id: string, warriorCnt: number) => {
+    handleOpenSupply(parseInt(id), warriorCnt);
   };
 
   const openShopping = (id: string) => {
@@ -155,68 +155,68 @@ export default function LegionCard(props: CardProps) {
           <Grid container spacing={1} sx={{ pt: 2 }}>
             {showWarrior
               ? warriorList.map((item: any, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                <Grid item xs={12} md={6} key={index}>
+                  <Box
+                    sx={{
+                      backgroundColor: "black",
+                      padding: 1,
+                      borderRadius: 1,
+                    }}
+                  >
                     <Box
                       sx={{
-                        backgroundColor: "black",
-                        padding: 1,
-                        borderRadius: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">{item.type}</Typography>
-                        <Typography variant="subtitle2">#{item.id}</Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">
-                          {formatNumber(item.power)} AP
-                        </Typography>
-                        <Box>{item.item}</Box>
-                      </Box>
+                      <Typography variant="subtitle2">{item.type}</Typography>
+                      <Typography variant="subtitle2">#{item.id}</Typography>
                     </Box>
-                  </Grid>
-                ))
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography variant="subtitle2">
+                        {formatNumber(item.power)} AP
+                      </Typography>
+                      <Box>{item.item}</Box>
+                    </Box>
+                  </Box>
+                </Grid>
+              ))
               : beastList.map((item: any, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                <Grid item xs={12} md={6} key={index}>
+                  <Box
+                    sx={{
+                      backgroundColor: "black",
+                      padding: 1,
+                      borderRadius: 1,
+                    }}
+                  >
                     <Box
                       sx={{
-                        backgroundColor: "black",
-                        padding: 1,
-                        borderRadius: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography variant="subtitle2">{item.type}</Typography>
-                        <Typography variant="subtitle2">#{item.id}</Typography>
-                      </Box>
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography variant="subtitle2">
-                          {item.capacity}
-                        </Typography>
-                        <img
-                          src="/assets/images/sword.png"
-                          style={{ height: "15px", marginLeft: "5px" }}
-                          alt="Sword"
-                        />
-                      </Box>
+                      <Typography variant="subtitle2">{item.type}</Typography>
+                      <Typography variant="subtitle2">#{item.id}</Typography>
                     </Box>
-                  </Grid>
-                ))}
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Typography variant="subtitle2">
+                        {item.capacity}
+                      </Typography>
+                      <img
+                        src="/assets/images/sword.png"
+                        style={{ height: "15px", marginLeft: "5px" }}
+                        alt="Sword"
+                      />
+                    </Box>
+                  </Box>
+                </Grid>
+              ))}
           </Grid>
         </CardContent>
       )}
@@ -244,12 +244,12 @@ export default function LegionCard(props: CardProps) {
             huntStatus === "green"
               ? "green"
               : huntStatus === "orange"
-              ? "orange"
-              : "red",
+                ? "orange"
+                : "red",
         }}
-        onClick={() => open(id)}
+        onClick={() => open(id, warriors.length)}
       >
-        {supplies} H
+        {supplies} {getTranslation("hSymbol")}
       </Box>
       <Box
         sx={{
@@ -265,12 +265,13 @@ export default function LegionCard(props: CardProps) {
           variant="h6"
           sx={{
             fontSize: "0.8rem",
-            fontWeight: '600',
+            fontWeight: "600",
             textShadow:
               "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          W {warriors.length} / {totalWarrior}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B {beasts.length}
+          W {warriors.length} / {totalWarrior}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B{" "}
+          {beasts.length}
         </Typography>
         <Box
           sx={{

@@ -13,34 +13,30 @@ import UpdateLegions from "../containers/UpdateLegions";
 import Profile from "../containers/Profile/Profile";
 import Policy from "../containers/Policy/Policy";
 import Help from "../containers/Help/Help";
+import MassExecute from "../containers/MassExecute/MassExecute";
 
 export const navConfig = {
   drawerWidth: 250,
   routes: () => [
     {
       path: "/",
-      // element: React.lazy(() => import('./../containers/Home/Home')),
       element: <Home />,
       children: [],
     },
     {
       path: "/hunt",
-      // element: React.lazy(() => import('./../containers/Monsters/Monsters'))
       element: <Monsters />,
     },
     {
       path: "/beasts",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Beasts />,
     },
     {
       path: "/warriors",
-      // element: React.lazy(() => import('./../containers/Monsters/Monsters'))
       element: <Warriors />,
     },
     {
       path: "/legions",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Legions />,
     },
     {
@@ -64,13 +60,15 @@ export const navConfig = {
       element: <UpdateLegions />,
     },
     {
+      path: "/massexecute",
+      element: <MassExecute />,
+    },
+    {
       path: "/profile",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Profile />,
     },
     {
       path: "/policy",
-      // element: React.lazy(() => import('./../containers/Beasts/Beasts'))
       element: <Policy />,
     },
     {
@@ -149,13 +147,14 @@ export const navConfig = {
         type: "link",
         title: "buyBlst",
         icon: "pancake.png",
-        path: "https://pancakeswap.com",
+        path: "https://pancakeswap.finance/swap?outputCurrency=0x340516B933597F131E827aBdf0E3f700E24e84Ff",
       },
       {
         type: "link",
         title: "whitepaper",
         icon: "whitepaper.png",
         path: "https://docs.cryptolegions.app/",
+        esPath: "https://docs-es.cryptolegions.app/",
       },
       {
         type: "navlink",

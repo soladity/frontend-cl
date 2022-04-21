@@ -1,7 +1,13 @@
 {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_feehandler",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
@@ -25,16 +31,30 @@
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "RewardChanged",
+      "type": "event"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
           "name": "_winner",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_monster_id",
-          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -56,37 +76,38 @@
         },
         {
           "internalType": "uint256",
-          "name": "_amount",
+          "name": "taxStartDay",
           "type": "uint256"
         }
       ],
-      "name": "addUnclaimedUSD",
+      "name": "claimReward",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "bloodstone",
+      "name": "getTotalUnclaimedUSD",
       "outputs": [
         {
-          "internalType": "contract IERC20",
+          "internalType": "uint256",
           "name": "",
-          "type": "address"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "getEarlyClaimTax",
-      "outputs": [
+      "inputs": [
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getUnclaimedBLST",
+      "outputs": [
         {
           "internalType": "uint256",
           "name": "",
@@ -110,19 +131,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "legion",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -169,24 +177,24 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_tax",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "_startTax",
+          "name": "_reward",
           "type": "uint256"
         }
       ],
-      "name": "setEarlyClaimTax",
+      "name": "subReward",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "totalHuntedCount",
+      "name": "totalUSDUnclaimed",
       "outputs": [
         {
           "internalType": "uint256",
@@ -213,32 +221,20 @@
     {
       "inputs": [
         {
-          "internalType": "address payable",
-          "name": "_addr",
+          "internalType": "address",
+          "name": "",
           "type": "address"
-        },
+        }
+      ],
+      "name": "unclaimedUSD",
+      "outputs": [
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "",
           "type": "uint256"
         }
       ],
-      "name": "withdrawBNB",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "withdrawBNBOwner",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     }
   ]

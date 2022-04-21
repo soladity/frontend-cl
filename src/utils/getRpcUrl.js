@@ -1,5 +1,14 @@
 const getRpcUrl = () => {
-    return 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161';
-}
+  // return "https://bsc-dataseed.binance.org/";
+  return "https://data-seed-prebsc-1-s1.binance.org:8545/";
+};
 
-export default getRpcUrl
+const getRpcWsUrl = () => {
+  return "wss://speedy-nodes-nyc.moralis.io/6a447a818bd3304f39a41940/bsc/testnet/ws";
+  // return "wss://bsc-ws-node.nariox.org:443";
+};
+
+export default {
+  getRpcUrl,
+  getRpcWsUrl,
+};

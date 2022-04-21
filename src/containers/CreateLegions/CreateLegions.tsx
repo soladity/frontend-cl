@@ -26,25 +26,30 @@ import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 
 import { meta_constant, createlegions } from "../../config/meta.config";
+
 import {
   getLegionBloodstoneAllowance,
   setLegionBloodstoneApprove,
   getWarriorTokenIds,
   getWarriorToken,
-} from "../../hooks/contractFunction";
-import {
+  getTrainingCost,
   mintLegion,
   getBeastTokenIds,
   getBeastToken,
   getBaseUrl,
+  getAllWarriors,
+  getAllBeasts
 } from "../../hooks/contractFunction";
+
 import {
   useBloodstone,
   useBeast,
   useWarrior,
   useWeb3,
   useLegion,
+  useFeeHandler,
 } from "../../hooks/useContract";
+
 import { getTranslation } from "../../utils/translation";
 import { toCapitalize } from "../../utils/common";
 import { formatNumber } from "../../utils/common";
@@ -53,6 +58,8 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
 import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
+import warriorInfo from "../../constant/warriors";
+import beastsTypeInfo from "../../constant/beasts";
 
 const useStyles = makeStyles({
   root: {
@@ -73,7 +80,7 @@ const useStyles = makeStyles({
 });
 
 const capFilterConfigList = [
-  { id: 0, name: "all", onClick: Function },
+  { id: 0, name: getTranslation("all"), onClick: Function },
   { id: 1, name: "1", onClick: Function },
   { id: 2, name: "2", onClick: Function },
   { id: 3, name: "3", onClick: Function },
@@ -83,7 +90,7 @@ const capFilterConfigList = [
 ];
 
 const powerFilterConfigList = [
-  { id: 0, name: "ALL", min: 0, max: 10000, onClick: Function },
+  { id: 0, name: getTranslation("all"), min: 0, max: 10000, onClick: Function },
   { id: 1, name: "AP < 1K", min: 0, max: 1000, onClick: Function },
   { id: 2, name: "1K < AP < 2K", min: 999, max: 2000, onClick: Function },
   { id: 3, name: "2K < AP < 3K", min: 1999, max: 3000, onClick: Function },
@@ -97,8 +104,8 @@ interface IItem {
   w5b: boolean;
   type: string;
   strength: string;
-  capacity: string | null;
-  power: string | null;
+  capacity: string;
+  power: string;
   jpg: string;
   gif: string;
   id: string;
@@ -145,7 +152,7 @@ const CreateLegions: React.FC = () => {
   const [legionName, setLegionName] = React.useState("");
   const [isWDropable, setIsWDropable] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
-  const [mintFee, setMintFee] = React.useState(0);
+  const [mintFee, setMintFee] = React.useState("0");
   const [comboFilterValue, setComboFilterValue] = React.useState("");
   const [comboFilterList, setComboFilterList] = React.useState<IBFilterItem[]>(
     []
@@ -161,6 +168,7 @@ const CreateLegions: React.FC = () => {
   const beastContract = useBeast();
   const legionContract = useLegion();
   const bloodstoneContract = useBloodstone();
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
 
   const theme = useTheme();
@@ -208,9 +216,9 @@ const CreateLegions: React.FC = () => {
     let cp = 0;
     dropItemList.forEach((item: IItem) => {
       if (item.w5b) {
-        sum += parseInt(item.power as string);
+        sum += parseInt(item.power);
       } else {
-        cp += parseInt(item.capacity as string);
+        cp += parseInt(item.capacity);
       }
     });
     setTotalCP(cp);
@@ -223,62 +231,69 @@ const CreateLegions: React.FC = () => {
       sum >= createlegions.main.minAvailableAP &&
       legionName.length > 0
     );
-    setMintFee(0.5 * dropItemList.length);
+    setFee();
   }, [beasts, warriors, dropItemList, legionName]);
+
+  const setFee = async () => {
+    setMintFee((await getTrainingCost(feeHandlerContract, dropItemList.length) / Math.pow(10, 18)).toFixed(3));
+  };
 
   const getBalance = async () => {
     setLoading(true);
-    setBaseUrl(await getBaseUrl());
-    const beastIds = await getBeastTokenIds(web3, beastContract, account);
-    const warriorIds = await getWarriorTokenIds(web3, warriorContract, account);
-    let beast;
-    let tempBeasts: IItem[] = [];
-    let gif = "";
-    let jpg = "";
-    for (let i = 0; i < beastIds.length; i++) {
-      beast = await getBeastToken(web3, beastContract, beastIds[i]);
-      for (let j = 0; j < Image.beasts.length; j++) {
-        if (Image.beasts[j].name === beast.type) {
-          gif = Image.beasts[j].gif;
-          jpg = Image.beasts[j].jpg;
-        }
-      }
-      tempBeasts.push({
-        id: beastIds[i],
-        type: beast.type,
-        strength: beast.strength,
-        capacity: beast.capacity,
-        power: null,
-        w5b: false,
-        jpg: jpg,
-        gif: gif,
-      });
-    }
-    let warrior;
-    let tempWarriors: IItem[] = [];
-    for (let i = 0; i < warriorIds.length; i++) {
-      warrior = await getWarriorToken(web3, warriorContract, warriorIds[i]);
-      for (let j = 0; j < Image.warriors.length; j++) {
-        if (Image.warriors[j].name === warrior.type) {
-          gif = Image.warriors[j].gif;
-          jpg = Image.warriors[j].jpg;
-        }
-      }
-      tempWarriors.push({
-        id: warriorIds[i],
-        type: warrior.type,
-        strength: warrior.strength,
-        capacity: null,
-        power: warrior.power,
-        w5b: true,
-        jpg: jpg,
-        gif: gif,
-      });
-    }
-    setBeasts(tempBeasts);
-    setWarriors(tempWarriors);
+    await getWarriors()
+    await getBeasts()
     setLoading(false);
-  };
+  }
+
+  const getWarriors = async () => {
+    var tempWarriors: any[] = []
+    try {
+      const warriorsInfo = await getAllWarriors(warriorContract, account)
+      let ids = warriorsInfo[0]
+      let strengths = warriorsInfo[1]
+      let powers = warriorsInfo[2]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: warriorInfo[parseInt(strengths[index]) - 1],
+          strength: strengths[index],
+          capacity: "",
+          power: powers[index],
+          w5b: true,
+          jpg: "",
+          gif: "",
+        }
+        tempWarriors.push(temp)
+      })
+    } catch (error) {
+    }
+    setWarriors(tempWarriors);
+  }
+
+  const getBeasts = async () => {
+    var tempBeasts: any[] = []
+    try {
+      const beastsInfo = await getAllBeasts(beastContract, account)
+      let ids = beastsInfo[0]
+      let capacities = beastsInfo[1]
+      ids.forEach((id: any, index: number) => {
+        var temp = {
+          id: id,
+          type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+          strength: capacities[index],
+          capacity: capacities[index],
+          power: "",
+          w5b: false,
+          jpg: "",
+          gif: "",
+        }
+        tempBeasts.push(temp)
+      })
+    } catch (error) {
+    }
+    console.log(tempBeasts)
+    setBeasts(tempBeasts);
+  }
 
   const moveToLeft = (index: number, w5b: boolean) => {
     const dropItemClone = [...dropItemList];
@@ -316,10 +331,10 @@ const CreateLegions: React.FC = () => {
       bloodstoneContract,
       account
     );
-    if (allowance === "0") {
-      await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
-    }
     try {
+      if (allowance === "0") {
+        await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
+      }
       await mintLegion(
         web3,
         legionContract,
@@ -336,11 +351,9 @@ const CreateLegions: React.FC = () => {
             return parseInt(fitem["id"]);
           })
       );
-    } catch (e: any) {
-      if (e.code === 4001) {
-        setMintLoading(false);
-        return;
-      }
+    } catch (e) {
+      setMintLoading(false);
+      return;
     }
     setMintLoading(false);
     navigate("/legions");
@@ -461,7 +474,9 @@ const CreateLegions: React.FC = () => {
               >
                 <ArrowBack />
               </IconButton>
-              {isSmallThanSM ? "BACK" : getTranslation("btnBackToLegions")}
+              {isSmallThanSM
+                ? getTranslation("back")
+                : getTranslation("btnBackToLegions")}
             </NavLink>
           </CommonBtn>
         </Grid>
@@ -711,14 +726,24 @@ const CreateLegions: React.FC = () => {
                   {warrior5beast &&
                     warriors
                       .filter(
-                        (fitem: any) =>
-                          apValue[0] < parseInt(fitem.power) &&
-                          apValue[1] > parseInt(fitem.power)
+                        (item: any) =>
+                          apValue[0] <= parseInt(item.power) &&
+                          (apValue[1] === 6000
+                            ? true
+                            : apValue[1] >= parseInt(item.power))
                       )
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={true}
-                          image={showAnimation === '0' ? '/assets/images/characters/jpg/warriors/' + item['type'] + '.jpg' : '/assets/images/characters/gif/warriors/' + item['type'] + '.gif'}
+                          image={
+                            showAnimation === "0"
+                              ? "/assets/images/characters/jpg/warriors/" +
+                              item["type"] +
+                              ".jpg"
+                              : "/assets/images/characters/gif/warriors/" +
+                              item["type"] +
+                              ".gif"
+                          }
                           item={item}
                           key={10000 + item.id}
                           index={+item.id}
@@ -735,7 +760,15 @@ const CreateLegions: React.FC = () => {
                       .map((item: any, index) => (
                         <DraggableCard
                           w5b={false}
-                          image={showAnimation === '0' ? '/assets/images/characters/jpg/beasts/' + item['type'] + '.jpg' : '/assets/images/characters/gif/beasts/' + item['type'] + '.gif'}
+                          image={
+                            showAnimation === "0"
+                              ? "/assets/images/characters/jpg/beasts/" +
+                              item["type"] +
+                              ".jpg"
+                              : "/assets/images/characters/gif/beasts/" +
+                              item["type"] +
+                              ".gif"
+                          }
                           item={item}
                           key={item.id}
                           index={+item.id}
@@ -762,7 +795,7 @@ const CreateLegions: React.FC = () => {
                           fontSize: isSmallThanSM ? 10 : 14,
                         }}
                         placeholder={
-                          isSmallThanSM ? "Name" : getTranslation("nameLegion")
+                          isSmallThanSM ? getTranslation("name") : getTranslation("nameLegion")
                         }
                         value={legionName}
                         onChange={handleChangedName}
@@ -781,7 +814,10 @@ const CreateLegions: React.FC = () => {
                         disabled={!isWDropable || mintLoading}
                       >
                         {isSmallThanSM ? (
-                          getTranslation("create") + " (" + formatNumber(totalAP) + "AP)"
+                          getTranslation("create") +
+                          " (" +
+                          formatNumber(totalAP) +
+                          "AP)"
                         ) : mintLoading ? (
                           <Spinner color="white" size={40} />
                         ) : totalCP <
@@ -790,11 +826,17 @@ const CreateLegions: React.FC = () => {
                           " " +
                           formatNumber(totalAP) +
                           " AP" +
-                          " (" + getTranslation("notEnoughBeasts") + ")"
+                          " (" +
+                          getTranslation("notEnoughBeasts") +
+                          ")"
                         ) : (
                           getTranslation("createLegion") +
                           (totalAP < createlegions.main.minAvailableAP
-                            ? " (" + getTranslation("min") + " 2000 AP " + getTranslation("needed") + ")"
+                            ? " (" +
+                            getTranslation("min") +
+                            " 2000 AP " +
+                            getTranslation("needed") +
+                            ")"
                             : " " + formatNumber(totalAP) + " AP")
                         )}
                       </CommonBtn>

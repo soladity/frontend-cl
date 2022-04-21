@@ -1,17 +1,23 @@
-export const RELOAD_CONTRACT_STATUS = 'RELOAD_CONTRACT_STATUS'
-
-export const SET_BEAST_IDS = 'SET_BEAST_IDS'
+export const RELOAD_CONTRACT_STATUS = "RELOAD_CONTRACT_STATUS";
+export const SET_MASS_HUNT_RESULT = "SET_MASS_HUNT_RESULT";
+export const INIT_MASS_HUNT_RESULT = "INIT_MASS_HUNT_RESULT";
 
 export const setReloadStatus = (payload) => {
-    return {
-        type: RELOAD_CONTRACT_STATUS,
-        payload: payload
-    }
-}
+  return {
+    type: RELOAD_CONTRACT_STATUS,
+    payload: payload,
+  };
+};
 
-export const setBeastIds = (payload) => {
-    return {
-        type: SET_BEAST_IDS,
-        payload: payload
-    }
-}
+export const setMassHuntResult = (payload) => {
+  return {
+    type: SET_MASS_HUNT_RESULT,
+    payload: payload,
+  };
+};
+
+export const initMassHuntResult = () => {
+  return {
+    type: INIT_MASS_HUNT_RESULT,
+  };
+};

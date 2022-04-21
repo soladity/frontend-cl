@@ -1,25 +1,35 @@
-import { RELOAD_CONTRACT_STATUS, SET_BEAST_IDS } from '../actions/contractActions'
+import {
+  RELOAD_CONTRACT_STATUS,
+  SET_MASS_HUNT_RESULT,
+  INIT_MASS_HUNT_RESULT,
+} from "../actions/contractActions";
 
 let initalState = {
-    reloadContractStatus: new Date(),
-    beastIds: []
-}
+  reloadContractStatus: new Date(),
+  massHuntResult: [],
+};
 
 export const contractReducer = (state = initalState, action) => {
-    switch (action.type) {
-        case RELOAD_CONTRACT_STATUS:
-            return {
-                ...state,
-                ...action.payload
-            };
+  switch (action.type) {
+    case RELOAD_CONTRACT_STATUS:
+      return {
+        ...state,
+        ...action.payload,
+      };
 
-        case SET_BEAST_IDS:
-            return {
-                ...state,
-                beastIds: action.payload
-            };
+    case SET_MASS_HUNT_RESULT:
+      return {
+        ...state,
+        massHuntResult: [...state.massHuntResult, action.payload],
+      };
 
-        default:
-            return state;
-    }
+    case INIT_MASS_HUNT_RESULT:
+      return {
+        ...state,
+        massHuntResult: [],
+      };
+
+    default:
+      return state;
+  }
 };
