@@ -398,7 +398,8 @@ const Warriors = () => {
   const handleExecute = async (id: number) => {
     setActionLoading(true);
     try {
-      await execute(web3, legionContract, account, false, id);
+      console.log("execute");
+      await execute(web3, warriorContract, account, [id]);
       let power = 0;
       let temp = warriors;
       for (let i = 0; i < temp.length; i++) {
@@ -413,6 +414,23 @@ const Warriors = () => {
         })
       );
     } catch (e) {}
+    setActionLoading(false);
+  };
+
+  const handleMassExecute = async () => {
+    setActionLoading(true);
+    try {
+      const ids = warriors
+        .filter((warrior: any) => warrior.executeStatus === true)
+        .map((warrior: any) => warrior.id);
+      await execute(web3, warriorContract, account, ids);
+      getBalance();
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
+    } catch (error) {}
     setActionLoading(false);
   };
 
@@ -652,8 +670,9 @@ const Warriors = () => {
                 disabled={
                   warriors.filter(
                     (warrior: any) => warrior.executeStatus === true
-                  ).length === 0
+                  ).length === 0 || actionLoading
                 }
+                onClick={handleMassExecute}
               >
                 {getTranslation("massExecute")}
               </CommonBtn>
