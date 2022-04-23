@@ -55,6 +55,25 @@
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_beast",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_warrior",
+          "type": "address"
+        }
+      ],
+      "name": "SetApprovedToContracts",
+      "type": "event"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -68,6 +87,24 @@
         }
       ],
       "name": "addReward",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_beast",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_warrior",
+          "type": "address"
+        }
+      ],
+      "name": "approveBlst",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -165,16 +202,16 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "_address",
+          "name": "_beast",
           "type": "address"
         },
         {
-          "internalType": "uint256",
-          "name": "_amount",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "_warrior",
+          "type": "address"
         }
       ],
-      "name": "returnTokenToPlayer",
+      "name": "setApproveToContracts",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

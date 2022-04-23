@@ -386,10 +386,9 @@ const Beasts = () => {
   };
 
   const handleExecute = async (id: number) => {
-    console.log(id);
     setActionLoading(true);
     try {
-      await execute(web3, legionContract, account, true, id);
+      await execute(web3, beastContract, account, [id]);
       let capacity = 0;
       let temp = beasts;
       for (let i = 0; i < temp.length; i++) {
@@ -407,6 +406,23 @@ const Beasts = () => {
     } catch (e) {
       console.log(e);
     }
+    setActionLoading(false);
+  };
+
+  const handleMassExecute = async () => {
+    setActionLoading(true);
+    try {
+      const ids = beasts
+        .filter((beast: any) => beast.executeStatus === true)
+        .map((beast: any) => beast.id);
+      await execute(web3, beastContract, account, ids);
+      getBalance();
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
+    } catch (error) {}
     setActionLoading(false);
   };
 
@@ -651,6 +667,7 @@ const Beasts = () => {
                   beasts.filter((beast: any) => beast.executeStatus === true)
                     .length === 0
                 }
+                onClick={handleMassExecute}
               >
                 {getTranslation("massExecute")}
               </CommonBtn>
