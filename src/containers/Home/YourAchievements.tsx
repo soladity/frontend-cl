@@ -115,13 +115,12 @@ const YourAchievements = () => {
       const ids = await getWarriorTokenIds(web3, warriorContract, account);
       for (let i = 0; i < ids.length; i++) {
         const warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-        if (warrior.strength === "6") {
+        if (warrior.strength === 6) {
           setWarriorMaster(true);
           return;
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getBeastStatus = async () => {
@@ -134,8 +133,7 @@ const YourAchievements = () => {
           return;
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getLegionStatus = async () => {
@@ -152,22 +150,19 @@ const YourAchievements = () => {
           }
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getMonsterStatus = async () => {
     try {
-      setMonsterConqueror(await getMonster23Hunted(legionContract, account))
-    } catch (error) {
-    }
+      setMonsterConqueror(await getMonster23Hunted(legionContract, account));
+    } catch (error) {}
   };
 
   const getKingStatus = async () => {
     try {
-      setKingOfNicah(await getMonster24Hunted(legionContract, account))
-    } catch (error) {
-    }
+      setKingOfNicah(await getMonster24Hunted(legionContract, account));
+    } catch (error) {}
   };
 
   const getInvitationLink = (role: string, status: boolean) => {
@@ -189,12 +184,10 @@ const YourAchievements = () => {
               .then((res) => {
                 window.open(res.data.link, "_blank");
               })
-              .catch((err) => {
-              });
+              .catch((err) => {});
           }
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     }
   };
 

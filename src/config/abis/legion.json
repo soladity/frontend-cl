@@ -253,6 +253,19 @@
       "inputs": [
         {
           "indexed": false,
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "SetMarketplace",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "uint256",
           "name": "_max",
           "type": "uint256"
@@ -817,19 +830,6 @@
     },
     {
       "inputs": [],
-      "name": "marketplace",
-      "outputs": [
-        {
-          "internalType": "contract Marketplace",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "massHunt",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -1110,6 +1110,19 @@
         }
       ],
       "name": "setLiquidityPool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "setMarketplaceAddr",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

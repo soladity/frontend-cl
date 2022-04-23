@@ -40,6 +40,8 @@ import {
   getFee,
   getUSDAmountFromBLST,
   getAllBeasts,
+  isApprovedForAll,
+  setApprovalForAll,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -57,6 +59,7 @@ import { FaTimes } from "react-icons/fa";
 import { getBeastGif } from "../../utils/common";
 import beastsTypeInfo from "../../constant/beasts";
 import MassExecute from "../MassExecute/MassExecute";
+import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
 const useStyles = makeStyles({
   root: {
@@ -296,6 +299,27 @@ const Beasts = () => {
     setLoading(false);
   };
 
+  const checkApprovalForAll = async () => {
+    console.log(
+      await isApprovedForAll(beastContract, account, getMarketplaceAddress())
+    );
+    if (
+      (await isApprovedForAll(
+        beastContract,
+        account,
+        getMarketplaceAddress()
+      )) === false
+    ) {
+      console.log("set");
+      await setApprovalForAll(
+        account,
+        beastContract,
+        getMarketplaceAddress(),
+        true
+      );
+    }
+  };
+
   const handleSupplyClose = () => {
     setOpenSupply(false);
   };
@@ -336,7 +360,8 @@ const Beasts = () => {
     setActionLoading(true);
     setOpenSupply(false);
     try {
-      await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
+      await checkApprovalForAll();
+      // await setMarketplaceApprove(web3, beastContract, account, selectedBeast);
       await sellToken(
         web3,
         marketplaceContract,

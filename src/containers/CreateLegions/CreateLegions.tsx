@@ -165,8 +165,9 @@ const CreateLegions: React.FC = () => {
     IWFilterItem[]
   >([]);
 
-  const [approvalForBeast, setApprovalForBeast] = React.useState(false);
-  const [approvalForWarrior, setApprovalForWarrior] = React.useState(false);
+  const [loadingText, setLoadingText] = React.useState(
+    getTranslation("loadingTitle")
+  );
 
   const navigate = useNavigate();
   const classes = useStyles();
@@ -252,34 +253,49 @@ const CreateLegions: React.FC = () => {
   const getBalance = async () => {
     setLoading(true);
     try {
-      if (
-        !(await isApprovedForAll(beastContract, account, getLegionAddress()))
-      ) {
-        await setApprovalForAll(
-          account,
-          beastContract,
-          getLegionAddress(),
-          true
-        );
-        setApprovalForBeast(true);
-      }
-      if (
-        !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
-      ) {
-        await setApprovalForAll(
-          account,
-          warriorContract,
-          getLegionAddress(),
-          true
-        );
-        setApprovalForWarrior(true);
-      }
+      await checkApprovalForAll();
       await getWarriors();
       await getBeasts();
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(true);
+    }
+  };
+
+  const checkApprovalForAll = async () => {
+    if (
+      !(await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
+    }
+    if (await isApprovedForAll(beastContract, account, getLegionAddress())) {
+      setLoadingText(getTranslation("approvalAllWarriors"));
+    }
+    if (await isApprovedForAll(warriorContract, account, getLegionAddress())) {
+      setLoadingText(getTranslation("approvalAllBeasts"));
+    }
+    if (!(await isApprovedForAll(beastContract, account, getLegionAddress()))) {
+      await setApprovalForAll(account, beastContract, getLegionAddress(), true);
+      setLoadingText(getTranslation("approvalAllWarriors"));
+    }
+    if (
+      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      await setApprovalForAll(
+        account,
+        warriorContract,
+        getLegionAddress(),
+        true
+      );
+      setLoadingText(getTranslation("approvalAllBeasts"));
+    }
+    if (
+      (await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+      (await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      setLoadingText(getTranslation("loadingTitle"));
     }
   };
 
@@ -967,15 +983,7 @@ const CreateLegions: React.FC = () => {
         {loading && (
           <>
             <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-              <Typography variant="h4">
-                {!approvalForBeast && !approvalForWarrior
-                  ? getTranslation("approvalAllBeastsAndWarriors")
-                  : !approvalForBeast
-                  ? getTranslation("approvalAllWarriors")
-                  : !approvalForWarrior
-                  ? getTranslation("approvalAllBeasts")
-                  : getTranslation("loadingTitle")}
-              </Typography>
+              <Typography variant="h4">{loadingText}</Typography>
             </Grid>
             <Grid item xs={1}>
               <Card>
