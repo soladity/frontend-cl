@@ -1,9 +1,12 @@
+import beastsInfo from "../constant/beasts";
+import warriorInfo from "../constant/warriors";
 import {
   getBeastAddress,
   getWarriorAddress,
   getLegionAddress,
   getMarketplaceAddress,
 } from "../utils/addressHelpers";
+import { getWarriorStrength } from "../utils/common";
 
 export const getBaseUrl = async () => {
   // const response = await contract.methods._baseURL().call();
@@ -61,15 +64,14 @@ export const getBeastTokenIds = async (web3, contract, account) => {
 };
 
 export const getBeastToken = async (web3, contract, tokenId) => {
-  console.log(tokenId)
   const response = await contract.methods.getBeast(tokenId).call();
-  console.log(response)
+  
   const beast = {
-    type: response[0],
-    strength: response[1],
-    capacity: response[2],
-    // image: response[3],
-    // imageAlt: response[4]
+    type: beastsInfo[
+      parseInt(response) == 20 ? 5 : parseInt(response) - 1
+    ],
+    strength: response,
+    capacity: response,
   };
   return beast;
 };
@@ -125,12 +127,13 @@ export const getWarriorTokenIds = async (web3, contract, account) => {
 
 export const getWarriorToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getWarrior(tokenId).call();
-  const beast = {
-    type: response[0],
-    strength: response[1],
-    power: response[2],
+  console.log(response)
+  const warrior = {
+    type:  warriorInfo[getWarriorStrength(parseInt(response)) - 1],
+    strength: getWarriorStrength(parseInt(response)),
+    power: response,
   };
-  return beast;
+  return warrior;
 };
 
 /**
@@ -554,10 +557,10 @@ export const getAllLegions = async (contract, account) => {
 };
 
 
-export const isApprovedForAll = async (contract, account, legionAddress) => {
-  return await contract.methods.isApprovedForAll(account, legionAddress).call();
+export const isApprovedForAll = async (contract, account, approvalContract) => {
+  return await contract.methods.isApprovedForAll(account, approvalContract).call();
 }
 
-export const setApprovalForAll = async (account, contract, legionAddress, status) => {
-  await contract.methods.setApprovalForAll(legionAddress, status).send({from: account});
+export const setApprovalForAll = async (account, contract, approvalContract, status) => {
+  await contract.methods.setApprovalForAll(approvalContract, status).send({from: account});
 }

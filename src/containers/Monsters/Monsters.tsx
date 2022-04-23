@@ -66,6 +66,8 @@ import {
   getBUSDBalance,
   getMonsterToHunt,
   getFee,
+  getLegionBloodstoneAllowance,
+  setLegionBloodstoneApprove,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -417,7 +419,7 @@ const Monsters = () => {
     try {
       setLoading(true);
       setHuntTax((await getFee(feeHandlerContract, 1)) / 10000);
-
+      console.log("huntTax", (await getFee(feeHandlerContract, 1)) / 10000);
       setBlstBalance(
         await getBloodstoneBalance(web3, bloodstoneContract, account)
       );
@@ -484,6 +486,10 @@ const Monsters = () => {
     try {
       const BUSD =
         (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
+      console.log(BUSD);
+      console.log(
+        (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
+      );
       if (
         BUSD >=
         (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
@@ -555,7 +561,15 @@ const Monsters = () => {
     setLoadingText(getTranslation("buyingSupplies"));
     setSupplyLoading(true);
     setOpenSupply(false);
+    const allowance = await getLegionBloodstoneAllowance(
+      web3,
+      bloodstoneContract,
+      account
+    );
     try {
+      if (allowance === "0") {
+        await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
+      }
       await addSupply(
         web3,
         legionContract,
@@ -1343,10 +1357,10 @@ const Monsters = () => {
           </CommonBtn>
         </Box>
       </Dialog>
-      <Present
+      {/* <Present
         presentDialogOpen={presentDialogOpen}
         setPresentDialogOpen={setPresentDialogOpen}
-      ></Present>
+      ></Present> */}
     </Box>
   );
 };

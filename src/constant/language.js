@@ -2557,7 +2557,7 @@ export const translations = {
     ph: "Mangyaring itakda ang pag-apruba sa lahat ng mga hayop!",
   },
   approvalAllWarriors: {
-    en: "Please set approval all beasts and warriors!",
+    en: "Please set approval all warriors!",
     es: "Por favor, apruebe todas las guerreras!",
     cn: "请集认可所有勇士！",
     pt: "Por favor, defina a aprovação de todos os guerreiros!",

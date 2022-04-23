@@ -38,6 +38,8 @@ import {
   getFee,
   getUSDAmountFromBLST,
   getAllWarriors,
+  isApprovedForAll,
+  setApprovalForAll,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -58,6 +60,7 @@ import {
 } from "../../utils/common";
 import { FaTimes } from "react-icons/fa";
 import warriorInfo from "../../constant/warriors";
+import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
 const useStyles = makeStyles({
   root: {
@@ -284,6 +287,27 @@ const Warriors = () => {
     setLoading(false);
   };
 
+  const checkApprovalForAll = async () => {
+    console.log(
+      await isApprovedForAll(warriorContract, account, getMarketplaceAddress())
+    );
+    if (
+      (await isApprovedForAll(
+        warriorContract,
+        account,
+        getMarketplaceAddress()
+      )) === false
+    ) {
+      console.log("set");
+      await setApprovalForAll(
+        account,
+        warriorContract,
+        getMarketplaceAddress(),
+        true
+      );
+    }
+  };
+
   const handleChangeAp = (
     event: Event,
     newValue: number | number[],
@@ -341,13 +365,13 @@ const Warriors = () => {
     setActionLoading(true);
     setOpenSupply(false);
     try {
-      await setMarketplaceApprove(
-        web3,
-        warriorContract,
-        account,
-        selectedWarrior
-      );
-
+      // await setMarketplaceApprove(
+      //   web3,
+      //   warriorContract,
+      //   account,
+      //   selectedWarrior
+      // );
+      await checkApprovalForAll();
       await sellToken(
         web3,
         marketplaceContract,
@@ -723,7 +747,7 @@ const Warriors = () => {
               .filter((item: any) =>
                 filter === "all"
                   ? parseInt(item.strength) >= 0
-                  : item.strength === filter
+                  : item.strength === parseInt(filter)
               )
               .filter(
                 (item: any) =>
@@ -762,7 +786,7 @@ const Warriors = () => {
                 .filter((item: any) =>
                   filter === "all"
                     ? parseInt(item.strength) >= 0
-                    : item.strength === filter
+                    : item.strength === parseInt(filter)
                 )
                 .filter(
                   (item: any) =>

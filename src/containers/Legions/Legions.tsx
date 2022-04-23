@@ -56,7 +56,9 @@ import {
   getUnclaimedBLST,
   getSupplyCost,
   getUSDAmountFromBLST,
-  getAllLegions
+  getAllLegions,
+  isApprovedForAll,
+  setApprovalForAll,
 } from "../../hooks/contractFunction";
 import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
@@ -65,6 +67,7 @@ import { formatNumber } from "../../utils/common";
 import { useDispatch } from "react-redux";
 import { setReloadStatus } from "../../actions/contractActions";
 import { FaTimes } from "react-icons/fa";
+import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
 const useStyles = makeStyles({
   root: {
@@ -117,14 +120,13 @@ const Legions = () => {
   const [apValue, setApValue] = React.useState<number[]>([0, 100000]);
   const [actionLoading, setActionLoading] = React.useState(false);
 
-
   const [supplyValues, setSupplyValues] = React.useState([0, 0, 0]);
   const [supplyOrder, setSupplyOrder] = React.useState(0);
   const [supplyCostLoading, setSupplyCostLoading] = React.useState(false);
 
   const [blstBalance, setBlstBalance] = React.useState(0);
   const [unclaimedBlst, setUnclaimedBlst] = React.useState(0);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -175,21 +177,21 @@ const Legions = () => {
   };
 
   const getBalance = async () => {
-    console.log(await getAllLegions(legionContract, account))
+    console.log(await getAllLegions(legionContract, account));
     setLoading(true);
 
     setBlstBalance(
       await getBloodstoneBalance(web3, bloodstoneContract, account)
-    )
+    );
     setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
     setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
     setBaseUrl(await getBaseUrl());
     setBeastBalance(await getBeastBalance(web3, beastContract, account));
     setWarriorBalance(await getWarriorBalance(web3, warriorContract, account));
-    const allLegions = await getAllLegions(legionContract, account)
+    const allLegions = await getAllLegions(legionContract, account);
     let amount = 0;
     const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
-      amount += parseInt(legion.attack_power) / 100
+      amount += parseInt(legion.attack_power) / 100;
       return {
         name: legion.name,
         beasts: legion.beast_ids,
@@ -199,9 +201,13 @@ const Legions = () => {
         supplies: legion.supplies,
         realPower: legion.attack_power,
         id: allLegions[1][index],
-        huntStatus: allLegions[2][index] ? 'green' : legion.supplies == "0" ? "red" : "orange"
-      }
-    })
+        huntStatus: allLegions[2][index]
+          ? "green"
+          : legion.supplies == "0"
+          ? "red"
+          : "orange",
+      };
+    });
     setTotalPower(parseInt(amount.toFixed(0)));
     let sortedArray = tempAllLegions.sort((a: any, b: any) => {
       if (a.attackPower > b.attackPower) {
@@ -215,6 +221,27 @@ const Legions = () => {
     setLegions(sortedArray);
     setTop3Lgions(sortedArray.slice(0, 3));
     setLoading(false);
+  };
+
+  const checkApprovalForAll = async () => {
+    console.log(
+      await isApprovedForAll(legionContract, account, getMarketplaceAddress())
+    );
+    if (
+      (await isApprovedForAll(
+        legionContract,
+        account,
+        getMarketplaceAddress()
+      )) === false
+    ) {
+      console.log("set");
+      await setApprovalForAll(
+        account,
+        legionContract,
+        getMarketplaceAddress(),
+        true
+      );
+    }
   };
 
   const handleChangeAp = (
@@ -254,7 +281,7 @@ const Legions = () => {
         legionContract,
         account,
         selectedLegion,
-        supplyOrder == 0 ? 7 : (supplyOrder == 1 ? 14 : 28),
+        supplyOrder == 0 ? 7 : supplyOrder == 1 ? 14 : 28,
         fromWallet
       );
       dispatch(
@@ -262,30 +289,22 @@ const Legions = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     setSupplyLoading(false);
     getBalance();
   };
 
   const handleOpenSupply = async (id: number, warriorCnt: any) => {
-    setSelectedLegion(id)
+    setSelectedLegion(id);
     setSupplyCostLoading(true);
     try {
       setOpenSupply(true);
       var tempArr = [];
-      tempArr.push(
-        await getSupplyCost(feeHandlerContract, warriorCnt, 7)
-      );
-      tempArr.push(
-        await getSupplyCost(feeHandlerContract, warriorCnt, 14)
-      );
-      tempArr.push(
-        await getSupplyCost(feeHandlerContract, warriorCnt, 28)
-      );
+      tempArr.push(await getSupplyCost(feeHandlerContract, warriorCnt, 7));
+      tempArr.push(await getSupplyCost(feeHandlerContract, warriorCnt, 14));
+      tempArr.push(await getSupplyCost(feeHandlerContract, warriorCnt, 28));
       setSupplyValues(tempArr);
-    } catch (error) {
-    }
+    } catch (error) {}
     setSupplyCostLoading(false);
   };
 
@@ -303,19 +322,29 @@ const Legions = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] == '0') {
-        price = price.slice(1)
+      if (price[0] == "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price == '') {
-        price = '0'
+      if (price == "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
 
@@ -323,12 +352,13 @@ const Legions = () => {
     setActionLoading(true);
     setOpenShopping(false);
     try {
-      await setMarketplaceApprove(
-        web3,
-        legionContract,
-        account,
-        selectedLegion
-      );
+      // await setMarketplaceApprove(
+      //   web3,
+      //   legionContract,
+      //   account,
+      //   selectedLegion
+      // );
+      await checkApprovalForAll();
       await sellToken(
         web3,
         marketplaceContract,
@@ -348,8 +378,7 @@ const Legions = () => {
       setLegions(
         legions.filter((item: any) => parseInt(item.id) !== selectedLegion)
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -503,8 +532,8 @@ const Legions = () => {
                           item.huntStatus === "green"
                             ? "green"
                             : item.huntStatus === "orange"
-                              ? "orange"
-                              : "red",
+                            ? "orange"
+                            : "red",
                       }}
                     >
                       {formatNumber(item.attackPower)} AP
@@ -752,7 +781,9 @@ const Legions = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" || evt.key === "E") && evt.preventDefault();
+            }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{
@@ -761,9 +792,11 @@ const Legions = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
-            {getTranslation('payMarketplaceTax')} {marketplaceTax}%
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
+          <Typography variant="subtitle1">
+            {getTranslation("payMarketplaceTax")} {marketplaceTax}%
           </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
@@ -788,14 +821,14 @@ const Legions = () => {
       </Dialog>
 
       <Dialog onClose={handleSupplyClose} open={openSupply}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ p: 1, visibility: 'hidden' }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ p: 1, visibility: "hidden" }}>
             <FaTimes />
           </Box>
           <DialogTitle sx={{ textAlign: "center" }}>
             {getTranslation("buySupply")}
           </DialogTitle>
-          <Box sx={{ p: 1, cursor: 'pointer' }} onClick={handleSupplyClose}>
+          <Box sx={{ p: 1, cursor: "pointer" }} onClick={handleSupplyClose}>
             <FaTimes />
           </Box>
         </Box>
@@ -850,19 +883,19 @@ const Legions = () => {
             sx={{ marginRight: 1, marginLeft: 1 }}
             disabled={
               parseFloat(blstBalance * Math.pow(10, 18) + "") <
-              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
-            {getTranslation('wallet')}
+            {getTranslation("wallet")}
           </CommonBtn>
           <CommonBtn
             onClick={() => handleSupplyClick(false)}
             disabled={
               parseFloat(unclaimedBlst + "") <
-              parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
+                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
             }
           >
-            {getTranslation('unclaimed')}
+            {getTranslation("unclaimed")}
           </CommonBtn>
         </Box>
         {supplyCostLoading && (

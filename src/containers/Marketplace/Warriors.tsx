@@ -34,7 +34,7 @@ import {
   getMarketItem,
   updatePrice,
   getUSDAmountFromBLST,
-  getAllWarriorMarketItems
+  getAllWarriorMarketItems,
 } from "../../hooks/contractFunction";
 import {
   useWarrior,
@@ -47,7 +47,11 @@ import {
 import WarriorMarketCard from "../../component/Cards/WarriorMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { getTranslation } from "../../utils/translation";
-import { formatNumber, getWarriorGif } from "../../utils/common";
+import {
+  formatNumber,
+  getWarriorGif,
+  getWarriorStrength,
+} from "../../utils/common";
 import Image from "../../config/image.json";
 import warriorInfo from "../../constant/warriors";
 
@@ -70,8 +74,8 @@ const useStyles = makeStyles({
 type WarriorProps = {
   id: string;
   type: string;
-  power: string;
-  strength: string;
+  power: number;
+  strength: number;
   owner: boolean;
   price: string;
 };
@@ -79,7 +83,6 @@ type WarriorProps = {
 const Warriors = () => {
   const { account } = useWeb3React();
 
-  const [baseUrl, setBaseUrl] = React.useState("");
   const [sort, setSort] = React.useState("0");
   const [warriors, setWarriors] = React.useState<WarriorProps[]>(Array);
   const [filter, setFilter] = React.useState("all");
@@ -92,7 +95,7 @@ const Warriors = () => {
   const [loading, setLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -101,7 +104,7 @@ const Warriors = () => {
   const marketplaceContract = useMarketplace();
   const marketplaceEventContract = useMarketplaceEvent();
   const bloodstoneContract = useBloodstone();
-  const feeHandlerContract = useFeeHandler()
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -116,130 +119,166 @@ const Warriors = () => {
     );
   }, []);
 
-
   React.useEffect(() => {
-    const buyEvent = marketplaceEventContract.events.BuyToken({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
-
-    const cancelEvent = marketplaceEventContract.events.CancelSelling({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        setWarriors(warriors.filter(warrior => warrior.id != event.returnValues._tokenId))
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
-
-    const sellEvent = marketplaceEventContract.events.SellToken({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (warriors.filter(item => item.id == event.returnValues._tokenId).length == 0) {
-        const warrior = await getWarriorToken(web3, warriorContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceEventContract, "2", event.returnValues._tokenId);
-        const newItem = {
-          ...warrior,
-          id: event.returnValues._tokenId,
-          owner: marketItem.owner === account ? true : false,
-          price: marketItem.price,
+    const buyEvent = marketplaceEventContract.events
+      .BuyToken({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          warriors.filter((item) => item.id == event.returnValues._tokenId)
+            .length > 0
+        ) {
+          setWarriors(
+            warriors.filter(
+              (warrior) => warrior.id != event.returnValues._tokenId
+            )
+          );
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
         }
-        setWarriors([...warriors, newItem])
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
+      });
 
-    const updateEvent = marketplaceEventContract.events.PriceUpdated({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (warriors.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        var temp = warriors.map(item => {
-          if (item.id == event.returnValues._tokenId) {
-            return {
-              ...item,
-              price: event.returnValues._price
+    const cancelEvent = marketplaceEventContract.events
+      .CancelSelling({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          warriors.filter((item) => item.id == event.returnValues._tokenId)
+            .length > 0
+        ) {
+          setWarriors(
+            warriors.filter(
+              (warrior) => warrior.id != event.returnValues._tokenId
+            )
+          );
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
+
+    const sellEvent = marketplaceEventContract.events
+      .SellToken({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          warriors.filter((item) => item.id == event.returnValues._tokenId)
+            .length == 0
+        ) {
+          const warrior = await getWarriorToken(
+            web3,
+            warriorContract,
+            event.returnValues._tokenId
+          );
+          const marketItem = await getMarketItem(
+            web3,
+            marketplaceEventContract,
+            "2",
+            event.returnValues._tokenId
+          );
+          const newItem = {
+            ...warrior,
+            id: event.returnValues._tokenId,
+            owner: marketItem.owner === account ? true : false,
+            price: marketItem.price,
+          };
+          setWarriors([...warriors, newItem]);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
+
+    const updateEvent = marketplaceEventContract.events
+      .PriceUpdated({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          warriors.filter((item) => item.id == event.returnValues._tokenId)
+            .length > 0
+        ) {
+          var temp = warriors.map((item) => {
+            if (item.id == event.returnValues._tokenId) {
+              return {
+                ...item,
+                price: event.returnValues._price,
+              };
+            } else {
+              return item;
             }
-          } else {
-            return item
-          }
-        })
-        setWarriors(temp)
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
+          });
+          setWarriors(temp);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       cancelEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
-    }
-  }, [warriors])
+      });
+    };
+  }, [warriors]);
 
   const getBalance = async () => {
     setLoading(true);
-    setBaseUrl(await getBaseUrl());
     let allWarriors;
-    let tempAllWarriors: any[] = []
+    let tempAllWarriors: any[] = [];
 
-    allWarriors = await getAllWarriorMarketItems(marketplaceContract);
+    try {
+      allWarriors = await getAllWarriorMarketItems(marketplaceContract);
+      console.log(allWarriors);
 
-    let ids = allWarriors[0]
-    let strengths = allWarriors[1]
-    let aps = allWarriors[2]
-    let prices = allWarriors[3]
-    let sellers = allWarriors[4]
+      let ids = allWarriors[0];
+      let aps = allWarriors[1];
+      let prices = allWarriors[2];
+      let sellers = allWarriors[3];
 
-    ids.forEach((id: any, index: number) => {
-      tempAllWarriors.push({
-        id: id,
-        strength: strengths[index],
-        power: aps[index],
-        price: prices[index],
-        owner: sellers[index] === account ? true : false,
-        type: warriorInfo[parseInt(strengths[index]) - 1],
-        gif: getWarriorGif(warriorInfo[parseInt(strengths[index]) - 1], parseInt(aps[index]))
-      })
-    })
+      ids.forEach((id: any, index: number) => {
+        tempAllWarriors.push({
+          id: id,
+          strength: getWarriorStrength(aps[index]),
+          power: aps[index],
+          price: prices[index],
+          owner: sellers[index] === account ? true : false,
+          type: warriorInfo[getWarriorStrength(aps[index]) - 1],
+          gif: getWarriorGif(
+            warriorInfo[getWarriorStrength(aps[index]) - 1],
+            parseInt(aps[index])
+          ),
+        });
+      });
+    } catch (error) {}
 
     // const ids = await getOnMarketplace(web3, warriorContract);
     // let warrior;
@@ -282,8 +321,7 @@ const Warriors = () => {
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "2", id);
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -302,15 +340,21 @@ const Warriors = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "2", id, BigInt(price));
+      await buyToken(
+        web3,
+        marketplaceContract,
+        account,
+        "2",
+        id,
+        BigInt(price)
+      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
       );
       setWarriors(warriors.filter((item: any) => parseInt(item.id) !== id));
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -367,9 +411,20 @@ const Warriors = () => {
   const handleUpdate = async (id: number) => {
     setSelectedWarrior(id);
     setPrice(
-      parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
+      parseInt(
+        warriors.filter((item: any) => parseInt(item.id) === id)[0].price
+      ) / Math.pow(10, 18)
     );
-    setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseInt(warriors.filter((item: any) => parseInt(item.id) === id)[0].price))))
+    setBlstToUsd(
+      await getUSDAmountFromBLST(
+        feeHandlerContract,
+        BigInt(
+          parseInt(
+            warriors.filter((item: any) => parseInt(item.id) === id)[0].price
+          )
+        )
+      )
+    );
     setOpenUpdate(true);
   };
 
@@ -378,22 +433,31 @@ const Warriors = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] == '0') {
-        price = price.slice(1)
+      if (price[0] == "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price == '') {
-        price = '0'
+      if (price == "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
-
 
   const handleUpdatePrice = async () => {
     setActionLoading(true);
@@ -410,19 +474,21 @@ const Warriors = () => {
       let temp = [];
       for (let i = 0; i < warriors.length; i++) {
         if (parseInt(warriors[i].id) === selectedWarrior)
-          temp.push({ ...warriors[i], price: (price * Math.pow(10, 18)).toString() });
+          temp.push({
+            ...warriors[i],
+            price: (price * Math.pow(10, 18)).toString(),
+          });
         else temp.push({ ...warriors[i] });
       }
       setWarriors([...temp]);
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
-  }
+  };
 
   return (
     <Box>
@@ -636,10 +702,10 @@ const Warriors = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/warriors/" +
-                          item["type"] +
-                          ".jpg"
+                            item["type"] +
+                            ".jpg"
                           : "/assets/images/characters/gif/warriors/" +
-                          item["gif"]
+                            item["gif"]
                       }
                       type={item["type"]}
                       power={item["power"]}
@@ -656,21 +722,24 @@ const Warriors = () => {
           </Grid>
           {warriors.length > 0 && (
             <Navigation
-              totalCount={warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              )
-              .filter((item: any) =>
-                onlyMyWarrior === true ? item.owner === true : true
-              ).length}
+              totalCount={
+                warriors
+                  .filter((item: any) =>
+                    filter === "all"
+                      ? parseInt(item.strength) >= 0
+                      : item.strength === filter
+                  )
+                  .filter(
+                    (item: any) =>
+                      apValue[0] <= parseInt(item.power) &&
+                      (apValue[1] === 6000
+                        ? true
+                        : apValue[1] >= parseInt(item.power))
+                  )
+                  .filter((item: any) =>
+                    onlyMyWarrior === true ? item.owner === true : true
+                  ).length
+              }
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
@@ -737,9 +806,17 @@ const Warriors = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" ||
+                evt.key === "E" ||
+                evt.key === "+" ||
+                evt.key === "-") &&
+                evt.preventDefault();
+            }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
