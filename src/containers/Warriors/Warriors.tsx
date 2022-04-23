@@ -37,7 +37,7 @@ import {
   getSummoningPrice,
   getFee,
   getUSDAmountFromBLST,
-  getAllWarriors
+  getAllWarriors,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -51,7 +51,11 @@ import WarriorCard from "../../component/Cards/WarriorCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import Navigation from "../../component/Navigation/Navigation";
 import { getTranslation } from "../../utils/translation";
-import { formatNumber, getWarriorGif } from "../../utils/common";
+import {
+  formatNumber,
+  getWarriorGif,
+  getWarriorStrength,
+} from "../../utils/common";
 import { FaTimes } from "react-icons/fa";
 import warriorInfo from "../../constant/warriors";
 
@@ -76,6 +80,10 @@ type WarriorProps = {
   type: string;
   power: string;
   strength: string;
+  executeStatus: {
+    type: boolean;
+    default: false;
+  };
 };
 
 const Warriors = () => {
@@ -95,7 +103,7 @@ const Warriors = () => {
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -158,26 +166,21 @@ const Warriors = () => {
     var BLST_per_150 = "5";
 
     try {
-      BLST_amount_1 = (await getSummoningPrice(
-        feeHandlerContract,
-        1
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_10 = (await getSummoningPrice(
-        feeHandlerContract,
-        10
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_50 = (await getSummoningPrice(
-        feeHandlerContract,
-        50
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_100 = (await getSummoningPrice(
-        feeHandlerContract,
-        100
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_150 = (await getSummoningPrice(
-        feeHandlerContract,
-        150
-      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_1 = (
+        (await getSummoningPrice(feeHandlerContract, 1)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_10 = (
+        (await getSummoningPrice(feeHandlerContract, 10)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_50 = (
+        (await getSummoningPrice(feeHandlerContract, 50)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_100 = (
+        (await getSummoningPrice(feeHandlerContract, 100)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_150 = (
+        (await getSummoningPrice(feeHandlerContract, 150)) / Math.pow(10, 18)
+      ).toFixed(2);
       var amount_per = {
         b1: {
           amount: BLST_amount_1,
@@ -202,9 +205,7 @@ const Warriors = () => {
       };
 
       setWarriorBlstAmountPer(amount_per);
-    } catch (error) {
-
-    }
+    } catch (error) {}
 
     return BLST_amount_1;
   };
@@ -239,47 +240,49 @@ const Warriors = () => {
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
-
       );
-    } catch (e) {
-
-    }
+    } catch (e) {}
     getBalance();
     setMintLoading(false);
   };
 
   const getBalance = async () => {
     setLoading(true);
-    var tempWarriors: any[] = []
-    var amount = 0
+    var tempWarriors: any[] = [];
+    var amount = 0;
     try {
-      setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+      setMarketplaceTax(
+        ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
+      );
       setBalance(
         parseInt(await getWarriorBalance(web3, warriorContract, account))
       );
-      const warriorsInfo = await getAllWarriors(warriorContract, account)
+      console.log(await getWarriorBalance(web3, warriorContract, account));
+      const warriorsInfo = await getAllWarriors(warriorContract, account);
+      console.log(warriorsInfo);
 
-      let ids = warriorsInfo[0]
-      let strengths = warriorsInfo[1]
-      let powers = warriorsInfo[2]
+      let ids = warriorsInfo[0];
+      let powers = warriorsInfo[1];
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: warriorInfo[parseInt(strengths[index]) - 1],
-          strength: strengths[index],
+          type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+          strength: getWarriorStrength(powers[index]),
           power: powers[index],
-          gif: getWarriorGif(warriorInfo[parseInt(strengths[index]) - 1], parseInt(powers[index]))
-        }
-        tempWarriors.push(temp)
-        amount += parseInt(powers[index])
-      })
-    } catch (error) {
-
-    }
+          gif: getWarriorGif(
+            warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+            parseInt(powers[index])
+          ),
+          executeStatus: false,
+        };
+        tempWarriors.push(temp);
+        amount += parseInt(powers[index]);
+      });
+    } catch (error) {}
     setMaxPower(amount);
     setWarriors(tempWarriors);
     setLoading(false);
-  }
+  };
 
   const handleChangeAp = (
     event: Event,
@@ -308,19 +311,29 @@ const Warriors = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] === '0') {
-        price = price.slice(1)
+      if (price[0] === "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price === '') {
-        price = '0'
+      if (price === "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
 
@@ -354,9 +367,7 @@ const Warriors = () => {
       setWarriors(
         warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior)
       );
-    } catch (e) {
-
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -367,8 +378,7 @@ const Warriors = () => {
       let power = 0;
       let temp = warriors;
       for (let i = 0; i < temp.length; i++) {
-        if (parseInt(temp[i]["id"]) === id)
-          power = parseInt(temp[i]["power"]);
+        if (parseInt(temp[i]["id"]) === id) power = parseInt(temp[i]["power"]);
       }
       setMaxPower(maxPower - power);
       setBalance(balance - 1);
@@ -378,9 +388,7 @@ const Warriors = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {
-
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -391,7 +399,21 @@ const Warriors = () => {
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
-  }
+  };
+
+  const setExecuteStatus = (id: String) => {
+    setWarriors(
+      warriors.map((warrior: any, index: any) => {
+        if (warrior.id == id) {
+          return {
+            ...warrior,
+            executeStatus: !warrior.executeStatus,
+          };
+        }
+        return warrior;
+      })
+    );
+  };
 
   return (
     <Box>
@@ -430,9 +452,7 @@ const Warriors = () => {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {getTranslation("summonWarrior")}
               </Typography>
-              <Box
-                sx={{ pt: 1 }}
-              >
+              <Box sx={{ pt: 1 }}>
                 <CommonBtn
                   aria-describedby={"summon-warrior-id"}
                   onClick={handlePopoverOpenSummonWarrior}
@@ -603,6 +623,16 @@ const Warriors = () => {
               >
                 {formatNumber(maxPower)}
               </Typography>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
+                disabled={
+                  warriors.filter(
+                    (warrior: any) => warrior.executeStatus === true
+                  ).length === 0
+                }
+              >
+                {getTranslation("massExecute")}
+              </CommonBtn>
             </Box>
           </Card>
         </Grid>
@@ -709,10 +739,10 @@ const Warriors = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/warriors/" +
-                        item["type"] +
-                        ".jpg"
+                          item["type"] +
+                          ".jpg"
                         : "/assets/images/characters/gif/warriors/" +
-                        item["gif"]
+                          item["gif"]
                     }
                     type={item["type"]}
                     power={item["power"]}
@@ -722,6 +752,8 @@ const Warriors = () => {
                     needButton={true}
                     handleOpenSupply={handleOpenSupply}
                     handleExecute={handleExecute}
+                    executeStatus={item["executeStatus"]}
+                    setExecuteStatus={setExecuteStatus}
                   />
                 </Grid>
               ))}
@@ -761,31 +793,35 @@ const Warriors = () => {
                 </Grid>
               )}
           </Grid>
-          {warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              ).length > 0 && (
+          {warriors
+            .filter((item: any) =>
+              filter === "all"
+                ? parseInt(item.strength) >= 0
+                : item.strength === filter
+            )
+            .filter(
+              (item: any) =>
+                apValue[0] <= parseInt(item.power) &&
+                (apValue[1] === 6000
+                  ? true
+                  : apValue[1] >= parseInt(item.power))
+            ).length > 0 && (
             <Navigation
-              totalCount={warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              ).length}
+              totalCount={
+                warriors
+                  .filter((item: any) =>
+                    filter === "all"
+                      ? parseInt(item.strength) >= 0
+                      : item.strength === filter
+                  )
+                  .filter(
+                    (item: any) =>
+                      apValue[0] <= parseInt(item.power) &&
+                      (apValue[1] === 6000
+                        ? true
+                        : apValue[1] >= parseInt(item.power))
+                  ).length
+              }
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
@@ -872,7 +908,13 @@ const Warriors = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" ||
+                evt.key === "E" ||
+                evt.key === "+" ||
+                evt.key === "-") &&
+                evt.preventDefault();
+            }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{
@@ -881,9 +923,11 @@ const Warriors = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
-            {getTranslation('payMarketplaceTax')} {marketplaceTax}%
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
+          <Typography variant="subtitle1">
+            {getTranslation("payMarketplaceTax")} {marketplaceTax}%
           </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (

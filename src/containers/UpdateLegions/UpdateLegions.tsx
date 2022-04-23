@@ -53,7 +53,7 @@ import {
   useFeeHandler,
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
-import { toCapitalize } from "../../utils/common";
+import { getWarriorStrength, toCapitalize } from "../../utils/common";
 import { formatNumber } from "../../utils/common";
 import { DropBox } from "../../component/Cards/DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -244,12 +244,12 @@ const UpdateLegions: React.FC = () => {
     setTotalAP(sum + tempAP);
     setIsWDropable(
       dropItemList.length > 0 &&
-      createlegions.main.maxAvailableDragCount >=
-      dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
-      cp + tempCP >=
-      dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
-      sum + tempAP >= createlegions.main.minAvailableAP &&
-      legionName.length > 0
+        createlegions.main.maxAvailableDragCount >=
+          dropItemList.filter((item) => !item.w5b).length + tempBeastsCnt &&
+        cp + tempCP >=
+          dropItemList.filter((item) => item.w5b).length + tempWarriorsCnt &&
+        sum + tempAP >= createlegions.main.minAvailableAP &&
+        legionName.length > 0
     );
     setFee();
   }, [beasts, warriors, dropItemList, legionName]);
@@ -288,13 +288,14 @@ const UpdateLegions: React.FC = () => {
 
   const setFee = async () => {
     setMintFee(
-      (parseInt(
-        await getTrainingCost(
-          feeHandlerContract,
-          dropItemList.filter((item) => item.w5b === false).length
-        )
-      ) /
-        Math.pow(10, 18) +
+      (
+        parseInt(
+          await getTrainingCost(
+            feeHandlerContract,
+            dropItemList.filter((item) => item.w5b === false).length
+          )
+        ) /
+          Math.pow(10, 18) +
         parseInt(
           await getCostForAddingWarrior(
             feeHandlerContract,
@@ -302,71 +303,67 @@ const UpdateLegions: React.FC = () => {
             curLegionSupply
           )
         ) /
-        Math.pow(10, 18)).toFixed(3)
+          Math.pow(10, 18)
+      ).toFixed(3)
     );
   };
 
-
   const getBalance = async () => {
     setLoading(true);
-    await getWarriors()
-    await getBeasts()
+    await getWarriors();
+    await getBeasts();
     setLoading(false);
-  }
+  };
 
   const getWarriors = async () => {
-    var tempWarriors: any[] = []
+    var tempWarriors: any[] = [];
     try {
-      const warriorsInfo = await getAllWarriors(warriorContract, account)
+      const warriorsInfo = await getAllWarriors(warriorContract, account);
 
-      let ids = warriorsInfo[0]
-      let strengths = warriorsInfo[1]
-      let powers = warriorsInfo[2]
+      let ids = warriorsInfo[0];
+      let powers = warriorsInfo[1];
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: warriorInfo[parseInt(strengths[index]) - 1],
-          strength: strengths[index],
+          type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+          strength: getWarriorStrength(powers[index]),
           capacity: "",
           power: powers[index],
           w5b: true,
           jpg: "",
           gif: "",
-        }
-        tempWarriors.push(temp)
-      })
-    } catch (error) {
-
-    }
+        };
+        tempWarriors.push(temp);
+      });
+    } catch (error) {}
     setWarriors(tempWarriors);
-  }
+  };
 
   const getBeasts = async () => {
-    var tempBeasts: any[] = []
+    var tempBeasts: any[] = [];
     try {
-      const beastsInfo = await getAllBeasts(beastContract, account)
+      const beastsInfo = await getAllBeasts(beastContract, account);
 
-      let ids = beastsInfo[0]
-      let capacities = beastsInfo[1]
+      let ids = beastsInfo[0];
+      let capacities = beastsInfo[1];
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+          type: beastsTypeInfo[
+            capacities[index] == 20 ? 5 : capacities[index] - 1
+          ],
           strength: capacities[index],
           capacity: capacities[index],
           power: "",
           w5b: false,
           jpg: "",
           gif: "",
-        }
-        tempBeasts.push(temp)
-      })
-    } catch (error) {
-
-    }
+        };
+        tempBeasts.push(temp);
+      });
+    } catch (error) {}
     setBeasts(tempBeasts);
-  }
-
+  };
 
   const moveToLeft = (index: number, w5b: boolean) => {
     const dropItemClone = [...dropItemList];
@@ -710,8 +707,9 @@ const UpdateLegions: React.FC = () => {
                                 size={isSmallThanSM ? "small" : "medium"}
                               >
                                 <Button
-                                  variant={`${filter === "all" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "all" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -720,8 +718,9 @@ const UpdateLegions: React.FC = () => {
                                   {getTranslation("all")}
                                 </Button>
                                 <Button
-                                  variant={`${filter === "1" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "1" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -730,8 +729,9 @@ const UpdateLegions: React.FC = () => {
                                   1
                                 </Button>
                                 <Button
-                                  variant={`${filter === "2" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "2" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -740,8 +740,9 @@ const UpdateLegions: React.FC = () => {
                                   2
                                 </Button>
                                 <Button
-                                  variant={`${filter === "3" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "3" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -750,8 +751,9 @@ const UpdateLegions: React.FC = () => {
                                   3
                                 </Button>
                                 <Button
-                                  variant={`${filter === "4" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "4" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -760,8 +762,9 @@ const UpdateLegions: React.FC = () => {
                                   4
                                 </Button>
                                 <Button
-                                  variant={`${filter === "5" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "5" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -770,8 +773,9 @@ const UpdateLegions: React.FC = () => {
                                   5
                                 </Button>
                                 <Button
-                                  variant={`${filter === "20" ? "contained" : "outlined"
-                                    }`}
+                                  variant={`${
+                                    filter === "20" ? "contained" : "outlined"
+                                  }`}
                                   sx={{
                                     borderRightColor: "#f66810 !important",
                                   }}
@@ -806,11 +810,11 @@ const UpdateLegions: React.FC = () => {
                           image={
                             showAnimation === "0"
                               ? "/assets/images/characters/jpg/warriors/" +
-                              item["type"] +
-                              ".jpg"
+                                item["type"] +
+                                ".jpg"
                               : "/assets/images/characters/gif/warriors/" +
-                              item["type"] +
-                              ".gif"
+                                item["type"] +
+                                ".gif"
                           }
                           item={item}
                           key={10000 + item.id}
@@ -831,11 +835,11 @@ const UpdateLegions: React.FC = () => {
                           image={
                             showAnimation === "0"
                               ? "/assets/images/characters/jpg/beasts/" +
-                              item["type"] +
-                              ".jpg"
+                                item["type"] +
+                                ".jpg"
                               : "/assets/images/characters/gif/beasts/" +
-                              item["type"] +
-                              ".gif"
+                                item["type"] +
+                                ".gif"
                           }
                           item={item}
                           key={item.id}
@@ -853,19 +857,19 @@ const UpdateLegions: React.FC = () => {
                 <Grid item xs={12} sx={{ p: 2, textAlign: "center" }}>
                   {isSmallThanSM
                     ? getTranslation("existingAPIs") +
-                    " " +
-                    formatNumber(tempAP) +
-                    " AP - " +
-                    getTranslation("ShortFeeToolTip") +
-                    " " +
-                    mintFee +
-                    " $BLST"
+                      " " +
+                      formatNumber(tempAP) +
+                      " AP - " +
+                      getTranslation("ShortFeeToolTip") +
+                      " " +
+                      mintFee +
+                      " $BLST"
                     : getTranslation("yourOldLegionAP") +
-                    formatNumber(tempAP) +
-                    " AP - " +
-                    getTranslation("feeToUpdate") +
-                    mintFee +
-                    " $BLST"}
+                      formatNumber(tempAP) +
+                      " AP - " +
+                      getTranslation("feeToUpdate") +
+                      mintFee +
+                      " $BLST"}
                 </Grid>
                 <Grid item xs={12} sx={{ pt: 2, px: 2 }}>
                   <Grid container sx={{ justifyContent: "space-around" }}>
@@ -924,15 +928,15 @@ const UpdateLegions: React.FC = () => {
                       sx={{
                         color:
                           totalCP <
-                            dropItemList.filter((item) => item.w5b === true)
-                              .length +
+                          dropItemList.filter((item) => item.w5b === true)
+                            .length +
                             tempWarriorsCnt
                             ? "red"
                             : "white",
                         fontWeight:
                           totalCP <
-                            dropItemList.filter((item) => item.w5b === true)
-                              .length +
+                          dropItemList.filter((item) => item.w5b === true)
+                            .length +
                             tempWarriorsCnt
                             ? "bold"
                             : "normal",
@@ -948,15 +952,15 @@ const UpdateLegions: React.FC = () => {
                       sx={{
                         color:
                           createlegions.main.maxAvailableDragCount <
-                            dropItemList.filter((item) => item.w5b === false)
-                              .length +
+                          dropItemList.filter((item) => item.w5b === false)
+                            .length +
                             tempBeastsCnt
                             ? "red"
                             : "white",
                         fontWeight:
                           createlegions.main.maxAvailableDragCount <
-                            dropItemList.filter((item) => item.w5b === false)
-                              .length +
+                          dropItemList.filter((item) => item.w5b === false)
+                            .length +
                             tempBeastsCnt
                             ? "bold"
                             : "normal",

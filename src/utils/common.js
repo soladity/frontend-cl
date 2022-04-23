@@ -79,6 +79,23 @@ export const getWarriorGif = (x, y) => {
   }
 };
 
+export const getWarriorStrength = (ap) => {
+  if (ap > 500 && ap <= 1000) {
+    return 1;
+  } else if (ap > 500 && ap <= 2000) {
+    return 2;
+  } else if (ap > 500 && ap <= 3000) {
+    return 3;
+  } else if (ap > 500 && ap <= 4000) {
+    return 4;
+  } else if (ap > 500 && ap <= 6000) {
+    return 5;
+  } else if (ap > 50000 && ap <= 60000) {
+    return 6;
+  }
+  return 1;
+}
+
 export const getBeastGif = (x) => {
   let variables = ['90', '95', '100', '105', '110'];
   switch (x){

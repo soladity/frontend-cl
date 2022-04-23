@@ -39,7 +39,7 @@ import {
   getSummoningPrice,
   getFee,
   getUSDAmountFromBLST,
-  getAllBeasts
+  getAllBeasts,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -81,6 +81,10 @@ type BeastProps = {
   strength: string;
   gif: string;
   jpg: string;
+  executeStatus: {
+    type: boolean;
+    default: false;
+  };
 };
 
 const Beasts = () => {
@@ -101,8 +105,8 @@ const Beasts = () => {
   const [loading, setLoading] = React.useState(false);
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
-  const [executeDialogOpen, setExecuteDialogOpen] = React.useState(true)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
+  const [executeDialogOpen, setExecuteDialogOpen] = React.useState(true);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -165,26 +169,21 @@ const Beasts = () => {
     var BLST_per_150 = "5";
 
     try {
-      BLST_amount_1 = (await getSummoningPrice(
-        feeHandlerContract,
-        1
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_10 = (await getSummoningPrice(
-        feeHandlerContract,
-        10
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_50 = (await getSummoningPrice(
-        feeHandlerContract,
-        50
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_100 = (await getSummoningPrice(
-        feeHandlerContract,
-        100
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_150 = (await getSummoningPrice(
-        feeHandlerContract,
-        150
-      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_1 = (
+        (await getSummoningPrice(feeHandlerContract, 1)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_10 = (
+        (await getSummoningPrice(feeHandlerContract, 10)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_50 = (
+        (await getSummoningPrice(feeHandlerContract, 50)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_100 = (
+        (await getSummoningPrice(feeHandlerContract, 100)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_150 = (
+        (await getSummoningPrice(feeHandlerContract, 150)) / Math.pow(10, 18)
+      ).toFixed(2);
 
       var amount_per = {
         b1: {
@@ -209,8 +208,7 @@ const Beasts = () => {
         },
       };
       setBeastBlstAmountPer(amount_per);
-    } catch (error) {
-    }
+    } catch (error) {}
 
     return BLST_amount_1;
   };
@@ -226,6 +224,10 @@ const Beasts = () => {
         : "0"
     );
   }, []);
+
+  React.useEffect(() => {
+    console.log(beasts);
+  }, [beasts]);
 
   const handleOpenMint = () => {
     setShowMint(true);
@@ -254,40 +256,45 @@ const Beasts = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     getBalance();
     setMintLoading(false);
   };
 
   const getBalance = async () => {
-    setLoading(true)
-    var tempBeasts: any[] = []
-    var amount = 0
+    setLoading(true);
+    var tempBeasts: any[] = [];
+    var amount = 0;
     try {
-      setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+      setMarketplaceTax(
+        ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
+      );
       setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
-      const beastsInfo = await getAllBeasts(beastContract, account)
-      let ids = beastsInfo[0]
-      let capacities = beastsInfo[1]
+      const beastsInfo = await getAllBeasts(beastContract, account);
+      console.log(beastsInfo);
+      let ids = beastsInfo[0];
+      let capacities = beastsInfo[1];
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+          type: beastsTypeInfo[
+            capacities[index] == 20 ? 5 : capacities[index] - 1
+          ],
           capacity: capacities[index],
           strength: capacities[index],
-          gif: getBeastGif(parseInt(capacities[index]))
-        }
-        tempBeasts.push(temp)
-        amount += parseInt(capacities[index])
-      })
+          gif: getBeastGif(parseInt(capacities[index])),
+          executeStatus: false,
+        };
+        tempBeasts.push(temp);
+        amount += parseInt(capacities[index]);
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
     setLoading(false);
-  }
+  };
 
   const handleSupplyClose = () => {
     setOpenSupply(false);
@@ -299,19 +306,29 @@ const Beasts = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] == '0') {
-        price = price.slice(1)
+      if (price[0] == "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price == '') {
-        price = '0'
+      if (price == "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
 
@@ -339,12 +356,12 @@ const Beasts = () => {
       setBeasts(
         beasts.filter((item: any) => parseInt(item.id) !== selectedBeast)
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
   const handleExecute = async (id: number) => {
+    console.log(id);
     setActionLoading(true);
     try {
       await execute(web3, legionContract, account, true, id);
@@ -363,6 +380,7 @@ const Beasts = () => {
         })
       );
     } catch (e) {
+      console.log(e);
     }
     setActionLoading(false);
   };
@@ -374,7 +392,21 @@ const Beasts = () => {
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
-  }
+  };
+
+  const setExecuteStatus = (id: String) => {
+    setBeasts(
+      beasts.map((beast: any, index: any) => {
+        if (beast.id == id) {
+          return {
+            ...beast,
+            executeStatus: !beast.executeStatus,
+          };
+        }
+        return beast;
+      })
+    );
+  };
 
   return (
     <Box>
@@ -588,6 +620,15 @@ const Beasts = () => {
               >
                 {maxWarrior}
               </Typography>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
+                disabled={
+                  beasts.filter((beast: any) => beast.executeStatus === true)
+                    .length === 0
+                }
+              >
+                {getTranslation("massExecute")}
+              </CommonBtn>
             </Box>
           </Card>
         </Grid>
@@ -665,15 +706,16 @@ const Beasts = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/beasts/" +
-                        item["type"] +
-                        ".jpg"
-                        : "/assets/images/characters/gif/beasts/" +
-                        item["gif"]
+                          item["type"] +
+                          ".jpg"
+                        : "/assets/images/characters/gif/beasts/" + item["gif"]
                     }
                     type={item["type"]}
                     capacity={item["capacity"]}
                     strength={item["strength"]}
                     id={item["id"]}
+                    executeStatus={item["executeStatus"]}
+                    setExecuteStatus={setExecuteStatus}
                     isMobile={false}
                     needButton={true}
                     handleOpenSupply={handleOpenSupply}
@@ -714,17 +756,19 @@ const Beasts = () => {
               ? parseInt(item.capacity) >= 0
               : item.capacity === filter
           ).length > 0 && (
-              <Navigation
-                totalCount={beasts.filter((item: any) =>
+            <Navigation
+              totalCount={
+                beasts.filter((item: any) =>
                   filter === "all"
                     ? parseInt(item.capacity) >= 0
                     : item.capacity === filter
-                ).length}
-                cPage={currentPage}
-                handlePage={handlePage}
-                perPage={20}
-              />
-            )}
+                ).length
+              }
+              cPage={currentPage}
+              handlePage={handlePage}
+              perPage={20}
+            />
+          )}
         </React.Fragment>
       )}
       {loading === true && (
@@ -806,7 +850,13 @@ const Beasts = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" ||
+                evt.key === "E" ||
+                evt.key === "+" ||
+                evt.key === "-") &&
+                evt.preventDefault();
+            }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{
@@ -815,9 +865,11 @@ const Beasts = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
-            {getTranslation('payMarketplaceTax')} {marketplaceTax}%
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
+          <Typography variant="subtitle1">
+            {getTranslation("payMarketplaceTax")} {marketplaceTax}%
           </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (

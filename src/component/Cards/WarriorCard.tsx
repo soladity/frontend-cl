@@ -1,9 +1,12 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import Checkbox from "@mui/material/Checkbox";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import "./card.css";
+import classNames from "classnames";
 
 import { formatNumber } from "../../utils/common";
 
@@ -17,6 +20,8 @@ type CardProps = {
   handleOpenSupply: Function;
   handleExecute: Function;
   needButton?: boolean;
+  executeStatus?: boolean;
+  setExecuteStatus: Function;
 };
 
 export default function WarriorCard(props: CardProps) {
@@ -30,6 +35,8 @@ export default function WarriorCard(props: CardProps) {
     handleOpenSupply,
     handleExecute,
     needButton = true,
+    executeStatus = false,
+    setExecuteStatus,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -60,11 +67,26 @@ export default function WarriorCard(props: CardProps) {
 
   return (
     <Card
-      sx={{
-        position: "relative",
-        width: "100%",
-        fontSize: isMobile ? 10 : 14,
-      }}
+      sx={
+        needButton
+          ? {
+              position: "relative",
+              width: "100%",
+              fontSize: isMobile ? 10 : 14,
+              "&:hover": {
+                boxShadow:
+                  "rgba(80, 60, 100, 0.4) 5px 5px, rgba(80, 60, 100, 0.3) 10px 10px, rgba(80, 60, 100, 0.2) 15px 15px, rgba(80, 60, 100, 0.1) 20px 20px !important",
+              },
+            }
+          : {
+              position: "relative",
+              width: "100%",
+              fontSize: isMobile ? 10 : 14,
+            }
+      }
+      // className="warriorCard"
+      className={classNames({ executeitem: executeStatus }, "warriorCard")}
+      onClick={() => setExecuteStatus(id)}
     >
       <CardMedia
         component="img"
@@ -143,6 +165,17 @@ export default function WarriorCard(props: CardProps) {
               alt="Shopping"
             />
           </Box>
+          <Checkbox
+            sx={
+              executeStatus
+                ? {
+                    opacity: 1,
+                  }
+                : {}
+            }
+            className="executeCheckBox"
+            checked={executeStatus}
+          />
           <Box
             sx={{
               display: "flex",
