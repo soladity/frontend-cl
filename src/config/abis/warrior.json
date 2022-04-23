@@ -11,6 +11,11 @@
           "internalType": "address",
           "name": "_feehandler",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_blst",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -136,6 +141,43 @@
       "type": "event"
     },
     {
+      "inputs": [],
+      "name": "_tokenIds",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "addressTokenIds",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -188,12 +230,12 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
+          "internalType": "uint256[]",
+          "name": "tokenIds",
+          "type": "uint256[]"
         }
       ],
-      "name": "burn",
+      "name": "execute",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -214,6 +256,30 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "maxNum",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "i",
+          "type": "uint256"
+        }
+      ],
+      "name": "genRand",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "_address",
           "type": "address"
@@ -221,11 +287,6 @@
       ],
       "name": "getAllWarriors",
       "outputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        },
         {
           "internalType": "uint256[]",
           "name": "",
@@ -289,16 +350,6 @@
       "name": "getWarrior",
       "outputs": [
         {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
@@ -358,19 +409,13 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "names",
+      "inputs": [],
+      "name": "nftType",
       "outputs": [
         {
-          "internalType": "string",
+          "internalType": "uint8",
           "name": "",
-          "type": "string"
+          "type": "uint8"
         }
       ],
       "stateMutability": "view",
@@ -524,6 +569,44 @@
           "internalType": "string",
           "name": "",
           "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenIdIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenToOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",

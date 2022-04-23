@@ -1,5 +1,3 @@
-import rpcUrls from "../utils/getRpcUrl";
-
 export const ethereumConnect = () =>
   window.ethereum.request({ method: "eth_requestAccounts" });
 export const isEthereumConnected = window.ethereum

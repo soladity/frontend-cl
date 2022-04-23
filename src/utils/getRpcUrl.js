@@ -1,6 +1,7 @@
 const getRpcUrl = () => {
   // return "https://bsc-dataseed.binance.org/";
-  return "https://data-seed-prebsc-1-s1.binance.org:8545/";
+  // return "http://data-seed-pre-0-s1.binance.org:80";
+  return "https://speedy-nodes-nyc.moralis.io/6a447a818bd3304f39a41940/bsc/testnet";
 };
 
 const getRpcWsUrl = () => {

@@ -3,7 +3,6 @@ import {
   getWarriorAddress,
   getLegionAddress,
   getMarketplaceAddress,
-  getBUSDAddress,
 } from "../utils/addressHelpers";
 
 export const getBaseUrl = async () => {
@@ -62,7 +61,9 @@ export const getBeastTokenIds = async (web3, contract, account) => {
 };
 
 export const getBeastToken = async (web3, contract, tokenId) => {
+  console.log(tokenId)
   const response = await contract.methods.getBeast(tokenId).call();
+  console.log(response)
   const beast = {
     type: response[0],
     strength: response[1],
@@ -551,3 +552,12 @@ export const getAllLegionMarketItems = async (contract) => {
 export const getAllLegions = async (contract, account) => {
   return await contract.methods.getAllLegions(account).call();
 };
+
+
+export const isApprovedForAll = async (contract, account, legionAddress) => {
+  return await contract.methods.isApprovedForAll(account, legionAddress).call();
+}
+
+export const setApprovalForAll = async (account, contract, legionAddress, status) => {
+  await contract.methods.setApprovalForAll(legionAddress, status).send({from: account});
+}

@@ -6,6 +6,11 @@
           "internalType": "address",
           "name": "_feehandler",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_blst",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -170,6 +175,19 @@
         }
       ],
       "name": "returnTokenToPlayer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "setLegion",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

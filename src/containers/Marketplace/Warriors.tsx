@@ -221,8 +221,8 @@ const Warriors = () => {
     let allWarriors;
     let tempAllWarriors: any[] = []
 
-    allWarriors = await getAllWarriorMarketItems(marketplaceContract)
-    console.log(allWarriors)
+    allWarriors = await getAllWarriorMarketItems(marketplaceContract);
+
     let ids = allWarriors[0]
     let strengths = allWarriors[1]
     let aps = allWarriors[2]
@@ -231,7 +231,7 @@ const Warriors = () => {
 
     ids.forEach((id: any, index: number) => {
       tempAllWarriors.push({
-        id: ids,
+        id: id,
         strength: strengths[index],
         power: aps[index],
         price: prices[index],
@@ -256,7 +256,6 @@ const Warriors = () => {
     //   });
     //   console.log(tempWarriors)
     // }
-    console.log(tempAllWarriors)
     setWarriors(tempAllWarriors);
     setLoading(false);
   };
