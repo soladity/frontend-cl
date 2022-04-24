@@ -122,11 +122,13 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           tokenID === 25
             ? {
                 position: "absolute",
-                bottom: "15px",
+                bottom: "0px",
                 color: "white",
                 fontWeight: "bold",
                 justifyContent: "space-around",
                 background: "#333",
+                paddingTop: 1,
+                paddingBottom: 1,
               }
             : {
                 position: "absolute",
