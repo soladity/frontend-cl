@@ -71,6 +71,9 @@ const monstersInfo = [
   {
     name: "invisible",
   },
+  {
+    name: "trex"
+  }
 ];
 
 export default monstersInfo;
