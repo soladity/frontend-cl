@@ -291,6 +291,19 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_warriorCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetWarriorCountForMonster25",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "from",
@@ -1149,6 +1162,19 @@
         }
       ],
       "name": "setMinSyncPeriod",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_warriorCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "setWarriorCountForMonster25",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

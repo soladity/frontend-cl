@@ -52,3 +52,7 @@
   opacity: 1;
   transition: 0.7s all;
 }
+.beastCard:hover .executeCheckBox {
+  opacity: 1;
+  transition: 0.7s all;
+}
