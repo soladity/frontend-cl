@@ -665,7 +665,7 @@ const Beasts = () => {
                 sx={{ fontWeight: "bold", mt: 1 }}
                 disabled={
                   beasts.filter((beast: any) => beast.executeStatus === true)
-                    .length === 0
+                    .length === 0 || actionLoading
                 }
                 onClick={handleMassExecute}
               >

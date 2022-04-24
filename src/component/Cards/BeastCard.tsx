@@ -5,8 +5,9 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import { makeStyles } from "@mui/styles";
-import './card.css'
+import "./card.css";
 import classNames from "classnames";
+import { Checkbox } from "@mui/material";
 
 type CardProps = {
   id: string;
@@ -23,7 +24,6 @@ type CardProps = {
 };
 
 export default function BeastCard(props: CardProps) {
-
   const {
     id,
     image,
@@ -35,7 +35,7 @@ export default function BeastCard(props: CardProps) {
     isMobile,
     needButton = true,
     executeStatus = false,
-    setExecuteStatus
+    setExecuteStatus,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -54,20 +54,25 @@ export default function BeastCard(props: CardProps) {
 
   return (
     <Card
-      sx={needButton ? {
-        position: "relative",
-        width: "100%",
-        fontSize: isMobile ? 10 : 14,
-        "&:hover": {
-          boxShadow: "rgba(80, 60, 100, 0.4) 5px 5px, rgba(80, 60, 100, 0.3) 10px 10px, rgba(80, 60, 100, 0.2) 15px 15px, rgba(80, 60, 100, 0.1) 20px 20px !important",
-        }
-      } : {
-        position: "relative",
-        width: "100%",
-        fontSize: isMobile ? 10 : 14,
-      }}
-      className={classNames({'executeitem': executeStatus})}
-      onClick={() => setExecuteStatus(id)}
+      sx={
+        needButton
+          ? {
+              position: "relative",
+              width: "100%",
+              fontSize: isMobile ? 10 : 14,
+              "&:hover": {
+                boxShadow:
+                  "rgba(80, 60, 100, 0.4) 5px 5px, rgba(80, 60, 100, 0.3) 10px 10px, rgba(80, 60, 100, 0.2) 15px 15px, rgba(80, 60, 100, 0.1) 20px 20px !important",
+              },
+            }
+          : {
+              position: "relative",
+              width: "100%",
+              fontSize: isMobile ? 10 : 14,
+            }
+      }
+      className={classNames({ executeitem: executeStatus }, "beastCard")}
+      // onClick={() => setExecuteStatus(id)}
     >
       <CardMedia
         component="img"
@@ -147,6 +152,18 @@ export default function BeastCard(props: CardProps) {
               alt="Shopping"
             />
           </Box>
+          <Checkbox
+            sx={
+              executeStatus
+                ? {
+                    opacity: 1,
+                  }
+                : {}
+            }
+            className="executeCheckBox"
+            checked={executeStatus}
+            onClick={() => setExecuteStatus(id)}
+          />
           <Box
             sx={{
               display: "flex",

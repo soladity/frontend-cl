@@ -87,7 +87,6 @@ export default function WarriorCard(props: CardProps) {
       }
       // className="warriorCard"
       className={classNames({ executeitem: executeStatus }, "warriorCard")}
-      onClick={() => setExecuteStatus(id)}
     >
       <CardMedia
         component="img"
@@ -176,6 +175,7 @@ export default function WarriorCard(props: CardProps) {
             }
             className="executeCheckBox"
             checked={executeStatus}
+            onClick={() => setExecuteStatus(id)}
           />
           <Box
             sx={{
