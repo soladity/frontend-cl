@@ -318,6 +318,7 @@ const Monsters = () => {
     let monsterArrary = [];
     try {
       const monsterVal = await getAllMonsters(monsterContract);
+      console.log(monsterVal);
       const monsterArraryTemp = monsterVal[0];
       const rewardArray = monsterVal[1];
       monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
@@ -483,59 +484,90 @@ const Monsters = () => {
   };
 
   const handleHunt = async (monsterTokenID: number) => {
+    setDialogVisible(true);
+    setCurMonsterID(monsterTokenID);
+    setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
     try {
-      const BUSD =
-        (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
-      console.log(BUSD);
-      console.log(
-        (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
+      const allowance = await getLegionBUSDAllowance(
+        web3,
+        busdContract,
+        account
       );
-      if (
-        BUSD >=
-        (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
-      ) {
-        setDialogVisible(true);
-        setCurMonsterID(monsterTokenID);
-        setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
-        try {
-          const allowance = await getLegionBUSDAllowance(
-            web3,
-            busdContract,
-            account
-          );
-          if (allowance == 0) {
-            await setLegionBUSDApprove(web3, busdContract, account);
-          }
-          let response = await hunt(
-            web3,
-            legionContract,
-            account,
-            curLegion?.id,
-            monsterTokenID
-          );
-          const keys = Object.keys(response.events);
-          const result = response.events["Hunted"].returnValues;
-          setHuntedRoll(result.roll);
-          setHuntAvailablePercent(result.percent);
-          setHuntedStatus(result.success ? 1 : 2);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
-        } catch (e: any) {
-          setDialogVisible(false);
-          if (e.code == 4001) {
-          } else {
-            setSnackBarMessage(getTranslation("huntTransactionFailed"));
-            setOpenSnackBar(true);
-          }
-        }
-      } else {
-        setSnackBarMessage(getTranslation("addBUSD"));
-        setOpenSnackBar(true);
+      if (allowance == 0) {
+        await setLegionBUSDApprove(web3, busdContract, account);
       }
-    } catch (error) {}
+      let response = await hunt(
+        web3,
+        legionContract,
+        account,
+        curLegion?.id,
+        monsterTokenID
+      );
+      const keys = Object.keys(response.events);
+      const result = response.events["Hunted"].returnValues;
+      setHuntedRoll(result.roll);
+      setHuntAvailablePercent(result.percent);
+      setHuntedStatus(result.success ? 1 : 2);
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
+    } catch (err) {}
+
+    // try {
+    //   const BUSD =
+    //     (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
+    //   console.log(BUSD);
+    //   console.log(
+    //     (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
+    //   );
+    //   if (
+    //     BUSD >=
+    //     (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
+    //   ) {
+    //     setDialogVisible(true);
+    //     setCurMonsterID(monsterTokenID);
+    //     setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
+    //     try {
+    //       const allowance = await getLegionBUSDAllowance(
+    //         web3,
+    //         busdContract,
+    //         account
+    //       );
+    //       if (allowance == 0) {
+    //         await setLegionBUSDApprove(web3, busdContract, account);
+    //       }
+    //       let response = await hunt(
+    //         web3,
+    //         legionContract,
+    //         account,
+    //         curLegion?.id,
+    //         monsterTokenID
+    //       );
+    //       const keys = Object.keys(response.events);
+    //       const result = response.events["Hunted"].returnValues;
+    //       setHuntedRoll(result.roll);
+    //       setHuntAvailablePercent(result.percent);
+    //       setHuntedStatus(result.success ? 1 : 2);
+    //       dispatch(
+    //         setReloadStatus({
+    //           reloadContractStatus: new Date(),
+    //         })
+    //       );
+    //     } catch (e: any) {
+    //       setDialogVisible(false);
+    //       if (e.code == 4001) {
+    //       } else {
+    //         setSnackBarMessage(getTranslation("huntTransactionFailed"));
+    //         setOpenSnackBar(true);
+    //       }
+    //     }
+    //   } else {
+    //     setSnackBarMessage(getTranslation("addBUSD"));
+    //     setOpenSnackBar(true);
+    //   }
+    // } catch (error) {}
   };
 
   const handleContinue = async () => {

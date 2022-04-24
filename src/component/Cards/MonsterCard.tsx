@@ -7,6 +7,12 @@ import Skeleton from "@mui/material/Skeleton";
 import Grid from "@mui/material/Grid";
 import { toCapitalize } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
+import {
+  getCanAttackMonster25,
+  getWarriorCountForMonster25,
+} from "../../hooks/contractFunction";
+import { useLegion } from "../../hooks/useContract";
+import { useWeb3React } from "@web3-react/core";
 
 type CardProps = {
   name: string;
@@ -33,9 +39,30 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
 }) {
   const [loaded, setLoaded] = React.useState(false);
 
+  const [canHuntMonster25, setCanHuntMonster25] = React.useState(false);
+  const [warriorCnt, setWarriorCnt] = React.useState(0);
+  const [warriorBaseCnt, setWarriorBaseCnt] = React.useState(0);
+
   const handleImageLoaded = () => {
     setLoaded(true);
   };
+
+  const legionContract = useLegion();
+  const { account } = useWeb3React();
+
+  const getBalance = async () => {
+    setCanHuntMonster25(
+      (await getCanAttackMonster25(legionContract, account)).status
+    );
+    setWarriorCnt((await getCanAttackMonster25(legionContract, account)).count);
+    setWarriorBaseCnt(await getWarriorCountForMonster25(legionContract));
+  };
+
+  React.useEffect(() => {
+    if (tokenID === 25) {
+      getBalance();
+    }
+  }, []);
 
   return (
     <Card sx={{ position: "relative", textAlign: "center" }}>
@@ -63,8 +90,14 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             <Typography variant="h6">{base}</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h6">{getTranslation("bonus")} %</Typography>
-            <Typography variant="h6">{parseInt(bonus)}</Typography>
+            <Typography variant="h6">
+              {tokenID === 25 ? "Unlock Status" : getTranslation("bonus") + "%"}
+            </Typography>
+            <Typography variant="h6">
+              {tokenID === 25
+                ? `${warriorCnt}/${warriorBaseCnt} Warriors Used`
+                : parseInt(bonus)}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -85,13 +118,24 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
       )}
       <Grid
         container
-        sx={{
-          position: "absolute",
-          bottom: "15px",
-          color: "white",
-          fontWeight: "bold",
-          justifyContent: "space-around",
-        }}
+        sx={
+          tokenID === 25
+            ? {
+                position: "absolute",
+                bottom: "15px",
+                color: "white",
+                fontWeight: "bold",
+                justifyContent: "space-around",
+                background: "#333",
+              }
+            : {
+                position: "absolute",
+                bottom: "15px",
+                color: "white",
+                fontWeight: "bold",
+                justifyContent: "space-around",
+              }
+        }
         alignItems="center"
       >
         <Grid item>
@@ -111,7 +155,9 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           {/* c94f19 */}
           <Button
             variant="outlined"
-            disabled={!isHuntable}
+            disabled={
+              tokenID === 25 ? !isHuntable || !canHuntMonster25 : !isHuntable
+            }
             onClick={() => handleHunt(tokenID)}
           >
             {getTranslation("hunt")}

@@ -564,3 +564,16 @@ export const isApprovedForAll = async (contract, account, approvalContract) => {
 export const setApprovalForAll = async (account, contract, approvalContract, status) => {
   await contract.methods.setApprovalForAll(approvalContract, status).send({from: account});
 }
+
+export const getWarriorCountForMonster25 = async (contract) => {
+  return await contract.methods.warriorCountForMonster25().call();
+}
+
+export const getCanAttackMonster25 = async (contract, account) => {
+  const response = await contract.methods.canAttackMonster25(account).call()
+  console.log(response)
+  return {
+    status: response[0],
+    count: response[1]
+  }
+}
