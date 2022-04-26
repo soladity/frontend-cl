@@ -60,6 +60,7 @@ import { getBeastGif } from "../../utils/common";
 import beastsTypeInfo from "../../constant/beasts";
 import MassExecute from "../MassExecute/MassExecute";
 import { getMarketplaceAddress } from "../../utils/addressHelpers";
+import RevealCard from "../../component/Cards/RevealCard";
 
 const useStyles = makeStyles({
   root: {
@@ -934,6 +935,9 @@ const Beasts = () => {
           </Box>
         )}
       </Dialog>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <RevealCard></RevealCard>
+      </Box>
     </Box>
   );
 };

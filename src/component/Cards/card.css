@@ -56,3 +56,60 @@
   opacity: 1;
   transition: 0.7s all;
 }
+.revealCard {
+  width: 300px !important;
+  height: 300px !important;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+.revealCard img.backImg {
+  border-radius: 10px;
+  width: 300px;
+}
+.revealCard .logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 33%;
+  transform: translate(-50%, -50%);
+  /* animation: boomboom 1s linear infinite; */
+}
+.revealCard .blow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #333333ee;
+  /* background: linear-gradient(
+    60deg,
+    #f4ebe2dd,
+    #f0e5e3dd,
+    #f6ecefdd,
+    #eee5efdd,
+    #dde2e9dd,
+    #e2edefdd,
+    #e2e6e5dd,
+    #e3ece5ee
+  ); */
+  border-radius: 10px;
+}
+.revealCard .revealBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@keyframes boomboom {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
