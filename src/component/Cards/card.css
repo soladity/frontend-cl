@@ -1,12 +1,14 @@
 .executeitem {
-  --borderWidth: 3px;
+  border: 3px solid #f66810;
+  /* --borderWidth: 3px; */
   /* box-shadow: rgba(166, 46, 46, 0.4) 5px 5px, rgba(166, 46, 46, 0.3) 10px 10px,
     rgba(166, 46, 46, 0.2) 15px 15px, rgba(166, 46, 46, 0.1) 20px 20px !important; */
-  padding: 3px;
-  z-index: 0;
+  /* padding: 3px;
+  z-index: 0; */
 }
 .executeitem:after {
-  content: "";
+  /* border: 3px solid yellow; */
+  /* content: "";
   position: absolute;
   top: -3px;
   left: -3px;
@@ -26,7 +28,7 @@
   border-radius: 6px;
   z-index: -1;
   animation: animatedgradient 3s ease alternate infinite;
-  background-size: 300% 300%;
+  background-size: 300% 300%; */
 }
 
 @keyframes animatedgradient {
@@ -56,60 +58,9 @@
   opacity: 1;
   transition: 0.7s all;
 }
-.revealCard {
-  width: 300px !important;
-  height: 300px !important;
-  border-radius: 20px;
-  position: relative;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
-    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+.warriorCard:hover {
+  border: 3px solid #f66810;
 }
-.revealCard img.backImg {
-  border-radius: 10px;
-  width: 300px;
-}
-.revealCard .logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 33%;
-  transform: translate(-50%, -50%);
-  /* animation: boomboom 1s linear infinite; */
-}
-.revealCard .blow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: #333333ee;
-  /* background: linear-gradient(
-    60deg,
-    #f4ebe2dd,
-    #f0e5e3dd,
-    #f6ecefdd,
-    #eee5efdd,
-    #dde2e9dd,
-    #e2edefdd,
-    #e2e6e5dd,
-    #e3ece5ee
-  ); */
-  border-radius: 10px;
-}
-.revealCard .revealBtn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-@keyframes boomboom {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
+.beastCard:hover {
+  border: 3px solid #f66810;
 }

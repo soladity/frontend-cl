@@ -85,10 +85,12 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             </Typography>
             <Typography variant="h6">{minAP}</Typography>
           </Grid>
-          <Grid item>
-            <Typography variant="h6">{getTranslation("base")} %</Typography>
-            <Typography variant="h6">{base}</Typography>
-          </Grid>
+          {tokenID !== 25 && (
+            <Grid item>
+              <Typography variant="h6">{getTranslation("base")} %</Typography>
+              <Typography variant="h6">{base}</Typography>
+            </Grid>
+          )}
           <Grid item>
             <Typography variant="h6">
               {tokenID === 25 ? "Unlock Status" : getTranslation("bonus") + "%"}

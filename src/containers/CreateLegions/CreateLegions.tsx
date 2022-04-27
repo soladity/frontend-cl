@@ -917,7 +917,10 @@ const CreateLegions: React.FC = () => {
                   }}
                 >
                   {isSmallThanSM
-                    ? getTranslation("ShortFeeToolTip") + mintFee + " $BLST"
+                    ? getTranslation("ShortFeeToolTip") +
+                      " " +
+                      mintFee +
+                      " $BLST"
                     : getTranslation("LongFeeToolTip") + mintFee + " $BLST"}
                 </Grid>
                 <Grid item xs={12} sx={{ p: 2 }}>
