@@ -107,9 +107,6 @@ const Beasts = () => {
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
-  const [loading, setLoading] = React.useState(false);
-  const [mintLoading, setMintLoading] = React.useState(false);
-  const [actionLoading, setActionLoading] = React.useState(false);
   const [BlstToUsd, setBlstToUsd] = React.useState(0);
 
   const [revealStatus, setRevealStatus] = React.useState(false);
@@ -262,7 +259,7 @@ const Beasts = () => {
       setRevealStatus(await getWalletMintPending(beastContract, account));
       setTextLoading(true);
       if (await getWalletMintPending(beastContract, account)) {
-        setLoadingText(getTranslation("revealTextBeast"));
+        setLoadingText(getTranslation("revealTextBeasts"));
       }
       dispatch(
         setReloadStatus({
@@ -277,9 +274,10 @@ const Beasts = () => {
   };
 
   const handleReveal = async () => {
+    setRevealStatus(false);
     try {
       setTextLoading(true);
-      setLoadingText(getTranslation("revealBeasts") + "...");
+      setLoadingText(getTranslation("revealingBeasts"));
       await revealBeastsAndWarrior(beastContract, account);
       setRevealStatus(false);
       setRevealStatus(await getWalletMintPending(beastContract, account));
@@ -287,7 +285,7 @@ const Beasts = () => {
     } catch (error) {
       setRevealStatus(true);
       setTextLoading(true);
-      setLoadingText(getTranslation("revealTextBeast"));
+      setLoadingText(getTranslation("revealTextBeasts"));
     }
   };
 
@@ -328,7 +326,7 @@ const Beasts = () => {
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
     if (revealStatusVal) {
-      setLoadingText(getTranslation("revealTextBeast"));
+      setLoadingText(getTranslation("revealTextBeasts"));
     }
     console.log(revealStatusVal);
     if (!revealStatusVal) {
@@ -531,30 +529,7 @@ const Beasts = () => {
                 onMouseLeave={handleCloseMint}
                 sx={{ pt: 1 }}
               >
-                {revealStatus ? (
-                  <CommonBtn
-                    sx={{ fontWeight: "bold" }}
-                    onClick={() => handleReveal()}
-                  >
-                    {getTranslation("revealBeasts")}
-                  </CommonBtn>
-                ) : (
-                  <CommonBtn
-                    sx={{ fontWeight: "bold" }}
-                    onClick={handlePopoverOpenSummonBeast}
-                    aria-describedby={"summon-beast-id"}
-                  >
-                    <IconButton
-                      aria-label="claim"
-                      component="span"
-                      sx={{ p: 0, mr: 1, color: "black" }}
-                    >
-                      <HorizontalSplitIcon />
-                    </IconButton>
-                    {getTranslation("summonQuantity")}
-                  </CommonBtn>
-                )}
-                {/* <CommonBtn
+                <CommonBtn
                   sx={{ fontWeight: "bold" }}
                   onClick={handlePopoverOpenSummonBeast}
                   aria-describedby={"summon-beast-id"}
@@ -567,7 +542,7 @@ const Beasts = () => {
                     <HorizontalSplitIcon />
                   </IconButton>
                   {getTranslation("summonQuantity")}
-                </CommonBtn> */}
+                </CommonBtn>
                 <Popover
                   id={"summon-beast-id"}
                   open={openSummonBeast}
@@ -895,46 +870,6 @@ const Beasts = () => {
           </Grid>
         </>
       )}
-      {/* {mintLoading === true && (
-        <>
-          <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h4">
-              {getTranslation("summoningBeasts")}
-            </Typography>
-          </Grid>
-          <Grid container sx={{ justifyContent: "center" }}>
-            <Grid item xs={1}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  image="/assets/images/loading.gif"
-                  alt="Loading"
-                  loading="lazy"
-                />
-              </Card>
-            </Grid>
-          </Grid>
-        </>
-      )}
-      {actionLoading === true && (
-        <>
-          <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h4">{getTranslation("pleaseWait")}</Typography>
-          </Grid>
-          <Grid container sx={{ justifyContent: "center" }}>
-            <Grid item xs={1}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  image="/assets/images/loading.gif"
-                  alt="Loading"
-                  loading="lazy"
-                />
-              </Card>
-            </Grid>
-          </Grid>
-        </>
-      )} */}
       <Dialog onClose={handleSupplyClose} open={openSupply}>
         <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
           {getTranslation("listOnMarketplace")}
@@ -994,6 +929,16 @@ const Beasts = () => {
             {getTranslation("maxSellPrice")}
           </Box>
         )}
+      </Dialog>
+      <Dialog open={revealStatus}>
+        <DialogContent>
+          <CommonBtn
+            style={{ fontWeight: "bold" }}
+            onClick={() => handleReveal()}
+          >
+            {getTranslation("revealBeasts")}
+          </CommonBtn>
+        </DialogContent>
       </Dialog>
     </Box>
   );
