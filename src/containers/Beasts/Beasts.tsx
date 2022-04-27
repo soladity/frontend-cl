@@ -42,6 +42,8 @@ import {
   getAllBeasts,
   isApprovedForAll,
   setApprovalForAll,
+  getWalletMintPending,
+  revealBeastsAndWarrior,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -60,7 +62,6 @@ import { getBeastGif } from "../../utils/common";
 import beastsTypeInfo from "../../constant/beasts";
 import MassExecute from "../MassExecute/MassExecute";
 import { getMarketplaceAddress } from "../../utils/addressHelpers";
-import RevealCard from "../../component/Cards/RevealCard";
 
 const useStyles = makeStyles({
   root: {
@@ -110,7 +111,10 @@ const Beasts = () => {
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
   const [BlstToUsd, setBlstToUsd] = React.useState(0);
-  const [executeDialogOpen, setExecuteDialogOpen] = React.useState(true);
+
+  const [revealStatus, setRevealStatus] = React.useState(false);
+  const [textLoading, setTextLoading] = React.useState(false);
+  const [loadingText, setLoadingText] = React.useState("");
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -243,8 +247,8 @@ const Beasts = () => {
 
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonBeast();
-    setMintLoading(true);
-    setLoading(false);
+    setTextLoading(true);
+    setLoadingText(getTranslation("summoningBeasts"));
     const allowance = await getBeastBloodstoneAllowance(
       web3,
       bloodstoneContract,
@@ -255,21 +259,47 @@ const Beasts = () => {
         await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintBeast(web3, beastContract, account, amount);
+      setRevealStatus(await getWalletMintPending(beastContract, account));
+      setTextLoading(true);
+      if (await getWalletMintPending(beastContract, account)) {
+        setLoadingText(getTranslation("revealTextBeast"));
+      }
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {}
-    getBalance();
-    setMintLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
+    // getBalance();
+    // setTextLoading(false);
+  };
+
+  const handleReveal = async () => {
+    try {
+      setTextLoading(true);
+      setLoadingText(getTranslation("revealBeasts") + "...");
+      await revealBeastsAndWarrior(beastContract, account);
+      setRevealStatus(false);
+      setRevealStatus(await getWalletMintPending(beastContract, account));
+      await getBalance();
+    } catch (error) {
+      setRevealStatus(true);
+      setTextLoading(true);
+      setLoadingText(getTranslation("revealTextBeast"));
+    }
   };
 
   const getBalance = async () => {
-    setLoading(true);
+    setTextLoading(true);
     var tempBeasts: any[] = [];
     var amount = 0;
+    let revealStatusVal;
     try {
+      setLoadingText(getTranslation("loadingBeasts"));
+      revealStatusVal = await getWalletMintPending(beastContract, account);
+      setRevealStatus(revealStatusVal);
       setMarketplaceTax(
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
@@ -297,7 +327,13 @@ const Beasts = () => {
     }
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
-    setLoading(false);
+    if (revealStatusVal) {
+      setLoadingText(getTranslation("revealTextBeast"));
+    }
+    console.log(revealStatusVal);
+    if (!revealStatusVal) {
+      setTextLoading(false);
+    }
   };
 
   const checkApprovalForAll = async () => {
@@ -358,7 +394,8 @@ const Beasts = () => {
   };
 
   const handleSendToMarketplace = async () => {
-    setActionLoading(true);
+    setTextLoading(true);
+    setLoadingText(getTranslation("pleaseWait"));
     setOpenSupply(false);
     try {
       await checkApprovalForAll();
@@ -383,11 +420,12 @@ const Beasts = () => {
         beasts.filter((item: any) => parseInt(item.id) !== selectedBeast)
       );
     } catch (e) {}
-    setActionLoading(false);
+    setTextLoading(false);
   };
 
   const handleExecute = async (id: number) => {
-    setActionLoading(true);
+    setTextLoading(true);
+    setLoadingText(getTranslation("pleaseWait"));
     try {
       await execute(web3, beastContract, account, [id]);
       let capacity = 0;
@@ -407,11 +445,12 @@ const Beasts = () => {
     } catch (e) {
       console.log(e);
     }
-    setActionLoading(false);
+    setTextLoading(false);
   };
 
   const handleMassExecute = async () => {
-    setActionLoading(true);
+    setTextLoading(true);
+    setLoadingText(getTranslation("pleaseWait"));
     try {
       const ids = beasts
         .filter((beast: any) => beast.executeStatus === true)
@@ -424,7 +463,7 @@ const Beasts = () => {
         })
       );
     } catch (error) {}
-    setActionLoading(false);
+    setTextLoading(false);
   };
 
   const handlePage = (value: any) => {
@@ -492,7 +531,30 @@ const Beasts = () => {
                 onMouseLeave={handleCloseMint}
                 sx={{ pt: 1 }}
               >
-                <CommonBtn
+                {revealStatus ? (
+                  <CommonBtn
+                    sx={{ fontWeight: "bold" }}
+                    onClick={() => handleReveal()}
+                  >
+                    {getTranslation("revealBeasts")}
+                  </CommonBtn>
+                ) : (
+                  <CommonBtn
+                    sx={{ fontWeight: "bold" }}
+                    onClick={handlePopoverOpenSummonBeast}
+                    aria-describedby={"summon-beast-id"}
+                  >
+                    <IconButton
+                      aria-label="claim"
+                      component="span"
+                      sx={{ p: 0, mr: 1, color: "black" }}
+                    >
+                      <HorizontalSplitIcon />
+                    </IconButton>
+                    {getTranslation("summonQuantity")}
+                  </CommonBtn>
+                )}
+                {/* <CommonBtn
                   sx={{ fontWeight: "bold" }}
                   onClick={handlePopoverOpenSummonBeast}
                   aria-describedby={"summon-beast-id"}
@@ -505,7 +567,7 @@ const Beasts = () => {
                     <HorizontalSplitIcon />
                   </IconButton>
                   {getTranslation("summonQuantity")}
-                </CommonBtn>
+                </CommonBtn> */}
                 <Popover
                   id={"summon-beast-id"}
                   open={openSummonBeast}
@@ -666,7 +728,7 @@ const Beasts = () => {
                 sx={{ fontWeight: "bold", mt: 1 }}
                 disabled={
                   beasts.filter((beast: any) => beast.executeStatus === true)
-                    .length === 0 || actionLoading
+                    .length === 0 || textLoading
                 }
                 onClick={handleMassExecute}
               >
@@ -676,7 +738,7 @@ const Beasts = () => {
           </Card>
         </Grid>
       </Grid>
-      {loading === false && mintLoading === false && actionLoading === false && (
+      {textLoading === false && (
         <React.Fragment>
           <Grid container spacing={2} sx={{ my: 3 }}>
             <Grid item md={12}>
@@ -814,12 +876,10 @@ const Beasts = () => {
           )}
         </React.Fragment>
       )}
-      {loading === true && (
+      {textLoading === true && (
         <>
           <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h4">
-              {getTranslation("loadingBeasts")}
-            </Typography>
+            <Typography variant="h4">{loadingText}</Typography>
           </Grid>
           <Grid container sx={{ justifyContent: "center" }}>
             <Grid item xs={1}>
@@ -835,7 +895,7 @@ const Beasts = () => {
           </Grid>
         </>
       )}
-      {mintLoading === true && (
+      {/* {mintLoading === true && (
         <>
           <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
             <Typography variant="h4">
@@ -874,7 +934,7 @@ const Beasts = () => {
             </Grid>
           </Grid>
         </>
-      )}
+      )} */}
       <Dialog onClose={handleSupplyClose} open={openSupply}>
         <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
           {getTranslation("listOnMarketplace")}
@@ -935,9 +995,6 @@ const Beasts = () => {
           </Box>
         )}
       </Dialog>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <RevealCard></RevealCard>
-      </Box>
     </Box>
   );
 };

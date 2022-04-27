@@ -1,9 +1,6 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import {
-  Grid,
-  Box,
-} from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import { meta_constant } from "../../config/meta.config";
 import Helmet from "react-helmet";
 import { getTranslation } from "../../utils/translation";
@@ -13,7 +10,7 @@ import TakeAction from "./TakeAction";
 import ToSocial from "./ToSocial";
 import YourAchievements from "./YourAchievements";
 import ReactPlayer from "react-player/youtube";
-import Quotes from '../../constant/Quotes'
+import Quotes from "../../constant/Quotes";
 import Sparkles from "../../component/UI/Sparkless/Sparkles";
 
 export interface SimpleDialogProps {
@@ -22,9 +19,9 @@ export interface SimpleDialogProps {
 }
 
 const Home = () => {
-
-  const language = localStorage.getItem('lang')
-  const quoteIndex = Math.floor(new Date().getTime() / 1000 / 3600 / 24) % Quotes.length
+  const language = localStorage.getItem("lang");
+  const quoteIndex =
+    Math.floor(new Date().getTime() / 1000 / 3600 / 24) % Quotes.length;
 
   return (
     <Box>
@@ -52,7 +49,16 @@ const Home = () => {
         </Grid>
       </Grid>
       <ToSocial />
-      <Box sx={{ p: 2, textAlign: 'center', px: 10, fontSize: '18px', fontWeight: 'bold' }} className="legionFontColor">
+      <Box
+        sx={{
+          p: 2,
+          textAlign: "center",
+          px: 10,
+          fontSize: "18px",
+          fontWeight: "bold",
+        }}
+        className="legionFontColor"
+      >
         <Sparkles minDelay={6000} maxDelay={10000}>
           {Quotes[quoteIndex]}
         </Sparkles>
@@ -91,7 +97,11 @@ const Home = () => {
             <Grid item md={3} sm={2} xs={1}></Grid>
           </Grid>
           <a
-            href={language === 'es' ? "https://docs-es.cryptolegions.app/" : "https://docs.cryptolegions.app/"}
+            href={
+              language === "es"
+                ? "https://docs-es.cryptolegions.app/"
+                : "https://docs.cryptolegions.app/"
+            }
             target="_blank"
             style={{ color: "white", border: "none" }}
           >

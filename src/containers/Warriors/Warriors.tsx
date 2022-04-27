@@ -40,6 +40,8 @@ import {
   getAllWarriors,
   isApprovedForAll,
   setApprovalForAll,
+  revealBeastsAndWarrior,
+  getWalletMintPending,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -107,6 +109,8 @@ const Warriors = () => {
   const [mintLoading, setMintLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
   const [BlstToUsd, setBlstToUsd] = React.useState(0);
+  const [revealStatus, setRevealStatus] = React.useState(false);
+  const [revealLoading, setRevealLoading] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -239,14 +243,32 @@ const Warriors = () => {
         await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintWarrior(web3, warriorContract, account, amount);
+      setRevealStatus(await getWalletMintPending(warriorContract, account));
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {}
-    getBalance();
+    } catch (e) {
+      console.log(e);
+    }
+    // getBalance();
     setMintLoading(false);
+    setLoading(true);
+  };
+
+  const handleReveal = async () => {
+    try {
+      setRevealStatus(false);
+      setRevealLoading(true);
+      await revealBeastsAndWarrior(warriorContract, account);
+      setRevealLoading(false);
+      setRevealStatus(await getWalletMintPending(warriorContract, account));
+      await getBalance();
+    } catch (error) {
+      setRevealStatus(true);
+      setRevealLoading(false);
+    }
   };
 
   const getBalance = async () => {
@@ -257,34 +279,43 @@ const Warriors = () => {
       setMarketplaceTax(
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
-      setBalance(
-        parseInt(await getWarriorBalance(web3, warriorContract, account))
-      );
-      console.log(await getWarriorBalance(web3, warriorContract, account));
-      const warriorsInfo = await getAllWarriors(warriorContract, account);
-      console.log(warriorsInfo);
+      setRevealStatus(await getWalletMintPending(warriorContract, account));
+      // if (await getWalletMintPending(warriorContract, account)) {
+      //   await revealBeastsAndWarrior(warriorContract, account);
+      // }
+      if (!(await getWalletMintPending(warriorContract, account))) {
+        setBalance(
+          parseInt(await getWarriorBalance(web3, warriorContract, account))
+        );
+        const warriorsInfo = await getAllWarriors(warriorContract, account);
+        console.log(warriorsInfo);
 
-      let ids = warriorsInfo[0];
-      let powers = warriorsInfo[1];
-      ids.forEach((id: any, index: number) => {
-        var temp = {
-          id: id,
-          type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
-          strength: getWarriorStrength(powers[index]),
-          power: powers[index],
-          gif: getWarriorGif(
-            warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
-            parseInt(powers[index])
-          ),
-          executeStatus: false,
-        };
-        tempWarriors.push(temp);
-        amount += parseInt(powers[index]);
-      });
-    } catch (error) {}
-    setMaxPower(amount);
-    setWarriors(tempWarriors);
-    setLoading(false);
+        let ids = warriorsInfo[0];
+        let powers = warriorsInfo[1];
+        ids.forEach((id: any, index: number) => {
+          var temp = {
+            id: id,
+            type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+            strength: getWarriorStrength(powers[index]),
+            power: powers[index],
+            gif: getWarriorGif(
+              warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+              parseInt(powers[index])
+            ),
+            executeStatus: false,
+          };
+          tempWarriors.push(temp);
+          amount += parseInt(powers[index]);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    if (!(await getWalletMintPending(warriorContract, account))) {
+      setMaxPower(amount);
+      setWarriors(tempWarriors);
+      setLoading(false);
+    }
   };
 
   const checkApprovalForAll = async () => {
@@ -933,6 +964,27 @@ const Warriors = () => {
           </Grid>
         </>
       )}
+      {revealLoading === true && (
+        <>
+          <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
+            <Typography variant="h4">
+              {getTranslation("revealWarriors")}...
+            </Typography>
+          </Grid>
+          <Grid container sx={{ justifyContent: "center" }}>
+            <Grid item xs={1}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  image="/assets/images/loading.gif"
+                  alt="Loading"
+                  loading="lazy"
+                />
+              </Card>
+            </Grid>
+          </Grid>
+        </>
+      )}
       <Dialog onClose={handleSupplyClose} open={openSupply}>
         <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
           {getTranslation("listOnMarketplace")}
@@ -992,6 +1044,16 @@ const Warriors = () => {
             {getTranslation("maxSellPrice")}
           </Box>
         )}
+      </Dialog>
+      <Dialog open={revealStatus}>
+        <DialogContent>
+          <CommonBtn
+            style={{ fontWeight: "bold" }}
+            onClick={() => handleReveal()}
+          >
+            {getTranslation("revealWarriors")}
+          </CommonBtn>
+        </DialogContent>
       </Dialog>
     </Box>
   );

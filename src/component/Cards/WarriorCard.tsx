@@ -68,23 +68,11 @@ export default function WarriorCard(props: CardProps) {
 
   return (
     <Card
-      sx={
-        needButton
-          ? {
-              position: "relative",
-              width: "100%",
-              fontSize: isMobile ? 10 : 14,
-              "&:hover": {
-                boxShadow:
-                  "rgba(80, 60, 100, 0.4) 5px 5px, rgba(80, 60, 100, 0.3) 10px 10px, rgba(80, 60, 100, 0.2) 15px 15px, rgba(80, 60, 100, 0.1) 20px 20px !important",
-              },
-            }
-          : {
-              position: "relative",
-              width: "100%",
-              fontSize: isMobile ? 10 : 14,
-            }
-      }
+      sx={{
+        position: "relative",
+        width: "100%",
+        fontSize: isMobile ? 10 : 14,
+      }}
       // className="warriorCard"
       className={classNames({ executeitem: executeStatus }, "warriorCard")}
     >

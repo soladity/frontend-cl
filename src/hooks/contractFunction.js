@@ -40,7 +40,9 @@ export const setBeastBloodstoneApprove = async (web3, contract, account) => {
  */
 
 export const mintBeast = async (web3, contract, account, amount) => {
-  const response = await contract.methods.mint(amount).send({ from: account });
+  const response = await contract.methods
+    .initializeMint(amount)
+    .send({ from: account });
   return response;
 };
 
@@ -65,11 +67,9 @@ export const getBeastTokenIds = async (web3, contract, account) => {
 
 export const getBeastToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getBeast(tokenId).call();
-  
+
   const beast = {
-    type: beastsInfo[
-      parseInt(response) == 20 ? 5 : parseInt(response) - 1
-    ],
+    type: beastsInfo[parseInt(response) == 20 ? 5 : parseInt(response) - 1],
     strength: response,
     capacity: response,
   };
@@ -102,7 +102,10 @@ export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
 };
 
 export const mintWarrior = async (web3, contract, account, amount) => {
-  const response = await contract.methods.mint(amount).send({ from: account });
+  console.log(amount);
+  const response = await contract.methods
+    .initializeMint(amount)
+    .send({ from: account });
   return response;
 };
 
@@ -127,9 +130,9 @@ export const getWarriorTokenIds = async (web3, contract, account) => {
 
 export const getWarriorToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getWarrior(tokenId).call();
-  console.log(response)
+  console.log(response);
   const warrior = {
-    type:  warriorInfo[getWarriorStrength(parseInt(response)) - 1],
+    type: warriorInfo[getWarriorStrength(parseInt(response)) - 1],
     strength: getWarriorStrength(parseInt(response)),
     power: response,
   };
@@ -403,9 +406,7 @@ export const getMarketplaceBloodstoneAllowance = async (
 };
 
 export const execute = async (web3, contract, account, ids) => {
-  const response = await contract.methods
-    .execute(ids)
-    .send({ from: account });
+  const response = await contract.methods.execute(ids).send({ from: account });
   return response;
 };
 
@@ -556,24 +557,40 @@ export const getAllLegions = async (contract, account) => {
   return await contract.methods.getAllLegions(account).call();
 };
 
-
 export const isApprovedForAll = async (contract, account, approvalContract) => {
-  return await contract.methods.isApprovedForAll(account, approvalContract).call();
-}
+  return await contract.methods
+    .isApprovedForAll(account, approvalContract)
+    .call();
+};
 
-export const setApprovalForAll = async (account, contract, approvalContract, status) => {
-  await contract.methods.setApprovalForAll(approvalContract, status).send({from: account});
-}
+export const setApprovalForAll = async (
+  account,
+  contract,
+  approvalContract,
+  status
+) => {
+  await contract.methods
+    .setApprovalForAll(approvalContract, status)
+    .send({ from: account });
+};
 
 export const getWarriorCountForMonster25 = async (contract) => {
   return await contract.methods.warriorCountForMonster25().call();
-}
+};
 
 export const getCanAttackMonster25 = async (contract, account) => {
-  const response = await contract.methods.canAttackMonster25(account).call()
-  console.log(response)
+  const response = await contract.methods.canAttackMonster25(account).call();
+  console.log(response);
   return {
     status: response[0],
-    count: response[1]
-  }
-}
+    count: response[1],
+  };
+};
+
+export const revealBeastsAndWarrior = async (contract, account) => {
+  return await contract.methods.mint().send({ from: account });
+};
+
+export const getWalletMintPending = async (contract, account) => {
+  return await contract.methods.walletMintPending(account).call();
+};
