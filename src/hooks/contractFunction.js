@@ -1,9 +1,12 @@
+import beastsInfo from "../constant/beasts";
+import warriorInfo from "../constant/warriors";
 import {
   getBeastAddress,
   getWarriorAddress,
   getLegionAddress,
   getMarketplaceAddress,
 } from "../utils/addressHelpers";
+import { getWarriorStrength } from "../utils/common";
 
 export const getBaseUrl = async () => {
   // const response = await contract.methods._baseURL().call();
@@ -37,7 +40,9 @@ export const setBeastBloodstoneApprove = async (web3, contract, account) => {
  */
 
 export const mintBeast = async (web3, contract, account, amount) => {
-  const response = await contract.methods.mint(amount).send({ from: account });
+  const response = await contract.methods
+    .initializeMint(amount)
+    .send({ from: account });
   return response;
 };
 
@@ -62,12 +67,11 @@ export const getBeastTokenIds = async (web3, contract, account) => {
 
 export const getBeastToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getBeast(tokenId).call();
+
   const beast = {
-    type: response[0],
-    strength: response[1],
-    capacity: response[2],
-    // image: response[3],
-    // imageAlt: response[4]
+    type: beastsInfo[parseInt(response) == 20 ? 5 : parseInt(response) - 1],
+    strength: response,
+    capacity: response,
   };
   return beast;
 };
@@ -98,7 +102,10 @@ export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
 };
 
 export const mintWarrior = async (web3, contract, account, amount) => {
-  const response = await contract.methods.mint(amount).send({ from: account });
+  console.log(amount);
+  const response = await contract.methods
+    .initializeMint(amount)
+    .send({ from: account });
   return response;
 };
 
@@ -123,12 +130,13 @@ export const getWarriorTokenIds = async (web3, contract, account) => {
 
 export const getWarriorToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getWarrior(tokenId).call();
-  const beast = {
-    type: response[0],
-    strength: response[1],
-    power: response[2],
+  console.log(response);
+  const warrior = {
+    type: warriorInfo[getWarriorStrength(parseInt(response)) - 1],
+    strength: getWarriorStrength(parseInt(response)),
+    power: response,
   };
-  return beast;
+  return warrior;
 };
 
 /**
@@ -397,10 +405,8 @@ export const getMarketplaceBloodstoneAllowance = async (
   return web3.utils.fromWei(response, "ether").toString();
 };
 
-export const execute = async (web3, contract, account, type, id) => {
-  const response = await contract.methods
-    .execute(id, type)
-    .send({ from: account });
+export const execute = async (web3, contract, account, ids) => {
+  const response = await contract.methods.execute(ids).send({ from: account });
   return response;
 };
 
@@ -549,4 +555,42 @@ export const getAllLegionMarketItems = async (contract) => {
 
 export const getAllLegions = async (contract, account) => {
   return await contract.methods.getAllLegions(account).call();
+};
+
+export const isApprovedForAll = async (contract, account, approvalContract) => {
+  return await contract.methods
+    .isApprovedForAll(account, approvalContract)
+    .call();
+};
+
+export const setApprovalForAll = async (
+  account,
+  contract,
+  approvalContract,
+  status
+) => {
+  await contract.methods
+    .setApprovalForAll(approvalContract, status)
+    .send({ from: account });
+};
+
+export const getWarriorCountForMonster25 = async (contract) => {
+  return await contract.methods.warriorCountForMonster25().call();
+};
+
+export const getCanAttackMonster25 = async (contract, account) => {
+  const response = await contract.methods.canAttackMonster25(account).call();
+  console.log(response);
+  return {
+    status: response[0],
+    count: response[1],
+  };
+};
+
+export const revealBeastsAndWarrior = async (contract, account) => {
+  return await contract.methods.mint().send({ from: account });
+};
+
+export const getWalletMintPending = async (contract, account) => {
+  return await contract.methods.walletMintPending(account).call();
 };

@@ -37,7 +37,11 @@ import {
   getSummoningPrice,
   getFee,
   getUSDAmountFromBLST,
-  getAllWarriors
+  getAllWarriors,
+  isApprovedForAll,
+  setApprovalForAll,
+  revealBeastsAndWarrior,
+  getWalletMintPending,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -51,9 +55,14 @@ import WarriorCard from "../../component/Cards/WarriorCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import Navigation from "../../component/Navigation/Navigation";
 import { getTranslation } from "../../utils/translation";
-import { formatNumber, getWarriorGif } from "../../utils/common";
+import {
+  formatNumber,
+  getWarriorGif,
+  getWarriorStrength,
+} from "../../utils/common";
 import { FaTimes } from "react-icons/fa";
 import warriorInfo from "../../constant/warriors";
+import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
 const useStyles = makeStyles({
   root: {
@@ -76,6 +85,10 @@ type WarriorProps = {
   type: string;
   power: string;
   strength: string;
+  executeStatus: {
+    type: boolean;
+    default: false;
+  };
 };
 
 const Warriors = () => {
@@ -91,11 +104,12 @@ const Warriors = () => {
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
-  const [loading, setLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([500, 6000]);
-  const [mintLoading, setMintLoading] = React.useState(false);
-  const [actionLoading, setActionLoading] = React.useState(false);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
+
+  const [revealStatus, setRevealStatus] = React.useState(false);
+  const [textLoading, setTextLoading] = React.useState(false);
+  const [loadingText, setLoadingText] = React.useState("");
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -158,26 +172,21 @@ const Warriors = () => {
     var BLST_per_150 = "5";
 
     try {
-      BLST_amount_1 = (await getSummoningPrice(
-        feeHandlerContract,
-        1
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_10 = (await getSummoningPrice(
-        feeHandlerContract,
-        10
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_50 = (await getSummoningPrice(
-        feeHandlerContract,
-        50
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_100 = (await getSummoningPrice(
-        feeHandlerContract,
-        100
-      ) / Math.pow(10, 18)).toFixed(2);
-      BLST_amount_150 = (await getSummoningPrice(
-        feeHandlerContract,
-        150
-      ) / Math.pow(10, 18)).toFixed(2);
+      BLST_amount_1 = (
+        (await getSummoningPrice(feeHandlerContract, 1)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_10 = (
+        (await getSummoningPrice(feeHandlerContract, 10)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_50 = (
+        (await getSummoningPrice(feeHandlerContract, 50)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_100 = (
+        (await getSummoningPrice(feeHandlerContract, 100)) / Math.pow(10, 18)
+      ).toFixed(2);
+      BLST_amount_150 = (
+        (await getSummoningPrice(feeHandlerContract, 150)) / Math.pow(10, 18)
+      ).toFixed(2);
       var amount_per = {
         b1: {
           amount: BLST_amount_1,
@@ -202,9 +211,7 @@ const Warriors = () => {
       };
 
       setWarriorBlstAmountPer(amount_per);
-    } catch (error) {
-
-    }
+    } catch (error) {}
 
     return BLST_amount_1;
   };
@@ -221,10 +228,38 @@ const Warriors = () => {
     );
   }, []);
 
+  // const handleMint = async (amount: Number) => {
+  //   handlePopoverCloseSummonWarrior();
+  //   setMintLoading(true);
+  //   setLoading(false);
+  //   const allowance = await getWarriorBloodstoneAllowance(
+  //     web3,
+  //     bloodstoneContract,
+  //     account
+  //   );
+  //   try {
+  //     if (allowance === "0") {
+  //       await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
+  //     }
+  //     await mintWarrior(web3, warriorContract, account, amount);
+  //     setRevealStatus(await getWalletMintPending(warriorContract, account));
+  //     dispatch(
+  //       setReloadStatus({
+  //         reloadContractStatus: new Date(),
+  //       })
+  //     );
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  //   // getBalance();
+  //   setMintLoading(false);
+  //   setLoading(true);
+  // };
+
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonWarrior();
-    setMintLoading(true);
-    setLoading(false);
+    setTextLoading(true);
+    setLoadingText(getTranslation("summoningWarriors"));
     const allowance = await getWarriorBloodstoneAllowance(
       web3,
       bloodstoneContract,
@@ -235,51 +270,169 @@ const Warriors = () => {
         await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintWarrior(web3, warriorContract, account, amount);
+      setRevealStatus(await getWalletMintPending(warriorContract, account));
+      setTextLoading(true);
+      if (await getWalletMintPending(warriorContract, account)) {
+        setLoadingText(getTranslation("revealTextWarriors"));
+      }
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
-
       );
     } catch (e) {
-
+      console.log(e);
     }
-    getBalance();
-    setMintLoading(false);
+    // getBalance();
+    // setTextLoading(false);
   };
 
-  const getBalance = async () => {
-    setLoading(true);
-    var tempWarriors: any[] = []
-    var amount = 0
+  // const handleReveal = async () => {
+  //   try {
+  //     setRevealStatus(false);
+  //     setRevealLoading(true);
+  //     await revealBeastsAndWarrior(warriorContract, account);
+  //     setRevealLoading(false);
+  //     setRevealStatus(await getWalletMintPending(warriorContract, account));
+  //     await getBalance();
+  //   } catch (error) {
+  //     setRevealStatus(true);
+  //     setRevealLoading(false);
+  //   }
+  // };
+
+  const handleReveal = async () => {
+    setRevealStatus(false);
     try {
-      setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
+      setTextLoading(true);
+      setLoadingText(getTranslation("revealingWarriors"));
+      await revealBeastsAndWarrior(warriorContract, account);
+      setRevealStatus(false);
+      setRevealStatus(await getWalletMintPending(warriorContract, account));
+      await getBalance();
+    } catch (error) {
+      setRevealStatus(true);
+      setTextLoading(true);
+      setLoadingText(getTranslation("revealTextWarriors"));
+    }
+  };
+
+  // const getBalance = async () => {
+  //   setLoading(true);
+  //   var tempWarriors: any[] = [];
+  //   var amount = 0;
+  //   try {
+  //     setMarketplaceTax(
+  //       ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
+  //     );
+  //     setRevealStatus(await getWalletMintPending(warriorContract, account));
+  //     // if (await getWalletMintPending(warriorContract, account)) {
+  //     //   await revealBeastsAndWarrior(warriorContract, account);
+  //     // }
+  //     if (!(await getWalletMintPending(warriorContract, account))) {
+  //       setBalance(
+  //         parseInt(await getWarriorBalance(web3, warriorContract, account))
+  //       );
+  //       const warriorsInfo = await getAllWarriors(warriorContract, account);
+  //       console.log(warriorsInfo);
+
+  //       let ids = warriorsInfo[0];
+  //       let powers = warriorsInfo[1];
+  //       ids.forEach((id: any, index: number) => {
+  //         var temp = {
+  //           id: id,
+  //           type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+  //           strength: getWarriorStrength(powers[index]),
+  //           power: powers[index],
+  //           gif: getWarriorGif(
+  //             warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+  //             parseInt(powers[index])
+  //           ),
+  //           executeStatus: false,
+  //         };
+  //         tempWarriors.push(temp);
+  //         amount += parseInt(powers[index]);
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   if (!(await getWalletMintPending(warriorContract, account))) {
+  //     setMaxPower(amount);
+  //     setWarriors(tempWarriors);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const getBalance = async () => {
+    setTextLoading(true);
+    var tempWarriors: any[] = [];
+    var amount = 0;
+    let revealStatusVal;
+    try {
+      setLoadingText(getTranslation("loadingWarriors"));
+      revealStatusVal = await getWalletMintPending(warriorContract, account);
+      setRevealStatus(revealStatusVal);
+      setMarketplaceTax(
+        ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
+      );
       setBalance(
         parseInt(await getWarriorBalance(web3, warriorContract, account))
       );
-      const warriorsInfo = await getAllWarriors(warriorContract, account)
+      const warriorsInfo = await getAllWarriors(warriorContract, account);
+      console.log(warriorsInfo);
 
-      let ids = warriorsInfo[0]
-      let strengths = warriorsInfo[1]
-      let powers = warriorsInfo[2]
+      let ids = warriorsInfo[0];
+      let powers = warriorsInfo[1];
       ids.forEach((id: any, index: number) => {
         var temp = {
           id: id,
-          type: warriorInfo[parseInt(strengths[index]) - 1],
-          strength: strengths[index],
+          type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+          strength: getWarriorStrength(powers[index]),
           power: powers[index],
-          gif: getWarriorGif(warriorInfo[parseInt(strengths[index]) - 1], parseInt(powers[index]))
-        }
-        tempWarriors.push(temp)
-        amount += parseInt(powers[index])
-      })
+          gif: getWarriorGif(
+            warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+            parseInt(powers[index])
+          ),
+          executeStatus: false,
+        };
+        tempWarriors.push(temp);
+        amount += parseInt(powers[index]);
+      });
     } catch (error) {
-
+      console.log(error);
     }
     setMaxPower(amount);
     setWarriors(tempWarriors);
-    setLoading(false);
-  }
+    if (revealStatusVal) {
+      setLoadingText(getTranslation("revealTextWarriors"));
+    }
+    console.log(revealStatusVal);
+    if (!revealStatusVal) {
+      setTextLoading(false);
+    }
+  };
+
+  const checkApprovalForAll = async () => {
+    console.log(
+      await isApprovedForAll(warriorContract, account, getMarketplaceAddress())
+    );
+    if (
+      (await isApprovedForAll(
+        warriorContract,
+        account,
+        getMarketplaceAddress()
+      )) === false
+    ) {
+      console.log("set");
+      await setApprovalForAll(
+        account,
+        warriorContract,
+        getMarketplaceAddress(),
+        true
+      );
+    }
+  };
 
   const handleChangeAp = (
     event: Event,
@@ -308,33 +461,44 @@ const Warriors = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] === '0') {
-        price = price.slice(1)
+      if (price[0] === "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price === '') {
-        price = '0'
+      if (price === "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
 
   const handleSendToMarketplace = async () => {
-    setActionLoading(true);
+    setTextLoading(true);
+    setLoadingText(getTranslation("pleaseWait"));
     setOpenSupply(false);
     try {
-      await setMarketplaceApprove(
-        web3,
-        warriorContract,
-        account,
-        selectedWarrior
-      );
-
+      // await setMarketplaceApprove(
+      //   web3,
+      //   warriorContract,
+      //   account,
+      //   selectedWarrior
+      // );
+      await checkApprovalForAll();
       await sellToken(
         web3,
         marketplaceContract,
@@ -354,21 +518,20 @@ const Warriors = () => {
       setWarriors(
         warriors.filter((item: any) => parseInt(item.id) !== selectedWarrior)
       );
-    } catch (e) {
-
-    }
-    setActionLoading(false);
+    } catch (e) {}
+    setTextLoading(false);
   };
 
   const handleExecute = async (id: number) => {
-    setActionLoading(true);
+    setTextLoading(true);
+    setLoadingText(getTranslation("pleaseWait"));
     try {
-      await execute(web3, legionContract, account, false, id);
+      console.log("execute");
+      await execute(web3, warriorContract, account, [id]);
       let power = 0;
       let temp = warriors;
       for (let i = 0; i < temp.length; i++) {
-        if (parseInt(temp[i]["id"]) === id)
-          power = parseInt(temp[i]["power"]);
+        if (parseInt(temp[i]["id"]) === id) power = parseInt(temp[i]["power"]);
       }
       setMaxPower(maxPower - power);
       setBalance(balance - 1);
@@ -378,10 +541,26 @@ const Warriors = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {
+    } catch (e) {}
+    setTextLoading(false);
+  };
 
-    }
-    setActionLoading(false);
+  const handleMassExecute = async () => {
+    setTextLoading(true);
+    setLoadingText(getTranslation("pleaseWait"));
+    try {
+      const ids = warriors
+        .filter((warrior: any) => warrior.executeStatus === true)
+        .map((warrior: any) => warrior.id);
+      await execute(web3, warriorContract, account, ids);
+      getBalance();
+      dispatch(
+        setReloadStatus({
+          reloadContractStatus: new Date(),
+        })
+      );
+    } catch (error) {}
+    setTextLoading(false);
   };
 
   const handlePage = (value: any) => {
@@ -391,7 +570,21 @@ const Warriors = () => {
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
-  }
+  };
+
+  const setExecuteStatus = (id: String) => {
+    setWarriors(
+      warriors.map((warrior: any, index: any) => {
+        if (warrior.id == id) {
+          return {
+            ...warrior,
+            executeStatus: !warrior.executeStatus,
+          };
+        }
+        return warrior;
+      })
+    );
+  };
 
   return (
     <Box>
@@ -430,9 +623,7 @@ const Warriors = () => {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {getTranslation("summonWarrior")}
               </Typography>
-              <Box
-                sx={{ pt: 1 }}
-              >
+              <Box sx={{ pt: 1 }}>
                 <CommonBtn
                   aria-describedby={"summon-warrior-id"}
                   onClick={handlePopoverOpenSummonWarrior}
@@ -603,11 +794,22 @@ const Warriors = () => {
               >
                 {formatNumber(maxPower)}
               </Typography>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
+                disabled={
+                  warriors.filter(
+                    (warrior: any) => warrior.executeStatus === true
+                  ).length === 0 || textLoading
+                }
+                onClick={handleMassExecute}
+              >
+                {getTranslation("massExecute")}
+              </CommonBtn>
             </Box>
           </Card>
         </Grid>
       </Grid>
-      {loading === false && mintLoading === false && actionLoading === false && (
+      {textLoading === false && (
         <React.Fragment>
           <Grid container spacing={2} sx={{ my: 3 }}>
             <Grid item md={4} xs={12}>
@@ -693,7 +895,7 @@ const Warriors = () => {
               .filter((item: any) =>
                 filter === "all"
                   ? parseInt(item.strength) >= 0
-                  : item.strength === filter
+                  : item.strength === parseInt(filter)
               )
               .filter(
                 (item: any) =>
@@ -709,10 +911,10 @@ const Warriors = () => {
                     image={
                       showAnimation === "0"
                         ? "/assets/images/characters/jpg/warriors/" +
-                        item["type"] +
-                        ".jpg"
+                          item["type"] +
+                          ".jpg"
                         : "/assets/images/characters/gif/warriors/" +
-                        item["gif"]
+                          item["gif"]
                     }
                     type={item["type"]}
                     power={item["power"]}
@@ -722,6 +924,8 @@ const Warriors = () => {
                     needButton={true}
                     handleOpenSupply={handleOpenSupply}
                     handleExecute={handleExecute}
+                    executeStatus={item["executeStatus"]}
+                    setExecuteStatus={setExecuteStatus}
                   />
                 </Grid>
               ))}
@@ -730,7 +934,7 @@ const Warriors = () => {
                 .filter((item: any) =>
                   filter === "all"
                     ? parseInt(item.strength) >= 0
-                    : item.strength === filter
+                    : item.strength === parseInt(filter)
                 )
                 .filter(
                   (item: any) =>
@@ -761,31 +965,35 @@ const Warriors = () => {
                 </Grid>
               )}
           </Grid>
-          {warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              ).length > 0 && (
+          {warriors
+            .filter((item: any) =>
+              filter === "all"
+                ? parseInt(item.strength) >= 0
+                : item.strength === filter
+            )
+            .filter(
+              (item: any) =>
+                apValue[0] <= parseInt(item.power) &&
+                (apValue[1] === 6000
+                  ? true
+                  : apValue[1] >= parseInt(item.power))
+            ).length > 0 && (
             <Navigation
-              totalCount={warriors.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.strength) >= 0
-                  : item.strength === filter
-              )
-              .filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.power) &&
-                  (apValue[1] === 6000
-                    ? true
-                    : apValue[1] >= parseInt(item.power))
-              ).length}
+              totalCount={
+                warriors
+                  .filter((item: any) =>
+                    filter === "all"
+                      ? parseInt(item.strength) >= 0
+                      : item.strength === filter
+                  )
+                  .filter(
+                    (item: any) =>
+                      apValue[0] <= parseInt(item.power) &&
+                      (apValue[1] === 6000
+                        ? true
+                        : apValue[1] >= parseInt(item.power))
+                  ).length
+              }
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
@@ -793,52 +1001,10 @@ const Warriors = () => {
           )}
         </React.Fragment>
       )}
-      {loading === true && (
+      {textLoading === true && (
         <>
           <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h4">
-              {getTranslation("loadingWarriors")}
-            </Typography>
-          </Grid>
-          <Grid container sx={{ justifyContent: "center" }}>
-            <Grid item xs={1}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  image="/assets/images/loading.gif"
-                  alt="Loading"
-                  loading="lazy"
-                />
-              </Card>
-            </Grid>
-          </Grid>
-        </>
-      )}
-      {mintLoading === true && (
-        <>
-          <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h4">
-              {getTranslation("summoningWarriors")}
-            </Typography>
-          </Grid>
-          <Grid container sx={{ justifyContent: "center" }}>
-            <Grid item xs={1}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  image="/assets/images/loading.gif"
-                  alt="Loading"
-                  loading="lazy"
-                />
-              </Card>
-            </Grid>
-          </Grid>
-        </>
-      )}
-      {actionLoading === true && (
-        <>
-          <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-            <Typography variant="h4">{getTranslation("pleaseWait")}</Typography>
+            <Typography variant="h4">{loadingText}</Typography>
           </Grid>
           <Grid container sx={{ justifyContent: "center" }}>
             <Grid item xs={1}>
@@ -872,7 +1038,13 @@ const Warriors = () => {
             variant="standard"
             value={price}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" ||
+                evt.key === "E" ||
+                evt.key === "+" ||
+                evt.key === "-") &&
+                evt.preventDefault();
+            }}
             color={price < maxSellPrice ? "primary" : "error"}
             inputProps={{ step: "0.1" }}
             sx={{
@@ -881,9 +1053,11 @@ const Warriors = () => {
               },
             }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
           <Typography variant="subtitle1">
-            {getTranslation('payMarketplaceTax')} {marketplaceTax}%
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
+          <Typography variant="subtitle1">
+            {getTranslation("payMarketplaceTax")} {marketplaceTax}%
           </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
@@ -905,6 +1079,16 @@ const Warriors = () => {
             {getTranslation("maxSellPrice")}
           </Box>
         )}
+      </Dialog>
+      <Dialog open={revealStatus}>
+        <DialogContent>
+          <CommonBtn
+            style={{ fontWeight: "bold" }}
+            onClick={() => handleReveal()}
+          >
+            {getTranslation("revealWarriors")}
+          </CommonBtn>
+        </DialogContent>
       </Dialog>
     </Box>
   );

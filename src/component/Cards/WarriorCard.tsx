@@ -1,9 +1,12 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import Checkbox from "@mui/material/Checkbox";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
+import "./card.css";
+import classNames from "classnames";
 
 import { formatNumber } from "../../utils/common";
 
@@ -17,6 +20,8 @@ type CardProps = {
   handleOpenSupply: Function;
   handleExecute: Function;
   needButton?: boolean;
+  executeStatus?: boolean;
+  setExecuteStatus: Function;
 };
 
 export default function WarriorCard(props: CardProps) {
@@ -30,6 +35,8 @@ export default function WarriorCard(props: CardProps) {
     handleOpenSupply,
     handleExecute,
     needButton = true,
+    executeStatus = false,
+    setExecuteStatus,
   } = props;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -55,6 +62,7 @@ export default function WarriorCard(props: CardProps) {
   };
 
   const execute = (id: string) => {
+    console.log(id, "execute");
     handleExecute(parseInt(id));
   };
 
@@ -65,6 +73,8 @@ export default function WarriorCard(props: CardProps) {
         width: "100%",
         fontSize: isMobile ? 10 : 14,
       }}
+      // className="warriorCard"
+      className={classNames({ executeitem: executeStatus }, "warriorCard")}
     >
       <CardMedia
         component="img"
@@ -143,6 +153,18 @@ export default function WarriorCard(props: CardProps) {
               alt="Shopping"
             />
           </Box>
+          <Checkbox
+            sx={
+              executeStatus
+                ? {
+                    opacity: 1,
+                  }
+                : {}
+            }
+            className="executeCheckBox"
+            checked={executeStatus}
+            onClick={() => setExecuteStatus(id)}
+          />
           <Box
             sx={{
               display: "flex",

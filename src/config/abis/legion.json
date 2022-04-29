@@ -1,7 +1,43 @@
 {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_rewardpool",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_feehandler",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_blst",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_beast",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_warrior",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_monster",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_vrfConsumer",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
@@ -147,6 +183,31 @@
         {
           "indexed": true,
           "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "count",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "name": "Minted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
           "name": "previousOwner",
           "type": "address"
         },
@@ -197,6 +258,19 @@
       "inputs": [
         {
           "indexed": false,
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "SetMarketplace",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "uint256",
           "name": "_max",
           "type": "uint256"
@@ -216,6 +290,19 @@
         }
       ],
       "name": "SetMinSyncPeriod",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_warriorCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetWarriorCountForMonster25",
       "type": "event"
     },
     {
@@ -245,12 +332,12 @@
     },
     {
       "inputs": [],
-      "name": "BUSD",
+      "name": "_tokenIds",
       "outputs": [
         {
-          "internalType": "contract IERC20",
+          "internalType": "uint256",
           "name": "",
-          "type": "address"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -277,6 +364,30 @@
       "name": "addSupply",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "addressTokenIds",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -345,6 +456,30 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "_addr",
+          "type": "address"
+        }
+      ],
+      "name": "canAttackMonster25",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
@@ -371,14 +506,9 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bool",
-          "name": "isbeast",
-          "type": "bool"
+          "internalType": "uint256[]",
+          "name": "tokenIds",
+          "type": "uint256[]"
         }
       ],
       "name": "execute",
@@ -391,9 +521,38 @@
       "name": "feehandler",
       "outputs": [
         {
-          "internalType": "contract FeeHandler",
+          "internalType": "contract IFeeHandler",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "maxNum",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "i",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "genRand",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -698,6 +857,19 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "isPaused",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -711,19 +883,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "marketplace",
-      "outputs": [
-        {
-          "internalType": "contract Marketplace",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -790,7 +949,7 @@
       "name": "monster",
       "outputs": [
         {
-          "internalType": "contract Monster",
+          "internalType": "contract IMonster",
           "name": "",
           "type": "address"
         }
@@ -870,6 +1029,19 @@
     },
     {
       "inputs": [],
+      "name": "nftType",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "owner",
       "outputs": [
         {
@@ -909,10 +1081,10 @@
     },
     {
       "inputs": [],
-      "name": "rewardpool",
+      "name": "rewardPool",
       "outputs": [
         {
-          "internalType": "contract RewardPool",
+          "internalType": "contract IRewardPool",
           "name": "",
           "type": "address"
         }
@@ -992,17 +1164,12 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_fee",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_index",
-          "type": "uint8"
+          "internalType": "address",
+          "name": "_lpAddr",
+          "type": "address"
         }
       ],
-      "name": "setFee",
+      "name": "setLiquidityPool",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1011,11 +1178,11 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "_lpAddr",
+          "name": "_addr",
           "type": "address"
         }
       ],
-      "name": "setLiquidityPool",
+      "name": "setMarketplaceAddr",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1042,6 +1209,32 @@
         }
       ],
       "name": "setMinSyncPeriod",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "_isPaused",
+          "type": "bool"
+        }
+      ],
+      "name": "setPaused",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_warriorCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "setWarriorCountForMonster25",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1092,6 +1285,44 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenIdIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenToOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1163,25 +1394,6 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferTime",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
         },
@@ -1202,6 +1414,63 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "walletLastMintRequestAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "walletLastRequestId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "walletMintPending",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "warrior",
       "outputs": [
@@ -1209,6 +1478,19 @@
           "internalType": "contract IWarriorNFT",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "warriorCountForMonster25",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",

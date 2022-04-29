@@ -81,16 +81,16 @@ const AppBarComponent = () => {
 
   React.useEffect(() => {
     if (account) {
-      realTimeUpdate()
+      realTimeUpdate();
     }
-  }, [])
+  }, []);
 
   const realTimeUpdate = () => {
     setTimeout(() => {
-      getBalance()
-      realTimeUpdate()
-    }, 5000)
-  }
+      getBalance();
+      realTimeUpdate();
+    }, 5000);
+  };
 
   const getBalance = async () => {
     setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
@@ -131,7 +131,7 @@ const AppBarComponent = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (error) { }
+    } catch (error) {}
     setLoading(false);
     setDialogOpen(false);
   };
@@ -220,7 +220,7 @@ const AppBarComponent = () => {
                   style={{
                     width: "15px",
                     height: "15px",
-                    marginRight: '10px'
+                    marginRight: "10px",
                   }}
                   alt="icon"
                 />
@@ -305,8 +305,8 @@ const AppBarComponent = () => {
                         {account === undefined || account === null
                           ? "..."
                           : account.substr(0, 6) +
-                          "..." +
-                          account.substr(account.length - 4, 4)}
+                            "..." +
+                            account.substr(account.length - 4, 4)}
                       </Typography>
                     </NavLink>
                   </Button>
@@ -326,7 +326,9 @@ const AppBarComponent = () => {
       >
         <DialogTitle>
           {taxLeftDays !== "0"
-            ? `${getTranslation("willPay")} ${parseInt(taxLeftDays) * 2}% ${getTranslation("tax")}.`
+            ? `${getTranslation("willPay")} ${
+                parseInt(taxLeftDays) * 2
+              }% ${getTranslation("tax")}.`
             : `${getTranslation("claim")} ${unClaimedBLST.toFixed(2)} $BLST`}
         </DialogTitle>
         <DialogContent>
@@ -339,8 +341,8 @@ const AppBarComponent = () => {
               </>
             ) : taxLeftDays === "0" ? (
               <>
-                {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)} $BLST{" "}
-                {getTranslation("taxFree")}.
+                {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)}{" "}
+                $BLST {getTranslation("taxFree")}.
                 <br />
                 {getTranslation("willReceive")} {unClaimedBLST.toFixed(2)} $BLST{" "}
                 {getTranslation("inYourWallet")}.
@@ -361,8 +363,8 @@ const AppBarComponent = () => {
               </>
             ) : (
               <>
-                {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)} $BLST{" "}
-                {getTranslation("with")} {2 * parseInt(taxLeftDays)}%{" "}
+                {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)}{" "}
+                $BLST {getTranslation("with")} {2 * parseInt(taxLeftDays)}%{" "}
                 {getTranslation("tax")}.
                 <br />
                 {getTranslation("willPay")}{" "}

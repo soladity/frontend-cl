@@ -23,7 +23,7 @@ import {
   sellTaxLiquidity,
   sellTaxReward,
   getSummoningPrice,
-  getSupplyCost
+  getSupplyCost,
 } from "../../hooks/contractFunction";
 
 const NadodoWatch = () => {
@@ -36,7 +36,7 @@ const NadodoWatch = () => {
   const [suppliesFee14, setSuppliesFee14] = React.useState(0);
   const [suppliesFee28, setSuppliesFee28] = React.useState(0);
   const feeHandlerContract = useFeeHandler();
-  const bloodstoneContract = useBloodstone()
+  const bloodstoneContract = useBloodstone();
 
   const getFeeValues = async () => {
     try {
@@ -45,7 +45,6 @@ const NadodoWatch = () => {
       );
       setHuntTax(((await getFee(feeHandlerContract, 1)) / 100).toFixed(1));
 
-
       const feeDenominatorVal = await feeDenominator(bloodstoneContract);
       const buyTaxLiquidityVal = await buyTaxLiquidity(bloodstoneContract);
       const buyTaxRewardVal = await buyTaxReward(bloodstoneContract);
@@ -53,8 +52,18 @@ const NadodoWatch = () => {
       const sellTaxLiquidityVal = await sellTaxLiquidity(bloodstoneContract);
       const sellTaxRewardVal = await sellTaxReward(bloodstoneContract);
 
-      setBuyTax((parseInt(buyTaxLiquidityVal) + parseInt(buyTaxRewardVal)) / parseInt(feeDenominatorVal) * 100);
-      setSellTax((parseInt(sellTaxLiquidityVal) + parseInt(sellTaxRewardVal) + parseInt(sellTaxDevVal)) / parseInt(feeDenominatorVal) * 100);
+      setBuyTax(
+        ((parseInt(buyTaxLiquidityVal) + parseInt(buyTaxRewardVal)) /
+          parseInt(feeDenominatorVal)) *
+          100
+      );
+      setSellTax(
+        ((parseInt(sellTaxLiquidityVal) +
+          parseInt(sellTaxRewardVal) +
+          parseInt(sellTaxDevVal)) /
+          parseInt(feeDenominatorVal)) *
+          100
+      );
 
       setDamageReduction(
         ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
@@ -63,6 +72,7 @@ const NadodoWatch = () => {
       setSuppliesFee14(await getFee(feeHandlerContract, 4));
       setSuppliesFee28(await getFee(feeHandlerContract, 5));
     } catch (error) {
+      console.log(error);
     }
   };
 
