@@ -281,6 +281,7 @@ const Warriors = () => {
         })
       );
     } catch (e) {
+      setTextLoading(false);
       console.log(e);
     }
     // getBalance();
