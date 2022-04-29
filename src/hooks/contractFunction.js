@@ -594,3 +594,19 @@ export const revealBeastsAndWarrior = async (contract, account) => {
 export const getWalletMintPending = async (contract, account) => {
   return await contract.methods.walletMintPending(account).call();
 };
+
+export const initiateHunt = async (contract, account) => {
+  return await contract.methods.initiateHunt().send({ from: account });
+};
+
+export const initiateMassHunt = async (contract, account) => {
+  return await contract.methods.initiateMassHunt().send({ from: account });
+};
+
+export const getWalletMassHuntPending = async (contract, account) => {
+  return await contract.methods.walletMassHuntPending(account).call();
+};
+
+export const getWalletHuntPending = async (contract, account) => {
+  return await contract.methods.walletHuntPending(account).call();
+};

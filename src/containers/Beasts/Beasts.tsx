@@ -267,6 +267,7 @@ const Beasts = () => {
         })
       );
     } catch (e) {
+      setTextLoading(false);
       console.log(e);
     }
     // getBalance();
@@ -322,6 +323,7 @@ const Beasts = () => {
       });
     } catch (error) {
       console.log(error);
+      setTextLoading(false);
     }
     setMaxWarrior(amount);
     setBeasts(tempBeasts);

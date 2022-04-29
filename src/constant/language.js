@@ -2640,4 +2640,16 @@ export const translations = {
     pl: "Aby je zobaczyć, musisz odsłonić bestie.",
     ph: "Kailangan mong magbunyag ng mga hayop upang makita sila.",
   },
+  revealResult: {
+    en: "Reveal Result",
+    es: "Revelar resultado",
+    cn: "显示结果",
+    pt: "Revelar resultado",
+    tr: "Sonucu Göster",
+    ru: "Показать результат",
+    fr: "Révéler le résultat",
+    de: "Resultaat onthullen",
+    pl: "Ujawnij wynik",
+    ph: "Ibunyag ang Resulta",
+  },
 };

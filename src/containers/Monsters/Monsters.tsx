@@ -68,6 +68,10 @@ import {
   getFee,
   getLegionBloodstoneAllowance,
   setLegionBloodstoneApprove,
+  initiateHunt,
+  getWalletMassHuntPending,
+  getWalletHuntPending,
+  initiateMassHunt,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -235,7 +239,8 @@ const Monsters = () => {
 
   const [huntTax, setHuntTax] = React.useState(0);
 
-  const [presentDialogOpen, setPresentDialogOpen] = React.useState(false);
+  const [huntPending, setHuntPending] = React.useState(false);
+  const [massHuntPending, setMassHuntPending] = React.useState(false);
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -449,14 +454,19 @@ const Monsters = () => {
       const huntableLegions = legionArrayTmp.filter(
         (item: any) => item.attackPower >= 2000
       );
-      console.log(legionArrayTmp);
-      console.log("hi");
+      let huntPending;
+      huntPending = await getWalletHuntPending(legionContract, account);
+      setHuntPending(huntPending);
+
+      let massHuntPending;
+      massHuntPending = await getWalletMassHuntPending(legionContract, account);
+      setMassHuntPending(massHuntPending);
+
       await initMonster(huntableLegions);
       setLegionIDs(legionIDS);
       setLegions(huntableLegions);
       setCurLegion(huntableLegions[0]);
     } catch (error) {}
-    setPresentDialogOpen(true);
     setLoading(false);
   };
 
@@ -483,91 +493,79 @@ const Monsters = () => {
     setCurLegion(curLegionTmp);
   };
 
-  const handleHunt = async (monsterTokenID: number) => {
+  const handleInitiateHunt = async (monsterTokenID: number) => {
     setDialogVisible(true);
     setCurMonsterID(monsterTokenID);
-    setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
     try {
-      const allowance = await getLegionBUSDAllowance(
-        web3,
-        busdContract,
-        account
-      );
-      if (allowance == 0) {
-        await setLegionBUSDApprove(web3, busdContract, account);
+      let huntPending;
+      huntPending = await getWalletHuntPending(legionContract, account);
+      setHuntPending(huntPending);
+      if (!huntPending) {
+        await initiateHunt(legionContract, account);
+        huntPending = await getWalletHuntPending(legionContract, account);
+        setHuntPending(huntPending);
       }
-      let response = await hunt(
-        web3,
-        legionContract,
-        account,
-        curLegion?.id,
-        monsterTokenID
-      );
-      const keys = Object.keys(response.events);
-      const result = response.events["Hunted"].returnValues;
-      setHuntedRoll(result.roll);
-      setHuntAvailablePercent(result.percent);
-      setHuntedStatus(result.success ? 1 : 2);
-      dispatch(
-        setReloadStatus({
-          reloadContractStatus: new Date(),
-        })
-      );
-    } catch (err) {}
+    } catch (error) {
+      setDialogVisible(false);
+    }
+  };
 
-    // try {
-    //   const BUSD =
-    //     (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
-    //   console.log(BUSD);
-    //   console.log(
-    //     (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
-    //   );
-    //   if (
-    //     BUSD >=
-    //     (monsters[monsterTokenID - 1] as MonsterInterface).BUSDReward * huntTax
-    //   ) {
-    //     setDialogVisible(true);
-    //     setCurMonsterID(monsterTokenID);
-    //     setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
-    //     try {
-    //       const allowance = await getLegionBUSDAllowance(
-    //         web3,
-    //         busdContract,
-    //         account
-    //       );
-    //       if (allowance == 0) {
-    //         await setLegionBUSDApprove(web3, busdContract, account);
-    //       }
-    //       let response = await hunt(
-    //         web3,
-    //         legionContract,
-    //         account,
-    //         curLegion?.id,
-    //         monsterTokenID
-    //       );
-    //       const keys = Object.keys(response.events);
-    //       const result = response.events["Hunted"].returnValues;
-    //       setHuntedRoll(result.roll);
-    //       setHuntAvailablePercent(result.percent);
-    //       setHuntedStatus(result.success ? 1 : 2);
-    //       dispatch(
-    //         setReloadStatus({
-    //           reloadContractStatus: new Date(),
-    //         })
-    //       );
-    //     } catch (e: any) {
-    //       setDialogVisible(false);
-    //       if (e.code == 4001) {
-    //       } else {
-    //         setSnackBarMessage(getTranslation("huntTransactionFailed"));
-    //         setOpenSnackBar(true);
-    //       }
-    //     }
-    //   } else {
-    //     setSnackBarMessage(getTranslation("addBUSD"));
-    //     setOpenSnackBar(true);
-    //   }
-    // } catch (error) {}
+  const handleHunt = async () => {
+    setDialogVisible(true);
+    setCurMonster(monsters[curMonsterID - 1] as MonsterInterface);
+    try {
+      const BUSD =
+        (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
+      console.log(BUSD);
+      console.log(
+        (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward * huntTax
+      );
+      if (
+        BUSD >=
+        (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward * huntTax
+      ) {
+        try {
+          const allowance = await getLegionBUSDAllowance(
+            web3,
+            busdContract,
+            account
+          );
+          if (allowance == 0) {
+            await setLegionBUSDApprove(web3, busdContract, account);
+          }
+          console.log("-------- Hunting test ----------");
+          let response = await hunt(
+            web3,
+            legionContract,
+            account,
+            curLegion?.id,
+            curMonsterID
+          );
+          const keys = Object.keys(response.events);
+          const result = response.events["Hunted"].returnValues;
+          setHuntedRoll(result.roll);
+          setHuntAvailablePercent(result.percent);
+          setHuntedStatus(result.success ? 1 : 2);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        } catch (error: any) {
+          setDialogVisible(false);
+          if (error.code == 4001) {
+          } else {
+            setSnackBarMessage(getTranslation("huntTransactionFailed"));
+            setOpenSnackBar(true);
+          }
+        }
+      } else {
+        setSnackBarMessage(getTranslation("addBUSD"));
+        setOpenSnackBar(true);
+      }
+    } catch (err) {
+      setDialogVisible(false);
+    }
   };
 
   const handleContinue = async () => {
@@ -684,6 +682,28 @@ const Monsters = () => {
     setSupplyCostLoading(false);
   };
 
+  const handleInitiateMassHunt = async () => {
+    setOpenMassHunt(true);
+    try {
+      let massHuntPending;
+      massHuntPending = await getWalletMassHuntPending(legionContract, account);
+      setMassHuntPending(massHuntPending);
+      if (!massHuntPending) {
+        setMassHuntLoading(true);
+        await initiateMassHunt(legionContract, account);
+        setMassHuntLoading(false);
+        massHuntPending = await getWalletMassHuntPending(
+          legionContract,
+          account
+        );
+        setMassHuntPending(massHuntPending);
+      }
+    } catch (error) {
+      setOpenMassHunt(false);
+      setMassHuntLoading(false);
+    }
+  };
+
   const massHunting = async () => {
     setCheckingMassHuntBUSD(true);
     const BUSD =
@@ -703,6 +723,12 @@ const Monsters = () => {
           await setLegionBUSDApprove(web3, busdContract, account);
         }
         await massHunt(legionContract, account);
+        let massHuntPending;
+        massHuntPending = await getWalletMassHuntPending(
+          legionContract,
+          account
+        );
+        setMassHuntPending(massHuntPending);
       } catch (error) {
         setOpenMassHunt(false);
       }
@@ -889,7 +915,7 @@ const Monsters = () => {
                 >
                   {checkingMassHuntBUSD ? (
                     <CommonBtn
-                      onClick={() => massHunting()}
+                      onClick={() => handleInitiateMassHunt()}
                       sx={{ fontWeight: "bold" }}
                       disabled
                     >
@@ -899,7 +925,7 @@ const Monsters = () => {
                     </CommonBtn>
                   ) : (
                     <CommonBtn
-                      onClick={() => massHunting()}
+                      onClick={() => handleInitiateMassHunt()}
                       sx={{ fontWeight: "bold" }}
                       disabled={!massBtnEnable}
                     >
@@ -990,7 +1016,7 @@ const Monsters = () => {
                       curLegion?.status === "1" &&
                       monster.ap <= (curLegion as LegionInterface).attackPower
                     }
-                    handleHunt={handleHunt}
+                    handleHunt={handleInitiateHunt}
                   />
                 </ScrollSection>
               </Grid>
@@ -1052,6 +1078,14 @@ const Monsters = () => {
               <Box component="p">{getTranslation("huntTime")}</Box>
               {getTranslation("huntTimeSubtitle1")}
               <Box component="p">{curMonster?.name.toUpperCase()}</Box>
+              {huntPending && (
+                <CommonBtn
+                  style={{ fontWeight: "bold" }}
+                  onClick={() => handleHunt()}
+                >
+                  {getTranslation("revealResult")}
+                </CommonBtn>
+              )}
             </DialogTitle>
             <DialogContent>
               <CardMedia
@@ -1298,9 +1332,40 @@ const Monsters = () => {
         <DialogTitle sx={{ textAlign: "center" }}>
           {getTranslation("massHuntResult")}
         </DialogTitle>
-        {massHuntLoading && (
+        {/* {massHuntPending && (
+          <CommonBtn
+            style={{ fontWeight: "bold" }}
+            onClick={() => initiateHunt()}
+          >
+            {getTranslation("revealResult")}
+          </CommonBtn>
+        )} */}
+        {massHuntLoading ? (
           <Box sx={{ p: 1 }}>
             <LinearProgress sx={{ width: "100%" }} color="success" />
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {massHuntPending &&
+              (checkingMassHuntBUSD ? (
+                <CommonBtn
+                  onClick={() => massHunting()}
+                  sx={{ fontWeight: "bold" }}
+                  disabled
+                >
+                  <Spinner color="white" size={40} />
+                  &nbsp;
+                  {getTranslation("revealResult")}
+                </CommonBtn>
+              ) : (
+                <CommonBtn
+                  onClick={() => massHunting()}
+                  sx={{ fontWeight: "bold" }}
+                  disabled={!massBtnEnable}
+                >
+                  {getTranslation("revealResult")}
+                </CommonBtn>
+              ))}
           </Box>
         )}
         <Box
@@ -1376,23 +1441,21 @@ const Monsters = () => {
           ))}
         </Box>
         <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
-          <CommonBtn
-            onClick={() => handleContinue()}
-            disabled={continueLoading || massHuntLoading}
-            sx={{ marginLeft: "auto", fontWeight: "bold" }}
-          >
-            {continueLoading ? (
-              <Spinner color="white" size={40} />
-            ) : (
-              getTranslation("continue")
-            )}
-          </CommonBtn>
+          {!massHuntPending && (
+            <CommonBtn
+              onClick={() => handleContinue()}
+              disabled={continueLoading || massHuntLoading || massHuntPending}
+              sx={{ marginLeft: "auto", fontWeight: "bold" }}
+            >
+              {continueLoading || massHuntPending ? (
+                <Spinner color="white" size={40} />
+              ) : (
+                getTranslation("continue")
+              )}
+            </CommonBtn>
+          )}
         </Box>
       </Dialog>
-      {/* <Present
-        presentDialogOpen={presentDialogOpen}
-        setPresentDialogOpen={setPresentDialogOpen}
-      ></Present> */}
     </Box>
   );
 };
