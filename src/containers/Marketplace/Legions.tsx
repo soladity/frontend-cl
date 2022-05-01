@@ -78,6 +78,7 @@ type LegionProps = {
   lastHuntTime: string;
   owner: boolean;
   price: string;
+  badge: boolean;
   huntStatus: String;
   image: string;
   // animationImage: string;
@@ -153,6 +154,7 @@ const Legions = () => {
           image: image,
           owner: marketItem.owner === account ? true : false,
           price: marketItem.price,
+          badge: true,
           huntStatus: huntStatus,
         }
         setLegions([...legions, newItem])
@@ -274,7 +276,8 @@ const Legions = () => {
         id: allLegions[1][index],
         huntStatus: allLegions[2][index] ? 'green' : legion.supplies == "0" ? "red" : "orange",
         owner: allLegions[4][index] === account ? true : false,
-        price: allLegions[3][index]
+        price: allLegions[3][index],
+        badge: allLegions[5][index]
       }
     })
     console.log(tempAllLegions)
@@ -668,6 +671,7 @@ const Legions = () => {
                       huntStatus={item["huntStatus"]}
                       owner={item["owner"]}
                       price={item["price"]}
+                      badge={item["badge"]}
                       handleCancel={handleCancel}
                       handleBuy={handleBuy}
                       handleUpdate={handleUpdate}

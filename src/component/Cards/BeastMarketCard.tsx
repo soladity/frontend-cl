@@ -19,6 +19,7 @@ type CardProps = {
   strength?: string;
   owner: boolean;
   price: string;
+  badge: boolean;
   handleCancel: Function;
   handleBuy: Function;
   handleUpdate: Function;
@@ -32,6 +33,7 @@ export default function BeastMarketCard(props: CardProps) {
     capacity,
     owner,
     price,
+    badge,
     handleCancel,
     handleBuy,
     handleUpdate,
@@ -122,6 +124,19 @@ export default function BeastMarketCard(props: CardProps) {
             />
           </Box>
         )}
+        {
+          badge === true &&
+          <img 
+            src="/assets/images/badge.png"
+            style={{
+              position: "absolute",
+              bottom: "40px",
+              left: "15px",
+              height: '20px'
+             }}
+            alt="New Item"
+          />
+        }
         <Typography
           variant="subtitle2"
           sx={{

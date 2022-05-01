@@ -74,6 +74,7 @@ type BeastProps = {
   strength: string;
   owner: boolean;
   price: string;
+  badge: boolean;
 };
 
 const Beasts = () => {
@@ -156,6 +157,7 @@ const Beasts = () => {
           id: event.returnValues._tokenId,
           owner: marketItem.owner === account ? true : false,
           price: marketItem.price,
+          badge: true
         }
         setBeasts([...beasts, newItem])
         dispatch(
@@ -223,11 +225,13 @@ const Beasts = () => {
     let allBeasts;
     let tempAllBeasts: any[] = []
 
-    allBeasts = await getAllBeastMarketItems(marketplaceContract)
-    let ids = allBeasts[0]
-    let capacities = allBeasts[1]
-    let prices = allBeasts[2]
-    let sellers = allBeasts[3]
+    allBeasts = await getAllBeastMarketItems(marketplaceContract);
+    console.log(allBeasts)
+    let ids = allBeasts[0];
+    let capacities = allBeasts[1];
+    let prices = allBeasts[2];
+    let sellers = allBeasts[3];
+    let badges = allBeasts[4];
     ids.forEach((id: any, index: number) => {
       tempAllBeasts.push({
         id: id,
@@ -236,6 +240,7 @@ const Beasts = () => {
         capacity: capacities[index],
         strength: capacities[index],
         type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+        badge: badges[index],
         gif: getBeastGif(parseInt(capacities[index]))
       })
     })
@@ -548,6 +553,7 @@ const Beasts = () => {
                       id={item["id"]}
                       owner={item["owner"]}
                       price={item["price"]}
+                      badge={item["badge"]}
                       handleCancel={handleCancel}
                       handleBuy={handleBuy}
                       handleUpdate={handleUpdate}

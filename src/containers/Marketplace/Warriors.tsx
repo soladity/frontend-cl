@@ -78,6 +78,7 @@ type WarriorProps = {
   strength: number;
   owner: boolean;
   price: string;
+  badge: boolean;
 };
 
 const Warriors = () => {
@@ -186,6 +187,7 @@ const Warriors = () => {
             id: event.returnValues._tokenId,
             owner: marketItem.owner === account ? true : false,
             price: marketItem.price,
+            badge: true
           };
           setWarriors([...warriors, newItem]);
           dispatch(
@@ -263,6 +265,7 @@ const Warriors = () => {
       let aps = allWarriors[1];
       let prices = allWarriors[2];
       let sellers = allWarriors[3];
+      let badges = allWarriors[4];
 
       ids.forEach((id: any, index: number) => {
         tempAllWarriors.push({
@@ -272,6 +275,7 @@ const Warriors = () => {
           price: prices[index],
           owner: sellers[index] === account ? true : false,
           type: warriorInfo[getWarriorStrength(aps[index]) - 1],
+          badge: badges[index],
           gif: getWarriorGif(
             warriorInfo[getWarriorStrength(aps[index]) - 1],
             parseInt(aps[index])
@@ -713,6 +717,7 @@ const Warriors = () => {
                       id={item["id"]}
                       owner={item["owner"]}
                       price={item["price"]}
+                      badge={item["badge"]}
                       handleCancel={handleCancel}
                       handleBuy={handleBuy}
                       handleUpdate={handleUpdate}
