@@ -20,10 +20,12 @@
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "axios": "^0.24.0",
+    "better-docs": "^2.7.2",
     "classnames": "^2.3.1",
     "dotenv": "^16.0.0",
     "emailjs-com": "^3.2.0",
     "fs": "^0.0.1-security",
+    "jsdoc": "^3.6.10",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-card-flip": "^1.1.5",
@@ -62,7 +64,8 @@
     "build": "CI=false && node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier --write \"**/*.+(js|jsx|json|css|scss|md|ts|tsx)\""
+    "format": "prettier --write \"**/*.+(js|jsx|json|css|scss|md|ts|tsx)\"",
+    "docs": "jsdoc -c jsdoc.conf.json"
   },
   "eslintConfig": {
     "extends": [

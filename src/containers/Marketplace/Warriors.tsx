@@ -78,6 +78,7 @@ type WarriorProps = {
   strength: number;
   owner: boolean;
   price: string;
+  badge: boolean;
 };
 
 const Warriors = () => {
@@ -87,6 +88,7 @@ const Warriors = () => {
   const [warriors, setWarriors] = React.useState<WarriorProps[]>(Array);
   const [filter, setFilter] = React.useState("all");
   const [onlyMyWarrior, setOnlyMyWarrior] = React.useState(false);
+  const [onlyNew, setOnlyNew] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [openUpdate, setOpenUpdate] = React.useState(false);
   const [price, setPrice] = React.useState(0);
@@ -186,6 +188,7 @@ const Warriors = () => {
             id: event.returnValues._tokenId,
             owner: marketItem.owner === account ? true : false,
             price: marketItem.price,
+            badge: true
           };
           setWarriors([...warriors, newItem]);
           dispatch(
@@ -263,6 +266,7 @@ const Warriors = () => {
       let aps = allWarriors[1];
       let prices = allWarriors[2];
       let sellers = allWarriors[3];
+      let badges = allWarriors[4];
 
       ids.forEach((id: any, index: number) => {
         tempAllWarriors.push({
@@ -272,6 +276,7 @@ const Warriors = () => {
           price: prices[index],
           owner: sellers[index] === account ? true : false,
           type: warriorInfo[getWarriorStrength(aps[index]) - 1],
+          badge: badges[index],
           gif: getWarriorGif(
             warriorInfo[getWarriorStrength(aps[index]) - 1],
             parseInt(aps[index])
@@ -664,6 +669,32 @@ const Warriors = () => {
             >
               <FormControl component="fieldset" sx={{ width: "90%" }}>
                 <FormLabel component="legend">
+                  {getTranslation("showNew")}:
+                </FormLabel>
+              </FormControl>
+              <Checkbox
+                checked={onlyNew}
+                onChange={() => {
+                  setOnlyNew(!onlyNew);
+                  setCurrentPage(1);
+                }}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+              xl={2}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <FormControl component="fieldset" sx={{ width: "90%" }}>
+                <FormLabel component="legend">
                   {getTranslation("showMyWarrior")}:
                 </FormLabel>
               </FormControl>
@@ -695,6 +726,9 @@ const Warriors = () => {
                 .filter((item: any) =>
                   onlyMyWarrior === true ? item.owner === true : true
                 )
+                .filter((item: any) =>
+                  onlyNew === true ? item.badge === true : true
+                )
                 .slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20)
                 .map((item: any, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
@@ -713,6 +747,7 @@ const Warriors = () => {
                       id={item["id"]}
                       owner={item["owner"]}
                       price={item["price"]}
+                      badge={item["badge"]}
                       handleCancel={handleCancel}
                       handleBuy={handleBuy}
                       handleUpdate={handleUpdate}
@@ -738,6 +773,9 @@ const Warriors = () => {
                   )
                   .filter((item: any) =>
                     onlyMyWarrior === true ? item.owner === true : true
+                  )
+                  .filter((item: any) =>
+                    onlyNew === true ? item.badge === true : true
                   ).length
               }
               cPage={currentPage}
