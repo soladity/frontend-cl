@@ -290,8 +290,8 @@ const Legions = () => {
         })
       );
     } catch (e) {}
-    setSupplyLoading(false);
     getBalance();
+    setSupplyLoading(false);
   };
 
   const handleOpenSupply = async (id: number, warriorCnt: any) => {

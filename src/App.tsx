@@ -13,7 +13,7 @@ function ResponsiveDrawer(props: any) {
     error: networkError,
     activate: activateNetwork,
   } = useWeb3React();
-
+  console.log(networkActive, networkError, activateNetwork);
   const { reloadContractStatus } = useSelector(
     (state: any) => state.contractReducer
   );
@@ -22,14 +22,17 @@ function ResponsiveDrawer(props: any) {
     injected
       .isAuthorized()
       .then((isAuthorized) => {
+        console.log(isAuthorized);
         setLoaded(true);
         if (isAuthorized && !networkActive && !networkError) {
+          console.log("activateNetwork");
           activateNetwork(injected);
         }
       })
       .catch(() => {
         setLoaded(true);
       });
+    console.log(networkActive);
   }, [activateNetwork, networkActive, networkError]);
 
   if (loaded) {
