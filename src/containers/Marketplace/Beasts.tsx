@@ -74,6 +74,7 @@ type BeastProps = {
   strength: string;
   owner: boolean;
   price: string;
+  badge: boolean;
 };
 
 const Beasts = () => {
@@ -84,6 +85,7 @@ const Beasts = () => {
   const [beasts, setBeasts] = React.useState<BeastProps[]>(Array);
   const [filter, setFilter] = React.useState("all");
   const [onlyMyBeast, setOnlyMyBeast] = React.useState(false);
+  const [onlyNew, setOnlyNew] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [openUpdate, setOpenUpdate] = React.useState(false);
   const [price, setPrice] = React.useState(0);
@@ -156,6 +158,7 @@ const Beasts = () => {
           id: event.returnValues._tokenId,
           owner: marketItem.owner === account ? true : false,
           price: marketItem.price,
+          badge: true
         }
         setBeasts([...beasts, newItem])
         dispatch(
@@ -223,11 +226,13 @@ const Beasts = () => {
     let allBeasts;
     let tempAllBeasts: any[] = []
 
-    allBeasts = await getAllBeastMarketItems(marketplaceContract)
-    let ids = allBeasts[0]
-    let capacities = allBeasts[1]
-    let prices = allBeasts[2]
-    let sellers = allBeasts[3]
+    allBeasts = await getAllBeastMarketItems(marketplaceContract);
+    console.log(allBeasts)
+    let ids = allBeasts[0];
+    let capacities = allBeasts[1];
+    let prices = allBeasts[2];
+    let sellers = allBeasts[3];
+    let badges = allBeasts[4];
     ids.forEach((id: any, index: number) => {
       tempAllBeasts.push({
         id: id,
@@ -236,6 +241,7 @@ const Beasts = () => {
         capacity: capacities[index],
         strength: capacities[index],
         type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+        badge: badges[index],
         gif: getBeastGif(parseInt(capacities[index]))
       })
     })
@@ -506,6 +512,31 @@ const Beasts = () => {
             >
               <FormControl component="fieldset" sx={{ width: "90%" }}>
                 <FormLabel component="legend">
+                  {getTranslation("showNew")}:
+                </FormLabel>
+              </FormControl>
+              <Checkbox
+                checked={onlyNew}
+                onChange={() => {
+                  setOnlyNew(!onlyNew);
+                  setCurrentPage(1);
+                }}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              xl={4}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <FormControl component="fieldset" sx={{ width: "90%" }}>
+                <FormLabel component="legend">
                   {getTranslation("showMyBeast")}:
                 </FormLabel>
               </FormControl>
@@ -530,6 +561,9 @@ const Beasts = () => {
                 .filter((item: any) =>
                   onlyMyBeast === true ? item.owner === true : true
                 )
+                .filter((item: any) =>
+                  onlyNew === true ? item.badge === true : true
+                )
                 .slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20)
                 .map((item: any, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
@@ -548,6 +582,7 @@ const Beasts = () => {
                       id={item["id"]}
                       owner={item["owner"]}
                       price={item["price"]}
+                      badge={item["badge"]}
                       handleCancel={handleCancel}
                       handleBuy={handleBuy}
                       handleUpdate={handleUpdate}
@@ -568,6 +603,9 @@ const Beasts = () => {
               )
               .filter((item: any) =>
                 onlyMyBeast === true ? item.owner === true : true
+              )
+              .filter((item: any) =>
+                onlyNew === true ? item.badge === true : true
               ).length}
               cPage={currentPage}
               handlePage={handlePage}

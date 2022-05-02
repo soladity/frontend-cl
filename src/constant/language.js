@@ -2652,4 +2652,16 @@ export const translations = {
     pl: "Ujawnij wynik",
     ph: "Ibunyag ang Resulta",
   },
+  showNew: {
+    en: "Show Only New",
+    es: "Mostrar solo nuevos",
+    cn: "只显示新的",
+    pt: "Mostrar apenas novo",
+    tr: "Yalnızca Yenileri Göster",
+    ru: "Показать только новые",
+    fr: "Afficher uniquement les nouveautés",
+    de: "Toon alleen nieuw",
+    pl: "Pokaż tylko nowe",
+    ph: "Ipakita Lamang ang Bago",
+  },
 };

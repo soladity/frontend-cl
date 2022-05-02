@@ -78,6 +78,7 @@ type LegionProps = {
   lastHuntTime: string;
   owner: boolean;
   price: string;
+  badge: boolean;
   huntStatus: String;
   image: string;
   // animationImage: string;
@@ -89,6 +90,7 @@ const Legions = () => {
   const [sort, setSort] = React.useState("0");
   const [legions, setLegions] = React.useState<LegionProps[]>(Array);
   const [onlyMyLegion, setOnlyMyLegion] = React.useState(false);
+  const [onlyNew, setOnlyNew] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [openUpdate, setOpenUpdate] = React.useState(false);
   const [price, setPrice] = React.useState(0);
@@ -153,6 +155,7 @@ const Legions = () => {
           image: image,
           owner: marketItem.owner === account ? true : false,
           price: marketItem.price,
+          badge: true,
           huntStatus: huntStatus,
         }
         setLegions([...legions, newItem])
@@ -274,7 +277,8 @@ const Legions = () => {
         id: allLegions[1][index],
         huntStatus: allLegions[2][index] ? 'green' : legion.supplies == "0" ? "red" : "orange",
         owner: allLegions[4][index] === account ? true : false,
-        price: allLegions[3][index]
+        price: allLegions[3][index],
+        badge: allLegions[5][index]
       }
     })
     console.log(tempAllLegions)
@@ -621,6 +625,32 @@ const Legions = () => {
             >
               <FormControl component="fieldset" sx={{ width: "90%" }}>
                 <FormLabel component="legend">
+                  {getTranslation("showNew")}:
+                </FormLabel>
+              </FormControl>
+              <Checkbox
+                checked={onlyNew}
+                onChange={() => {
+                  setOnlyNew(!onlyNew);
+                  setCurrentPage(1);
+                }}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+              xl={2}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <FormControl component="fieldset" sx={{ width: "90%" }}>
+                <FormLabel component="legend">
                   {getTranslation("showMyLegion")}:
                 </FormLabel>
               </FormControl>
@@ -654,6 +684,9 @@ const Legions = () => {
                 .filter((item: any) =>
                   onlyMyLegion === true ? item.owner === true : true
                 )
+                .filter((item: any) =>
+                  onlyNew === true ? item.badge === true : true
+                )
                 .slice((currentPage - 1) * 20, (currentPage - 1) * 20 + 20)
                 .map((item: any, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
@@ -668,6 +701,7 @@ const Legions = () => {
                       huntStatus={item["huntStatus"]}
                       owner={item["owner"]}
                       price={item["price"]}
+                      badge={item["badge"]}
                       handleCancel={handleCancel}
                       handleBuy={handleBuy}
                       handleUpdate={handleUpdate}
@@ -693,6 +727,9 @@ const Legions = () => {
               )
               .filter((item: any) =>
                 onlyMyLegion === true ? item.owner === true : true
+              )
+              .filter((item: any) =>
+                onlyNew === true ? item.badge === true : true
               ).length}
               cPage={currentPage}
               handlePage={handlePage}

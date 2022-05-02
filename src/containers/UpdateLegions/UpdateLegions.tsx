@@ -54,7 +54,7 @@ import {
 } from "../../hooks/useContract";
 import { getTranslation } from "../../utils/translation";
 import { getWarriorStrength, toCapitalize } from "../../utils/common";
-import { formatNumber } from "../../utils/common";
+import { formatNumber, getBeastGif, getWarriorGif } from "../../utils/common";
 import { DropBox } from "../../component/Cards/DropBox";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { Spinner } from "../../component/Buttons/Spinner";
@@ -331,7 +331,10 @@ const UpdateLegions: React.FC = () => {
           power: powers[index],
           w5b: true,
           jpg: "",
-          gif: "",
+          gif: getWarriorGif(
+            warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
+            parseInt(powers[index])
+          ),
         };
         tempWarriors.push(temp);
       });
@@ -357,7 +360,7 @@ const UpdateLegions: React.FC = () => {
           power: "",
           w5b: false,
           jpg: "",
-          gif: "",
+          gif: getBeastGif(parseInt(capacities[index])),
         };
         tempBeasts.push(temp);
       });
@@ -813,8 +816,7 @@ const UpdateLegions: React.FC = () => {
                                 item["type"] +
                                 ".jpg"
                               : "/assets/images/characters/gif/warriors/" +
-                                item["type"] +
-                                ".gif"
+                              item["gif"]
                           }
                           item={item}
                           key={10000 + item.id}
@@ -837,9 +839,7 @@ const UpdateLegions: React.FC = () => {
                               ? "/assets/images/characters/jpg/beasts/" +
                                 item["type"] +
                                 ".jpg"
-                              : "/assets/images/characters/gif/beasts/" +
-                                item["type"] +
-                                ".gif"
+                              : "/assets/images/characters/gif/beasts/" + item["gif"]
                           }
                           item={item}
                           key={item.id}
