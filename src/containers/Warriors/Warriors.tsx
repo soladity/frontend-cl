@@ -1083,12 +1083,15 @@ const Warriors = () => {
       </Dialog>
       <Dialog open={revealStatus}>
         <DialogContent>
-          <CommonBtn
-            style={{ fontWeight: "bold" }}
-            onClick={() => handleReveal()}
-          >
-            {getTranslation("revealWarriors")}
-          </CommonBtn>
+          <Box sx={{ textAlign: "center", mb: 2 }}>
+            <CommonBtn
+              style={{ fontWeight: "bold" }}
+              onClick={() => handleReveal()}
+            >
+              {getTranslation("revealBeasts")}
+            </CommonBtn>
+          </Box>
+          <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
         </DialogContent>
       </Dialog>
     </Box>

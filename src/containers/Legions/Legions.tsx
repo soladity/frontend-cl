@@ -177,7 +177,6 @@ const Legions = () => {
   };
 
   const getBalance = async () => {
-    console.log(await getAllLegions(legionContract, account));
     setLoading(true);
 
     setBlstBalance(
@@ -284,6 +283,7 @@ const Legions = () => {
         supplyOrder == 0 ? 7 : supplyOrder == 1 ? 14 : 28,
         fromWallet
       );
+      getBalance();
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -291,7 +291,6 @@ const Legions = () => {
       );
     } catch (e) {}
     setSupplyLoading(false);
-    getBalance();
   };
 
   const handleOpenSupply = async (id: number, warriorCnt: any) => {

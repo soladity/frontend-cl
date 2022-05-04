@@ -44,7 +44,20 @@ const NadodoWatch = () => {
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
       setHuntTax(((await getFee(feeHandlerContract, 1)) / 100).toFixed(1));
+      setBuyAndSellTax();
+      setDamageReduction(
+        ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
+      );
+      setSummonFee(await getFee(feeHandlerContract, 3));
+      setSuppliesFee14(await getFee(feeHandlerContract, 4));
+      setSuppliesFee28(await getFee(feeHandlerContract, 5));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const setBuyAndSellTax = async () => {
+    try {
       const feeDenominatorVal = await feeDenominator(bloodstoneContract);
       const buyTaxLiquidityVal = await buyTaxLiquidity(bloodstoneContract);
       const buyTaxRewardVal = await buyTaxReward(bloodstoneContract);
@@ -64,13 +77,6 @@ const NadodoWatch = () => {
           parseInt(feeDenominatorVal)) *
           100
       );
-
-      setDamageReduction(
-        ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
-      );
-      setSummonFee(await getFee(feeHandlerContract, 3));
-      setSuppliesFee14(await getFee(feeHandlerContract, 4));
-      setSuppliesFee28(await getFee(feeHandlerContract, 5));
     } catch (error) {
       console.log(error);
     }

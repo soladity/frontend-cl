@@ -122,8 +122,8 @@ const Beasts = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
+      if (beasts.filter(item => item.id == event.returnValues.tokenId).length > 0) {
+        setBeasts(beasts.filter(beast => beast.id != event.returnValues.tokenId))
         dispatch(
           setReloadStatus({
             reloadContractStatus: new Date(),
@@ -136,8 +136,8 @@ const Beasts = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        setBeasts(beasts.filter(beast => beast.id != event.returnValues._tokenId))
+      if (beasts.filter(item => item.id == event.returnValues.tokenId).length > 0) {
+        setBeasts(beasts.filter(beast => beast.id != event.returnValues.tokenId))
         dispatch(
           setReloadStatus({
             reloadContractStatus: new Date(),
@@ -150,12 +150,12 @@ const Beasts = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues._tokenId).length == 0) {
-        const beast = await getBeastToken(web3, beastContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues._tokenId);
+      if (beasts.filter(item => item.id == event.returnValues.tokenId).length == 0) {
+        const beast = await getBeastToken(web3, beastContract, event.returnValues.tokenId);
+        const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues.tokenId);
         const newItem = {
           ...beast,
-          id: event.returnValues._tokenId,
+          id: event.returnValues.tokenId,
           owner: marketItem.owner === account ? true : false,
           price: marketItem.price,
           badge: true
@@ -173,9 +173,9 @@ const Beasts = () => {
     }).on('connected', function (subscriptionId: any) {
     }).on('data', async function (event: any) {
       console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues._tokenId).length > 0) {
+      if (beasts.filter(item => item.id == event.returnValues.tokenId).length > 0) {
         var temp = beasts.map(item => {
-          if (item.id == event.returnValues._tokenId) {
+          if (item.id == event.returnValues.tokenId) {
             return {
               ...item,
               price: event.returnValues._price

@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Box, Container, Snackbar, Grid, Alert } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
-import { injected } from '../../wallet';
-import Slide, { SlideProps } from '@mui/material/Slide';
-import { makeStyles } from '@mui/styles';
-import { addNetwork, switchNetwork } from '../../wallet/ethereum';
+import * as React from "react";
+import { Box, Container, Snackbar, Grid, Alert } from "@mui/material";
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "../../wallet";
+import Slide, { SlideProps } from "@mui/material/Slide";
+import { makeStyles } from "@mui/styles";
+import { addNetwork, switchNetwork } from "../../wallet/ethereum";
 
 const useStyles = makeStyles({
   loginToWhitePaperBtn: {
@@ -106,12 +106,11 @@ const AskMetaLogin = () => {
         setOpenSnackBar(true);
       }
       if (error.toString().indexOf("Unsupported") > -1) {
-        addNetwork()
+        addNetwork();
         switchNetwork();
         setErrorMsg("Please choose BSC TEST Network!");
         setOpenSnackBar(true);
       }
-
     }
     setLoading(false);
   }, [active, activate, error]);
