@@ -96,7 +96,6 @@ const AskMetaLogin = () => {
 
   const handleCloseClick = () => {
     setLoading(true);
-    console.log("login");
     activate(injected);
   };
 

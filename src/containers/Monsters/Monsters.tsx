@@ -242,6 +242,8 @@ const Monsters = () => {
   const [huntPending, setHuntPending] = React.useState(false);
   const [massHuntPending, setMassHuntPending] = React.useState(false);
 
+  const [revealBtnDisabled, setRevealBtnDisabled] = React.useState(false);
+
   const scrollArea = useCallback((node) => {
     if (node != null) {
       setScrollMaxHeight(node.scrollHeight);
@@ -496,6 +498,7 @@ const Monsters = () => {
   const handleInitiateHunt = async (monsterTokenID: number) => {
     setDialogVisible(true);
     setCurMonsterID(monsterTokenID);
+    setCurMonster(monsters[monsterTokenID - 1] as MonsterInterface);
     try {
       let huntPending;
       huntPending = await getWalletHuntPending(legionContract, account);
@@ -514,6 +517,7 @@ const Monsters = () => {
     setDialogVisible(true);
     setCurMonster(monsters[curMonsterID - 1] as MonsterInterface);
     try {
+      setRevealBtnDisabled(true);
       const BUSD =
         (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
       console.log(BUSD);
@@ -525,6 +529,7 @@ const Monsters = () => {
         (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward * huntTax
       ) {
         try {
+          setRevealBtnDisabled(true);
           const allowance = await getLegionBUSDAllowance(
             web3,
             busdContract,
@@ -551,6 +556,7 @@ const Monsters = () => {
               reloadContractStatus: new Date(),
             })
           );
+          setRevealBtnDisabled(false);
         } catch (error: any) {
           setDialogVisible(false);
           if (error.code == 4001) {
@@ -566,6 +572,7 @@ const Monsters = () => {
     } catch (err) {
       setDialogVisible(false);
     }
+    setRevealBtnDisabled(false);
   };
 
   const handleContinue = async () => {
@@ -704,7 +711,7 @@ const Monsters = () => {
     }
   };
 
-  const massHunting = async () => {
+  const handleMassHunting = async () => {
     setCheckingMassHuntBUSD(true);
     const BUSD =
       (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
@@ -1077,13 +1084,24 @@ const Monsters = () => {
             <DialogTitle sx={{ textAlign: "center" }}>
               <Box component="p">{getTranslation("huntTime")}</Box>
               {getTranslation("huntTimeSubtitle1")}
-              <Box component="p">{curMonster?.name.toUpperCase()}</Box>
+              <Box component="p">
+                #{curMonsterID} {curMonster?.name.toUpperCase()}
+              </Box>
               {huntPending && (
                 <CommonBtn
                   style={{ fontWeight: "bold" }}
-                  onClick={() => handleHunt()}
+                  onClick={() => {
+                    setTimeout(() => {
+                      handleHunt();
+                    }, 1500);
+                  }}
+                  disabled={revealBtnDisabled}
                 >
-                  {getTranslation("revealResult")}
+                  {revealBtnDisabled ? (
+                    <Spinner color="white" size={40} />
+                  ) : (
+                    getTranslation("revealResult")
+                  )}
                 </CommonBtn>
               )}
             </DialogTitle>
@@ -1349,7 +1367,7 @@ const Monsters = () => {
             {massHuntPending &&
               (checkingMassHuntBUSD ? (
                 <CommonBtn
-                  onClick={() => massHunting()}
+                  onClick={() => handleMassHunting()}
                   sx={{ fontWeight: "bold" }}
                   disabled
                 >
@@ -1359,7 +1377,7 @@ const Monsters = () => {
                 </CommonBtn>
               ) : (
                 <CommonBtn
-                  onClick={() => massHunting()}
+                  onClick={() => handleMassHunting()}
                   sx={{ fontWeight: "bold" }}
                   disabled={!massBtnEnable}
                 >

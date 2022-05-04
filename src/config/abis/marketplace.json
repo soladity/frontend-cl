@@ -42,13 +42,13 @@
         {
           "indexed": false,
           "internalType": "uint8",
-          "name": "_itemType",
+          "name": "itemType",
           "type": "uint8"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "tokenId",
           "type": "uint256"
         },
         {
@@ -79,13 +79,13 @@
         {
           "indexed": false,
           "internalType": "uint8",
-          "name": "_itemType",
+          "name": "itemType",
           "type": "uint8"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
@@ -98,19 +98,19 @@
         {
           "indexed": false,
           "internalType": "uint8",
-          "name": "_itemType",
+          "name": "itemType",
           "type": "uint8"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "tokenId",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_price",
+          "name": "price",
           "type": "uint256"
         }
       ],
@@ -123,13 +123,13 @@
         {
           "indexed": false,
           "internalType": "uint8",
-          "name": "_itemType",
+          "name": "itemType",
           "type": "uint8"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "_tokenId",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
@@ -453,5 +453,5 @@
       "stateMutability": "view",
       "type": "function"
     }
-  ]  
+  ]
 }
