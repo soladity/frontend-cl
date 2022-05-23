@@ -68,6 +68,7 @@ import CommonBtn from "../../component/Buttons/CommonBtn";
 import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
 import { Spinner } from "../../component/Buttons/Spinner";
+import { MdClose } from "react-icons/md";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -186,6 +187,8 @@ const TakeAction = () => {
   const [checkingMassHuntBUSD, setCheckingMassHuntBUSD] = React.useState(false);
 
   const [warriorRevealStatus, setWarriorRevealStatus] = React.useState(false);
+  const [warriorRevealModalStatus, setWarriorRevealModalStatus] =
+    React.useState(false);
 
   const [beastRevealStatus, setBeastRevealStatus] = React.useState(false);
 
@@ -261,7 +264,7 @@ const TakeAction = () => {
       );
       setTransition(() => Transition);
       setAlertType("success");
-      setSnackBarMessage(getTranslation("plzReveal"));
+      setSnackBarMessage(getTranslation("plzRevealBeast"));
       setSnackBarNavigation("/beasts");
       setOpenSnackBar(true);
       setBeastRevealStatus(mintBeastPending);
@@ -311,11 +314,12 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
+      setWarriorRevealModalStatus(mintWarriorPending);
       if (!mintWarriorPending) {
         await mintWarrior(web3, warriorContract, account, amount);
         setTransition(() => Transition);
         setAlertType("success");
-        setSnackBarMessage(getTranslation("plzReveal"));
+        setSnackBarMessage(getTranslation("plzRevealWarrior"));
         setSnackBarNavigation("/warriors");
         setOpenSnackBar(true);
         const mintWarriorPending = await getWalletMintPending(
@@ -323,6 +327,7 @@ const TakeAction = () => {
           account
         );
         setWarriorRevealStatus(mintWarriorPending);
+        setWarriorRevealModalStatus(mintWarriorPending);
       }
     } catch (error) {
       console.log(error);
@@ -344,6 +349,7 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
+      setWarriorRevealModalStatus(mintWarriorPending);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -566,6 +572,7 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
+      setWarriorRevealModalStatus(mintWarriorPending);
       setHuntTax((await getFee(feeHandlerContract, 1)) / 10000);
 
       getBlstAmountToMintWarrior();
@@ -1411,7 +1418,7 @@ const TakeAction = () => {
           )}
         </Box>
       </Dialog>
-      {/* <Dialog open={warriorRevealStatus}>
+      <Dialog open={warriorRevealModalStatus}>
         <DialogContent>
           <Box sx={{ textAlign: "center", mb: 2 }}>
             <CommonBtn
@@ -1423,7 +1430,17 @@ const TakeAction = () => {
           </Box>
           <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
         </DialogContent>
-      </Dialog> */}
+        <MdClose
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            fontSize: 24,
+            cursor: "pointer",
+          }}
+          onClick={() => setWarriorRevealModalStatus(false)}
+        />
+      </Dialog>
     </Card>
   );
 };
