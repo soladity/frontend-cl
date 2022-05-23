@@ -622,6 +622,10 @@ export const getHuntRequestId = async (contract, account) => {
   return await contract.methods.walletLastHuntRequestId(account).call();
 };
 
+export const getMassHuntRequestId = async (contract, account) => {
+  return await contract.methods.walletLastMassHuntRequestId(account).call();
+};
+
 export const getVRFResult = async (contract, requestId) => {
   return await contract.methods.getResult(requestId).call();
 };
