@@ -42,6 +42,7 @@ import {
   getVRFResult,
   getBeastRequestId,
   getWarriorRequestId,
+  getMassHuntRequestId,
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -216,6 +217,7 @@ const TakeAction = () => {
   const [checkBeastVRF, setCheckBeastVRF] = React.useState(false);
 
   const [massHuntPending, setMassHuntPending] = React.useState(false);
+  const [checkMassHuntVRF, setCheckMassHuntVRF] = React.useState(false);
 
   const [aletType, setAlertType] = React.useState<AlertColor | undefined>(
     "success"
@@ -527,6 +529,17 @@ const TakeAction = () => {
     return BLST_amount_1;
   };
 
+  const checkRevealMassHuntStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getMassHuntRequestId(warriorContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckMassHuntVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
+
   const handleInitiateMassHunt = async () => {
     setOpenMassHunt(true);
     try {
@@ -542,6 +555,8 @@ const TakeAction = () => {
           account
         );
         setMassHuntPending(massHuntPending);
+        setCheckMassHuntVRF(true);
+        checkRevealMassHuntStatus();
       }
     } catch (error) {
       setOpenMassHunt(false);
@@ -811,6 +826,7 @@ const TakeAction = () => {
                         marginBottom: 1,
                       }}
                       className={classes.revealBtn}
+                      disabled={checkWarriorVRF}
                     >
                       <img
                         src={`/assets/images/dashboard/warrior.png`}
@@ -1365,7 +1381,7 @@ const TakeAction = () => {
                 <CommonBtn
                   onClick={() => handleMassHunting()}
                   sx={{ fontWeight: "bold" }}
-                  disabled
+                  disabled={checkMassHuntVRF}
                 >
                   <Spinner color="white" size={40} />
                   &nbsp;
