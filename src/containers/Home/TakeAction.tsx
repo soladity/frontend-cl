@@ -120,6 +120,25 @@ const useStyles = makeStyles({
         "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
     },
   },
+  revealBtn: {
+    background:
+      "linear-gradient(360deg, #bf4801, #ffffff29), radial-gradient(#ff6100, #ecff0e)",
+    transition: ".4s all",
+    "&:hover": {
+      background:
+        "linear-gradient(360deg, #8d4405, #ffffff29), radial-gradient(#702c02, #98a500)",
+      transition: ".4s all",
+    },
+    color: "white !important",
+    textShadow:
+      "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+    "&[disabled]": {
+      background: "grey",
+      transition: ".4s all",
+      cursor: "default",
+    },
+    animation: `$Flash linear 2s infinite`,
+  },
 });
 
 const TakeAction = () => {
@@ -187,8 +206,6 @@ const TakeAction = () => {
   const [checkingMassHuntBUSD, setCheckingMassHuntBUSD] = React.useState(false);
 
   const [warriorRevealStatus, setWarriorRevealStatus] = React.useState(false);
-  const [warriorRevealModalStatus, setWarriorRevealModalStatus] =
-    React.useState(false);
 
   const [beastRevealStatus, setBeastRevealStatus] = React.useState(false);
 
@@ -314,7 +331,6 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
-      setWarriorRevealModalStatus(mintWarriorPending);
       if (!mintWarriorPending) {
         await mintWarrior(web3, warriorContract, account, amount);
         setTransition(() => Transition);
@@ -327,7 +343,6 @@ const TakeAction = () => {
           account
         );
         setWarriorRevealStatus(mintWarriorPending);
-        setWarriorRevealModalStatus(mintWarriorPending);
       }
     } catch (error) {
       console.log(error);
@@ -349,7 +364,6 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
-      setWarriorRevealModalStatus(mintWarriorPending);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -572,7 +586,6 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
-      setWarriorRevealModalStatus(mintWarriorPending);
       setHuntTax((await getFee(feeHandlerContract, 1)) / 10000);
 
       getBlstAmountToMintWarrior();
@@ -760,9 +773,10 @@ const TakeAction = () => {
                         width: "100%",
                         marginBottom: 1,
                       }}
+                      className={classes.revealBtn}
                     >
                       <img
-                        src={`/assets/images/warrior.png`}
+                        src={`/assets/images/dashboard/warrior.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -785,7 +799,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/warrior.png`}
+                        src={`/assets/images/dashboard/warrior.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -926,7 +940,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/beast.png`}
+                        src={`/assets/images/dashboard/beast.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -949,7 +963,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/beast.png`}
+                        src={`/assets/images/dashboard/beast.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1086,7 +1100,7 @@ const TakeAction = () => {
                     }}
                   >
                     <img
-                      src={`/assets/images/legion.png`}
+                      src={`/assets/images/dashboard/legion.png`}
                       style={{
                         width: "15px",
                         height: "15px",
@@ -1109,7 +1123,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/hunt.png`}
+                        src={`/assets/images/dashboard/hunt.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1129,7 +1143,7 @@ const TakeAction = () => {
                       <Spinner color="white" size={40} />
                       &nbsp;
                       <img
-                        src={`/assets/images/massHunt.png`}
+                        src={`/assets/images/dashboard/massHunt.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1146,7 +1160,7 @@ const TakeAction = () => {
                       disabled={availableLegionCount == 0}
                     >
                       <img
-                        src={`/assets/images/massHunt.png`}
+                        src={`/assets/images/dashboard/massHunt.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1181,7 +1195,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/marketWarrior.png`}
+                        src={`/assets/images/dashboard/marketWarrior.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1203,7 +1217,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/marketBeast.png`}
+                        src={`/assets/images/dashboard/marketBeast.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1225,7 +1239,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/marketLegion.png`}
+                        src={`/assets/images/dashboard/marketLegion.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1250,7 +1264,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/chart.png`}
+                        src={`/assets/images/dashboard/chart.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1274,7 +1288,7 @@ const TakeAction = () => {
                       }}
                     >
                       <img
-                        src={`/assets/images/pancake.png`}
+                        src={`/assets/images/dashboard/pancake.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1358,8 +1372,8 @@ const TakeAction = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
-                      : `/assets/images/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
+                      ? `/assets/images/dashboard/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                      : `/assets/images/dashboard/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
                 />
@@ -1367,8 +1381,8 @@ const TakeAction = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `/assets/images/characters/jpg/monsters/m${item["monsterId"]}.jpg`
-                      : `/assets/images/characters/gif/monsters/m${item["monsterId"]}.gif`
+                      ? `/assets/images/dashboard/characters/jpg/monsters/m${item["monsterId"]}.jpg`
+                      : `/assets/images/dashboard/characters/gif/monsters/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
                 />
@@ -1417,29 +1431,6 @@ const TakeAction = () => {
             </CommonBtn>
           )}
         </Box>
-      </Dialog>
-      <Dialog open={warriorRevealModalStatus}>
-        <DialogContent>
-          <Box sx={{ textAlign: "center", mb: 2 }}>
-            <CommonBtn
-              style={{ fontWeight: "bold" }}
-              onClick={() => handleWarriorReveal(TransitionUp)}
-            >
-              {getTranslation("revealWarriors")}
-            </CommonBtn>
-          </Box>
-          <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
-        </DialogContent>
-        <MdClose
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            fontSize: 24,
-            cursor: "pointer",
-          }}
-          onClick={() => setWarriorRevealModalStatus(false)}
-        />
       </Dialog>
     </Card>
   );

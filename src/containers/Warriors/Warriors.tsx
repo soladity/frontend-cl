@@ -742,6 +742,15 @@ const Warriors = () => {
               </Typography>
               <CommonBtn
                 sx={{ fontWeight: "bold", mt: 1 }}
+                onClick={() => handleSelectAll()}
+              >
+                {warriors.filter((beast: any) => beast.executeStatus === true)
+                  .length > 0
+                  ? getTranslation("deSelectAll")
+                  : getTranslation("selectAll")}
+              </CommonBtn>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
                 disabled={
                   warriors.filter(
                     (warrior: any) => warrior.executeStatus === true
@@ -750,15 +759,6 @@ const Warriors = () => {
                 onClick={handleMassExecute}
               >
                 {getTranslation("massExecute")}
-              </CommonBtn>
-              <CommonBtn
-                sx={{ fontWeight: "bold", mt: 1 }}
-                onClick={() => handleSelectAll()}
-              >
-                {warriors.filter((beast: any) => beast.executeStatus === true)
-                  .length > 0
-                  ? "Deselect All"
-                  : "Select All"}
               </CommonBtn>
             </Box>
           </Card>
