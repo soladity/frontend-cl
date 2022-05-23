@@ -610,10 +610,18 @@ export const getWalletHuntPending = async (contract, account) => {
   return await contract.methods.walletHuntPending(account).call();
 };
 
-export const getRequestId = async (contract, account) => {
+export const getBeastRequestId = async (contract, account) => {
+  return await contract.methods.walletLastRequestId(account).call();
+};
+
+export const getWarriorRequestId = async (contract, account) => {
+  return await contract.methods.walletLastRequestId(account).call();
+};
+
+export const getHuntRequestId = async (contract, account) => {
   return await contract.methods.walletLastHuntRequestId(account).call();
 };
 
 export const getVRFResult = async (contract, requestId) => {
-  return await contract.methods.getResult(requestId);
+  return await contract.methods.getResult(requestId).call();
 };

@@ -39,6 +39,9 @@ import {
   revealBeastsAndWarrior,
   getWalletMassHuntPending,
   initiateMassHunt,
+  getVRFResult,
+  getBeastRequestId,
+  getWarriorRequestId,
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -51,6 +54,7 @@ import {
   useMonster,
   useBUSD,
   useLegionEvent,
+  useVRF,
 } from "../../hooks/useContract";
 import { useNavigate } from "react-router-dom";
 import Slide, { SlideProps } from "@mui/material/Slide";
@@ -206,8 +210,10 @@ const TakeAction = () => {
   const [checkingMassHuntBUSD, setCheckingMassHuntBUSD] = React.useState(false);
 
   const [warriorRevealStatus, setWarriorRevealStatus] = React.useState(false);
+  const [checkWarriorVRF, setCheckWarriorVRF] = React.useState(false);
 
   const [beastRevealStatus, setBeastRevealStatus] = React.useState(false);
+  const [checkBeastVRF, setCheckBeastVRF] = React.useState(false);
 
   const [massHuntPending, setMassHuntPending] = React.useState(false);
 
@@ -255,8 +261,20 @@ const TakeAction = () => {
   const busdContract = useBUSD();
   const legionEventContract = useLegionEvent();
 
+  const vrfContract = useVRF();
+
   const web3 = useWeb3();
 
+  const checkRevealBeastStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getBeastRequestId(beastContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckBeastVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
   //Mint Beast with quantity
   const handleBeastMint = async (
     amount: Number,
@@ -279,6 +297,8 @@ const TakeAction = () => {
         beastContract,
         account
       );
+      setCheckBeastVRF(true);
+      checkRevealBeastStatus();
       setTransition(() => Transition);
       setAlertType("success");
       setSnackBarMessage(getTranslation("plzRevealBeast"));
@@ -311,6 +331,16 @@ const TakeAction = () => {
     } catch (error) {}
   };
 
+  const checkRevealWarriorStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getWarriorRequestId(warriorContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckWarriorVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
   //Mint Warriors with quantity
   const handleWarriorMint = async (
     amount: Number,
@@ -342,6 +372,8 @@ const TakeAction = () => {
           warriorContract,
           account
         );
+        setCheckWarriorVRF(true);
+        checkRevealWarriorStatus();
         setWarriorRevealStatus(mintWarriorPending);
       }
     } catch (error) {
@@ -586,6 +618,11 @@ const TakeAction = () => {
         account
       );
       setWarriorRevealStatus(mintWarriorPending);
+      const mintBeastPending = await getWalletMintPending(
+        beastContract,
+        account
+      );
+      setBeastRevealStatus(mintBeastPending);
       setHuntTax((await getFee(feeHandlerContract, 1)) / 10000);
 
       getBlstAmountToMintWarrior();
@@ -938,6 +975,8 @@ const TakeAction = () => {
                         width: "100%",
                         marginBottom: 1,
                       }}
+                      className={classes.revealBtn}
+                      disabled={checkBeastVRF}
                     >
                       <img
                         src={`/assets/images/dashboard/beast.png`}
