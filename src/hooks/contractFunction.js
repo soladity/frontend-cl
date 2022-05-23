@@ -130,7 +130,6 @@ export const getWarriorTokenIds = async (web3, contract, account) => {
 
 export const getWarriorToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getWarrior(tokenId).call();
-  console.log(response);
   const warrior = {
     type: warriorInfo[getWarriorStrength(parseInt(response)) - 1],
     strength: getWarriorStrength(parseInt(response)),
