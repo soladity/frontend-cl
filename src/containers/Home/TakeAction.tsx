@@ -263,7 +263,7 @@ const TakeAction = () => {
       setBeastRevealStatus(mintBeastPending);
     }
   };
-
+  ///
   const handleBeastReveal = async (
     Transition: React.ComponentType<TransitionProps>
   ) => {
