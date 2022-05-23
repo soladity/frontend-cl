@@ -1198,7 +1198,7 @@ const TakeAction = () => {
                       <Spinner color="white" size={40} />
                       &nbsp;
                       <img
-                        src={`/assets/images/dashboard/masshunt.png`}
+                        src={`/assets/images/dashboard/masshuntIcon.png`}
                         style={{
                           width: "15px",
                           height: "15px",
@@ -1215,7 +1215,7 @@ const TakeAction = () => {
                       disabled={availableLegionCount == 0}
                     >
                       <img
-                        src={`/assets/images/dashboard/massHunt.png`}
+                        src={`/assets/images/dashboard/masshuntIcon.png`}
                         style={{
                           width: "15px",
                           height: "15px",
