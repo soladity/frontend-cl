@@ -734,6 +734,15 @@ const Beasts = () => {
               </Typography>
               <CommonBtn
                 sx={{ fontWeight: "bold", mt: 1 }}
+                onClick={() => handleSelectAll()}
+              >
+                {beasts.filter((beast: any) => beast.executeStatus === true)
+                  .length > 0
+                  ? getTranslation("deSelectAll")
+                  : getTranslation("selectAll")}
+              </CommonBtn>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
                 disabled={
                   beasts.filter((beast: any) => beast.executeStatus === true)
                     .length === 0 || textLoading
@@ -741,15 +750,6 @@ const Beasts = () => {
                 onClick={handleMassExecute}
               >
                 {getTranslation("massExecute")}
-              </CommonBtn>
-              <CommonBtn
-                sx={{ fontWeight: "bold", mt: 1 }}
-                onClick={() => handleSelectAll()}
-              >
-                {beasts.filter((beast: any) => beast.executeStatus === true)
-                  .length > 0
-                  ? getTranslation("deSelectAll")
-                  : getTranslation("selectAll")}
               </CommonBtn>
             </Box>
           </Card>

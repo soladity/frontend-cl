@@ -609,3 +609,11 @@ export const getWalletMassHuntPending = async (contract, account) => {
 export const getWalletHuntPending = async (contract, account) => {
   return await contract.methods.walletHuntPending(account).call();
 };
+
+export const getRequestId = async (contract, account) => {
+  return await contract.methods.walletLastHuntRequestId(account).call();
+};
+
+export const getVRFResult = async (contract, requestId) => {
+  return await contract.methods.getResult(requestId);
+};
