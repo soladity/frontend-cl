@@ -16,11 +16,7 @@ import {
   DialogContent,
   Snackbar,
   Alert,
-  List,
-  ListItem,
-  ListItemText,
   LinearProgress,
-  Button,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -28,11 +24,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
 import Helmet from "react-helmet";
-import {
-  meta_constant,
-  createlegions,
-  allConstants,
-} from "../../config/meta.config";
+import { meta_constant, createlegions } from "../../config/meta.config";
 import { useWeb3React } from "@web3-react/core";
 import {
   useBeast,
@@ -47,11 +39,8 @@ import {
   useLegionEvent,
 } from "../../hooks/useContract";
 import {
-  getBeastBalance,
   getLegionTokenIds,
   getLegionToken,
-  getWarriorBalance,
-  getMonsterInfo,
   canHunt,
   hunt,
   getBeastToken,
@@ -85,16 +74,12 @@ import {
   setMassHuntResult,
   setReloadStatus,
 } from "../../actions/contractActions";
-import imageUrls from "../../constant/images";
-import { useNavigate } from "react-router-dom";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
 import Slide, { SlideProps } from "@mui/material/Slide";
-import { maxWidth } from "@mui/system";
 import { FaTimes } from "react-icons/fa";
 import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
-import Present from "./SundayPresent";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -502,6 +487,7 @@ const Monsters = () => {
     try {
       let huntPending;
       huntPending = await getWalletHuntPending(legionContract, account);
+      console.log(huntPending);
       setHuntPending(huntPending);
       if (!huntPending) {
         await initiateHunt(legionContract, account);

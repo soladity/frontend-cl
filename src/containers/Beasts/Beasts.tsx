@@ -466,6 +466,37 @@ const Beasts = () => {
     setTextLoading(false);
   };
 
+  const handleSelectAll = () => {
+    if (
+      beasts.filter((beast: any) => beast.executeStatus === true).length > 0
+    ) {
+      const data = beasts.map((beast: any) => ({
+        ...beast,
+        executeStatus: false,
+      }));
+      setBeasts(data);
+    } else {
+      const data = beasts.filter((item: any) =>
+        filter === "all"
+          ? parseInt(item.capacity) >= 0
+          : item.capacity === filter
+      );
+      const result = beasts.map((beast: any) => {
+        if (data.filter((item: any) => item.id === beast.id).length > 0) {
+          return {
+            ...beast,
+            executeStatus: true,
+          };
+        } else {
+          return beast;
+        }
+      });
+      // .map((beast: any) => ({ ...beast, executeStatus: true }));
+      setBeasts(result);
+      console.log(data);
+    }
+  };
+
   const handlePage = (value: any) => {
     setCurrentPage(value);
   };
@@ -711,6 +742,15 @@ const Beasts = () => {
               >
                 {getTranslation("massExecute")}
               </CommonBtn>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
+                onClick={() => handleSelectAll()}
+              >
+                {beasts.filter((beast: any) => beast.executeStatus === true)
+                  .length > 0
+                  ? "Deselect All"
+                  : "Select All"}
+              </CommonBtn>
             </Box>
           </Card>
         </Grid>
@@ -718,7 +758,7 @@ const Beasts = () => {
       {textLoading === false && (
         <React.Fragment>
           <Grid container spacing={2} sx={{ my: 3 }}>
-            <Grid item md={12}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" style={{ marginBottom: 12 }}>
                   {getTranslation("filterCapacity")}:
