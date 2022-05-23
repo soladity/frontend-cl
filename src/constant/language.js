@@ -2664,4 +2664,16 @@ export const translations = {
     pl: "Pokaż tylko nowe",
     ph: "Ipakita Lamang ang Bago",
   },
+  plzReveal: {
+    en: "Please Reveal to see your new items.",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
 };
