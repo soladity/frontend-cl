@@ -44,6 +44,8 @@ import {
   setApprovalForAll,
   getWalletMintPending,
   revealBeastsAndWarrior,
+  getBeastRequestId,
+  getVRFResult,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -52,6 +54,7 @@ import {
   useLegion,
   useFeeHandler,
   useWeb3,
+  useVRF,
 } from "../../hooks/useContract";
 import BeastCard from "../../component/Cards/BeastCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -112,6 +115,7 @@ const Beasts = () => {
   const [revealStatus, setRevealStatus] = React.useState(false);
   const [textLoading, setTextLoading] = React.useState(false);
   const [loadingText, setLoadingText] = React.useState("");
+  const [checkBeastVRF, setCheckBeastVRF] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -144,6 +148,7 @@ const Beasts = () => {
   const marketplaceContract = useMarketplace();
   const feeHandlerContract = useFeeHandler();
   const bloodstoneContract = useBloodstone();
+  const vrfContract = useVRF();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -242,6 +247,18 @@ const Beasts = () => {
     setShowMint(false);
   };
 
+  const checkRevealBeastStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getBeastRequestId(beastContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      console.log(returnVal);
+      if (returnVal != 0) {
+        setCheckBeastVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
+
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonBeast();
     setTextLoading(true);
@@ -256,6 +273,8 @@ const Beasts = () => {
         await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintBeast(web3, beastContract, account, amount);
+      setCheckBeastVRF(true);
+      checkRevealBeastStatus();
       setRevealStatus(await getWalletMintPending(beastContract, account));
       setTextLoading(true);
       if (await getWalletMintPending(beastContract, account)) {
@@ -978,6 +997,7 @@ const Beasts = () => {
             <CommonBtn
               style={{ fontWeight: "bold" }}
               onClick={() => handleReveal()}
+              disabled={checkBeastVRF}
             >
               {getTranslation("revealBeasts")}
             </CommonBtn>
