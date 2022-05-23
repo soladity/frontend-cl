@@ -37,6 +37,8 @@ import {
   setLegionBUSDApprove,
   getWalletMintPending,
   revealBeastsAndWarrior,
+  getWalletMassHuntPending,
+  initiateMassHunt,
 } from "../../hooks/contractFunction";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -186,6 +188,8 @@ const TakeAction = () => {
   const [warriorRevealStatus, setWarriorRevealStatus] = React.useState(false);
 
   const [beastRevealStatus, setBeastRevealStatus] = React.useState(false);
+
+  const [massHuntPending, setMassHuntPending] = React.useState(false);
 
   const [aletType, setAlertType] = React.useState<AlertColor | undefined>(
     "success"
@@ -471,7 +475,29 @@ const TakeAction = () => {
     return BLST_amount_1;
   };
 
-  const massHunting = async () => {
+  const handleInitiateMassHunt = async () => {
+    setOpenMassHunt(true);
+    try {
+      let massHuntPending;
+      massHuntPending = await getWalletMassHuntPending(legionContract, account);
+      setMassHuntPending(massHuntPending);
+      if (!massHuntPending) {
+        setMassHuntLoading(true);
+        await initiateMassHunt(legionContract, account);
+        setMassHuntLoading(false);
+        massHuntPending = await getWalletMassHuntPending(
+          legionContract,
+          account
+        );
+        setMassHuntPending(massHuntPending);
+      }
+    } catch (error) {
+      setOpenMassHunt(false);
+      setMassHuntLoading(false);
+    }
+  };
+
+  const handleMassHunting = async () => {
     setCheckingMassHuntBUSD(true);
     const BUSD =
       (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
@@ -479,38 +505,50 @@ const TakeAction = () => {
     if (BUSD >= totalBUSD * huntTax) {
       dispatch(initMassHuntResult());
       setOpenMassHunt(true);
-      if (availableLegionCount > 0) {
-        setMassHuntLoading(true);
-        try {
-          const allowance = await getLegionBUSDAllowance(
-            web3,
-            busdContract,
-            account
-          );
-          if (allowance == 0) {
-            await setLegionBUSDApprove(web3, busdContract, account);
-          }
-          await massHunt(legionContract, account);
-        } catch (error) {
-          setOpenMassHunt(false);
+      setMassHuntLoading(true);
+      try {
+        const allowance = await getLegionBUSDAllowance(
+          web3,
+          busdContract,
+          account
+        );
+        if (allowance == 0) {
+          await setLegionBUSDApprove(web3, busdContract, account);
         }
-        setMassHuntLoading(false);
+        await massHunt(legionContract, account);
+        let massHuntPending;
+        massHuntPending = await getWalletMassHuntPending(
+          legionContract,
+          account
+        );
+        setMassHuntPending(massHuntPending);
+      } catch (error) {
+        setOpenMassHunt(false);
       }
+      setMassHuntLoading(false);
     } else {
-      setAlertType("error");
       setSnackBarMessage(getTranslation("addBUSD"));
       setOpenSnackBar(true);
     }
     setCheckingMassHuntBUSD(false);
   };
 
-  const updateState = () => {
+  const updateState = async () => {
     setOpenMassHunt(false);
     dispatch(
       setReloadStatus({
         reloadContractStatus: new Date(),
       })
     );
+    const availableLegionCount = await getAvailableLegionsCount(
+      web3,
+      legionContract,
+      account
+    );
+    if (availableLegionCount == 0) {
+      setMassHuntResult([]);
+    }
+    setAvailableLegionCount(availableLegionCount);
     dispatch(initMassHuntResult());
   };
 
@@ -1077,7 +1115,7 @@ const TakeAction = () => {
                   </NavLink>
                   {checkingMassHuntBUSD ? (
                     <CommonBtn
-                      onClick={() => massHunting()}
+                      onClick={() => handleInitiateMassHunt()}
                       sx={{ fontWeight: "bold", width: "100%" }}
                       disabled
                     >
@@ -1096,8 +1134,9 @@ const TakeAction = () => {
                     </CommonBtn>
                   ) : (
                     <CommonBtn
-                      onClick={() => massHunting()}
+                      onClick={() => handleInitiateMassHunt()}
                       sx={{ fontWeight: "bold", width: "100%" }}
+                      disabled={availableLegionCount == 0}
                     >
                       <img
                         src={`/assets/images/massHunt.png`}
@@ -1255,9 +1294,32 @@ const TakeAction = () => {
         <DialogTitle sx={{ textAlign: "center" }}>
           {getTranslation("massHuntResult")}
         </DialogTitle>
-        {massHuntLoading && availableLegionCount > 0 && (
+        {massHuntLoading && availableLegionCount > 0 ? (
           <Box sx={{ p: 1 }}>
             <LinearProgress sx={{ width: "100%" }} color="success" />
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {massHuntPending &&
+              (checkingMassHuntBUSD ? (
+                <CommonBtn
+                  onClick={() => handleMassHunting()}
+                  sx={{ fontWeight: "bold" }}
+                  disabled
+                >
+                  <Spinner color="white" size={40} />
+                  &nbsp;
+                  {getTranslation("revealResult")}
+                </CommonBtn>
+              ) : (
+                <CommonBtn
+                  onClick={() => handleMassHunting()}
+                  sx={{ fontWeight: "bold" }}
+                  disabled={availableLegionCount == 0}
+                >
+                  {getTranslation("revealResult")}
+                </CommonBtn>
+              ))}
           </Box>
         )}
         <Box
@@ -1338,13 +1400,15 @@ const TakeAction = () => {
           ))}
         </Box>
         <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
-          <CommonBtn
-            disabled={massHuntLoading}
-            sx={{ marginLeft: "auto", fontWeight: "bold" }}
-            onClick={() => updateState()}
-          >
-            {getTranslation("continue")}
-          </CommonBtn>
+          {!massHuntPending && (
+            <CommonBtn
+              disabled={massHuntLoading}
+              sx={{ marginLeft: "auto", fontWeight: "bold" }}
+              onClick={() => updateState()}
+            >
+              {getTranslation("continue")}
+            </CommonBtn>
+          )}
         </Box>
       </Dialog>
       {/* <Dialog open={warriorRevealStatus}>

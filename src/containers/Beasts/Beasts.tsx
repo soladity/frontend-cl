@@ -748,8 +748,8 @@ const Beasts = () => {
               >
                 {beasts.filter((beast: any) => beast.executeStatus === true)
                   .length > 0
-                  ? "Deselect All"
-                  : "Select All"}
+                  ? getTranslation("deSelectAll")
+                  : getTranslation("selectAll")}
               </CommonBtn>
             </Box>
           </Card>

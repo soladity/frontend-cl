@@ -34,3 +34,7 @@ export const getFeeHandlerAddress = () => {
 export const getBUSDAddress = () => {
   return address.busd[process.env.REACT_APP_CHAIN_ID];
 };
+
+export const getVRFAddress = () => {
+  return address.vrf[process.env.REACT_APP_CHAIN_ID];
+};
