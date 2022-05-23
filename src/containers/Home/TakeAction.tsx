@@ -531,7 +531,7 @@ const TakeAction = () => {
 
   const checkRevealMassHuntStatus = () => {
     const revealChecker = setInterval(async () => {
-      const requestId = await getMassHuntRequestId(warriorContract, account);
+      const requestId = await getMassHuntRequestId(legionContract, account);
       const returnVal = await getVRFResult(vrfContract, requestId);
       if (returnVal != 0) {
         setCheckMassHuntVRF(false);
@@ -1391,7 +1391,7 @@ const TakeAction = () => {
                 <CommonBtn
                   onClick={() => handleMassHunting()}
                   sx={{ fontWeight: "bold" }}
-                  disabled={availableLegionCount == 0}
+                  disabled={availableLegionCount == 0 || checkMassHuntVRF}
                 >
                   {getTranslation("revealResult")}
                 </CommonBtn>

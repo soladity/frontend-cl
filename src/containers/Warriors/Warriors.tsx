@@ -42,6 +42,8 @@ import {
   setApprovalForAll,
   revealBeastsAndWarrior,
   getWalletMintPending,
+  getWarriorRequestId,
+  getVRFResult,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -50,6 +52,7 @@ import {
   useLegion,
   useFeeHandler,
   useWeb3,
+  useVRF,
 } from "../../hooks/useContract";
 import WarriorCard from "../../component/Cards/WarriorCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -110,6 +113,7 @@ const Warriors = () => {
   const [revealStatus, setRevealStatus] = React.useState(false);
   const [textLoading, setTextLoading] = React.useState(false);
   const [loadingText, setLoadingText] = React.useState("");
+  const [checkWarriorVRF, setCheckWarriorVRF] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -142,6 +146,7 @@ const Warriors = () => {
   const bloodstoneContract = useBloodstone();
   const marketplaceContract = useMarketplace();
   const feeHandlerContract = useFeeHandler();
+  const vrfContract = useVRF();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -228,6 +233,17 @@ const Warriors = () => {
     );
   }, []);
 
+  const checkRevealWarriorStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getWarriorRequestId(warriorContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckWarriorVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
+
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonWarrior();
     setTextLoading(true);
@@ -243,6 +259,8 @@ const Warriors = () => {
       }
       await mintWarrior(web3, warriorContract, account, amount);
       setRevealStatus(await getWalletMintPending(warriorContract, account));
+      setCheckWarriorVRF(true);
+      checkRevealWarriorStatus();
       setTextLoading(true);
       if (await getWalletMintPending(warriorContract, account)) {
         setLoadingText(getTranslation("revealTextWarriors"));
@@ -1041,6 +1059,7 @@ const Warriors = () => {
             <CommonBtn
               style={{ fontWeight: "bold" }}
               onClick={() => handleReveal()}
+              disabled={checkWarriorVRF}
             >
               {getTranslation("revealWarriors")}
             </CommonBtn>
