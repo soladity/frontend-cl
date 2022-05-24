@@ -35,6 +35,10 @@ const address = {
     97: "0x78867bbeef44f2326bf8ddd1941a4439382ef2a7",
     56: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
   },
+  vrf: {
+    97: "0xAe3a60c85c73CF59a141FCeE307ECB216BF8cEd3",
+    56: "",
+  },
 };
 
 export default address;

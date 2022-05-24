@@ -130,7 +130,6 @@ export const getWarriorTokenIds = async (web3, contract, account) => {
 
 export const getWarriorToken = async (web3, contract, tokenId) => {
   const response = await contract.methods.getWarrior(tokenId).call();
-  console.log(response);
   const warrior = {
     type: warriorInfo[getWarriorStrength(parseInt(response)) - 1],
     strength: getWarriorStrength(parseInt(response)),
@@ -609,4 +608,24 @@ export const getWalletMassHuntPending = async (contract, account) => {
 
 export const getWalletHuntPending = async (contract, account) => {
   return await contract.methods.walletHuntPending(account).call();
+};
+
+export const getBeastRequestId = async (contract, account) => {
+  return await contract.methods.walletLastRequestId(account).call();
+};
+
+export const getWarriorRequestId = async (contract, account) => {
+  return await contract.methods.walletLastRequestId(account).call();
+};
+
+export const getHuntRequestId = async (contract, account) => {
+  return await contract.methods.walletLastHuntRequestId(account).call();
+};
+
+export const getMassHuntRequestId = async (contract, account) => {
+  return await contract.methods.walletLastMassHuntRequestId(account).call();
+};
+
+export const getVRFResult = async (contract, requestId) => {
+  return await contract.methods.getResult(requestId).call();
 };

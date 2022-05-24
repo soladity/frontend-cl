@@ -16,11 +16,7 @@ import {
   DialogContent,
   Snackbar,
   Alert,
-  List,
-  ListItem,
-  ListItemText,
   LinearProgress,
-  Button,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -28,11 +24,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { MonsterCard } from "../../component/Cards/MonsterCard";
 import Helmet from "react-helmet";
-import {
-  meta_constant,
-  createlegions,
-  allConstants,
-} from "../../config/meta.config";
+import { meta_constant, createlegions } from "../../config/meta.config";
 import { useWeb3React } from "@web3-react/core";
 import {
   useBeast,
@@ -45,13 +37,11 @@ import {
   useRewardPool,
   useBUSD,
   useLegionEvent,
+  useVRF,
 } from "../../hooks/useContract";
 import {
-  getBeastBalance,
   getLegionTokenIds,
   getLegionToken,
-  getWarriorBalance,
-  getMonsterInfo,
   canHunt,
   hunt,
   getBeastToken,
@@ -72,6 +62,9 @@ import {
   getWalletMassHuntPending,
   getWalletHuntPending,
   initiateMassHunt,
+  getMassHuntRequestId,
+  getHuntRequestId,
+  getVRFResult,
 } from "../../hooks/contractFunction";
 import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -85,16 +78,12 @@ import {
   setMassHuntResult,
   setReloadStatus,
 } from "../../actions/contractActions";
-import imageUrls from "../../constant/images";
-import { useNavigate } from "react-router-dom";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
 import Slide, { SlideProps } from "@mui/material/Slide";
-import { maxWidth } from "@mui/system";
 import { FaTimes } from "react-icons/fa";
 import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
-import Present from "./SundayPresent";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -196,6 +185,7 @@ const Monsters = () => {
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
   const busdContract = useBUSD();
+  const vrfContract = useVRF();
   const legionEventContract = useLegionEvent();
 
   const [loading, setLoading] = useState(true);
@@ -243,6 +233,9 @@ const Monsters = () => {
   const [massHuntPending, setMassHuntPending] = React.useState(false);
 
   const [revealBtnDisabled, setRevealBtnDisabled] = React.useState(false);
+
+  const [checkHuntVRF, setCheckHuntVRF] = React.useState(false);
+  const [checkMassHuntVRF, setCheckMassHuntVRF] = React.useState(false);
 
   const scrollArea = useCallback((node) => {
     if (node != null) {
@@ -495,6 +488,17 @@ const Monsters = () => {
     setCurLegion(curLegionTmp);
   };
 
+  const checkRevealHuntStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getHuntRequestId(legionContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckHuntVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
+
   const handleInitiateHunt = async (monsterTokenID: number) => {
     setDialogVisible(true);
     setCurMonsterID(monsterTokenID);
@@ -502,10 +506,13 @@ const Monsters = () => {
     try {
       let huntPending;
       huntPending = await getWalletHuntPending(legionContract, account);
+      console.log(huntPending);
       setHuntPending(huntPending);
       if (!huntPending) {
         await initiateHunt(legionContract, account);
         huntPending = await getWalletHuntPending(legionContract, account);
+        checkRevealHuntStatus();
+        setCheckHuntVRF(true);
         setHuntPending(huntPending);
       }
     } catch (error) {
@@ -689,6 +696,17 @@ const Monsters = () => {
     setSupplyCostLoading(false);
   };
 
+  const checkRevealMassHuntStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getMassHuntRequestId(legionContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckMassHuntVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
+
   const handleInitiateMassHunt = async () => {
     setOpenMassHunt(true);
     try {
@@ -699,6 +717,8 @@ const Monsters = () => {
         setMassHuntLoading(true);
         await initiateMassHunt(legionContract, account);
         setMassHuntLoading(false);
+        setCheckMassHuntVRF(true);
+        checkRevealMassHuntStatus();
         massHuntPending = await getWalletMassHuntPending(
           legionContract,
           account
@@ -1095,7 +1115,7 @@ const Monsters = () => {
                       handleHunt();
                     }, 1500);
                   }}
-                  disabled={revealBtnDisabled}
+                  disabled={revealBtnDisabled || checkHuntVRF}
                 >
                   {revealBtnDisabled ? (
                     <Spinner color="white" size={40} />
@@ -1369,7 +1389,7 @@ const Monsters = () => {
                 <CommonBtn
                   onClick={() => handleMassHunting()}
                   sx={{ fontWeight: "bold" }}
-                  disabled
+                  disabled={checkMassHuntVRF}
                 >
                   <Spinner color="white" size={40} />
                   &nbsp;
@@ -1379,7 +1399,7 @@ const Monsters = () => {
                 <CommonBtn
                   onClick={() => handleMassHunting()}
                   sx={{ fontWeight: "bold" }}
-                  disabled={!massBtnEnable}
+                  disabled={!massBtnEnable || checkMassHuntVRF}
                 >
                   {getTranslation("revealResult")}
                 </CommonBtn>

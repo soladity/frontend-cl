@@ -44,6 +44,8 @@ import {
   setApprovalForAll,
   getWalletMintPending,
   revealBeastsAndWarrior,
+  getBeastRequestId,
+  getVRFResult,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -52,6 +54,7 @@ import {
   useLegion,
   useFeeHandler,
   useWeb3,
+  useVRF,
 } from "../../hooks/useContract";
 import BeastCard from "../../component/Cards/BeastCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -112,6 +115,7 @@ const Beasts = () => {
   const [revealStatus, setRevealStatus] = React.useState(false);
   const [textLoading, setTextLoading] = React.useState(false);
   const [loadingText, setLoadingText] = React.useState("");
+  const [checkBeastVRF, setCheckBeastVRF] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -144,6 +148,7 @@ const Beasts = () => {
   const marketplaceContract = useMarketplace();
   const feeHandlerContract = useFeeHandler();
   const bloodstoneContract = useBloodstone();
+  const vrfContract = useVRF();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -242,6 +247,18 @@ const Beasts = () => {
     setShowMint(false);
   };
 
+  const checkRevealBeastStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getBeastRequestId(beastContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      console.log(returnVal);
+      if (returnVal != 0) {
+        setCheckBeastVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
+
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonBeast();
     setTextLoading(true);
@@ -256,6 +273,8 @@ const Beasts = () => {
         await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintBeast(web3, beastContract, account, amount);
+      setCheckBeastVRF(true);
+      checkRevealBeastStatus();
       setRevealStatus(await getWalletMintPending(beastContract, account));
       setTextLoading(true);
       if (await getWalletMintPending(beastContract, account)) {
@@ -464,6 +483,37 @@ const Beasts = () => {
       );
     } catch (error) {}
     setTextLoading(false);
+  };
+
+  const handleSelectAll = () => {
+    if (
+      beasts.filter((beast: any) => beast.executeStatus === true).length > 0
+    ) {
+      const data = beasts.map((beast: any) => ({
+        ...beast,
+        executeStatus: false,
+      }));
+      setBeasts(data);
+    } else {
+      const data = beasts.filter((item: any) =>
+        filter === "all"
+          ? parseInt(item.capacity) >= 0
+          : item.capacity === filter
+      );
+      const result = beasts.map((beast: any) => {
+        if (data.filter((item: any) => item.id === beast.id).length > 0) {
+          return {
+            ...beast,
+            executeStatus: true,
+          };
+        } else {
+          return beast;
+        }
+      });
+      // .map((beast: any) => ({ ...beast, executeStatus: true }));
+      setBeasts(result);
+      console.log(data);
+    }
   };
 
   const handlePage = (value: any) => {
@@ -703,6 +753,15 @@ const Beasts = () => {
               </Typography>
               <CommonBtn
                 sx={{ fontWeight: "bold", mt: 1 }}
+                onClick={() => handleSelectAll()}
+              >
+                {beasts.filter((beast: any) => beast.executeStatus === true)
+                  .length > 0
+                  ? getTranslation("deSelectAll")
+                  : getTranslation("selectAll")}
+              </CommonBtn>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
                 disabled={
                   beasts.filter((beast: any) => beast.executeStatus === true)
                     .length === 0 || textLoading
@@ -718,7 +777,7 @@ const Beasts = () => {
       {textLoading === false && (
         <React.Fragment>
           <Grid container spacing={2} sx={{ my: 3 }}>
-            <Grid item md={12}>
+            <Grid item md={6}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" style={{ marginBottom: 12 }}>
                   {getTranslation("filterCapacity")}:
@@ -938,6 +997,7 @@ const Beasts = () => {
             <CommonBtn
               style={{ fontWeight: "bold" }}
               onClick={() => handleReveal()}
+              disabled={checkBeastVRF}
             >
               {getTranslation("revealBeasts")}
             </CommonBtn>

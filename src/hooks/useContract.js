@@ -11,6 +11,7 @@ import {
   getMarketplaceAddress,
   getFeeHandlerAddress,
   getBUSDAddress,
+  getVRFAddress,
 } from "../utils/addressHelpers";
 import bloodstone from "../config/abis/bloodstone.json";
 import beast from "../config/abis/beast.json";
@@ -22,6 +23,7 @@ import marketplace from "../config/abis/marketplace.json";
 import getRpcUrls from "../utils/getRpcUrl";
 import feehandler from "../config/abis/feehandler.json";
 import busd from "../config/abis/busd.json";
+import vrf from "../config/abis/vrf.json";
 
 const RPC_URL = getRpcUrls.getRpcUrl();
 const RPC_WS_URL = getRpcUrls.getRpcWsUrl();
@@ -94,6 +96,11 @@ export const useFeeHandler = () => {
 export const useBUSD = () => {
   const abi = busd.abi;
   return useContract(abi, getBUSDAddress());
+};
+
+export const useVRF = () => {
+  const abi = vrf.abi;
+  return useContract(abi, getVRFAddress());
 };
 
 export const useLegionEvent = () => {

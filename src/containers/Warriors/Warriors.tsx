@@ -42,6 +42,8 @@ import {
   setApprovalForAll,
   revealBeastsAndWarrior,
   getWalletMintPending,
+  getWarriorRequestId,
+  getVRFResult,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -50,6 +52,7 @@ import {
   useLegion,
   useFeeHandler,
   useWeb3,
+  useVRF,
 } from "../../hooks/useContract";
 import WarriorCard from "../../component/Cards/WarriorCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -110,6 +113,7 @@ const Warriors = () => {
   const [revealStatus, setRevealStatus] = React.useState(false);
   const [textLoading, setTextLoading] = React.useState(false);
   const [loadingText, setLoadingText] = React.useState("");
+  const [checkWarriorVRF, setCheckWarriorVRF] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -142,6 +146,7 @@ const Warriors = () => {
   const bloodstoneContract = useBloodstone();
   const marketplaceContract = useMarketplace();
   const feeHandlerContract = useFeeHandler();
+  const vrfContract = useVRF();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -228,33 +233,16 @@ const Warriors = () => {
     );
   }, []);
 
-  // const handleMint = async (amount: Number) => {
-  //   handlePopoverCloseSummonWarrior();
-  //   setMintLoading(true);
-  //   setLoading(false);
-  //   const allowance = await getWarriorBloodstoneAllowance(
-  //     web3,
-  //     bloodstoneContract,
-  //     account
-  //   );
-  //   try {
-  //     if (allowance === "0") {
-  //       await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
-  //     }
-  //     await mintWarrior(web3, warriorContract, account, amount);
-  //     setRevealStatus(await getWalletMintPending(warriorContract, account));
-  //     dispatch(
-  //       setReloadStatus({
-  //         reloadContractStatus: new Date(),
-  //       })
-  //     );
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  //   // getBalance();
-  //   setMintLoading(false);
-  //   setLoading(true);
-  // };
+  const checkRevealWarriorStatus = () => {
+    const revealChecker = setInterval(async () => {
+      const requestId = await getWarriorRequestId(warriorContract, account);
+      const returnVal = await getVRFResult(vrfContract, requestId);
+      if (returnVal != 0) {
+        setCheckWarriorVRF(false);
+        clearInterval(revealChecker);
+      }
+    }, 1000);
+  };
 
   const handleMint = async (amount: Number) => {
     handlePopoverCloseSummonWarrior();
@@ -271,6 +259,8 @@ const Warriors = () => {
       }
       await mintWarrior(web3, warriorContract, account, amount);
       setRevealStatus(await getWalletMintPending(warriorContract, account));
+      setCheckWarriorVRF(true);
+      checkRevealWarriorStatus();
       setTextLoading(true);
       if (await getWalletMintPending(warriorContract, account)) {
         setLoadingText(getTranslation("revealTextWarriors"));
@@ -284,23 +274,7 @@ const Warriors = () => {
       setTextLoading(false);
       console.log(e);
     }
-    // getBalance();
-    // setTextLoading(false);
   };
-
-  // const handleReveal = async () => {
-  //   try {
-  //     setRevealStatus(false);
-  //     setRevealLoading(true);
-  //     await revealBeastsAndWarrior(warriorContract, account);
-  //     setRevealLoading(false);
-  //     setRevealStatus(await getWalletMintPending(warriorContract, account));
-  //     await getBalance();
-  //   } catch (error) {
-  //     setRevealStatus(true);
-  //     setRevealLoading(false);
-  //   }
-  // };
 
   const handleReveal = async () => {
     setRevealStatus(false);
@@ -317,53 +291,6 @@ const Warriors = () => {
       setLoadingText(getTranslation("revealTextWarriors"));
     }
   };
-
-  // const getBalance = async () => {
-  //   setLoading(true);
-  //   var tempWarriors: any[] = [];
-  //   var amount = 0;
-  //   try {
-  //     setMarketplaceTax(
-  //       ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
-  //     );
-  //     setRevealStatus(await getWalletMintPending(warriorContract, account));
-  //     // if (await getWalletMintPending(warriorContract, account)) {
-  //     //   await revealBeastsAndWarrior(warriorContract, account);
-  //     // }
-  //     if (!(await getWalletMintPending(warriorContract, account))) {
-  //       setBalance(
-  //         parseInt(await getWarriorBalance(web3, warriorContract, account))
-  //       );
-  //       const warriorsInfo = await getAllWarriors(warriorContract, account);
-  //       console.log(warriorsInfo);
-
-  //       let ids = warriorsInfo[0];
-  //       let powers = warriorsInfo[1];
-  //       ids.forEach((id: any, index: number) => {
-  //         var temp = {
-  //           id: id,
-  //           type: warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
-  //           strength: getWarriorStrength(powers[index]),
-  //           power: powers[index],
-  //           gif: getWarriorGif(
-  //             warriorInfo[getWarriorStrength(parseInt(powers[index])) - 1],
-  //             parseInt(powers[index])
-  //           ),
-  //           executeStatus: false,
-  //         };
-  //         tempWarriors.push(temp);
-  //         amount += parseInt(powers[index]);
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  //   if (!(await getWalletMintPending(warriorContract, account))) {
-  //     setMaxPower(amount);
-  //     setWarriors(tempWarriors);
-  //     setLoading(false);
-  //   }
-  // };
 
   const getBalance = async () => {
     setTextLoading(true);
@@ -564,6 +491,42 @@ const Warriors = () => {
     setTextLoading(false);
   };
 
+  const handleSelectAll = () => {
+    if (
+      warriors.filter((beast: any) => beast.executeStatus === true).length > 0
+    ) {
+      const data = warriors.map((warrior: any) => ({
+        ...warrior,
+        executeStatus: false,
+      }));
+      setWarriors(data);
+    } else {
+      const data = warriors
+        .filter((item: any) =>
+          filter === "all"
+            ? parseInt(item.strength) >= 0
+            : item.strength === parseInt(filter)
+        )
+        .filter(
+          (item: any) =>
+            apValue[0] <= parseInt(item.power) &&
+            (apValue[1] === 6000 ? true : apValue[1] >= parseInt(item.power))
+        );
+      const result = warriors.map((warrior: any) => {
+        if (data.filter((item: any) => item.id === warrior.id).length > 0) {
+          return {
+            ...warrior,
+            executeStatus: true,
+          };
+        } else {
+          return warrior;
+        }
+      });
+      // .map((beast: any) => ({ ...beast, executeStatus: true }));
+      setWarriors(result);
+      console.log(data);
+    }
+  };
   const handlePage = (value: any) => {
     setCurrentPage(value);
   };
@@ -795,6 +758,15 @@ const Warriors = () => {
               >
                 {formatNumber(maxPower)}
               </Typography>
+              <CommonBtn
+                sx={{ fontWeight: "bold", mt: 1 }}
+                onClick={() => handleSelectAll()}
+              >
+                {warriors.filter((beast: any) => beast.executeStatus === true)
+                  .length > 0
+                  ? getTranslation("deSelectAll")
+                  : getTranslation("selectAll")}
+              </CommonBtn>
               <CommonBtn
                 sx={{ fontWeight: "bold", mt: 1 }}
                 disabled={
@@ -1087,8 +1059,9 @@ const Warriors = () => {
             <CommonBtn
               style={{ fontWeight: "bold" }}
               onClick={() => handleReveal()}
+              disabled={checkWarriorVRF}
             >
-              {getTranslation("revealBeasts")}
+              {getTranslation("revealWarriors")}
             </CommonBtn>
           </Box>
           <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
