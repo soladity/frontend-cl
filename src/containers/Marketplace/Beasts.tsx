@@ -34,7 +34,7 @@ import {
   getMarketItem,
   updatePrice,
   getUSDAmountFromBLST,
-  getAllBeastMarketItems
+  getAllBeastMarketItems,
 } from "../../hooks/contractFunction";
 import {
   useBeast,
@@ -93,7 +93,7 @@ const Beasts = () => {
   const [showAnimation, setShowAnimation] = React.useState<string | null>("0");
   const [loading, setLoading] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState(false);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -102,7 +102,7 @@ const Beasts = () => {
   const marketplaceContract = useMarketplace();
   const marketplaceEventContract = useMarketplaceEvent();
   const bloodstoneContract = useBloodstone();
-  const feeHandlerContract = useFeeHandler()
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
@@ -118,116 +118,145 @@ const Beasts = () => {
   }, []);
 
   React.useEffect(() => {
-    const buyEvent = marketplaceEventContract.events.BuyToken({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues.tokenId).length > 0) {
-        setBeasts(beasts.filter(beast => beast.id != event.returnValues.tokenId))
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
-
-    const cancelEvent = marketplaceEventContract.events.CancelSelling({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues.tokenId).length > 0) {
-        setBeasts(beasts.filter(beast => beast.id != event.returnValues.tokenId))
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
-
-    const sellEvent = marketplaceEventContract.events.SellToken({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues.tokenId).length == 0) {
-        const beast = await getBeastToken(web3, beastContract, event.returnValues.tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceEventContract, "1", event.returnValues.tokenId);
-        const newItem = {
-          ...beast,
-          id: event.returnValues.tokenId,
-          owner: marketItem.owner === account ? true : false,
-          price: marketItem.price,
-          badge: true
+    const buyEvent = marketplaceEventContract.events
+      .BuyToken({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        console.log(event);
+        if (
+          beasts.filter((item) => item.id == event.returnValues.tokenId)
+            .length > 0
+        ) {
+          setBeasts(
+            beasts.filter((beast) => beast.id != event.returnValues.tokenId)
+          );
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
         }
-        setBeasts([...beasts, newItem])
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
+      });
 
-    const updateEvent = marketplaceEventContract.events.PriceUpdated({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      console.log(event)
-      if (beasts.filter(item => item.id == event.returnValues.tokenId).length > 0) {
-        var temp = beasts.map(item => {
-          if (item.id == event.returnValues.tokenId) {
-            return {
-              ...item,
-              price: event.returnValues._price
+    const cancelEvent = marketplaceEventContract.events
+      .CancelSelling({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        console.log(event);
+        if (
+          beasts.filter((item) => item.id == event.returnValues.tokenId)
+            .length > 0
+        ) {
+          setBeasts(
+            beasts.filter((beast) => beast.id != event.returnValues.tokenId)
+          );
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
+
+    const sellEvent = marketplaceEventContract.events
+      .SellToken({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        console.log(event);
+        if (
+          beasts.filter((item) => item.id == event.returnValues.tokenId)
+            .length == 0
+        ) {
+          const beast = await getBeastToken(
+            web3,
+            beastContract,
+            event.returnValues.tokenId
+          );
+          const marketItem = await getMarketItem(
+            web3,
+            marketplaceEventContract,
+            "1",
+            event.returnValues.tokenId
+          );
+          const newItem = {
+            ...beast,
+            id: event.returnValues.tokenId,
+            owner: marketItem.owner === account ? true : false,
+            price: marketItem.price,
+            badge: true,
+          };
+          setBeasts([...beasts, newItem]);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
+
+    const updateEvent = marketplaceEventContract.events
+      .PriceUpdated({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        console.log(event);
+        if (
+          beasts.filter((item) => item.id == event.returnValues.tokenId)
+            .length > 0
+        ) {
+          var temp = beasts.map((item) => {
+            if (item.id == event.returnValues.tokenId) {
+              return {
+                ...item,
+                price: event.returnValues.price,
+              };
+            } else {
+              return item;
             }
-          } else {
-            return item
-          }
-        })
-        setBeasts(temp)
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
+          });
+          setBeasts(temp);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       cancelEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
-    }
-  }, [beasts])
+      });
+    };
+  }, [beasts]);
 
   const getBalance = async () => {
     setLoading(true);
     setBaseUrl(await getBaseUrl());
     let allBeasts;
-    let tempAllBeasts: any[] = []
+    let tempAllBeasts: any[] = [];
 
     allBeasts = await getAllBeastMarketItems(marketplaceContract);
-    console.log(allBeasts)
+    console.log(allBeasts);
     let ids = allBeasts[0];
     let capacities = allBeasts[1];
     let prices = allBeasts[2];
@@ -240,11 +269,13 @@ const Beasts = () => {
         price: prices[index],
         capacity: capacities[index],
         strength: capacities[index],
-        type: beastsTypeInfo[capacities[index] == 20 ? 5 : (capacities[index] - 1)],
+        type: beastsTypeInfo[
+          capacities[index] == 20 ? 5 : capacities[index] - 1
+        ],
         badge: badges[index],
-        gif: getBeastGif(parseInt(capacities[index]))
-      })
-    })
+        gif: getBeastGif(parseInt(capacities[index])),
+      });
+    });
     setBeasts(tempAllBeasts);
     setLoading(false);
   };
@@ -254,8 +285,7 @@ const Beasts = () => {
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "1", id);
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -274,15 +304,21 @@ const Beasts = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "1", id, BigInt(price));
+      await buyToken(
+        web3,
+        marketplaceContract,
+        account,
+        "1",
+        id,
+        BigInt(price)
+      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
       );
       setBeasts(beasts.filter((item: any) => parseInt(item.id) !== id));
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -321,9 +357,20 @@ const Beasts = () => {
   const handleUpdate = async (id: number) => {
     setSelectedBeast(id);
     setPrice(
-      parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
+      parseInt(
+        beasts.filter((item: any) => parseInt(item.id) === id)[0].price
+      ) / Math.pow(10, 18)
     );
-    setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseInt(beasts.filter((item: any) => parseInt(item.id) === id)[0].price))))
+    setBlstToUsd(
+      await getUSDAmountFromBLST(
+        feeHandlerContract,
+        BigInt(
+          parseInt(
+            beasts.filter((item: any) => parseInt(item.id) === id)[0].price
+          )
+        )
+      )
+    );
     setOpenUpdate(true);
   };
 
@@ -332,19 +379,29 @@ const Beasts = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] == '0') {
-        price = price.slice(1)
+      if (price[0] == "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price == '') {
-        price = '0'
+      if (price == "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
 
@@ -363,19 +420,21 @@ const Beasts = () => {
       let temp = [];
       for (let i = 0; i < beasts.length; i++) {
         if (parseInt(beasts[i].id) === selectedBeast)
-          temp.push({ ...beasts[i], price: (price * Math.pow(10, 18)).toString() });
+          temp.push({
+            ...beasts[i],
+            price: (price * Math.pow(10, 18)).toString(),
+          });
         else temp.push({ ...beasts[i] });
       }
       setBeasts([...temp]);
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
   const handleFilter = (value: string) => {
     setFilter(value);
     setCurrentPage(1);
-  }
+  };
 
   return (
     <Box>
@@ -571,10 +630,10 @@ const Beasts = () => {
                       image={
                         showAnimation === "0"
                           ? "/assets/images/characters/jpg/beasts/" +
-                          item["type"] +
-                          ".jpg"
+                            item["type"] +
+                            ".jpg"
                           : "/assets/images/characters/gif/beasts/" +
-                          item["gif"]
+                            item["gif"]
                       }
                       type={item["type"]}
                       capacity={item["capacity"]}
@@ -591,22 +650,25 @@ const Beasts = () => {
                 ))}
           </Grid>
           {beasts.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.capacity) >= 0
-                  : item.capacity === filter
-              ).length > 0 && (
+            filter === "all"
+              ? parseInt(item.capacity) >= 0
+              : item.capacity === filter
+          ).length > 0 && (
             <Navigation
-              totalCount={beasts.filter((item: any) =>
-                filter === "all"
-                  ? parseInt(item.capacity) >= 0
-                  : item.capacity === filter
-              )
-              .filter((item: any) =>
-                onlyMyBeast === true ? item.owner === true : true
-              )
-              .filter((item: any) =>
-                onlyNew === true ? item.badge === true : true
-              ).length}
+              totalCount={
+                beasts
+                  .filter((item: any) =>
+                    filter === "all"
+                      ? parseInt(item.capacity) >= 0
+                      : item.capacity === filter
+                  )
+                  .filter((item: any) =>
+                    onlyMyBeast === true ? item.owner === true : true
+                  )
+                  .filter((item: any) =>
+                    onlyNew === true ? item.badge === true : true
+                  ).length
+              }
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
@@ -673,9 +735,17 @@ const Beasts = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" ||
+                evt.key === "E" ||
+                evt.key === "+" ||
+                evt.key === "-") &&
+                evt.preventDefault();
+            }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
