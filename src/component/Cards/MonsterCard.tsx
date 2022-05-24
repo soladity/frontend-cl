@@ -93,11 +93,11 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           )}
           <Grid item>
             <Typography variant="h6">
-              {tokenID === 25 ? "Unlock Status" : getTranslation("bonus") + "%"}
+              {tokenID === 25 ? getTranslation("unlockStatus") : getTranslation("bonus") + "%"}
             </Typography>
             <Typography variant="h6">
               {tokenID === 25
-                ? `${warriorCnt}/${warriorBaseCnt} Warriors Used`
+                ? `${warriorCnt}/${warriorBaseCnt} ${getTranslation("warriorsUsed")}`
                 : parseInt(bonus)}
             </Typography>
           </Grid>
