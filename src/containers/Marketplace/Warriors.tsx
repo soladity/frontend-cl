@@ -212,7 +212,7 @@ const Warriors = () => {
             if (item.id == event.returnValues.tokenId) {
               return {
                 ...item,
-                price: event.returnValues._price,
+                price: event.returnValues.price,
               };
             } else {
               return item;
