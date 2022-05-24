@@ -127,12 +127,12 @@ const Warriors = () => {
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
         if (
-          warriors.filter((item) => item.id == event.returnValues._tokenId)
+          warriors.filter((item) => item.id == event.returnValues.tokenId)
             .length > 0
         ) {
           setWarriors(
             warriors.filter(
-              (warrior) => warrior.id != event.returnValues._tokenId
+              (warrior) => warrior.id != event.returnValues.tokenId
             )
           );
           dispatch(
@@ -148,12 +148,12 @@ const Warriors = () => {
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
         if (
-          warriors.filter((item) => item.id == event.returnValues._tokenId)
+          warriors.filter((item) => item.id == event.returnValues.tokenId)
             .length > 0
         ) {
           setWarriors(
             warriors.filter(
-              (warrior) => warrior.id != event.returnValues._tokenId
+              (warrior) => warrior.id != event.returnValues.tokenId
             )
           );
           dispatch(
@@ -168,27 +168,28 @@ const Warriors = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
+        console.log("sell, ", event);
         if (
-          warriors.filter((item) => item.id == event.returnValues._tokenId)
+          warriors.filter((item) => item.id == event.returnValues.tokenId)
             .length == 0
         ) {
           const warrior = await getWarriorToken(
             web3,
             warriorContract,
-            event.returnValues._tokenId
+            event.returnValues.tokenId
           );
           const marketItem = await getMarketItem(
             web3,
             marketplaceEventContract,
             "2",
-            event.returnValues._tokenId
+            event.returnValues.tokenId
           );
           const newItem = {
             ...warrior,
-            id: event.returnValues._tokenId,
+            id: event.returnValues.tokenId,
             owner: marketItem.owner === account ? true : false,
             price: marketItem.price,
-            badge: true
+            badge: true,
           };
           setWarriors([...warriors, newItem]);
           dispatch(
@@ -204,11 +205,11 @@ const Warriors = () => {
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
         if (
-          warriors.filter((item) => item.id == event.returnValues._tokenId)
+          warriors.filter((item) => item.id == event.returnValues.tokenId)
             .length > 0
         ) {
           var temp = warriors.map((item) => {
-            if (item.id == event.returnValues._tokenId) {
+            if (item.id == event.returnValues.tokenId) {
               return {
                 ...item,
                 price: event.returnValues._price,

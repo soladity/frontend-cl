@@ -36,7 +36,7 @@ import {
   getHuntStatus,
   updatePrice,
   getUSDAmountFromBLST,
-  getAllLegionMarketItems
+  getAllLegionMarketItems,
 } from "../../hooks/contractFunction";
 import {
   useLegion,
@@ -44,7 +44,7 @@ import {
   useBloodstone,
   useWeb3,
   useFeeHandler,
-  useMarketplaceEvent
+  useMarketplaceEvent,
 } from "../../hooks/useContract";
 import LegionMarketCard from "../../component/Cards/LegionMarketCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -100,7 +100,7 @@ const Legions = () => {
   const [actionLoading, setActionLoading] = React.useState(false);
   const [apValue, setApValue] = React.useState<number[]>([2000, 100000]);
   const [huntsValue, setHuntsValue] = React.useState<number[]>([0, 14]);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -109,113 +109,145 @@ const Legions = () => {
   const marketplaceContract = useMarketplace();
   const marketplaceEventContract = useMarketplaceEvent();
   const bloodstoneContract = useBloodstone();
-  const feeHandlerContract = useFeeHandler()
+  const feeHandlerContract = useFeeHandler();
   const web3 = useWeb3();
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-
-    const buyEvent = marketplaceEventContract.events.BuyToken({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        setLegions(legions.filter(legion => legion.id != event.returnValues._tokenId))
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
-
-    const cancelEvent = marketplaceEventContract.events.CancelSelling({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        setLegions(legions.filter(legion => legion.id != event.returnValues._tokenId))
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
-
-    const sellEvent = marketplaceEventContract.events.SellToken({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (legions.filter(item => item.id == event.returnValues._tokenId).length == 0) {
-        const legion = await getLegionToken(web3, legionContract, event.returnValues._tokenId);
-        const marketItem = await getMarketItem(web3, marketplaceEventContract, "3", event.returnValues._tokenId);
-        const image = getLegionImageUrl(legion.attackPower);
-        const huntStatus = await getHuntStatus(web3, legionContract, event.returnValues._tokenId);
-        const newItem = {
-          ...legion,
-          id: event.returnValues._tokenId,
-          image: image,
-          owner: marketItem.owner === account ? true : false,
-          price: marketItem.price,
-          badge: true,
-          huntStatus: huntStatus,
+    const buyEvent = marketplaceEventContract.events
+      .BuyToken({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          legions.filter((item) => item.id == event.returnValues.tokenId)
+            .length > 0
+        ) {
+          setLegions(
+            legions.filter((legion) => legion.id != event.returnValues.tokenId)
+          );
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
         }
-        setLegions([...legions, newItem])
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
+      });
 
-    const updateEvent = marketplaceEventContract.events.PriceUpdated({
-    }).on('connected', function (subscriptionId: any) {
-    }).on('data', async function (event: any) {
-      if (legions.filter(item => item.id == event.returnValues._tokenId).length > 0) {
-        var temp = legions.map(item => {
-          if (item.id == event.returnValues._tokenId) {
-            return {
-              ...item,
-              price: event.returnValues._price
+    const cancelEvent = marketplaceEventContract.events
+      .CancelSelling({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          legions.filter((item) => item.id == event.returnValues.tokenId)
+            .length > 0
+        ) {
+          setLegions(
+            legions.filter((legion) => legion.id != event.returnValues.tokenId)
+          );
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
+
+    const sellEvent = marketplaceEventContract.events
+      .SellToken({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          legions.filter((item) => item.id == event.returnValues.tokenId)
+            .length == 0
+        ) {
+          const legion = await getLegionToken(
+            web3,
+            legionContract,
+            event.returnValues.tokenId
+          );
+          const marketItem = await getMarketItem(
+            web3,
+            marketplaceEventContract,
+            "3",
+            event.returnValues.tokenId
+          );
+          const image = getLegionImageUrl(legion.attackPower);
+          const huntStatus = await getHuntStatus(
+            web3,
+            legionContract,
+            event.returnValues.tokenId
+          );
+          const newItem = {
+            ...legion,
+            id: event.returnValues.tokenId,
+            image: image,
+            owner: marketItem.owner === account ? true : false,
+            price: marketItem.price,
+            badge: true,
+            huntStatus: huntStatus,
+          };
+          setLegions([...legions, newItem]);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
+
+    const updateEvent = marketplaceEventContract.events
+      .PriceUpdated({})
+      .on("connected", function (subscriptionId: any) {})
+      .on("data", async function (event: any) {
+        if (
+          legions.filter((item) => item.id == event.returnValues.tokenId)
+            .length > 0
+        ) {
+          var temp = legions.map((item) => {
+            if (item.id == event.returnValues.tokenId) {
+              return {
+                ...item,
+                price: event.returnValues._price,
+              };
+            } else {
+              return item;
             }
-          } else {
-            return item
-          }
-        })
-        setLegions(temp)
-        dispatch(
-          setReloadStatus({
-            reloadContractStatus: new Date(),
-          })
-        );
-      }
-    })
+          });
+          setLegions(temp);
+          dispatch(
+            setReloadStatus({
+              reloadContractStatus: new Date(),
+            })
+          );
+        }
+      });
     return () => {
       buyEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       cancelEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       sellEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
+      });
       updateEvent.unsubscribe((error: any, success: any) => {
         if (success) {
         }
         if (error) {
         }
-      })
-    }
-  }, [legions])
+      });
+    };
+  }, [legions]);
 
   React.useEffect(() => {
     setShowAnimation(
@@ -260,12 +292,12 @@ const Legions = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    console.log(await getAllLegionMarketItems(marketplaceContract))
+    console.log(await getAllLegionMarketItems(marketplaceContract));
 
-    const allLegions = await getAllLegionMarketItems(marketplaceContract)
+    const allLegions = await getAllLegionMarketItems(marketplaceContract);
     let amount = 0;
     const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
-      amount += parseInt(legion.attack_power) / 100
+      amount += parseInt(legion.attack_power) / 100;
       return {
         name: legion.name,
         beasts: legion.beast_ids,
@@ -275,13 +307,17 @@ const Legions = () => {
         supplies: legion.supplies,
         realPower: parseFloat(legion.attack_power),
         id: allLegions[1][index],
-        huntStatus: allLegions[2][index] ? 'green' : legion.supplies == "0" ? "red" : "orange",
+        huntStatus: allLegions[2][index]
+          ? "green"
+          : legion.supplies == "0"
+          ? "red"
+          : "orange",
         owner: allLegions[4][index] === account ? true : false,
         price: allLegions[3][index],
-        badge: allLegions[5][index]
-      }
-    })
-    console.log(tempAllLegions)
+        badge: allLegions[5][index],
+      };
+    });
+    console.log(tempAllLegions);
 
     // const ids = await getOnMarketplace(web3, legionContract);
     // let legion;
@@ -347,8 +383,7 @@ const Legions = () => {
     try {
       await cancelMarketplace(web3, marketplaceContract, account, "3", id);
       setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -367,15 +402,21 @@ const Legions = () => {
           account
         );
       }
-      await buyToken(web3, marketplaceContract, account, "3", id, BigInt(price));
+      await buyToken(
+        web3,
+        marketplaceContract,
+        account,
+        "3",
+        id,
+        BigInt(price)
+      );
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
         })
       );
       setLegions(legions.filter((item: any) => parseInt(item.id) !== id));
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -432,9 +473,20 @@ const Legions = () => {
   const handleUpdate = async (id: number) => {
     setSelectedLegion(id);
     setPrice(
-      parseInt(legions.filter((item: any) => parseInt(item.id) === id)[0].price) / Math.pow(10, 18)
+      parseInt(
+        legions.filter((item: any) => parseInt(item.id) === id)[0].price
+      ) / Math.pow(10, 18)
     );
-    setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseInt(legions.filter((item: any) => parseInt(item.id) === id)[0].price))))
+    setBlstToUsd(
+      await getUSDAmountFromBLST(
+        feeHandlerContract,
+        BigInt(
+          parseInt(
+            legions.filter((item: any) => parseInt(item.id) === id)[0].price
+          )
+        )
+      )
+    );
     setOpenUpdate(true);
   };
 
@@ -443,22 +495,31 @@ const Legions = () => {
   };
 
   const handlePrice = async (e: any) => {
-    var price = e.target.value
+    var price = e.target.value;
     if (price >= 1) {
-      if (price[0] == '0') {
-        price = price.slice(1)
+      if (price[0] == "0") {
+        price = price.slice(1);
       }
       setPrice(price);
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     } else if (price >= 0) {
       setPrice(price);
-      if (price == '') {
-        price = '0'
+      if (price == "") {
+        price = "0";
       }
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(parseFloat(price) * Math.pow(10, 18))))
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(parseFloat(price) * Math.pow(10, 18))
+        )
+      );
     }
   };
-
 
   const handleUpdatePrice = async () => {
     setActionLoading(true);
@@ -475,12 +536,14 @@ const Legions = () => {
       let temp = [];
       for (let i = 0; i < legions.length; i++) {
         if (parseInt(legions[i].id) === selectedLegion)
-          temp.push({ ...legions[i], price: (price * Math.pow(10, 18)).toString() });
+          temp.push({
+            ...legions[i],
+            price: (price * Math.pow(10, 18)).toString(),
+          });
         else temp.push({ ...legions[i] });
       }
       setLegions([...temp]);
-    } catch (e) {
-    }
+    } catch (e) {}
     setActionLoading(false);
   };
 
@@ -711,26 +774,29 @@ const Legions = () => {
           </Grid>
           {legions.length > 0 && (
             <Navigation
-              totalCount={legions.filter(
-                (item: any) =>
-                  apValue[0] <= parseInt(item.attackPower) &&
-                  (apValue[1] === 100000
-                    ? true
-                    : apValue[1] >= parseInt(item.attackPower))
-              )
-              .filter(
-                (item: any) =>
-                  huntsValue[0] <= parseInt(item.supplies) &&
-                  (huntsValue[1] === 14
-                    ? true
-                    : huntsValue[1] >= parseInt(item.supplies))
-              )
-              .filter((item: any) =>
-                onlyMyLegion === true ? item.owner === true : true
-              )
-              .filter((item: any) =>
-                onlyNew === true ? item.badge === true : true
-              ).length}
+              totalCount={
+                legions
+                  .filter(
+                    (item: any) =>
+                      apValue[0] <= parseInt(item.attackPower) &&
+                      (apValue[1] === 100000
+                        ? true
+                        : apValue[1] >= parseInt(item.attackPower))
+                  )
+                  .filter(
+                    (item: any) =>
+                      huntsValue[0] <= parseInt(item.supplies) &&
+                      (huntsValue[1] === 14
+                        ? true
+                        : huntsValue[1] >= parseInt(item.supplies))
+                  )
+                  .filter((item: any) =>
+                    onlyMyLegion === true ? item.owner === true : true
+                  )
+                  .filter((item: any) =>
+                    onlyNew === true ? item.badge === true : true
+                  ).length
+              }
               cPage={currentPage}
               handlePage={handlePage}
               perPage={20}
@@ -797,9 +863,17 @@ const Legions = () => {
             value={price}
             inputProps={{ step: "0.1" }}
             onChange={handlePrice}
-            onKeyDown={(evt) => { (evt.key === 'e' || evt.key === 'E' || evt.key === '+' || evt.key === '-') && evt.preventDefault() }}
+            onKeyDown={(evt) => {
+              (evt.key === "e" ||
+                evt.key === "E" ||
+                evt.key === "+" ||
+                evt.key === "-") &&
+                evt.preventDefault();
+            }}
           />
-          <Typography variant="subtitle1">(= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)</Typography>
+          <Typography variant="subtitle1">
+            (= {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD)
+          </Typography>
         </DialogContent>
         {+price >= 0 && price < maxSellPrice ? (
           <CommonBtn sx={{ fontWeight: "bold" }} onClick={handleUpdatePrice}>
