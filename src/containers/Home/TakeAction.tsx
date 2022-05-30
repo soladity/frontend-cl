@@ -74,6 +74,8 @@ import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
 import { Spinner } from "../../component/Buttons/Spinner";
 import { MdClose } from "react-icons/md";
+import CircularProgress from "@mui/material/CircularProgress";
+import { green, yellow, red } from "@mui/material/colors";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -270,7 +272,9 @@ const TakeAction = () => {
   const checkRevealBeastStatus = () => {
     const revealChecker = setInterval(async () => {
       const requestId = await getBeastRequestId(beastContract, account);
+      console.log(requestId);
       const returnVal = await getVRFResult(vrfContract, requestId);
+      console.log(returnVal);
       if (returnVal != 0) {
         setCheckBeastVRF(false);
         clearInterval(revealChecker);
@@ -337,6 +341,7 @@ const TakeAction = () => {
     const revealChecker = setInterval(async () => {
       const requestId = await getWarriorRequestId(warriorContract, account);
       const returnVal = await getVRFResult(vrfContract, requestId);
+      console.log(returnVal);
       if (returnVal != 0) {
         setCheckWarriorVRF(false);
         clearInterval(revealChecker);
@@ -546,7 +551,10 @@ const TakeAction = () => {
       let massHuntPending;
       massHuntPending = await getWalletMassHuntPending(legionContract, account);
       setMassHuntPending(massHuntPending);
-      if (!massHuntPending) {
+      if (massHuntPending) {
+        setCheckMassHuntVRF(true);
+        checkRevealMassHuntStatus();
+      } else {
         setMassHuntLoading(true);
         await initiateMassHunt(legionContract, account);
         setMassHuntLoading(false);
@@ -638,6 +646,14 @@ const TakeAction = () => {
         account
       );
       setBeastRevealStatus(mintBeastPending);
+      if (mintWarriorPending) {
+        setCheckWarriorVRF(true);
+        checkRevealWarriorStatus();
+      }
+      if (mintBeastPending) {
+        setCheckBeastVRF(true);
+        checkRevealBeastStatus();
+      }
       setHuntTax((await getFee(feeHandlerContract, 1)) / 10000);
 
       getBlstAmountToMintWarrior();
@@ -657,7 +673,7 @@ const TakeAction = () => {
       }
       setAvailableLegionCount(availableLegionCount);
     } catch (error) {
-      console.log(error);
+      console.log("init error", error);
     }
   };
 
@@ -816,29 +832,46 @@ const TakeAction = () => {
               >
                 <Box sx={{ textAlign: "center", width: "100%" }}>
                   {warriorRevealStatus ? (
-                    <CommonBtn
-                      onClick={() => handleWarriorReveal(TransitionUp)}
-                      sx={{
-                        fontWeight: "bold",
-                        wordBreak: "break-word",
-                        fontSize: 14,
-                        width: "100%",
-                        marginBottom: 1,
-                      }}
-                      className={classes.revealBtn}
-                      disabled={checkWarriorVRF}
-                    >
-                      <img
-                        src={`/assets/images/dashboard/warrior.png`}
-                        style={{
-                          width: "15px",
-                          height: "15px",
-                          marginRight: "5px",
+                    <>
+                      <CommonBtn
+                        onClick={() => handleWarriorReveal(TransitionUp)}
+                        sx={{
+                          fontWeight: "bold",
+                          wordBreak: "break-word",
+                          fontSize: 14,
+                          width: "100%",
+                          marginBottom: 1,
                         }}
-                        alt="icon"
-                      />
-                      {getTranslation("revealWarriors")}
-                    </CommonBtn>
+                        className={classes.revealBtn}
+                        disabled={checkWarriorVRF}
+                      >
+                        <Box>
+                          <img
+                            src={`/assets/images/dashboard/warrior.png`}
+                            style={{
+                              width: "15px",
+                              height: "15px",
+                              marginRight: "5px",
+                            }}
+                            alt="icon"
+                          />
+                          {getTranslation("revealWarriors")}
+                          {checkWarriorVRF && (
+                            <CircularProgress
+                              size={24}
+                              sx={{
+                                color: yellow[500],
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                marginTop: "-12px",
+                                marginLeft: "-12px",
+                              }}
+                            />
+                          )}
+                        </Box>
+                      </CommonBtn>
+                    </>
                   ) : (
                     <CommonBtn
                       aria-describedby={"summon-warrior-id"}
@@ -994,16 +1027,31 @@ const TakeAction = () => {
                       className={classes.revealBtn}
                       disabled={checkBeastVRF}
                     >
-                      <img
-                        src={`/assets/images/dashboard/beast.png`}
-                        style={{
-                          width: "15px",
-                          height: "15px",
-                          marginRight: "5px",
-                        }}
-                        alt="icon"
-                      />
-                      {getTranslation("revealBeasts")}
+                      <Box>
+                        <img
+                          src={`/assets/images/dashboard/beast.png`}
+                          style={{
+                            width: "15px",
+                            height: "15px",
+                            marginRight: "5px",
+                          }}
+                          alt="icon"
+                        />
+                        {getTranslation("revealBeasts")}
+                        {checkBeastVRF && (
+                          <CircularProgress
+                            size={24}
+                            sx={{
+                              color: yellow[500],
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              marginTop: "-12px",
+                              marginLeft: "-12px",
+                            }}
+                          />
+                        )}
+                      </Box>
                     </CommonBtn>
                   ) : (
                     <CommonBtn

@@ -1,40 +1,44 @@
-import address from "./constants";
+import address from "./contractAddresses";
+
+import gameVersion from "./manageVersion";
+console.log(gameVersion);
+
 export const getBloodstoneAddress = () => {
-  return address.blood[process.env.REACT_APP_CHAIN_ID];
+  return address.blood[gameVersion.chainID];
 };
 
 export const getBeastAddress = () => {
-  return address.beast[process.env.REACT_APP_CHAIN_ID];
+  return address.beast[gameVersion.chainID];
 };
 
 export const getWarriorAddress = () => {
-  return address.warrior[process.env.REACT_APP_CHAIN_ID];
+  return address.warrior[gameVersion.chainID];
 };
 
 export const getLegionAddress = () => {
-  return address.legion[process.env.REACT_APP_CHAIN_ID];
+  return address.legion[gameVersion.chainID];
 };
 
 export const getMonsterAddress = () => {
-  return address.monster[process.env.REACT_APP_CHAIN_ID];
+  return address.monster[gameVersion.chainID];
 };
 
 export const getRewardPoolAddress = () => {
-  return address.rewardPool[process.env.REACT_APP_CHAIN_ID];
+  return address.rewardPool[gameVersion.chainID];
 };
 
 export const getMarketplaceAddress = () => {
-  return address.marketplace[process.env.REACT_APP_CHAIN_ID];
+  return address.marketplace[gameVersion.chainID];
 };
 
 export const getFeeHandlerAddress = () => {
-  return address.feeHandler[process.env.REACT_APP_CHAIN_ID];
+  return address.feeHandler[gameVersion.chainID];
 };
 
 export const getBUSDAddress = () => {
-  return address.busd[process.env.REACT_APP_CHAIN_ID];
+  return address.busd[gameVersion.chainID];
 };
 
 export const getVRFAddress = () => {
-  return address.vrf[process.env.REACT_APP_CHAIN_ID];
+  return address.vrf[gameVersion.chainID];
 };
