@@ -22,7 +22,7 @@ const mainVersion = {
   blockExplorerUrls: ["https://bscscan.com"],
 };
 
-const gameVersion = testVersion;
-// const gameVersion = mainVersion;
+// const gameVersion = testVersion;
+const gameVersion = mainVersion;
 
 export default gameVersion;
