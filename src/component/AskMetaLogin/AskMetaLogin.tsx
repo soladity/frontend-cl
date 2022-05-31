@@ -5,6 +5,7 @@ import { injected } from "../../wallet";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import { makeStyles } from "@mui/styles";
 import { addNetwork, switchNetwork } from "../../wallet/ethereum";
+import gameVersion from "../../utils/manageVersion";
 
 const useStyles = makeStyles({
   loginToWhitePaperBtn: {
@@ -108,7 +109,11 @@ const AskMetaLogin = () => {
       if (error.toString().indexOf("Unsupported") > -1) {
         addNetwork();
         switchNetwork();
-        setErrorMsg("Please choose BSC TEST Network!");
+        setErrorMsg(
+          gameVersion.chain === "mainnet"
+            ? "Please choose BSC Network!"
+            : "Please choose BSC TEST Network!"
+        );
         setOpenSnackBar(true);
       }
     }
