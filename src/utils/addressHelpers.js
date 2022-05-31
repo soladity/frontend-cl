@@ -1,7 +1,6 @@
 import address from "./contractAddresses";
 
 import gameVersion from "./manageVersion";
-console.log(gameVersion);
 
 export const getBloodstoneAddress = () => {
   return address.blood[gameVersion.chainID];
