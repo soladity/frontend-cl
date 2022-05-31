@@ -66,6 +66,9 @@ import beastsTypeInfo from "../../constant/beasts";
 import MassExecute from "../MassExecute/MassExecute";
 import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
+import CircularProgress from "@mui/material/CircularProgress";
+import { green, yellow, red } from "@mui/material/colors";
+
 const useStyles = makeStyles({
   root: {
     display: "flex",
@@ -318,6 +321,10 @@ const Beasts = () => {
       setLoadingText(getTranslation("loadingBeasts"));
       revealStatusVal = await getWalletMintPending(beastContract, account);
       setRevealStatus(revealStatusVal);
+      if (revealStatusVal) {
+        setCheckBeastVRF(true);
+        checkRevealBeastStatus();
+      }
       setMarketplaceTax(
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
@@ -999,7 +1006,22 @@ const Beasts = () => {
               onClick={() => handleReveal()}
               disabled={checkBeastVRF}
             >
-              {getTranslation("revealBeasts")}
+              <Box>
+                {getTranslation("revealBeasts")}
+                {checkBeastVRF && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: yellow[500],
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px",
+                    }}
+                  />
+                )}
+              </Box>
             </CommonBtn>
           </Box>
           <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
