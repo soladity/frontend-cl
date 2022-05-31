@@ -67,6 +67,9 @@ import { FaTimes } from "react-icons/fa";
 import warriorInfo from "../../constant/warriors";
 import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
+import CircularProgress from "@mui/material/CircularProgress";
+import { green, yellow, red } from "@mui/material/colors";
+
 const useStyles = makeStyles({
   root: {
     display: "flex",
@@ -301,6 +304,10 @@ const Warriors = () => {
       setLoadingText(getTranslation("loadingWarriors"));
       revealStatusVal = await getWalletMintPending(warriorContract, account);
       setRevealStatus(revealStatusVal);
+      if (revealStatusVal) {
+        setCheckWarriorVRF(true);
+        checkRevealWarriorStatus();
+      }
       setMarketplaceTax(
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
@@ -1061,7 +1068,22 @@ const Warriors = () => {
               onClick={() => handleReveal()}
               disabled={checkWarriorVRF}
             >
-              {getTranslation("revealWarriors")}
+              <Box>
+                {getTranslation("revealWarriors")}
+                {checkWarriorVRF && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      color: yellow[500],
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px",
+                    }}
+                  />
+                )}
+              </Box>
             </CommonBtn>
           </Box>
           <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
