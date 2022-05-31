@@ -23,9 +23,9 @@ import feehandler from "../config/abis/FeeHandler.json";
 import legion from "../config/abis/LegionNFT.json";
 import marketplace from "../config/abis/Marketplace.json";
 import monster from "../config/abis/Monster.json";
-import rewardpool from "../config/abis/RewardPool.json";
 import vrfv2consumer from "../config/abis/VRFv2Consumer.json";
 import warrior from "../config/abis/WarriorNFT.json";
+import rewardpool from "../config/abis/RewardPool.json";
 
 const RPC_URL = gameVersion.rpcUrl;
 const RPC_WS_URL = gameVersion.rpcWsUrl;
