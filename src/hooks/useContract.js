@@ -25,7 +25,7 @@ import marketplace from "../config/abis/Marketplace.json";
 import monster from "../config/abis/Monster.json";
 import vrfv2consumer from "../config/abis/VRFv2Consumer.json";
 import warrior from "../config/abis/WarriorNFT.json";
-import rewardpool from "../config/abis/RewardPool.json";
+import rewardpool from "../config/abis/rewardpool.json";
 
 const RPC_URL = gameVersion.rpcUrl;
 const RPC_WS_URL = gameVersion.rpcWsUrl;
