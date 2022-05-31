@@ -16,35 +16,16 @@ import {
   getVRFAddress,
 } from "../utils/addressHelpers";
 
-const beast = require(`../config/abis/${gameVersion.chain}/BeastNFT.json`);
-console.log("beast", beast);
-
-const bloodstone = require(`../config/abis/${gameVersion.chain}/BloodStone.json`);
-console.log("bloodstone", bloodstone);
-
-const busd = require(`../config/abis/${gameVersion.chain}/busd.json`);
-console.log("busd", busd);
-
-const feehandler = require(`../config/abis/${gameVersion.chain}/FeeHandler.json`);
-console.log("feehandler", feehandler);
-
-const legion = require(`../config/abis/${gameVersion.chain}/LegionNFT.json`);
-console.log("legion", legion);
-
-const marketplace = require(`../config/abis/${gameVersion.chain}/Marketplace.json`);
-console.log("marketplace", marketplace);
-
-const monster = require(`../config/abis/${gameVersion.chain}/Monster.json`);
-console.log("monster", monster);
-
-const rewardpool = require(`../config/abis/${gameVersion.chain}/RewardPool.json`);
-console.log("rewardpool", rewardpool);
-
-const vrfv2consumer = require(`../config/abis/${gameVersion.chain}/VRFv2Consumer.json`);
-console.log("vrfv2consumer", vrfv2consumer);
-
-const warrior = require(`../config/abis/${gameVersion.chain}/WarriorNFT.json`);
-console.log("warrior", warrior);
+import beast from "../config/abis/BeastNFT.json";
+import bloodstone from "../config/abis/BloodStone.json";
+import busd from "../config/abis/busd.json";
+import feehandler from "../config/abis/FeeHandler.json";
+import legion from "../config/abis/LegionNFT.json";
+import marketplace from "../config/abis/Marketplace.json";
+import monster from "../config/abis/Monster.json";
+import rewardpool from "../config/abis/RewardPool.json";
+import vrfv2consumer from "../config/abis/VRFv2Consumer.json";
+import warrior from "../config/abis/WarriorNFT.json";
 
 const RPC_URL = gameVersion.rpcUrl;
 const RPC_WS_URL = gameVersion.rpcWsUrl;
