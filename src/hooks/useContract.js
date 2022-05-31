@@ -16,8 +16,6 @@ import {
   getVRFAddress,
 } from "../utils/addressHelpers";
 
-console.log(gameVersion);
-
 const beast = require(`../config/abis/${gameVersion.chain}/BeastNFT.json`);
 console.log("beast", beast);
 
