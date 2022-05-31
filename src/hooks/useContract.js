@@ -16,15 +16,15 @@ import {
   getVRFAddress,
 } from "../utils/addressHelpers";
 
-import beast from "../config/abis/beastnft.json";
+import beast from "../config/abis/beast.json";
 import bloodstone from "../config/abis/bloodstone.json";
 import busd from "../config/abis/busd.json";
 import feehandler from "../config/abis/feehandler.json";
-import legion from "../config/abis/legionnft.json";
+import legion from "../config/abis/legion.json";
 import marketplace from "../config/abis/marketplace.json";
 import monster from "../config/abis/monster.json";
 import vrfv2consumer from "../config/abis/vrfv2consumer.json";
-import warrior from "../config/abis/warriornft.json";
+import warrior from "../config/abis/warrior.json";
 import rewardpool from "../config/abis/rewardpool.json";
 
 const RPC_URL = gameVersion.rpcUrl;
