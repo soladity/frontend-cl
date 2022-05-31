@@ -1,14 +1,5 @@
 import * as React from "react";
-import {
-  Grid,
-  Card,
-  Box,
-  Button,
-  Popover,
-  Checkbox,
-  Dialog,
-  DialogTitle,
-} from "@mui/material";
+import { Card, Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { getTranslation } from "../../utils/translation";
 import { FaGrinBeam } from "react-icons/fa";
@@ -16,14 +7,8 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { useBloodstone, useFeeHandler } from "../../hooks/useContract";
 import {
   getFee,
-  feeDenominator,
-  buyTaxLiquidity,
-  buyTaxReward,
-  sellTaxDev,
-  sellTaxLiquidity,
-  sellTaxReward,
-  getSummoningPrice,
-  getSupplyCost,
+  getBuyTotalFees,
+  getSellTotalFees,
 } from "../../hooks/contractFunction";
 
 const NadodoWatch = () => {
@@ -58,25 +43,8 @@ const NadodoWatch = () => {
 
   const setBuyAndSellTax = async () => {
     try {
-      const feeDenominatorVal = await feeDenominator(bloodstoneContract);
-      const buyTaxLiquidityVal = await buyTaxLiquidity(bloodstoneContract);
-      const buyTaxRewardVal = await buyTaxReward(bloodstoneContract);
-      const sellTaxDevVal = await sellTaxDev(bloodstoneContract);
-      const sellTaxLiquidityVal = await sellTaxLiquidity(bloodstoneContract);
-      const sellTaxRewardVal = await sellTaxReward(bloodstoneContract);
-
-      setBuyTax(
-        ((parseInt(buyTaxLiquidityVal) + parseInt(buyTaxRewardVal)) /
-          parseInt(feeDenominatorVal)) *
-          100
-      );
-      setSellTax(
-        ((parseInt(sellTaxLiquidityVal) +
-          parseInt(sellTaxRewardVal) +
-          parseInt(sellTaxDevVal)) /
-          parseInt(feeDenominatorVal)) *
-          100
-      );
+      setBuyTax(await getBuyTotalFees(bloodstoneContract));
+      setSellTax(await getSellTotalFees(bloodstoneContract));
     } catch (error) {
       console.log(error);
     }

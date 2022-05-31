@@ -435,28 +435,12 @@ export const updatePrice = async (web3, contract, account, type, id, price) => {
   return response;
 };
 
-export const feeDenominator = async (contract) => {
-  return await contract.methods.feeDenominator().call();
+export const getBuyTotalFees = async (contract) => {
+  return await contract.methods.buyTotalFees().call();
 };
 
-export const buyTaxLiquidity = async (contract) => {
-  return await contract.methods.buyTaxLiquidity().call();
-};
-
-export const buyTaxReward = async (contract) => {
-  return await contract.methods.buyTaxReward().call();
-};
-
-export const sellTaxLiquidity = async (contract) => {
-  return await contract.methods.sellTaxLiquidity().call();
-};
-
-export const sellTaxReward = async (contract) => {
-  return await contract.methods.sellTaxReward().call();
-};
-
-export const sellTaxDev = async (contract) => {
-  return await contract.methods.sellTaxDev().call();
+export const getSellTotalFees = async (contract) => {
+  return await contract.methods.sellTotalFees().call();
 };
 
 export const getSummoningPrice = async (contract, amount) => {
