@@ -85,6 +85,9 @@ import { FaTimes } from "react-icons/fa";
 import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
 
+import CircularProgress from "@mui/material/CircularProgress";
+import { green, yellow, red } from "@mui/material/colors";
+
 type TransitionProps = Omit<SlideProps, "direction">;
 
 function TransitionUp(props: TransitionProps) {
@@ -1120,7 +1123,22 @@ const Monsters = () => {
                   {revealBtnDisabled ? (
                     <Spinner color="white" size={40} />
                   ) : (
-                    getTranslation("revealResult")
+                    <Box>
+                      {getTranslation("revealResult")}
+                      {checkHuntVRF && (
+                        <CircularProgress
+                          size={24}
+                          sx={{
+                            color: yellow[500],
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            marginTop: "-12px",
+                            marginLeft: "-12px",
+                          }}
+                        />
+                      )}
+                    </Box>
                   )}
                 </CommonBtn>
               )}
@@ -1391,9 +1409,24 @@ const Monsters = () => {
                   sx={{ fontWeight: "bold" }}
                   disabled={checkMassHuntVRF}
                 >
-                  <Spinner color="white" size={40} />
-                  &nbsp;
-                  {getTranslation("revealResult")}
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Spinner color="white" size={40} />
+                    &nbsp;
+                    {getTranslation("revealResult")}
+                    {checkMassHuntVRF && (
+                      <CircularProgress
+                        size={24}
+                        sx={{
+                          color: yellow[500],
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          marginTop: "-12px",
+                          marginLeft: "-12px",
+                        }}
+                      />
+                    )}
+                  </Box>
                 </CommonBtn>
               ) : (
                 <CommonBtn
@@ -1401,7 +1434,22 @@ const Monsters = () => {
                   sx={{ fontWeight: "bold" }}
                   disabled={!massBtnEnable || checkMassHuntVRF}
                 >
-                  {getTranslation("revealResult")}
+                  <Box>
+                    {getTranslation("revealResult")}
+                    {checkMassHuntVRF && (
+                      <CircularProgress
+                        size={24}
+                        sx={{
+                          color: yellow[500],
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          marginTop: "-12px",
+                          marginLeft: "-12px",
+                        }}
+                      />
+                    )}
+                  </Box>
                 </CommonBtn>
               ))}
           </Box>
