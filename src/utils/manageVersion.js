@@ -24,7 +24,7 @@ const mainVersion = {
   baseTimeToShowMonster25: new Date(2022, 5, 30),
 };
 
-const gameVersion = testVersion;
-// const gameVersion = mainVersion;
+// const gameVersion = testVersion;
+const gameVersion = mainVersion;
 
 export default gameVersion;
