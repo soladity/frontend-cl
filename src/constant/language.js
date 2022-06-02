@@ -2772,4 +2772,16 @@ export const translations = {
     pl: "Wykonać",
     ph: "Ipatupad",
   },
+  moreCoin: {
+    en: "You need more $BLST to summon.",
+    es: "Necesitas más $BLST para convocar.",
+    cn: "你需要更多的 $BLST 才能召唤.",
+    pt: "Você precisa de mais $BLST para invocar.",
+    tr: "Çağırmak için daha fazla $BLST'ye ihtiyacınız var.",
+    ru: "Вам нужно больше $BLST для призыва.",
+    fr: "Vous avez besoin de plus de $BLST pour invoquer.",
+    de: "Je hebt meer $BLST nodig om op te roepen.",
+    pl: "Do przywołania potrzebujesz więcej $BLST.",
+    ph: "Kailangan mo ng higit pang $BLST para ipatawag.",
+  },
 };
