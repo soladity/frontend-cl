@@ -87,6 +87,7 @@ import monstersInfo from "../../constant/monsters";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { green, yellow, red } from "@mui/material/colors";
+import gameVersion from "../../utils/manageVersion";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
@@ -259,6 +260,7 @@ const Monsters = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
+        console.log("legionContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -281,6 +283,7 @@ const Monsters = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
+        console.log("legionEventContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -995,63 +998,70 @@ const Monsters = () => {
             alignItems="center"
             className={classes.Grid}
           >
-            {monsters.map((monster: any | MonsterInterface, index) => (
-              // <Box component='div' sx={{ width: '100%', my: 1 }} key={index}> xs={32} sm={30} md={20} lg={15} xl={12}
-              <Grid
-                item
-                sx={{
-                  width: "700px",
-                  height: "500px",
-                  maxWidth: "500px",
-                  maxHeight: "700px",
-                  margin: "auto",
-                  marginBottom: "200px",
-                }}
-                key={index}
-              >
-                <ScrollSection id={"monster" + index}>
-                  <MonsterCard
-                    image={
-                      showAnimation === "0"
-                        ? `/assets/images/characters/jpg/monsters/m${
-                            index + 1
-                          }.jpg`
-                        : `/assets/images/characters/gif/monsters/m${
-                            index + 1
-                          }.gif`
-                    }
-                    name={monster.name}
-                    tokenID={index + 1}
-                    base={monster.base}
-                    minAP={monster.ap}
-                    bonus={
-                      index < 20 &&
-                      curLegion &&
-                      monster.ap < (curLegion as LegionInterface).attackPower
-                        ? parseInt(monster.base) +
-                            ((curLegion as LegionInterface).attackPower -
-                              monster.ap) /
-                              2000 >
-                          89
-                          ? 89 - parseInt(monster.base) + ""
-                          : Math.floor(
-                              ((curLegion as LegionInterface).attackPower -
-                                monster.ap) /
-                                2000
-                            ) + ""
-                        : "0"
-                    }
-                    price={monster.reward}
-                    isHuntable={
-                      curLegion?.status === "1" &&
-                      monster.ap <= (curLegion as LegionInterface).attackPower
-                    }
-                    handleHunt={handleInitiateHunt}
-                  />
-                </ScrollSection>
-              </Grid>
+            {monsters.map(
+              (monster: any | MonsterInterface, index) =>
+                // <Box component='div' sx={{ width: '100%', my: 1 }} key={index}> xs={32} sm={30} md={20} lg={15} xl={12}
+
+                (index !== 24 ||
+                  new Date() > gameVersion.baseTimeToShowMonster25) && (
+                  <Grid
+                    item
+                    sx={{
+                      width: "700px",
+                      height: "500px",
+                      maxWidth: "500px",
+                      maxHeight: "700px",
+                      margin: "auto",
+                      marginBottom: "200px",
+                    }}
+                    key={index}
+                  >
+                    <ScrollSection id={"monster" + index}>
+                      <MonsterCard
+                        image={
+                          showAnimation === "0"
+                            ? `/assets/images/characters/jpg/monsters/m${
+                                index + 1
+                              }.jpg`
+                            : `/assets/images/characters/gif/monsters/m${
+                                index + 1
+                              }.gif`
+                        }
+                        name={monster.name}
+                        tokenID={index + 1}
+                        base={monster.base}
+                        minAP={monster.ap}
+                        bonus={
+                          index < 20 &&
+                          curLegion &&
+                          monster.ap <
+                            (curLegion as LegionInterface).attackPower
+                            ? parseInt(monster.base) +
+                                ((curLegion as LegionInterface).attackPower -
+                                  monster.ap) /
+                                  2000 >
+                              89
+                              ? 89 - parseInt(monster.base) + ""
+                              : Math.floor(
+                                  ((curLegion as LegionInterface).attackPower -
+                                    monster.ap) /
+                                    2000
+                                ) + ""
+                            : "0"
+                        }
+                        price={monster.reward}
+                        isHuntable={
+                          curLegion?.status === "1" &&
+                          monster.ap <=
+                            (curLegion as LegionInterface).attackPower
+                        }
+                        handleHunt={handleInitiateHunt}
+                      />
+                    </ScrollSection>
+                  </Grid>
+                )
               // </Box>
-            ))}
+            )}
           </Grid>
         </Box>
       )}

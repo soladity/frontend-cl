@@ -156,6 +156,7 @@ const Legions = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
+        console.log(event);
         if (
           legions.filter((item) => item.id == event.returnValues.tokenId)
             .length == 0
@@ -171,6 +172,7 @@ const Legions = () => {
             "3",
             event.returnValues.tokenId
           );
+          console.log(marketItem);
           const image = getLegionImageUrl(legion.attackPower);
           const huntStatus = await getHuntStatus(
             web3,
