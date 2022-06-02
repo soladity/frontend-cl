@@ -477,10 +477,7 @@ export const getUSDAmountFromBLST = async (contract, amount) => {
 
 export const setLegionBUSDApprove = async (web3, contract, account) => {
   const response = await contract.methods
-    .approve(
-      getLegionAddress(),
-      web3.utils.toWei("1000000000", "ether").toString()
-    )
+    .approve(getLegionAddress(), web3.utils.toWei("1400", "ether").toString())
     .send({ from: account });
   return response;
 };

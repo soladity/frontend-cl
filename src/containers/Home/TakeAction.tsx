@@ -1431,9 +1431,24 @@ const TakeAction = () => {
                   sx={{ fontWeight: "bold" }}
                   disabled={checkMassHuntVRF}
                 >
-                  <Spinner color="white" size={40} />
-                  &nbsp;
-                  {getTranslation("revealResult")}
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Spinner color="white" size={40} />
+                    &nbsp;
+                    {getTranslation("revealResult")}
+                    {checkMassHuntVRF && (
+                      <CircularProgress
+                        size={24}
+                        sx={{
+                          color: yellow[500],
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          marginTop: "-12px",
+                          marginLeft: "-12px",
+                        }}
+                      />
+                    )}
+                  </Box>
                 </CommonBtn>
               ) : (
                 <CommonBtn
@@ -1441,7 +1456,22 @@ const TakeAction = () => {
                   sx={{ fontWeight: "bold" }}
                   disabled={availableLegionCount == 0 || checkMassHuntVRF}
                 >
-                  {getTranslation("revealResult")}
+                  <Box>
+                    {getTranslation("revealResult")}
+                    {checkMassHuntVRF && (
+                      <CircularProgress
+                        size={24}
+                        sx={{
+                          color: yellow[500],
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          marginTop: "-12px",
+                          marginLeft: "-12px",
+                        }}
+                      />
+                    )}
+                  </Box>
                 </CommonBtn>
               ))}
           </Box>
@@ -1475,8 +1505,8 @@ const TakeAction = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `/assets/images/dashboard/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
-                      : `/assets/images/dashboard/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
+                      ? `assets/images/dashboard/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                      : `assets/images/dashboard/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
                 />
@@ -1484,8 +1514,8 @@ const TakeAction = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `/assets/images/dashboard/characters/jpg/monsters/m${item["monsterId"]}.jpg`
-                      : `/assets/images/dashboard/characters/gif/monsters/m${item["monsterId"]}.gif`
+                      ? `assets/images/dashboard/characters/jpg/monsters/m${item["monsterId"]}.jpg`
+                      : `assets/images/dashboard/characters/gif/monsters/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
                 />
