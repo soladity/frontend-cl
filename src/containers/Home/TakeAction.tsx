@@ -713,7 +713,7 @@ const TakeAction = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
+        console.log("legionContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -737,7 +737,7 @@ const TakeAction = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
+        console.log("legionEventContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -1505,8 +1505,8 @@ const TakeAction = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `assets/images/dashboard/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
-                      : `assets/images/dashboard/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
+                      ? `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                      : `/assets/images/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
                 />
@@ -1514,8 +1514,8 @@ const TakeAction = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `assets/images/dashboard/characters/jpg/monsters/m${item["monsterId"]}.jpg`
-                      : `assets/images/dashboard/characters/gif/monsters/m${item["monsterId"]}.gif`
+                      ? `/assets/images/characters/jpg/monsters/m${item["monsterId"]}.jpg`
+                      : `/assets/images/characters/gif/monsters/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
                 />
