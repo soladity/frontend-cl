@@ -303,19 +303,6 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_period",
-        "type": "uint256"
-      }
-    ],
-    "name": "SetMinSyncPeriod",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "_warriorCount",
         "type": "uint256"
       }
@@ -998,19 +985,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "minSyncPeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "string",
@@ -1304,19 +1278,6 @@
       }
     ],
     "name": "setMaxBeastNumber",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_period",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinSyncPeriod",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
