@@ -272,9 +272,7 @@ const TakeAction = () => {
   const checkRevealBeastStatus = () => {
     const revealChecker = setInterval(async () => {
       const requestId = await getBeastRequestId(beastContract, account);
-      console.log(requestId);
       const returnVal = await getVRFResult(vrfContract, requestId);
-      console.log(returnVal);
       if (returnVal != 0) {
         setCheckBeastVRF(false);
         clearInterval(revealChecker);
@@ -341,7 +339,6 @@ const TakeAction = () => {
     const revealChecker = setInterval(async () => {
       const requestId = await getWarriorRequestId(warriorContract, account);
       const returnVal = await getVRFResult(vrfContract, requestId);
-      console.log(returnVal);
       if (returnVal != 0) {
         setCheckWarriorVRF(false);
         clearInterval(revealChecker);
@@ -383,9 +380,7 @@ const TakeAction = () => {
         checkRevealWarriorStatus();
         setWarriorRevealStatus(mintWarriorPending);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const handleWarriorReveal = async (
@@ -672,9 +667,7 @@ const TakeAction = () => {
         setMassHuntResult([]);
       }
       setAvailableLegionCount(availableLegionCount);
-    } catch (error) {
-      console.log("init error", error);
-    }
+    } catch (error) {}
   };
 
   const checkMassHuntBUSD = async () => {
@@ -713,7 +706,6 @@ const TakeAction = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log("legionContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -737,7 +729,6 @@ const TakeAction = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log("legionEventContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -1354,7 +1345,7 @@ const TakeAction = () => {
                     </CommonBtn>
                   </NavLink>
                   <a
-                    href="https://www.dextools.io/app/bsc/pair-explorer/0xc60fefaa2bfa581ce86dbfc08ee7144bae43b981"
+                    href="https://www.dextools.io/app/bsc/pair-explorer/0x47bcdda79b5b75c143864234b61205e40b8a09f5"
                     target="_blank"
                   >
                     <CommonBtn

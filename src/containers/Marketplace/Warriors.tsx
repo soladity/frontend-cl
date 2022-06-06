@@ -168,7 +168,6 @@ const Warriors = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log("sell, ", event);
         if (
           warriors.filter((item) => item.id == event.returnValues.tokenId)
             .length == 0
@@ -261,7 +260,6 @@ const Warriors = () => {
 
     try {
       allWarriors = await getAllWarriorMarketItems(marketplaceContract);
-      console.log(allWarriors);
 
       let ids = allWarriors[0];
       let aps = allWarriors[1];
@@ -299,7 +297,6 @@ const Warriors = () => {
     //     owner: marketItem.owner === account ? true : false,
     //     price: marketItem.price,
     //   });
-    //   console.log(tempWarriors)
     // }
     setWarriors(tempAllWarriors);
     setLoading(false);

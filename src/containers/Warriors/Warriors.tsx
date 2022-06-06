@@ -275,7 +275,6 @@ const Warriors = () => {
       );
     } catch (e) {
       setTextLoading(false);
-      console.log(e);
     }
   };
 
@@ -315,7 +314,6 @@ const Warriors = () => {
         parseInt(await getWarriorBalance(web3, warriorContract, account))
       );
       const warriorsInfo = await getAllWarriors(warriorContract, account);
-      console.log(warriorsInfo);
 
       let ids = warriorsInfo[0];
       let powers = warriorsInfo[1];
@@ -334,24 +332,18 @@ const Warriors = () => {
         tempWarriors.push(temp);
         amount += parseInt(powers[index]);
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
     setMaxPower(amount);
     setWarriors(tempWarriors);
     if (revealStatusVal) {
       setLoadingText(getTranslation("revealTextWarriors"));
     }
-    console.log(revealStatusVal);
     if (!revealStatusVal) {
       setTextLoading(false);
     }
   };
 
   const checkApprovalForAll = async () => {
-    console.log(
-      await isApprovedForAll(warriorContract, account, getMarketplaceAddress())
-    );
     if (
       (await isApprovedForAll(
         warriorContract,
@@ -359,7 +351,6 @@ const Warriors = () => {
         getMarketplaceAddress()
       )) === false
     ) {
-      console.log("set");
       await setApprovalForAll(
         account,
         warriorContract,
@@ -461,7 +452,6 @@ const Warriors = () => {
     setTextLoading(true);
     setLoadingText(getTranslation("pleaseWait"));
     try {
-      console.log("execute");
       await execute(web3, warriorContract, account, [id]);
       let power = 0;
       let temp = warriors;
@@ -531,7 +521,6 @@ const Warriors = () => {
       });
       // .map((beast: any) => ({ ...beast, executeStatus: true }));
       setWarriors(result);
-      console.log(data);
     }
   };
   const handlePage = (value: any) => {

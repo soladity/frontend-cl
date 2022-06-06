@@ -102,7 +102,6 @@ export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
 };
 
 export const mintWarrior = async (web3, contract, account, amount) => {
-  console.log(amount);
   const response = await contract.methods
     .initializeMint(amount)
     .send({ from: account });
@@ -560,7 +559,6 @@ export const getWarriorCountForMonster25 = async (contract) => {
 
 export const getCanAttackMonster25 = async (contract, account) => {
   const response = await contract.methods.canAttackMonster25(account).call();
-  console.log(response);
   return {
     status: response[0],
     count: response[1],

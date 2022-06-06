@@ -260,7 +260,6 @@ const Monsters = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log("legionContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -283,7 +282,6 @@ const Monsters = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log("legionEventContract", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -324,7 +322,6 @@ const Monsters = () => {
     let monsterArrary = [];
     try {
       const monsterVal = await getAllMonsters(monsterContract);
-      console.log(monsterVal);
       const monsterArraryTemp = monsterVal[0];
       const rewardArray = monsterVal[1];
       monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
@@ -354,12 +351,8 @@ const Monsters = () => {
   const calcWarriorCapacity = async (legionId: any) => {
     try {
       let legionTmp = await getLegionToken(web3, legionContract, legionId);
-      console.log(legionTmp);
       var warriorCapacity = 0;
       for (let j = 0; j < legionTmp.beasts.length; j++) {
-        console.log(
-          await getBeastToken(web3, beastContract, legionTmp.beasts[j])
-        );
         warriorCapacity += parseInt(
           (await getBeastToken(web3, beastContract, legionTmp.beasts[j]))
             .capacity
@@ -426,7 +419,6 @@ const Monsters = () => {
     try {
       setLoading(true);
       setHuntTax((await getFee(feeHandlerContract, 1)) / 10000);
-      console.log("huntTax", (await getFee(feeHandlerContract, 1)) / 10000);
       setBlstBalance(
         await getBloodstoneBalance(web3, bloodstoneContract, account)
       );
@@ -512,7 +504,6 @@ const Monsters = () => {
     try {
       let huntPending;
       huntPending = await getWalletHuntPending(legionContract, account);
-      console.log(huntPending);
       setHuntPending(huntPending);
       if (!huntPending) {
         await initiateHunt(legionContract, account);
@@ -533,10 +524,6 @@ const Monsters = () => {
       setRevealBtnDisabled(true);
       const BUSD =
         (await getBUSDBalance(busdContract, account)) / Math.pow(10, 18);
-      console.log(BUSD);
-      console.log(
-        (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward * huntTax
-      );
       if (
         BUSD >=
         (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward * huntTax
@@ -551,7 +538,6 @@ const Monsters = () => {
           if (allowance == 0) {
             await setLegionBUSDApprove(web3, busdContract, account);
           }
-          console.log("-------- Hunting test ----------");
           let response = await hunt(
             web3,
             legionContract,
