@@ -238,9 +238,7 @@ const Beasts = () => {
     );
   }, []);
 
-  React.useEffect(() => {
-    console.log(beasts);
-  }, [beasts]);
+  React.useEffect(() => {}, [beasts]);
 
   const handleOpenMint = () => {
     setShowMint(true);
@@ -254,7 +252,6 @@ const Beasts = () => {
     const revealChecker = setInterval(async () => {
       const requestId = await getBeastRequestId(beastContract, account);
       const returnVal = await getVRFResult(vrfContract, requestId);
-      console.log(returnVal);
       if (returnVal != 0) {
         setCheckBeastVRF(false);
         clearInterval(revealChecker);
@@ -290,7 +287,6 @@ const Beasts = () => {
       );
     } catch (e) {
       setTextLoading(false);
-      console.log(e);
     }
     // getBalance();
     // setTextLoading(false);
@@ -330,7 +326,6 @@ const Beasts = () => {
       );
       setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
       const beastsInfo = await getAllBeasts(beastContract, account);
-      console.log(beastsInfo);
       let ids = beastsInfo[0];
       let capacities = beastsInfo[1];
       ids.forEach((id: any, index: number) => {
@@ -348,7 +343,6 @@ const Beasts = () => {
         amount += parseInt(capacities[index]);
       });
     } catch (error) {
-      console.log(error);
       setTextLoading(false);
     }
     setMaxWarrior(amount);
@@ -356,16 +350,12 @@ const Beasts = () => {
     if (revealStatusVal) {
       setLoadingText(getTranslation("revealTextBeasts"));
     }
-    console.log(revealStatusVal);
     if (!revealStatusVal) {
       setTextLoading(false);
     }
   };
 
   const checkApprovalForAll = async () => {
-    console.log(
-      await isApprovedForAll(beastContract, account, getMarketplaceAddress())
-    );
     if (
       (await isApprovedForAll(
         beastContract,
@@ -373,7 +363,6 @@ const Beasts = () => {
         getMarketplaceAddress()
       )) === false
     ) {
-      console.log("set");
       await setApprovalForAll(
         account,
         beastContract,
@@ -468,9 +457,7 @@ const Beasts = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
     setTextLoading(false);
   };
 
@@ -519,7 +506,6 @@ const Beasts = () => {
       });
       // .map((beast: any) => ({ ...beast, executeStatus: true }));
       setBeasts(result);
-      console.log(data);
     }
   };
 

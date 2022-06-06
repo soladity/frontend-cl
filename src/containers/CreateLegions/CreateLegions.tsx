@@ -258,7 +258,6 @@ const CreateLegions: React.FC = () => {
       await getBeasts();
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(true);
     }
   };
@@ -391,7 +390,6 @@ const CreateLegions: React.FC = () => {
       if (allowance === "0") {
         await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
       }
-      console.log(getLegionAddress());
       await mintLegion(
         web3,
         legionContract,
@@ -409,7 +407,6 @@ const CreateLegions: React.FC = () => {
           })
       );
     } catch (e) {
-      console.log(e);
       setMintLoading(false);
       return;
     }
@@ -806,7 +803,7 @@ const CreateLegions: React.FC = () => {
                                 item["type"] +
                                 ".jpg"
                               : "/assets/images/characters/gif/warriors/" +
-                              item["gif"]
+                                item["gif"]
                           }
                           item={item}
                           key={10000 + item.id}
@@ -829,7 +826,8 @@ const CreateLegions: React.FC = () => {
                               ? "/assets/images/characters/jpg/beasts/" +
                                 item["type"] +
                                 ".jpg"
-                              : "/assets/images/characters/gif/beasts/" + item["gif"]
+                              : "/assets/images/characters/gif/beasts/" +
+                                item["gif"]
                           }
                           item={item}
                           key={item.id}

@@ -156,7 +156,6 @@ const Legions = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
         if (
           legions.filter((item) => item.id == event.returnValues.tokenId)
             .length == 0
@@ -172,7 +171,6 @@ const Legions = () => {
             "3",
             event.returnValues.tokenId
           );
-          console.log(marketItem);
           const image = getLegionImageUrl(legion.attackPower);
           const huntStatus = await getHuntStatus(
             web3,
@@ -294,7 +292,6 @@ const Legions = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    console.log(await getAllLegionMarketItems(marketplaceContract));
 
     const allLegions = await getAllLegionMarketItems(marketplaceContract);
     let amount = 0;
@@ -319,7 +316,6 @@ const Legions = () => {
         badge: allLegions[5][index],
       };
     });
-    console.log(tempAllLegions);
 
     // const ids = await getOnMarketplace(web3, legionContract);
     // let legion;
@@ -341,7 +337,6 @@ const Legions = () => {
     //     huntStatus: huntStatus,
     //   });
     // }
-    // console.log(tempLegions)
     setLegions(tempAllLegions);
     setLoading(false);
   };

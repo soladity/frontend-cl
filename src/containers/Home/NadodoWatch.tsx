@@ -36,18 +36,14 @@ const NadodoWatch = () => {
       setSummonFee(await getFee(feeHandlerContract, 3));
       setSuppliesFee14(await getFee(feeHandlerContract, 4));
       setSuppliesFee28(await getFee(feeHandlerContract, 5));
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const setBuyAndSellTax = async () => {
     try {
       setBuyTax(await getBuyTotalFees(bloodstoneContract));
       setSellTax(await getSellTotalFees(bloodstoneContract));
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   React.useEffect(() => {

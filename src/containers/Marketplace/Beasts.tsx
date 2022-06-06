@@ -122,7 +122,6 @@ const Beasts = () => {
       .BuyToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
         if (
           beasts.filter((item) => item.id == event.returnValues.tokenId)
             .length > 0
@@ -142,7 +141,6 @@ const Beasts = () => {
       .CancelSelling({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
         if (
           beasts.filter((item) => item.id == event.returnValues.tokenId)
             .length > 0
@@ -162,7 +160,6 @@ const Beasts = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
         if (
           beasts.filter((item) => item.id == event.returnValues.tokenId)
             .length == 0
@@ -198,7 +195,6 @@ const Beasts = () => {
       .PriceUpdated({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        console.log(event);
         if (
           beasts.filter((item) => item.id == event.returnValues.tokenId)
             .length > 0
@@ -256,7 +252,6 @@ const Beasts = () => {
     let tempAllBeasts: any[] = [];
 
     allBeasts = await getAllBeastMarketItems(marketplaceContract);
-    console.log(allBeasts);
     let ids = allBeasts[0];
     let capacities = allBeasts[1];
     let prices = allBeasts[2];

@@ -27,8 +27,6 @@ const Home = () => {
         Math.floor(new Date(2022, 5, 7).getTime() / 1000 / 3600 / 24)
       : Math.floor(new Date().getTime() / 1000 / 3600 / 24)) % Quotes.length;
 
-  console.log(quoteIndex);
-
   return (
     <Box>
       <Helmet>

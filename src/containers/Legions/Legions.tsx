@@ -223,9 +223,6 @@ const Legions = () => {
   };
 
   const checkApprovalForAll = async () => {
-    console.log(
-      await isApprovedForAll(legionContract, account, getMarketplaceAddress())
-    );
     if (
       (await isApprovedForAll(
         legionContract,
@@ -233,7 +230,6 @@ const Legions = () => {
         getMarketplaceAddress()
       )) === false
     ) {
-      console.log("set");
       await setApprovalForAll(
         account,
         legionContract,

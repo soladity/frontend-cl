@@ -62,7 +62,6 @@ export default function WarriorCard(props: CardProps) {
   };
 
   const execute = (id: string) => {
-    console.log(id, "execute");
     handleExecute(parseInt(id));
   };
 
