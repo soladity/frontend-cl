@@ -16,6 +16,7 @@ import {
   DialogContent,
   TextField,
   Popover,
+  DialogActions,
 } from "@mui/material";
 import HorizontalSplitIcon from "@mui/icons-material/HorizontalSplit";
 import { makeStyles } from "@mui/styles";
@@ -119,6 +120,8 @@ const Beasts = () => {
   const [textLoading, setTextLoading] = React.useState(false);
   const [loadingText, setLoadingText] = React.useState("");
   const [checkBeastVRF, setCheckBeastVRF] = React.useState(false);
+
+  const [executeDialogOpen, setExecuteDialogOpen] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
 
@@ -461,22 +464,39 @@ const Beasts = () => {
     setTextLoading(false);
   };
 
-  const handleMassExecute = async () => {
-    setTextLoading(true);
-    setLoadingText(getTranslation("pleaseWait"));
-    try {
-      const ids = beasts
-        .filter((beast: any) => beast.executeStatus === true)
-        .map((beast: any) => beast.id);
-      await execute(web3, beastContract, account, ids);
-      getBalance();
-      dispatch(
-        setReloadStatus({
-          reloadContractStatus: new Date(),
-        })
-      );
-    } catch (error) {}
-    setTextLoading(false);
+  const handleMassExecute = async (over3: boolean) => {
+    if (
+      beasts.filter(
+        (beast: any) => beast.executeStatus === true && beast.capacity > 2
+      ).length > 0 &&
+      !over3
+    ) {
+      setExecuteDialogOpen(true);
+    } else {
+      setTextLoading(true);
+      setExecuteDialogOpen(false);
+      setLoadingText(getTranslation("pleaseWait"));
+      try {
+        const ids = beasts
+          .filter((beast: any) => beast.executeStatus === true)
+          .map((beast: any) => beast.id);
+        await execute(web3, beastContract, account, ids);
+        getBalance();
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
+      } catch (error) {}
+      setTextLoading(false);
+    }
+  };
+
+  const handleExecuteDialogClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
+    setExecuteDialogOpen(false);
   };
 
   const handleSelectAll = () => {
@@ -759,7 +779,7 @@ const Beasts = () => {
                   beasts.filter((beast: any) => beast.executeStatus === true)
                     .length === 0 || textLoading
                 }
-                onClick={handleMassExecute}
+                onClick={() => handleMassExecute(false)}
               >
                 {getTranslation("massExecute")}
               </CommonBtn>
@@ -1012,6 +1032,38 @@ const Beasts = () => {
           </Box>
           <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
         </DialogContent>
+      </Dialog>
+      <Dialog open={executeDialogOpen}>
+        <DialogTitle sx={{ textAlign: "center" }}>
+          {getTranslation("warning")}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ textAlign: "center" }}>
+            {getTranslation("executeItem")}
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            onClick={() => handleExecuteDialogClose("cancel")}
+            variant="contained"
+            sx={{ color: "white", fontWeight: "bold" }}
+          >
+            {getTranslation("cancel")}
+          </Button>
+          <Button
+            onClick={() => handleMassExecute(true)}
+            variant="outlined"
+            sx={{ fontWeight: "bold" }}
+          >
+            {getTranslation("execute")}
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );
