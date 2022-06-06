@@ -1354,7 +1354,7 @@ const TakeAction = () => {
                     </CommonBtn>
                   </NavLink>
                   <a
-                    href="https://www.dextools.io/app/bsc/pair-explorer/0xc60fefaa2bfa581ce86dbfc08ee7144bae43b981"
+                    href="https://www.dextools.io/app/bsc/pair-explorer/0x47bcdda79b5b75c143864234b61205e40b8a09f5"
                     target="_blank"
                   >
                     <CommonBtn
