@@ -21,11 +21,7 @@ export interface SimpleDialogProps {
 const Home = () => {
   const language = localStorage.getItem("lang");
   const quoteIndex =
-    (Math.floor(new Date().getTime() / 1000 / 3600 / 24) >
-    Math.floor(new Date(2022, 5, 6).getTime() / 1000 / 3600 / 24)
-      ? Math.floor(new Date().getTime() / 1000 / 3600 / 24) -
-        Math.floor(new Date(2022, 5, 7).getTime() / 1000 / 3600 / 24)
-      : Math.floor(new Date().getTime() / 1000 / 3600 / 24)) % Quotes.length;
+    (Math.floor(new Date().getTime() / 1000 / 3600 / 24) - 53) % Quotes.length;
 
   return (
     <Box>
