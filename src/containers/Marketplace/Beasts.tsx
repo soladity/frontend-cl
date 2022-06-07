@@ -122,18 +122,21 @@ const Beasts = () => {
       .BuyToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          beasts.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          setBeasts(
-            beasts.filter((beast) => beast.id != event.returnValues.tokenId)
-          );
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        console.log("beast buy: ", event);
+        if (event.returnValues.itemType == "1") {
+          if (
+            beasts.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            setBeasts(
+              beasts.filter((beast) => beast.id != event.returnValues.tokenId)
+            );
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -141,18 +144,20 @@ const Beasts = () => {
       .CancelSelling({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          beasts.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          setBeasts(
-            beasts.filter((beast) => beast.id != event.returnValues.tokenId)
-          );
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "1") {
+          if (
+            beasts.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            setBeasts(
+              beasts.filter((beast) => beast.id != event.returnValues.tokenId)
+            );
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -160,34 +165,36 @@ const Beasts = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          beasts.filter((item) => item.id == event.returnValues.tokenId)
-            .length == 0
-        ) {
-          const beast = await getBeastToken(
-            web3,
-            beastContract,
-            event.returnValues.tokenId
-          );
-          const marketItem = await getMarketItem(
-            web3,
-            marketplaceEventContract,
-            "1",
-            event.returnValues.tokenId
-          );
-          const newItem = {
-            ...beast,
-            id: event.returnValues.tokenId,
-            owner: marketItem.owner === account ? true : false,
-            price: marketItem.price,
-            badge: true,
-          };
-          setBeasts([...beasts, newItem]);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "1") {
+          if (
+            beasts.filter((item) => item.id == event.returnValues.tokenId)
+              .length == 0
+          ) {
+            const beast = await getBeastToken(
+              web3,
+              beastContract,
+              event.returnValues.tokenId
+            );
+            const marketItem = await getMarketItem(
+              web3,
+              marketplaceEventContract,
+              "1",
+              event.returnValues.tokenId
+            );
+            const newItem = {
+              ...beast,
+              id: event.returnValues.tokenId,
+              owner: marketItem.owner === account ? true : false,
+              price: marketItem.price,
+              badge: true,
+            };
+            setBeasts([...beasts, newItem]);
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -195,26 +202,28 @@ const Beasts = () => {
       .PriceUpdated({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          beasts.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          var temp = beasts.map((item) => {
-            if (item.id == event.returnValues.tokenId) {
-              return {
-                ...item,
-                price: event.returnValues.price,
-              };
-            } else {
-              return item;
-            }
-          });
-          setBeasts(temp);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "1") {
+          if (
+            beasts.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            var temp = beasts.map((item) => {
+              if (item.id == event.returnValues.tokenId) {
+                return {
+                  ...item,
+                  price: event.returnValues.price,
+                };
+              } else {
+                return item;
+              }
+            });
+            setBeasts(temp);
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
     return () => {

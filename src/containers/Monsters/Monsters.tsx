@@ -1059,7 +1059,7 @@ const Monsters = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} sx={{ textAlign: "center", marginTop: 2 }}>
-            <CommonBtn>
+            <CommonBtn sx={{ fontWeight: "bold" }}>
               <NavLink to="/createlegions" className="non-style">
                 {getTranslation("createLegion")}
               </NavLink>

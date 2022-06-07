@@ -126,20 +126,23 @@ const Warriors = () => {
       .BuyToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          warriors.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          setWarriors(
-            warriors.filter(
-              (warrior) => warrior.id != event.returnValues.tokenId
-            )
-          );
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        console.log("warrior buy: ", event);
+        if (event.returnValues.itemType == "2") {
+          if (
+            warriors.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            setWarriors(
+              warriors.filter(
+                (warrior) => warrior.id != event.returnValues.tokenId
+              )
+            );
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -147,20 +150,22 @@ const Warriors = () => {
       .CancelSelling({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          warriors.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          setWarriors(
-            warriors.filter(
-              (warrior) => warrior.id != event.returnValues.tokenId
-            )
-          );
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "2") {
+          if (
+            warriors.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            setWarriors(
+              warriors.filter(
+                (warrior) => warrior.id != event.returnValues.tokenId
+              )
+            );
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -168,34 +173,36 @@ const Warriors = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          warriors.filter((item) => item.id == event.returnValues.tokenId)
-            .length == 0
-        ) {
-          const warrior = await getWarriorToken(
-            web3,
-            warriorContract,
-            event.returnValues.tokenId
-          );
-          const marketItem = await getMarketItem(
-            web3,
-            marketplaceEventContract,
-            "2",
-            event.returnValues.tokenId
-          );
-          const newItem = {
-            ...warrior,
-            id: event.returnValues.tokenId,
-            owner: marketItem.owner === account ? true : false,
-            price: marketItem.price,
-            badge: true,
-          };
-          setWarriors([...warriors, newItem]);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "2") {
+          if (
+            warriors.filter((item) => item.id == event.returnValues.tokenId)
+              .length == 0
+          ) {
+            const warrior = await getWarriorToken(
+              web3,
+              warriorContract,
+              event.returnValues.tokenId
+            );
+            const marketItem = await getMarketItem(
+              web3,
+              marketplaceEventContract,
+              "2",
+              event.returnValues.tokenId
+            );
+            const newItem = {
+              ...warrior,
+              id: event.returnValues.tokenId,
+              owner: marketItem.owner === account ? true : false,
+              price: marketItem.price,
+              badge: true,
+            };
+            setWarriors([...warriors, newItem]);
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -203,26 +210,28 @@ const Warriors = () => {
       .PriceUpdated({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          warriors.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          var temp = warriors.map((item) => {
-            if (item.id == event.returnValues.tokenId) {
-              return {
-                ...item,
-                price: event.returnValues.price,
-              };
-            } else {
-              return item;
-            }
-          });
-          setWarriors(temp);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "2") {
+          if (
+            warriors.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            var temp = warriors.map((item) => {
+              if (item.id == event.returnValues.tokenId) {
+                return {
+                  ...item,
+                  price: event.returnValues.price,
+                };
+              } else {
+                return item;
+              }
+            });
+            setWarriors(temp);
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
     return () => {

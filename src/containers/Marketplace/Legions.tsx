@@ -118,18 +118,23 @@ const Legions = () => {
       .BuyToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          legions.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          setLegions(
-            legions.filter((legion) => legion.id != event.returnValues.tokenId)
-          );
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        console.log("legions Buy: ", event);
+        if (event.returnValues.itemType == "3") {
+          if (
+            legions.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            setLegions(
+              legions.filter(
+                (legion) => legion.id != event.returnValues.tokenId
+              )
+            );
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -137,18 +142,22 @@ const Legions = () => {
       .CancelSelling({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          legions.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          setLegions(
-            legions.filter((legion) => legion.id != event.returnValues.tokenId)
-          );
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "3") {
+          if (
+            legions.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            setLegions(
+              legions.filter(
+                (legion) => legion.id != event.returnValues.tokenId
+              )
+            );
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -156,42 +165,44 @@ const Legions = () => {
       .SellToken({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          legions.filter((item) => item.id == event.returnValues.tokenId)
-            .length == 0
-        ) {
-          const legion = await getLegionToken(
-            web3,
-            legionContract,
-            event.returnValues.tokenId
-          );
-          const marketItem = await getMarketItem(
-            web3,
-            marketplaceEventContract,
-            "3",
-            event.returnValues.tokenId
-          );
-          const image = getLegionImageUrl(legion.attackPower);
-          const huntStatus = await getHuntStatus(
-            web3,
-            legionContract,
-            event.returnValues.tokenId
-          );
-          const newItem = {
-            ...legion,
-            id: event.returnValues.tokenId,
-            image: image,
-            owner: marketItem.owner === account ? true : false,
-            price: marketItem.price,
-            badge: true,
-            huntStatus: huntStatus,
-          };
-          setLegions([...legions, newItem]);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "3") {
+          if (
+            legions.filter((item) => item.id == event.returnValues.tokenId)
+              .length == 0
+          ) {
+            const legion = await getLegionToken(
+              web3,
+              legionContract,
+              event.returnValues.tokenId
+            );
+            const marketItem = await getMarketItem(
+              web3,
+              marketplaceEventContract,
+              "3",
+              event.returnValues.tokenId
+            );
+            const image = getLegionImageUrl(legion.attackPower);
+            const huntStatus = await getHuntStatus(
+              web3,
+              legionContract,
+              event.returnValues.tokenId
+            );
+            const newItem = {
+              ...legion,
+              id: event.returnValues.tokenId,
+              image: image,
+              owner: marketItem.owner === account ? true : false,
+              price: marketItem.price,
+              badge: true,
+              huntStatus: huntStatus,
+            };
+            setLegions([...legions, newItem]);
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
 
@@ -199,26 +210,28 @@ const Legions = () => {
       .PriceUpdated({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
-        if (
-          legions.filter((item) => item.id == event.returnValues.tokenId)
-            .length > 0
-        ) {
-          var temp = legions.map((item) => {
-            if (item.id == event.returnValues.tokenId) {
-              return {
-                ...item,
-                price: event.returnValues.price,
-              };
-            } else {
-              return item;
-            }
-          });
-          setLegions(temp);
-          dispatch(
-            setReloadStatus({
-              reloadContractStatus: new Date(),
-            })
-          );
+        if (event.returnValues.itemType == "3") {
+          if (
+            legions.filter((item) => item.id == event.returnValues.tokenId)
+              .length > 0
+          ) {
+            var temp = legions.map((item) => {
+              if (item.id == event.returnValues.tokenId) {
+                return {
+                  ...item,
+                  price: event.returnValues.price,
+                };
+              } else {
+                return item;
+              }
+            });
+            setLegions(temp);
+            dispatch(
+              setReloadStatus({
+                reloadContractStatus: new Date(),
+              })
+            );
+          }
         }
       });
     return () => {
