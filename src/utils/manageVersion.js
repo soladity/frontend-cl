@@ -2,8 +2,8 @@ const testVersion = {
   chain: "testnet",
   chainID: process.env.REACT_APP_CHAIN_ID,
   chainIDHex: process.env.REACT_APP_CHAIN_ID_HEX,
-  rpcUrl:
-    "https://speedy-nodes-nyc.moralis.io/e205f98725c0bea218c8fdee/bsc/testnet",
+  rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+  // "https://speedy-nodes-nyc.moralis.io/e205f98725c0bea218c8fdee/bsc/testnet",
   rpcWsUrl:
     "wss://speedy-nodes-nyc.moralis.io/e205f98725c0bea218c8fdee/bsc/testnet/ws",
   walletAddRpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
