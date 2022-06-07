@@ -17,6 +17,7 @@ import {
   DialogContent,
   TextField,
   Popover,
+  DialogActions,
 } from "@mui/material";
 import HorizontalSplitIcon from "@mui/icons-material/HorizontalSplit";
 import { makeStyles } from "@mui/styles";
@@ -119,6 +120,7 @@ const Warriors = () => {
   const [checkWarriorVRF, setCheckWarriorVRF] = React.useState(false);
 
   const maxSellPrice = allConstants.maxSellPrice;
+  const [executeDialogOpen, setExecuteDialogOpen] = React.useState(false);
 
   const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
     b1: {
@@ -470,22 +472,39 @@ const Warriors = () => {
     setTextLoading(false);
   };
 
-  const handleMassExecute = async () => {
-    setTextLoading(true);
-    setLoadingText(getTranslation("pleaseWait"));
-    try {
-      const ids = warriors
-        .filter((warrior: any) => warrior.executeStatus === true)
-        .map((warrior: any) => warrior.id);
-      await execute(web3, warriorContract, account, ids);
-      getBalance();
-      dispatch(
-        setReloadStatus({
-          reloadContractStatus: new Date(),
-        })
-      );
-    } catch (error) {}
-    setTextLoading(false);
+  const handleMassExecute = async (over3: boolean) => {
+    if (
+      warriors.filter(
+        (warrior: any) => warrior.executeStatus === true && warrior.strength > 2
+      ).length > 0 &&
+      !over3
+    ) {
+      setExecuteDialogOpen(true);
+    } else {
+      setTextLoading(true);
+      setExecuteDialogOpen(false);
+      setLoadingText(getTranslation("pleaseWait"));
+      try {
+        const ids = warriors
+          .filter((warrior: any) => warrior.executeStatus === true)
+          .map((warrior: any) => warrior.id);
+        await execute(web3, warriorContract, account, ids);
+        getBalance();
+        dispatch(
+          setReloadStatus({
+            reloadContractStatus: new Date(),
+          })
+        );
+      } catch (error) {}
+      setTextLoading(false);
+    }
+  };
+
+  const handleExecuteDialogClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
+    setExecuteDialogOpen(false);
   };
 
   const handleSelectAll = () => {
@@ -770,7 +789,7 @@ const Warriors = () => {
                     (warrior: any) => warrior.executeStatus === true
                   ).length === 0 || textLoading
                 }
-                onClick={handleMassExecute}
+                onClick={() => handleMassExecute(false)}
               >
                 {getTranslation("massExecute")}
               </CommonBtn>
@@ -1077,6 +1096,38 @@ const Warriors = () => {
           </Box>
           <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
         </DialogContent>
+      </Dialog>
+      <Dialog open={executeDialogOpen}>
+        <DialogTitle sx={{ textAlign: "center" }}>
+          {getTranslation("warning")}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ textAlign: "center" }}>
+            {getTranslation("executeItem")}
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            onClick={() => handleExecuteDialogClose("cancel")}
+            variant="contained"
+            sx={{ color: "white", fontWeight: "bold" }}
+          >
+            {getTranslation("cancel")}
+          </Button>
+          <Button
+            onClick={() => handleMassExecute(true)}
+            variant="outlined"
+            sx={{ fontWeight: "bold" }}
+          >
+            {getTranslation("execute")}
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

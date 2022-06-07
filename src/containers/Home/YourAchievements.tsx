@@ -14,6 +14,9 @@ import {
   getLegionToken,
   getMonster23Hunted,
   getMonster24Hunted,
+  getAllWarriors,
+  getAllBeasts,
+  getAllLegions,
 } from "../../hooks/contractFunction";
 import {
   useBeast,
@@ -25,6 +28,7 @@ import Axios from "axios";
 
 import { useSelector } from "react-redux";
 import classnames from "classnames";
+import { getWarriorStrength } from "../../utils/common";
 
 const useStyles = makeStyles({
   root: {
@@ -112,44 +116,69 @@ const YourAchievements = () => {
 
   const getWarriorStatus = async () => {
     try {
-      const ids = await getWarriorTokenIds(web3, warriorContract, account);
-      for (let i = 0; i < ids.length; i++) {
-        const warrior = await getWarriorToken(web3, warriorContract, ids[i]);
-        if (warrior.strength === 6) {
+      const warriorsInfo = await getAllWarriors(warriorContract, account);
+      let powers = warriorsInfo[1];
+      for (let i = 0; i < powers.length; i++) {
+        if (getWarriorStrength(powers[i]) == 6) {
           setWarriorMaster(true);
           return;
         }
       }
+      // const ids = await getWarriorTokenIds(web3, warriorContract, account);
+      // console.log(ids);
+      // for (let i = 0; i < ids.length; i++) {
+      //   const warrior = await getWarriorToken(web3, warriorContract, ids[i]);
+      //   console.log(warrior);
+      //   if (warrior.strength === 1) {
+      //     setWarriorMaster(true);
+      //     return;
+      //   }
+      // }
     } catch (error) {}
   };
 
   const getBeastStatus = async () => {
     try {
-      const ids = await getBeastTokenIds(web3, beastContract, account);
-      for (let i = 0; i < ids.length; i++) {
-        const beast = await getBeastToken(web3, beastContract, ids[i]);
-        if (beast.capacity === "20") {
+      const beastsInfo = await getAllBeasts(beastContract, account);
+      let capacities = beastsInfo[1];
+      for (let i = 0; i < capacities.length; i++) {
+        if (capacities[i] == "20") {
           setBeastMaster(true);
           return;
         }
       }
+      // const ids = await getBeastTokenIds(web3, beastContract, account);
+      // for (let i = 0; i < ids.length; i++) {
+      //   const beast = await getBeastToken(web3, beastContract, ids[i]);
+      //   if (beast.capacity === "20") {
+      //     setBeastMaster(true);
+      //     return;
+      //   }
+      // }
     } catch (error) {}
   };
 
   const getLegionStatus = async () => {
     try {
-      const ids = await getLegionTokenIds(web3, legionContract, account);
-      var legionCount = 0;
-      for (let i = 0; i < ids.length; i++) {
-        const legion = await getLegionToken(web3, legionContract, ids[i]);
-        if (legion.attackPower > 30000) {
-          legionCount++;
-          if (legionCount == 10) {
-            setLegionMaster(true);
-            return;
-          }
-        }
+      const allLegions = await getAllLegions(legionContract, account);
+      const attackPowers = allLegions[0].map((legion: any) => {
+        return parseInt(legion.attack_power) / 100;
+      });
+      if (attackPowers.filter((item: any) => item > 30000).length >= 10) {
+        setLegionMaster(true);
       }
+      // const ids = await getLegionTokenIds(web3, legionContract, account);
+      //   var legionCount = 0;
+      //   for (let i = 0; i < ids.length; i++) {
+      //     const legion = await getLegionToken(web3, legionContract, ids[i]);
+      //     if (legion.attackPower > 30000) {
+      //       legionCount++;
+      //       if (legionCount == 10) {
+      //         setLegionMaster(true);
+      //         return;
+      //       }
+      //     }
+      //   }
     } catch (error) {}
   };
 
@@ -173,16 +202,16 @@ const YourAchievements = () => {
       )
         .then((res) => {
           if (res.data.hasAlready) {
-            window.open(
-              baseInviteUrl + res.data.hasAlready.random_string,
-              "_blank"
-            );
+            // window.open(
+            //   baseInviteUrl + res.data.hasAlready.random_string,
+            //   "_blank"
+            // );
           } else {
             Axios.get(
               `https://www.cryptolegions.link/api/get-roles/${role}/12/${account}`
             )
               .then((res) => {
-                window.open(res.data.link, "_blank");
+                // window.open(res.data.link, "_blank");
               })
               .catch((err) => {});
           }

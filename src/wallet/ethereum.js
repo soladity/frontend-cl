@@ -26,7 +26,10 @@ export const addNetwork = () =>
       params: [
         {
           chainId: gameVersion.chainIDHex,
-          chainName: "Binance Smart Chain Testnet",
+          chainName:
+            gameVersion.chain == "mainnet"
+              ? "Binance Smart Chain"
+              : "Binance Smart Chain Testnet",
           nativeCurrency: {
             name: "Binance Coin",
             symbol: "BNB",

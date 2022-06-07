@@ -840,8 +840,8 @@ const TakeAction = () => {
                           <img
                             src={`/assets/images/dashboard/warrior.png`}
                             style={{
-                              width: "15px",
-                              height: "15px",
+                              width: "18px",
+                              height: "18px",
                               marginRight: "5px",
                             }}
                             alt="icon"
@@ -878,8 +878,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/warrior.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1022,8 +1022,8 @@ const TakeAction = () => {
                         <img
                           src={`/assets/images/dashboard/beast.png`}
                           style={{
-                            width: "15px",
-                            height: "15px",
+                            width: "18px",
+                            height: "18px",
                             marginRight: "5px",
                           }}
                           alt="icon"
@@ -1059,8 +1059,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/beast.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1196,8 +1196,8 @@ const TakeAction = () => {
                     <img
                       src={`/assets/images/dashboard/legion.png`}
                       style={{
-                        width: "15px",
-                        height: "15px",
+                        width: "18px",
+                        height: "18px",
                         marginRight: "5px",
                       }}
                       alt="icon"
@@ -1219,8 +1219,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/hunt.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1239,8 +1239,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/masshuntIcon.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1256,8 +1256,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/masshuntIcon.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1291,8 +1291,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/marketWarrior.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1313,8 +1313,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/marketBeast.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1335,8 +1335,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/marketLegion.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1360,8 +1360,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/chart.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
@@ -1384,8 +1384,8 @@ const TakeAction = () => {
                       <img
                         src={`/assets/images/dashboard/pancake.png`}
                         style={{
-                          width: "15px",
-                          height: "15px",
+                          width: "18px",
+                          height: "18px",
                           marginRight: "5px",
                         }}
                         alt="icon"
