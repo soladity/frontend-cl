@@ -721,7 +721,7 @@ const Warriors = () => {
                 .filter((item: any) =>
                   filter === "all"
                     ? parseInt(item.strength) >= 0
-                    : item.strength === filter
+                    : item.strength === parseInt(filter)
                 )
                 .filter(
                   (item: any) =>
