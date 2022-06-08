@@ -818,14 +818,21 @@ const Monsters = () => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
                   alignItems: "center",
                   paddingBottom: "10px",
                   paddingLeft: "10px",
                   paddingRight: "10px",
                 }}
               >
-                {getTranslation("noMintedLegion")}
+                <Box
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "calc(17px + 5 * (100vw - 320px) / 1080)",
+                  }}
+                >
+                  {getTranslation("noMintedLegion")}
+                </Box>
                 <CommonBtn sx={{ fontWeight: "bold", ml: 2 }}>
                   <NavLink to="/createlegions" className="non-style">
                     {getTranslation("createLegion")}
