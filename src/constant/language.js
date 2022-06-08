@@ -1754,7 +1754,7 @@ export const translations = {
   min: {
     en: "min",
     es: "min",
-    cn: "分钟",
+    cn: "最少需要",
     pt: "min",
     tr: "dk",
     ru: "мин",
@@ -1766,7 +1766,7 @@ export const translations = {
   needed: {
     en: "needed",
     es: "necesario",
-    cn: "需要",
+    cn: "",
     pt: "necessário",
     tr: "gerekli",
     ru: "требуется",
