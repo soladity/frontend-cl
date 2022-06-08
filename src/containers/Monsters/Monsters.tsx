@@ -806,178 +806,200 @@ const Monsters = () => {
           />
         )}
       </Helmet>
-      {loading === false && legions.length > 0 && (
+      {loading === false && (
         <Box
           component="div"
           sx={{ position: "relative" }}
           ref={scrollArea}
           id="monsters"
         >
-          <Card className={classes.Card}>
-            <Grid
-              container
-              spacing={2}
-              sx={{ justifyContent: "center" }}
-              alignItems="center"
-              columns={70}
-            >
-              <Grid item xs={70} sm={70} md={20}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    {getTranslation("legions")}
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={curComboLegionValue}
-                    label="Current Legion"
-                    onChange={handleCurLegionValue}
+          {legions.length === 0 ? (
+            <Card className={classes.Card}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingBottom: "10px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                }}
+              >
+                {getTranslation("noMintedLegion")}
+                <CommonBtn sx={{ fontWeight: "bold", ml: 2 }}>
+                  <NavLink to="/createlegions" className="non-style">
+                    {getTranslation("createLegion")}
+                  </NavLink>
+                </CommonBtn>
+              </Box>
+            </Card>
+          ) : (
+            <Card className={classes.Card}>
+              <Grid
+                container
+                spacing={2}
+                sx={{ justifyContent: "center" }}
+                alignItems="center"
+                columns={70}
+              >
+                <Grid item xs={70} sm={70} md={20}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      {getTranslation("legions")}
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={curComboLegionValue}
+                      label="Current Legion"
+                      onChange={handleCurLegionValue}
+                    >
+                      {legions.map((legion: any, index) =>
+                        legion.status === "1" ? (
+                          <GreenBGMenuItem value={index} key={index}>
+                            #{legion.id} {legion.name} ({legion.attackPower} AP)
+                          </GreenBGMenuItem>
+                        ) : legion.status === "2" ? (
+                          <OrgBGMenuItem value={index} key={index}>
+                            #{legion.id} {legion.name} ({legion.attackPower} AP)
+                          </OrgBGMenuItem>
+                        ) : (
+                          <RedBGMenuItem value={index} key={index}>
+                            #{legion.id} {legion.name} ({legion.attackPower} AP)
+                          </RedBGMenuItem>
+                        )
+                      )}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={35} sm={35} md={9}>
+                  <ScrollToButton
+                    toId={"monster" + strongestMonsterToHunt}
+                    duration={1000}
                   >
-                    {legions.map((legion: any, index) =>
-                      legion.status === "1" ? (
-                        <GreenBGMenuItem value={index} key={index}>
-                          #{legion.id} {legion.name} ({legion.attackPower} AP)
-                        </GreenBGMenuItem>
-                      ) : legion.status === "2" ? (
-                        <OrgBGMenuItem value={index} key={index}>
-                          #{legion.id} {legion.name} ({legion.attackPower} AP)
-                        </OrgBGMenuItem>
-                      ) : (
-                        <RedBGMenuItem value={index} key={index}>
-                          #{legion.id} {legion.name} ({legion.attackPower} AP)
-                        </RedBGMenuItem>
-                      )
-                    )}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={35} sm={35} md={9}>
-                <ScrollToButton
-                  toId={"monster" + strongestMonsterToHunt}
-                  duration={1000}
-                >
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontSize: {
+                          xs: 14,
+                          sm: 16,
+                          md: 20,
+                        },
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {curLegion?.attackPower.toFixed(0)} AP
+                    </Typography>
+                  </ScrollToButton>
+                </Grid>
+                <Grid item xs={35} sm={35} md={7}>
                   <Typography
                     variant="h5"
                     sx={{
-                      fontSize: {
-                        xs: 14,
-                        sm: 16,
-                        md: 20,
-                      },
-                      cursor: "pointer",
-                      fontWeight: "bold",
+                      fontSize: { xs: 14, sm: 16, md: 20 },
                     }}
                   >
-                    {curLegion?.attackPower.toFixed(0)} AP
+                    W {curLegion?.warriors.length}/{warriorCapacity}
                   </Typography>
-                </ScrollToButton>
+                </Grid>
+                <Grid item xs={35} sm={35} md={7}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontSize: { xs: 14, sm: 16, md: 20 },
+                    }}
+                  >
+                    B {curLegion?.beasts.length}/
+                    {createlegions.main.maxAvailableDragCount}
+                  </Typography>
+                </Grid>
+                <Grid item xs={35} sm={35} md={7}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      color:
+                        curLegion?.status === "1"
+                          ? "#18e001"
+                          : curLegion?.status === "2"
+                          ? "#ae7c00"
+                          : "#fd3742",
+                      fontWeight: 1000,
+                      fontSize: { xs: 14, sm: 16, md: 20 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => getSupplyValues()}
+                  >
+                    {curLegion?.supplies}
+                    {getTranslation("hSymbol")}{" "}
+                    {curLegion?.supplies == "0" &&
+                      "(" + getTranslation("suppliesNeeded") + ")"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={35} sm={35} md={10}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontSize: { xs: 14, sm: 16, md: 20 },
+                    }}
+                  >
+                    {calcHuntTime(curLegion?.lastHuntTime)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={35} sm={35} md={10} sx={{ marginRight: "auto" }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontSize: { xs: 14, sm: 16, md: 20 },
+                    }}
+                  >
+                    {checkingMassHuntBUSD ? (
+                      <CommonBtn
+                        onClick={() => handleInitiateMassHunt()}
+                        sx={{ fontWeight: "bold" }}
+                        disabled
+                      >
+                        <Spinner color="white" size={40} />
+                        &nbsp;
+                        {getTranslation("takeActionMassHunt")}
+                      </CommonBtn>
+                    ) : (
+                      <CommonBtn
+                        onClick={() => handleInitiateMassHunt()}
+                        sx={{ fontWeight: "bold" }}
+                        disabled={!massBtnEnable}
+                      >
+                        {getTranslation("takeActionMassHunt")}
+                      </CommonBtn>
+                    )}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={35} sm={35} md={7}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontSize: { xs: 14, sm: 16, md: 20 },
+              {supplyLoading && (
+                <Box
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    display: "flex",
+                    alignItems: "center",
+                    background: "#222222ee",
                   }}
                 >
-                  W {curLegion?.warriors.length}/{warriorCapacity}
-                </Typography>
-              </Grid>
-              <Grid item xs={35} sm={35} md={7}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontSize: { xs: 14, sm: 16, md: 20 },
-                  }}
-                >
-                  B {curLegion?.beasts.length}/
-                  {createlegions.main.maxAvailableDragCount}
-                </Typography>
-              </Grid>
-              <Grid item xs={35} sm={35} md={7}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    color:
-                      curLegion?.status === "1"
-                        ? "#18e001"
-                        : curLegion?.status === "2"
-                        ? "#ae7c00"
-                        : "#fd3742",
-                    fontWeight: 1000,
-                    fontSize: { xs: 14, sm: 16, md: 20 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => getSupplyValues()}
-                >
-                  {curLegion?.supplies}
-                  {getTranslation("hSymbol")}{" "}
-                  {curLegion?.supplies == "0" &&
-                    "(" + getTranslation("suppliesNeeded") + ")"}
-                </Typography>
-              </Grid>
-              <Grid item xs={35} sm={35} md={10}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontSize: { xs: 14, sm: 16, md: 20 },
-                  }}
-                >
-                  {calcHuntTime(curLegion?.lastHuntTime)}
-                </Typography>
-              </Grid>
-              <Grid item xs={35} sm={35} md={10} sx={{ marginRight: "auto" }}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontSize: { xs: 14, sm: 16, md: 20 },
-                  }}
-                >
-                  {checkingMassHuntBUSD ? (
-                    <CommonBtn
-                      onClick={() => handleInitiateMassHunt()}
-                      sx={{ fontWeight: "bold" }}
-                      disabled
-                    >
-                      <Spinner color="white" size={40} />
-                      &nbsp;
-                      {getTranslation("takeActionMassHunt")}
-                    </CommonBtn>
-                  ) : (
-                    <CommonBtn
-                      onClick={() => handleInitiateMassHunt()}
-                      sx={{ fontWeight: "bold" }}
-                      disabled={!massBtnEnable}
-                    >
-                      {getTranslation("takeActionMassHunt")}
-                    </CommonBtn>
-                  )}
-                </Typography>
-              </Grid>
-            </Grid>
-            {supplyLoading && (
-              <Box
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  display: "flex",
-                  alignItems: "center",
-                  background: "#222222ee",
-                }}
-              >
-                <Box sx={{ width: "100%" }}>
-                  <Box sx={{ textAlign: "center", marginBottom: 1 }}>
-                    {loadingText}
+                  <Box sx={{ width: "100%" }}>
+                    <Box sx={{ textAlign: "center", marginBottom: 1 }}>
+                      {loadingText}
+                    </Box>
+                    <LinearProgress sx={{ width: "100%" }} color="success" />
                   </Box>
-                  <LinearProgress sx={{ width: "100%" }} color="success" />
                 </Box>
-              </Box>
-            )}
-          </Card>
+              )}
+            </Card>
+          )}
           <Grid
             container
             justifyContent="center"
@@ -1051,7 +1073,7 @@ const Monsters = () => {
           </Grid>
         </Box>
       )}
-      {loading === false && legions.length === 0 && (
+      {/* {loading === false && legions.length === 0 && (
         <Grid container justifyContent="center" sx={{ paddingTop: "20%" }}>
           <Grid item>
             <Typography variant="h4">
@@ -1066,7 +1088,7 @@ const Monsters = () => {
             </CommonBtn>
           </Grid>
         </Grid>
-      )}
+      )} */}
       {loading === true && (
         <>
           <Grid
