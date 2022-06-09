@@ -209,10 +209,10 @@ const Legions = () => {
     });
     setTotalPower(parseInt(amount.toFixed(0)));
     let sortedArray = tempAllLegions.sort((a: any, b: any) => {
-      if (a.attackPower > b.attackPower) {
+      if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
         return -1;
       }
-      if (a.attackPower < b.attackPower) {
+      if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
         return 1;
       }
       return 0;
