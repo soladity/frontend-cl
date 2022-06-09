@@ -322,6 +322,7 @@ const Monsters = () => {
     let monsterArrary = [];
     try {
       const monsterVal = await getAllMonsters(monsterContract);
+      console.log("allMonster Val: ", monsterVal);
       const monsterArraryTemp = monsterVal[0];
       const rewardArray = monsterVal[1];
       monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
@@ -333,7 +334,9 @@ const Monsters = () => {
           BUSDReward: item.reward / Math.pow(10, 4),
         };
       });
+      console.log(monsterArrary);
     } catch (error) {}
+    // console.log(monsterArrary);
     setMonsters(monsterArrary);
 
     if (legions[0]) {
@@ -1065,6 +1068,7 @@ const Monsters = () => {
                             : "0"
                         }
                         price={monster.reward}
+                        BUSDReward={monster.BUSDReward}
                         isHuntable={
                           curLegion?.status === "1" &&
                           monster.ap <=

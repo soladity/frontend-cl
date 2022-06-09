@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Skeleton from "@mui/material/Skeleton";
 import Grid from "@mui/material/Grid";
-import { toCapitalize } from "../../utils/common";
+import { formatNumber, toCapitalize } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
 import {
   getCanAttackMonster25,
@@ -23,6 +23,7 @@ type CardProps = {
   price: string;
   tokenID: number;
   isHuntable: boolean;
+  BUSDReward: number;
   handleHunt: (monsterID: number) => void;
 };
 
@@ -35,6 +36,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
   price,
   tokenID,
   isHuntable,
+  BUSDReward,
   handleHunt,
 }) {
   const [loaded, setLoaded] = React.useState(false);
@@ -93,11 +95,15 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           )}
           <Grid item>
             <Typography variant="h6">
-              {tokenID === 25 ? getTranslation("unlockStatus") : getTranslation("bonus") + "%"}
+              {tokenID === 25
+                ? getTranslation("unlockStatus")
+                : getTranslation("bonus") + "%"}
             </Typography>
             <Typography variant="h6">
               {tokenID === 25
-                ? `${warriorCnt}/${warriorBaseCnt} ${getTranslation("warriorsUsed")}`
+                ? `${warriorCnt}/${warriorBaseCnt} ${getTranslation(
+                    "warriorsUsed"
+                  )}`
                 : parseInt(bonus)}
             </Typography>
           </Grid>
@@ -152,7 +158,12 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
         </Grid>
         <Grid item>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            {price} $BLST
+            {formatNumber(price)} $BLST
+          </Typography>
+          <Typography
+            sx={{ color: "gray", fontSize: "14px", fontWeight: "bold" }}
+          >
+            (= {formatNumber(BUSDReward)} USD)
           </Typography>
         </Grid>
         <Grid item>
