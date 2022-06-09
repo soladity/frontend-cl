@@ -146,7 +146,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
                 justifyContent: "space-around",
               }
         }
-        alignItems="center"
+        alignItems="unset"
       >
         <Grid item>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
