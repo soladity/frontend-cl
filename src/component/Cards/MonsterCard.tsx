@@ -15,6 +15,8 @@ import { useLegion } from "../../hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
 import { Box } from "@mui/system";
 
+import { FaTwitter, FaTelegram, FaTelegramPlane } from "react-icons/fa";
+
 type CardProps = {
   name: string;
   image: string;
@@ -43,10 +45,13 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
   const shareImgUrl = `https://play.cryptolegions.app/assets/images/characters/gif/monsters_dying/m${tokenID}.gif`;
   const text = `I just won ${formatNumber(price)} $BLST (= ${formatNumber(
     BUSDReward
-  )} USD) from Monster-${name.toUpperCase()} in Cryptolegions https://cryptolegions.app`;
-  const shareLink = `https://xn--r1a.link/share/url?url=${encodeURI(
-    shareImgUrl
-  )}&text=${encodeURI(text)}`;
+  )} USD) from Monster ${name.toUpperCase()} in Crypto Legions! Play here: https://cryptolegions.app`;
+  const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
+  // console.log(text);
+  // console.log(mainLink);
+  const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
+  console.log(telegramShareLink);
+  const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
 
   const [loaded, setLoaded] = React.useState(false);
 
@@ -156,6 +161,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
               }
         }
         alignItems="unset"
+        columns={60}
       >
         <Grid item>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
@@ -186,15 +192,26 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             {getTranslation("hunt")}
           </Button>
         </Grid>
-        <Box>
-          <a href={shareLink} target={"_blank"}>
-            <img
-              src={"/assets/images/telegram.png"}
-              style={{ height: "32px", marginRight: "7px" }}
-              alt="social icon"
+        <Grid
+          item
+          xs={60}
+          style={{
+            marginTop: 10,
+            display: "flex",
+            justifyContent: "space-around",
+          }}
+        >
+          <a href={telegramShareLink} target={"_blank"}>
+            <FaTelegramPlane
+              style={{ background: "", color: "white", fontSize: 33 }}
             />
           </a>
-        </Box>
+          <a href={twitterShareLink} target={"_blank"}>
+            <FaTwitter
+              style={{ background: "", color: "white", fontSize: 33 }}
+            />
+          </a>
+        </Grid>
       </Grid>
     </Card>
   );
