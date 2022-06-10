@@ -706,6 +706,7 @@ const TakeAction = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
+        console.log("legion contract: ", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
@@ -729,6 +730,7 @@ const TakeAction = () => {
       .Hunted({})
       .on("connected", function (subscriptionId: any) {})
       .on("data", async function (event: any) {
+        console.log("legion event contract: ", event);
         if (
           account == event.returnValues._addr &&
           massHuntResult.filter(
