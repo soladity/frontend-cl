@@ -13,6 +13,7 @@ import {
 } from "../../hooks/contractFunction";
 import { useLegion } from "../../hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
+import { Box } from "@mui/system";
 
 type CardProps = {
   name: string;
@@ -39,6 +40,14 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
   BUSDReward,
   handleHunt,
 }) {
+  const shareImgUrl = `https://play.cryptolegions.app/assets/images/characters/gif/monsters_dying/m${tokenID}.gif`;
+  const text = `I just won ${formatNumber(price)} $BLST (= ${formatNumber(
+    BUSDReward
+  )} USD) from Monster-${name.toUpperCase()} in Cryptolegions https://cryptolegions.app`;
+  const shareLink = `https://xn--r1a.link/share/url?url=${encodeURI(
+    shareImgUrl
+  )}&text=${encodeURI(text)}`;
+
   const [loaded, setLoaded] = React.useState(false);
 
   const [canHuntMonster25, setCanHuntMonster25] = React.useState(false);
@@ -167,7 +176,6 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           </Typography>
         </Grid>
         <Grid item>
-          {/* c94f19 */}
           <Button
             variant="outlined"
             disabled={
@@ -178,6 +186,15 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             {getTranslation("hunt")}
           </Button>
         </Grid>
+        <Box>
+          <a href={shareLink} target={"_blank"}>
+            <img
+              src={"/assets/images/telegram.png"}
+              style={{ height: "32px", marginRight: "7px" }}
+              alt="social icon"
+            />
+          </a>
+        </Box>
       </Grid>
     </Card>
   );
