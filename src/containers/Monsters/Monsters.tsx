@@ -82,7 +82,7 @@ import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import { FaTimes } from "react-icons/fa";
-import { toCapitalize } from "../../utils/common";
+import { formatNumber, toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -198,12 +198,12 @@ const Monsters = () => {
   const [legions, setLegions] = useState(Array);
   const [legionIDs, setLegionIDs] = useState(Array);
   const [curLegion, setCurLegion] = useState<LegionInterface | null>();
-  const [monsters, setMonsters] = useState(Array);
+  const [monsters, setMonsters] = useState<MonsterInterface[]>(Array);
   const [curMonster, setCurMonster] = useState<MonsterInterface | null>();
   const [curMonsterID, setCurMonsterID] = useState(0);
   const [scrollMaxHeight, setScrollMaxHeight] = useState(0);
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [huntedStatus, setHuntedStatus] = useState(0);
+  const [dialogVisible, setDialogVisible] = useState(true);
+  const [huntedStatus, setHuntedStatus] = useState(1);
   const [continueLoading, setContinueLoading] = useState(false);
   const [huntedRoll, setHuntedRoll] = useState(0);
   const [huntAvailablePercent, setHuntAvailablePercent] = useState(0);
@@ -789,6 +789,24 @@ const Monsters = () => {
     return totalBUSD;
   };
 
+  const getShareLink = (tokenId: number, social: string) => {
+    const shareImgUrl = `https://play.cryptolegions.app/monster_dying_end/m${tokenId}.gif`;
+    const text =
+      monsters[tokenId] &&
+      `I just won ${formatNumber(
+        monsters[tokenId].reward
+      )} $BLST (= ${formatNumber(
+        monsters[tokenId].BUSDReward
+      )} USD) from Monster ${monsters[tokenId].name.replace(
+        /^./,
+        monsters[tokenId].name[0].toUpperCase()
+      )} in Crypto Legions! Play here: https://cryptolegions.app`;
+    const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
+    const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
+    const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
+    return social == "telegram" ? telegramShareLink : twitterShareLink;
+  };
+
   React.useEffect(() => {
     setTimeout(() => {
       setCurrentTime(new Date());
@@ -1191,6 +1209,37 @@ const Monsters = () => {
                 <Box component="p">
                   {getTranslation("congSubtitle2").toUpperCase()}{" "}
                   {curMonster?.reward} $BLST
+                </Box>
+                <Box>
+                  Share Your Success!
+                  <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+                    <a
+                      href={getShareLink(curMonsterID, "telegram")}
+                      target={"_blank"}
+                    >
+                      <img
+                        src={`/assets/images/telegram.png`}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                        }}
+                        alt="icon"
+                      />
+                    </a>
+                    <a
+                      href={getShareLink(curMonsterID, "twitter")}
+                      target={"_blank"}
+                    >
+                      <img
+                        src={`/assets/images/twitter.png`}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                        }}
+                        alt="icon"
+                      />
+                    </a>
+                  </Box>
                 </Box>
               </>
             </DialogTitle>

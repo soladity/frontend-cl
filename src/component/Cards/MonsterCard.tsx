@@ -42,15 +42,15 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
   BUSDReward,
   handleHunt,
 }) {
-  const shareImgUrl = `https://play.cryptolegions.app/assets/images/characters/gif/monsters_dying/m${tokenID}.gif`;
+  const shareImgUrl = `https://play.cryptolegions.app/monster_dying_end/m${tokenID}.gif`;
   const text = `I just won ${formatNumber(price)} $BLST (= ${formatNumber(
     BUSDReward
-  )} USD) from Monster ${name.toUpperCase()} in Crypto Legions! Play here: https://cryptolegions.app`;
+  )} USD) from Monster ${name.replace(
+    /^./,
+    name[0].toUpperCase()
+  )} in Crypto Legions! Play here: https://cryptolegions.app`;
   const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
-  // console.log(text);
-  // console.log(mainLink);
   const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
-  console.log(telegramShareLink);
   const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
 
   const [loaded, setLoaded] = React.useState(false);
@@ -192,7 +192,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             {getTranslation("hunt")}
           </Button>
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={60}
           style={{
@@ -202,16 +202,26 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           }}
         >
           <a href={telegramShareLink} target={"_blank"}>
-            <FaTelegramPlane
-              style={{ background: "", color: "white", fontSize: 33 }}
+            <img
+              src={`/assets/images/telegram.png`}
+              style={{
+                width: "40px",
+                height: "40px",
+              }}
+              alt="icon"
             />
           </a>
           <a href={twitterShareLink} target={"_blank"}>
-            <FaTwitter
-              style={{ background: "", color: "white", fontSize: 33 }}
+            <img
+              src={`/assets/images/twitter.png`}
+              style={{
+                width: "40px",
+                height: "40px",
+              }}
+              alt="icon"
             />
           </a>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Card>
   );
