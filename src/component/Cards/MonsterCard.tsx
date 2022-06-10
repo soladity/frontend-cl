@@ -192,7 +192,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
             {getTranslation("hunt")}
           </Button>
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={60}
           style={{
@@ -207,7 +207,6 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
               style={{
                 width: "40px",
                 height: "40px",
-                marginRight: "34px",
               }}
               alt="icon"
             />
@@ -218,12 +217,11 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
               style={{
                 width: "40px",
                 height: "40px",
-                marginRight: "34px",
               }}
               alt="icon"
             />
           </a>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Card>
   );
