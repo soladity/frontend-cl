@@ -2784,4 +2784,16 @@ export const translations = {
     pl: "Do przywołania potrzebujesz więcej $BLST.",
     ph: "Kailangan mo ng higit pang $BLST para ipatawag.",
   },
+  shareYourSuccess: {
+    en: "Share Your Success!",
+    es: "¡Comparta su éxito!",
+    cn: "分享您的成功！",
+    pt: "Compartilhe seu sucesso!",
+    tr: "Başarını Paylaş!",
+    ru: "Поделитесь своим успехом!",
+    fr: "Partagez votre succès !",
+    de: "Deel uw succes!",
+    pl: "Podziel się swoim sukcesem!",
+    ph: "Ibahagi ang Iyong Tagumpay!",
+  },
 };
