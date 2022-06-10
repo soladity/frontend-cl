@@ -200,7 +200,7 @@ const Monsters = () => {
   const [curLegion, setCurLegion] = useState<LegionInterface | null>();
   const [monsters, setMonsters] = useState<MonsterInterface[]>(Array);
   const [curMonster, setCurMonster] = useState<MonsterInterface | null>();
-  const [curMonsterID, setCurMonsterID] = useState(0);
+  const [curMonsterID, setCurMonsterID] = useState(1);
   const [scrollMaxHeight, setScrollMaxHeight] = useState(0);
   const [dialogVisible, setDialogVisible] = useState(true);
   const [huntedStatus, setHuntedStatus] = useState(1);
@@ -790,16 +790,16 @@ const Monsters = () => {
   };
 
   const getShareLink = (tokenId: number, social: string) => {
-    const shareImgUrl = `https://play.cryptolegions.app/monster_dying_end/m${tokenId}.gif`;
+    const shareImgUrl = `https://dev.cryptolegions.app/monster_dying_end/m${tokenId}.gif`;
     const text =
-      monsters[tokenId] &&
+      monsters[tokenId - 1] &&
       `I just won ${formatNumber(
-        monsters[tokenId].reward
+        monsters[tokenId - 1].reward
       )} $BLST (= ${formatNumber(
         monsters[tokenId].BUSDReward
-      )} USD) from Monster ${monsters[tokenId].name.replace(
+      )} USD) from Monster ${monsters[tokenId - 1].name.replace(
         /^./,
-        monsters[tokenId].name[0].toUpperCase()
+        monsters[tokenId - 1].name[0].toUpperCase()
       )} in Crypto Legions! Play here: https://cryptolegions.app`;
     const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
     const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
@@ -1211,8 +1211,12 @@ const Monsters = () => {
                   {curMonster?.reward} $BLST
                 </Box>
                 <Box>
-                  Share Your Success!
-                  <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+                  <Box sx={{ fontWeight: "bold" }}>
+                    {getTranslation("shareYourSuccess")}
+                  </Box>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "center", mt: 1 }}
+                  >
                     <a
                       href={getShareLink(curMonsterID, "telegram")}
                       target={"_blank"}
@@ -1222,6 +1226,7 @@ const Monsters = () => {
                         style={{
                           width: "40px",
                           height: "40px",
+                          marginRight: "30px",
                         }}
                         alt="icon"
                       />
@@ -1235,6 +1240,7 @@ const Monsters = () => {
                         style={{
                           width: "40px",
                           height: "40px",
+                          marginLeft: "30px",
                         }}
                         alt="icon"
                       />
