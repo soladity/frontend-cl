@@ -200,10 +200,10 @@ const Monsters = () => {
   const [curLegion, setCurLegion] = useState<LegionInterface | null>();
   const [monsters, setMonsters] = useState<MonsterInterface[]>(Array);
   const [curMonster, setCurMonster] = useState<MonsterInterface | null>();
-  const [curMonsterID, setCurMonsterID] = useState(1);
+  const [curMonsterID, setCurMonsterID] = useState(0);
   const [scrollMaxHeight, setScrollMaxHeight] = useState(0);
-  const [dialogVisible, setDialogVisible] = useState(true);
-  const [huntedStatus, setHuntedStatus] = useState(1);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [huntedStatus, setHuntedStatus] = useState(0);
   const [continueLoading, setContinueLoading] = useState(false);
   const [huntedRoll, setHuntedRoll] = useState(0);
   const [huntAvailablePercent, setHuntAvailablePercent] = useState(0);
@@ -790,7 +790,11 @@ const Monsters = () => {
   };
 
   const getShareLink = (tokenId: number, social: string) => {
-    const shareImgUrl = `https://dev.cryptolegions.app/monster_dying_end/m${tokenId}.gif`;
+    const serverLink = "https://play.cryptolegions.app";
+    const shareImgUrl =
+      tokenId == 24
+        ? `${serverLink}/monster_dying_end/m24end.gif`
+        : `${serverLink}/assets/images/characters/gif/monsters_dying/m${tokenId}.gif`;
     const text =
       monsters[tokenId - 1] &&
       `I just won ${formatNumber(
