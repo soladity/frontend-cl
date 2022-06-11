@@ -1259,7 +1259,11 @@ const Monsters = () => {
                   component="img"
                   image={
                     showAnimation === "0"
-                      ? `/assets/images/characters/jpg/monsters_dying/m${curMonsterID}.jpg`
+                      ? curMonsterID == 24
+                        ? `/monster_dying_end/m24end.jpg`
+                        : `/assets/images/characters/jpg/monsters_dying/m${curMonsterID}.jpg`
+                      : curMonsterID == 24
+                      ? `monster_dying_end/m24end.gif`
                       : `/assets/images/characters/gif/monsters_dying/m${curMonsterID}.gif`
                   }
                   alt="Monster Image"
@@ -1566,7 +1570,11 @@ const Monsters = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                      ? item["monsterId"] == 24
+                        ? `/monster_dying_end/m24end.jpg`
+                        : `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                      : item["monsterId"] == 24
+                      ? `/monster_dying_end/m24end.gif`
                       : `/assets/images/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
