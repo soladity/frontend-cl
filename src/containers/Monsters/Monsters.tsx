@@ -800,7 +800,7 @@ const Monsters = () => {
       `I just won ${formatNumber(
         monsters[tokenId - 1].reward
       )} $BLST (= ${formatNumber(
-        monsters[tokenId].BUSDReward
+        monsters[tokenId - 1].BUSDReward
       )} USD) from Monster ${monsters[tokenId - 1].name.replace(
         /^./,
         monsters[tokenId - 1].name[0].toUpperCase()
