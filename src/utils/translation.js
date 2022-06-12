@@ -1,8 +1,13 @@
 import { translations } from "../constant/language";
 
-export const getTranslation = (key) => {
+export const getTranslation = (key, _param1, _param2) => {
   const lang = localStorage.getItem("lang")
     ? localStorage.getItem("lang")
     : "en";
-  return translations[key][lang];
+  if (key == "gotUnclaimedReward") {
+    console.log(key, _param1, _param2);
+  }
+  return _param1
+    ? translations[key](_param1, _param2)[lang]
+    : translations[key][lang];
 };

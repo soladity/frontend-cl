@@ -2796,4 +2796,30 @@ export const translations = {
     pl: "Podziel się swoim sukcesem!",
     ph: "Ibahagi ang Iyong Tagumpay!",
   },
+  shareYourHappiness: {
+    en: "Share Your Happiness!",
+    es: "¡Comparte tu felicidad!",
+    cn: "分享你的快乐!",
+    pt: "Compartilhe sua felicidade!",
+    tr: "Mutluluğunu Paylaş!",
+    ru: "Поделись своим счастьем!",
+    fr: "Partagez votre bonheur!",
+    de: "Deel je geluk!",
+    pl: "Dzielić swoje szczęście!",
+    ph: "Ibahagi ang Iyong Kaligayahan!",
+  },
+  gotUnclaimedReward: (BLST, BUSD) => {
+    return {
+      en: `You just got ${BLST} $BLST (= ${BUSD} USD) in your wallet.`,
+      es: `Acabas de recibir ${BLST} $BLST (= ${BUSD} USD) en tu billetera.`,
+      cn: `你的钱包里刚刚有 ${BLST} $BLST (= ${BUSD} USD)。`,
+      pt: `Você acabou de receber ${BLST} $BLST (= ${BUSD} USD) em sua carteira.`,
+      tr: `Cüzdanınızda ${BLST} $BLST (= ${BUSD} USD) var.`,
+      ru: `Вы только что получили ${BLST} $BLST (= ${BUSD} USD) на свой кошелек.`,
+      fr: `Vous venez d'avoir ${BLST} $BLST (= ${BUSD} USD) dans votre portefeuille.`,
+      de: `U heeft zojuist ${BLST} $BLST (= ${BUSD} USD) in uw portemonnee gekregen.`,
+      pl: `Właśnie masz w portfelu ${BLST} $BLST (= ${BUSD} USD).`,
+      ph: `Kakakuha mo lang ng ${BLST} $BLST (= ${BUSD} USD) sa iyong wallet.`,
+    };
+  },
 };

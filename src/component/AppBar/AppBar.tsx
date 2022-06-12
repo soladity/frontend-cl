@@ -27,12 +27,14 @@ import {
   getUnclaimedBLST,
   claimReward,
   getTaxLeftDays,
+  getUSDAmountFromBLST,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
   useWeb3,
   useRewardPool,
   useLegion,
+  useFeeHandler,
 } from "../../hooks/useContract";
 import { navConfig } from "../../config";
 import { getTranslation } from "../../utils/translation";
@@ -41,6 +43,8 @@ import NavList from "../Nav/NavList";
 import { useSelector, useDispatch } from "react-redux";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { setReloadStatus } from "../../actions/contractActions";
+
+import { MdClose } from "react-icons/md";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -67,9 +71,14 @@ const AppBarComponent = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
+  const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
+  const [BUSDReward, setBUSDReward] = React.useState(0);
+  const [BLSTReward, setBLSTReward] = React.useState(0);
+
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
   const legionContract = useLegion();
+  const feehandlerContract = useFeeHandler();
 
   const web3 = useWeb3();
 
@@ -93,15 +102,35 @@ const AppBarComponent = () => {
   };
 
   const getBalance = async () => {
-    setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
-    const unClaimedBLST = await getUnclaimedBLST(
-      web3,
-      rewardPoolContract,
-      account
-    );
-    setUnclaimedBLST(parseFloat(unClaimedBLST) / Math.pow(10, 18));
-    const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
-    setTaxLeftDays(taxLeftDays);
+    try {
+      setBalance(await getBloodstoneBalance(web3, bloodstoneContract, account));
+      const unClaimedBLST = await getUnclaimedBLST(
+        web3,
+        rewardPoolContract,
+        account
+      );
+      setUnclaimedBLST(parseFloat(unClaimedBLST) / Math.pow(10, 18));
+      const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
+      setTaxLeftDays(taxLeftDays);
+
+      const BLSTReward =
+        ((100 - 2 * parseInt(taxLeftDays)) * unClaimedBLST) /
+        100 /
+        Math.pow(10, 18);
+
+      setBLSTReward(BLSTReward);
+
+      const BUSDReward = await getUSDAmountFromBLST(
+        feehandlerContract,
+        BigInt(BLSTReward * Math.pow(10, 18))
+      );
+
+      console.log(BUSDReward);
+
+      setBUSDReward(BUSDReward / Math.pow(10, 18));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const toggleDrawer = (open: boolean) => (event: any) => {
@@ -122,10 +151,18 @@ const AppBarComponent = () => {
     setDialogOpen(false);
   };
 
+  const handleShareDialogClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
+    setShareDialogOpen(false);
+  };
+
   const handleClaimReward = async () => {
     setLoading(true);
     try {
       await claimReward(web3, legionContract, account);
+      setShareDialogOpen(true);
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
@@ -134,6 +171,16 @@ const AppBarComponent = () => {
     } catch (error) {}
     setLoading(false);
     setDialogOpen(false);
+  };
+
+  const getShareLink = (social: string) => {
+    const serverLink = "https://play.cryptolegions.app";
+    const shareImgUrl = `${serverLink}/winning.jpg`;
+    const text = `I just earned and got in my wallet ${BLSTReward} $BLST (= ${BUSDReward} USD). Thank you Crypto Legions! You can join the play to earn game I am playing here: https://cryptolegions.app`;
+    const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
+    const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
+    const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
+    return social == "telegram" ? telegramShareLink : twitterShareLink;
   };
 
   return (
@@ -208,13 +255,6 @@ const AppBarComponent = () => {
                 }}
                 onClick={() => setDialogOpen(true)}
               >
-                {/* <IconButton
-                  aria-label="claim"
-                  component="span"
-                  sx={{ p: 0, mr: 1, color: "black" }}
-                >
-                  <AssistantDirectionIcon />
-                </IconButton> */}
                 <img
                   src={`/assets/images/claimExit.png`}
                   style={{
@@ -369,11 +409,7 @@ const AppBarComponent = () => {
                 <br />
                 {getTranslation("willPay")}{" "}
                 {((2 * parseInt(taxLeftDays) * unClaimedBLST) / 100).toFixed(2)}{" "}
-                $BLST, {getTranslation("receiveOnly")}{" "}
-                {(
-                  ((100 - 2 * parseInt(taxLeftDays)) * unClaimedBLST) /
-                  100
-                ).toFixed(2)}{" "}
+                $BLST, {getTranslation("receiveOnly")} {BLSTReward.toFixed(2)}{" "}
                 $BLST {getTranslation("inYourWallet")}.
                 <br />
                 {getTranslation("youWait")} {taxLeftDays}{" "}
@@ -422,6 +458,61 @@ const AppBarComponent = () => {
               : getTranslation("claimPayTax")}
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+        open={shareDialogOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        disableEscapeKeyDown
+        onClose={(_, reason) => handleShareDialogClose(reason)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <MdClose
+            style={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+            onClick={() => handleShareDialogClose("cancel")}
+          ></MdClose>
+          {getTranslation(
+            "gotUnclaimedReward",
+            BLSTReward.toFixed(2),
+            BUSDReward.toFixed(2)
+          )}
+          <Box sx={{ fontWeight: "bold", textAlign: "center", mt: 1 }}>
+            {getTranslation("shareYourHappiness")}
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+            <a href={getShareLink("telegram")} target={"_blank"}>
+              <img
+                src={`/assets/images/telegram.png`}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  marginRight: "30px",
+                }}
+                alt="icon"
+              />
+            </a>
+            <a href={getShareLink("twitter")} target={"_blank"}>
+              <img
+                src={`/assets/images/twitter.png`}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  marginLeft: "30px",
+                }}
+                alt="icon"
+              />
+            </a>
+          </Box>
+        </DialogContent>
       </Dialog>
     </AppBar>
   );
