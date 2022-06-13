@@ -74,6 +74,8 @@ const AppBarComponent = () => {
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
   const [BUSDReward, setBUSDReward] = React.useState(0);
   const [BLSTReward, setBLSTReward] = React.useState(0);
+  const [BUSDTax, setBUSDTax] = React.useState(0);
+  const [BLSTTax, setBLSTTax] = React.useState(0);
 
   const bloodstoneContract = useBloodstone();
   const rewardPoolContract = useRewardPool();
@@ -113,6 +115,18 @@ const AppBarComponent = () => {
       const taxLeftDays = await getTaxLeftDays(web3, legionContract, account);
       setTaxLeftDays(taxLeftDays);
 
+      const BLSTTax =
+        (2 * parseInt(taxLeftDays) * unClaimedBLST) / 100 / Math.pow(10, 18);
+
+      setBLSTTax(BLSTTax);
+
+      const BUSDTax = await getUSDAmountFromBLST(
+        feehandlerContract,
+        BigInt(BLSTTax * Math.pow(10, 18))
+      );
+
+      setBUSDTax(BUSDTax / Math.pow(10, 18));
+
       const BLSTReward =
         ((100 - 2 * parseInt(taxLeftDays)) * unClaimedBLST) /
         100 /
@@ -124,8 +138,6 @@ const AppBarComponent = () => {
         feehandlerContract,
         BigInt(BLSTReward * Math.pow(10, 18))
       );
-
-      console.log(BUSDReward);
 
       setBUSDReward(BUSDReward / Math.pow(10, 18));
     } catch (error) {
@@ -382,9 +394,11 @@ const AppBarComponent = () => {
             ) : taxLeftDays === "0" ? (
               <>
                 {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)}{" "}
-                $BLST {getTranslation("taxFree")}.
+                $BLST (= {(BUSDReward + BUSDTax).toFixed(2)} USD){" "}
+                {getTranslation("taxFree")}.
                 <br />
-                {getTranslation("willReceive")} {unClaimedBLST.toFixed(2)} $BLST{" "}
+                {getTranslation("willReceive")} {unClaimedBLST.toFixed(2)} $BLST
+                (= {(BUSDReward + BUSDTax).toFixed(2)} USD){" "}
                 {getTranslation("inYourWallet")}.
                 <br />
                 {getTranslation("goAhead")}
@@ -404,13 +418,14 @@ const AppBarComponent = () => {
             ) : (
               <>
                 {getTranslation("aboutToClaim")} {unClaimedBLST.toFixed(2)}{" "}
-                $BLST {getTranslation("with")} {2 * parseInt(taxLeftDays)}%{" "}
+                $BLST (= {(BUSDTax + BUSDReward).toFixed(2)} USD){" "}
+                {getTranslation("with")} {2 * parseInt(taxLeftDays)}%{" "}
                 {getTranslation("tax")}.
                 <br />
-                {getTranslation("willPay")}{" "}
-                {((2 * parseInt(taxLeftDays) * unClaimedBLST) / 100).toFixed(2)}{" "}
-                $BLST, {getTranslation("receiveOnly")} {BLSTReward.toFixed(2)}{" "}
-                $BLST {getTranslation("inYourWallet")}.
+                {getTranslation("willPay")} {BLSTTax.toFixed(2)} $BLST (={" "}
+                {BUSDTax.toFixed(2)} USD), {getTranslation("receiveOnly")}{" "}
+                {BLSTReward.toFixed(2)} $BLST (= {BUSDReward.toFixed(2)} USD){" "}
+                {getTranslation("inYourWallet")}.
                 <br />
                 {getTranslation("youWait")} {taxLeftDays}{" "}
                 {getTranslation("willToClaim")}

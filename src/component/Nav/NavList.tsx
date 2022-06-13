@@ -119,7 +119,11 @@ const NavList = (props: any) => {
               <a
                 target="_blank"
                 className="nav-bar-item"
-                href={(navItem.title === 'whitepaper' && language === 'es') ? navItem.esPath : navItem.path || ""}
+                href={
+                  navItem.title === "whitepaper" && language === "es"
+                    ? navItem.esPath
+                    : navItem.path || ""
+                }
               >
                 <Tooltip title={navItem.title || ""} placement="right">
                   <ListItemButton>
