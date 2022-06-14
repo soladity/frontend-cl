@@ -18,6 +18,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { updateStore } from "./actions/contractActions";
 import { useTheme, useMediaQuery } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const useStyle = makeStyles({
   mainBox: {
@@ -38,7 +39,7 @@ const useStyle = makeStyles({
 
 const View = () => {
   const routing = useRoutes(navConfig.routes());
-
+  const location = useLocation();
   const theme = useTheme();
   const isSmallerThanMD = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -46,7 +47,9 @@ const View = () => {
   const { tutorialOn, isSmallerThanMD: isSmallerThanMiddle } = useSelector(
     (state: any) => state.contractReducer
   );
-  const [tutorialDialogOpen, setTutorialDialogOpen] = React.useState(true);
+  const [tutorialDialogOpen, setTutorialDialogOpen] = React.useState(
+    localStorage.getItem("tutorial") == "true" ? false : true
+  );
 
   const handleTutorialDialogClose = (reason: string) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
@@ -57,13 +60,25 @@ const View = () => {
   const setTutorialHelp = (type: any) => {
     if (type == "yes") {
       if (isSmallerThanMD) {
-        dispatch(
-          updateStore({
-            tutorialOn: true,
-            tutorialStep: [1],
-            isSideBarOpen: true,
-          })
-        );
+        if (
+          location.pathname == "/warriors" ||
+          location.pathname == "/beasts"
+        ) {
+          dispatch(
+            updateStore({
+              tutorialOn: true,
+              isSideBarOpen: false,
+            })
+          );
+        } else {
+          dispatch(
+            updateStore({
+              tutorialOn: true,
+              tutorialStep: [1],
+              isSideBarOpen: true,
+            })
+          );
+        }
       } else {
         dispatch(updateStore({ tutorialOn: true, tutorialStep: [1] }));
       }
@@ -173,6 +188,17 @@ const View = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {tutorialOn && (
+        <Box sx={{ position: "fixed", bottom: 5, right: 10 }}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => dispatch(updateStore({ tutorialOn: false }))}
+          >
+            Cancel Tutorial
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

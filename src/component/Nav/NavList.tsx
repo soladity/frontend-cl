@@ -17,6 +17,7 @@ import { getTranslation } from "../../utils/translation";
 import { useSelector, useDispatch } from "react-redux";
 import { setReloadStatus, updateStore } from "../../actions/contractActions";
 import Tutorial from "../Tutorial/Tutorial";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -30,7 +31,10 @@ const useStyles = makeStyles({
 const NavList = (props: any) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { tutorialOn } = useSelector((state: any) => state.contractReducer);
+  const location = useLocation();
+  const { tutorialOn, isSmallerThanMD } = useSelector(
+    (state: any) => state.contractReducer
+  );
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [language, setLanguage] = React.useState<string | null>("en");
@@ -122,7 +126,26 @@ const NavList = (props: any) => {
   };
 
   const setTutorialOn = () => {
-    dispatch(updateStore({ tutorialOn: !tutorialOn, tutorialStep: [1] }));
+    if (isSmallerThanMD) {
+      if (location.pathname == "/warriors" || location.pathname == "/beasts") {
+        dispatch(
+          updateStore({
+            tutorialOn: !tutorialOn,
+            isSideBarOpen: false,
+          })
+        );
+      } else {
+        dispatch(
+          updateStore({
+            tutorialOn: !tutorialOn,
+            tutorialStep: [1],
+            isSideBarOpen: true,
+          })
+        );
+      }
+    } else {
+      dispatch(updateStore({ tutorialOn: !tutorialOn, tutorialStep: [1] }));
+    }
   };
 
   return (
@@ -210,6 +233,27 @@ const NavList = (props: any) => {
                 {getTranslation(navItem.title)}
               </Typography>
             )}
+            {localStorage.getItem("tutorial") == "true" &&
+              navItem.type === "tutorial" && (
+                <Box onClick={() => setTutorialOn()}>
+                  <Tooltip title={"Tutorial" || ""} placement="right">
+                    <ListItemButton>
+                      <img
+                        src={`/assets/images/${navItem.icon}`}
+                        style={{
+                          width: "22px",
+                          height: "22px",
+                          marginRight: "34px",
+                        }}
+                        alt="icon"
+                      />
+                      <ListItemText
+                        primary={tutorialOn ? "Tutorial Off" : "Tutorial On"}
+                      />
+                    </ListItemButton>
+                  </Tooltip>
+                </Box>
+              )}
           </React.Fragment>
         ))}
         <Box sx={{ display: "flex", px: 2, pt: 2 }}>
@@ -267,11 +311,6 @@ const NavList = (props: any) => {
               </MenuItem>
             ))}
           </Menu>
-          {localStorage.getItem("tutorial") == "true" && (
-            <Button onClick={() => setTutorialOn()}>
-              {tutorialOn ? "tutorial off" : "tutorial on"}
-            </Button>
-          )}
           {navConfig.navBar.left.map(
             (navItem, index) =>
               navItem.type === "privacy" && (

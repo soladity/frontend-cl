@@ -237,6 +237,7 @@ const Warriors = () => {
 
   React.useEffect(() => {
     if (account) {
+      dispatch(updateStore({ isSideBarOpen: false }));
       getBalance();
       getBlstAmountToMintWarrior();
     }
@@ -286,6 +287,7 @@ const Warriors = () => {
       );
     } catch (e) {
       setTextLoading(false);
+      handleCheckTutorialStep(maxPower, warriors.length);
     }
   };
 
@@ -344,15 +346,7 @@ const Warriors = () => {
         amount += parseInt(powers[index]);
       });
     } catch (error) {}
-    if (amount == 0 && tempWarriors.length == 0) {
-      dispatch(updateStore({ tutorialStep: [2] }));
-    } else if (amount > 0 && amount < 2200) {
-      dispatch(updateStore({ tutorialStep: [4, 5] }));
-      setSummonWarriorTutorialStep(5);
-    }
-    if (amount >= 2200) {
-      dispatch(updateStore({ tutorialStep: [6, 7], isSideBarOpen: true }));
-    }
+    handleCheckTutorialStep(amount, tempWarriors.length);
     setMaxPower(amount);
     setWarriors(tempWarriors);
     if (revealStatusVal) {
@@ -583,6 +577,24 @@ const Warriors = () => {
     );
   };
 
+  const handleCheckTutorialStep = (
+    totalAttackPower: any,
+    warriorsLength: any
+  ) => {
+    if (totalAttackPower == 0 && warriorsLength == 0) {
+      dispatch(updateStore({ tutorialStep: [2] }));
+      // dispatch(updateStore({ tutorialStep: [4, 5] }));
+      // setSummonWarriorTutorialStep(5);
+      // dispatch(updateStore({ tutorialStep: [6], isSideBarOpen: false }));
+    } else if (totalAttackPower > 0 && totalAttackPower < 2200) {
+      dispatch(updateStore({ tutorialStep: [4, 5] }));
+      setSummonWarriorTutorialStep(5);
+    }
+    if (totalAttackPower >= 2200) {
+      dispatch(updateStore({ tutorialStep: [6], isSideBarOpen: false }));
+    }
+  };
+
   return (
     <Box>
       <Helmet>
@@ -629,6 +641,7 @@ const Warriors = () => {
                     aria-describedby={"summon-warrior-id"}
                     onClick={handlePopoverOpenSummonWarrior}
                     sx={{ fontWeight: "bold" }}
+                    id="summon-warrior-quantity"
                   >
                     <IconButton
                       aria-label="claim"
@@ -685,6 +698,7 @@ const Warriors = () => {
                           marginBottom: 1,
                           width: "100%",
                         }}
+                        id="summon-warrior-1"
                       >
                         1 ({warriorBlstAmountPer.b1?.amount} $BLST)
                       </CommonBtn>
@@ -696,6 +710,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-10"
                     >
                       10 (
                       {"-" +
@@ -712,6 +727,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-50"
                     >
                       50 (
                       {"-" +
@@ -728,6 +744,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-100"
                     >
                       100 (
                       {"-" +
@@ -744,6 +761,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-150"
                     >
                       150 (
                       {"-" +

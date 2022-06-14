@@ -14,13 +14,15 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { updateStore } from "../../actions/contractActions";
 import "./Tutorial.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 export default function Tutorial({ children, ...rest }: any) {
   const { curStep, placement } = rest;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let locationVal = useLocation();
+  console.log(locationVal);
 
   const { tutorialStep, tutorialForPopover, stepInfo, tutorialOn } =
     useSelector((state: any) => state.contractReducer);
@@ -43,15 +45,38 @@ export default function Tutorial({ children, ...rest }: any) {
     tutorialStep.filter((item: any) => item == curStep).length > 0;
 
   const handleTutorialNext = () => {
+    let summonWarriorQuantityBtn = document.getElementById(
+      "summon-warrior-quantity"
+    );
     switch (curStep) {
       case 1:
         navigate("/warriors");
-        dispatch(updateStore({ tutorialStep: [2], isSidebarOpen: false }));
         break;
-
+      case 2:
+        summonWarriorQuantityBtn?.click();
+        dispatch(updateStore({ tutorialStep: [3], isSideBarOpen: false }));
+        break;
+      case 3:
+        const summonWarrior1Btn = document.getElementById("summon-warrior-1");
+        summonWarrior1Btn?.click();
+        dispatch(updateStore({ isSideBarOpen: false }));
+        break;
+      case 4:
+        dispatch(updateStore({ tutorialStep: [5], isSideBarOpen: false }));
+        break;
+      case 5:
+        summonWarriorQuantityBtn?.click();
+        break;
+      case 6:
+        dispatch(updateStore({ tutorialStep: [7], isSideBarOpen: true }));
+        break;
       default:
         break;
     }
+  };
+
+  const handleTutorialCancel = () => {
+    dispatch(updateStore({ tutorialOn: false }));
   };
 
   const setTutorialClassName = () => {
@@ -92,6 +117,28 @@ export default function Tutorial({ children, ...rest }: any) {
         transition
         placement={placement}
         disablePortal={false}
+        modifiers={[
+          {
+            name: "flip",
+            enabled: false,
+            options: {
+              altBoundary: true,
+              rootBoundary: "document",
+              padding: 8,
+            },
+          },
+          {
+            name: "preventOverflow",
+            enabled: true,
+            options: {
+              altAxis: false,
+              altBoundary: true,
+              tether: true,
+              rootBoundary: "document",
+              padding: 8,
+            },
+          },
+        ]}
       >
         {show ? (
           ({ TransitionProps }) => (
@@ -113,14 +160,19 @@ export default function Tutorial({ children, ...rest }: any) {
                         /> */}
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    Tutorial {curStep}
+                    Step {curStep}
                   </Typography>
                   <Typography variant="body2">
                     {stepInfo[curStep]?.desc}
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ display: "flex" }}>
-                  <Button size="small" variant="outlined" sx={{ ml: "auto" }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ ml: "auto" }}
+                    onClick={() => handleTutorialCancel()}
+                  >
                     Cancel
                   </Button>
                   <Button
