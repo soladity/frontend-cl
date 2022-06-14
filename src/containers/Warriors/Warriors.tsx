@@ -174,6 +174,7 @@ const Warriors = () => {
   };
   const handlePopoverCloseSummonWarrior = () => {
     setAnchorElSummonWarrior(null);
+    handleCheckTutorialStep(maxPower, warriors.length);
   };
   const openSummonWarrior = Boolean(anchorElSummonWarrior);
 
@@ -583,9 +584,6 @@ const Warriors = () => {
   ) => {
     if (totalAttackPower == 0 && warriorsLength == 0) {
       dispatch(updateStore({ tutorialStep: [2] }));
-      // dispatch(updateStore({ tutorialStep: [4, 5] }));
-      // setSummonWarriorTutorialStep(5);
-      // dispatch(updateStore({ tutorialStep: [6], isSideBarOpen: false }));
     } else if (totalAttackPower > 0 && totalAttackPower < 2200) {
       dispatch(updateStore({ tutorialStep: [4, 5] }));
       setSummonWarriorTutorialStep(5);
