@@ -163,6 +163,11 @@ export const navConfig = {
         path: "/help",
       },
       {
+        type: "tutorial",
+        title: "help",
+        icon: "whitepaper.png",
+      },
+      {
         type: "social",
         title: "discord",
         icon: "/assets/images/discord.png",

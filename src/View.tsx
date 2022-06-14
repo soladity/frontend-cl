@@ -7,9 +7,18 @@ import Toolbar from "@mui/material/Toolbar";
 import { makeStyles } from "@mui/styles";
 
 import { navConfig } from "./config";
-import { useLegion, useRewardPool, useRewardPoolEvent, useWeb3 } from "./hooks/useContract";
-import { useWeb3React } from "@web3-react/core";
-import { getTaxStartDay, getUnclaimedUSD } from "./hooks/contractFunction";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+
+import { useSelector, useDispatch } from "react-redux";
+import { updateStore } from "./actions/contractActions";
+import { useTheme, useMediaQuery } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const useStyle = makeStyles({
   mainBox: {
@@ -30,9 +39,62 @@ const useStyle = makeStyles({
 
 const View = () => {
   const routing = useRoutes(navConfig.routes());
+  const location = useLocation();
+  const theme = useTheme();
+  const isSmallerThanMD = useMediaQuery(theme.breakpoints.down("md"));
+
+  const dispatch = useDispatch();
+  const { tutorialOn, isSmallerThanMD: isSmallerThanMiddle } = useSelector(
+    (state: any) => state.contractReducer
+  );
+  const [tutorialDialogOpen, setTutorialDialogOpen] = React.useState(
+    localStorage.getItem("tutorial") == "true" ? false : true
+  );
+
+  const handleTutorialDialogClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
+    setTutorialDialogOpen(false);
+  };
+  const setTutorialHelp = (type: any) => {
+    if (type == "yes") {
+      if (isSmallerThanMD) {
+        if (
+          location.pathname == "/warriors" ||
+          location.pathname == "/beasts"
+        ) {
+          dispatch(
+            updateStore({
+              tutorialOn: true,
+              isSideBarOpen: false,
+            })
+          );
+        } else {
+          dispatch(
+            updateStore({
+              tutorialOn: true,
+              tutorialStep: [1],
+              isSideBarOpen: true,
+            })
+          );
+        }
+      } else {
+        dispatch(updateStore({ tutorialOn: true, tutorialStep: [1] }));
+      }
+    } else if (type == "no") {
+      dispatch(updateStore({ tutorialOn: false }));
+    }
+    setTutorialDialogOpen(false);
+    localStorage.setItem("tutorial", "true");
+  };
 
   React.useEffect(() => {
-  }, [])
+    console.log(isSmallerThanMD);
+    if (isSmallerThanMD) {
+      dispatch(updateStore({ isSmallerThanMD: isSmallerThanMD }));
+    }
+  }, [isSmallerThanMD]);
 
   return (
     <Box
@@ -54,20 +116,22 @@ const View = () => {
       >
         <AppBarComponent />
       </Box>
-      <Box
-        component="nav"
-        sx={{
-          width: { md: navConfig.drawerWidth },
-          flexShrink: { md: 0 },
-          position: "relative",
-          zIndex: 99,
-        }}
-        aria-label="mailbox folders"
-        id="navbar"
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Navigation />
-      </Box>
+      {!isSmallerThanMD && (
+        <Box
+          component="nav"
+          sx={{
+            width: { md: navConfig.drawerWidth },
+            flexShrink: { md: 0 },
+            position: "relative",
+            zIndex: 99,
+          }}
+          aria-label="mailbox folders"
+          id="navbar"
+        >
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Navigation />
+        </Box>
+      )}
       <Box
         component="main"
         id="main"
@@ -81,6 +145,60 @@ const View = () => {
         <Toolbar />
         <React.Suspense fallback={<h3>Loading</h3>}>{routing}</React.Suspense>
       </Box>
+
+      <Dialog
+        open={tutorialDialogOpen}
+        keepMounted
+        disableEscapeKeyDown
+        onClose={(_, reason) => handleTutorialDialogClose(reason)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Welcome to your first time in Crypto Legions!</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+            Do you need some help to get started?
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            onClick={() => {
+              setTutorialHelp("no");
+              // handleTutorialDialogClose("cancel");
+            }}
+            variant="contained"
+            sx={{ color: "white", fontWeight: "bold" }}
+          >
+            No, I am an expert.
+          </Button>
+          <Button
+            onClick={() => {
+              setTutorialHelp("yes");
+              // handleTutorialDialogClose("cancel");
+            }}
+            variant="outlined"
+            sx={{ fontWeight: "bold" }}
+          >
+            Yes, help me play.
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {tutorialOn && (
+        <Box sx={{ position: "fixed", bottom: 5, right: 10 }}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => dispatch(updateStore({ tutorialOn: false }))}
+          >
+            Cancel Tutorial
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

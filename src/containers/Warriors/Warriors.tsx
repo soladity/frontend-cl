@@ -23,10 +23,10 @@ import HorizontalSplitIcon from "@mui/icons-material/HorizontalSplit";
 import { makeStyles } from "@mui/styles";
 import { useWeb3React } from "@web3-react/core";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { allConstants, meta_constant } from "../../config/meta.config";
-import { setReloadStatus } from "../../actions/contractActions";
+import { setReloadStatus, updateStore } from "../../actions/contractActions";
 import {
   getWarriorBloodstoneAllowance,
   setWarriorBloodstoneApprove,
@@ -70,6 +70,7 @@ import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { green, yellow, red } from "@mui/material/colors";
+import Tutorial from "../../component/Tutorial/Tutorial";
 
 const useStyles = makeStyles({
   root: {
@@ -145,6 +146,9 @@ const Warriors = () => {
     },
   });
 
+  const [summonWarriorTutorialStep, setSummonWarriorTutorialStep] =
+    React.useState(2);
+
   const classes = useStyles();
   const warriorContract = useWarrior();
   const legionContract = useLegion();
@@ -162,9 +166,15 @@ const Warriors = () => {
     event: React.MouseEvent<HTMLElement>
   ) => {
     setAnchorElSummonWarrior(event.currentTarget);
+    if (warriors.length == 0) {
+      dispatch(updateStore({ tutorialStep: [3] }));
+    } else {
+      dispatch(updateStore({ tutorialStep: [] }));
+    }
   };
   const handlePopoverCloseSummonWarrior = () => {
     setAnchorElSummonWarrior(null);
+    handleCheckTutorialStep(maxPower, warriors.length);
   };
   const openSummonWarrior = Boolean(anchorElSummonWarrior);
 
@@ -228,6 +238,7 @@ const Warriors = () => {
 
   React.useEffect(() => {
     if (account) {
+      dispatch(updateStore({ isSideBarOpen: false }));
       getBalance();
       getBlstAmountToMintWarrior();
     }
@@ -277,6 +288,7 @@ const Warriors = () => {
       );
     } catch (e) {
       setTextLoading(false);
+      handleCheckTutorialStep(maxPower, warriors.length);
     }
   };
 
@@ -335,6 +347,7 @@ const Warriors = () => {
         amount += parseInt(powers[index]);
       });
     } catch (error) {}
+    handleCheckTutorialStep(amount, tempWarriors.length);
     setMaxPower(amount);
     setWarriors(tempWarriors);
     if (revealStatusVal) {
@@ -565,6 +578,21 @@ const Warriors = () => {
     );
   };
 
+  const handleCheckTutorialStep = (
+    totalAttackPower: any,
+    warriorsLength: any
+  ) => {
+    if (totalAttackPower == 0 && warriorsLength == 0) {
+      dispatch(updateStore({ tutorialStep: [2] }));
+    } else if (totalAttackPower > 0 && totalAttackPower < 2200) {
+      dispatch(updateStore({ tutorialStep: [4, 5] }));
+      setSummonWarriorTutorialStep(5);
+    }
+    if (totalAttackPower >= 2200) {
+      dispatch(updateStore({ tutorialStep: [6], isSideBarOpen: false }));
+    }
+  };
+
   return (
     <Box>
       <Helmet>
@@ -603,20 +631,26 @@ const Warriors = () => {
                 {getTranslation("summonWarrior")}
               </Typography>
               <Box sx={{ pt: 1 }}>
-                <CommonBtn
-                  aria-describedby={"summon-warrior-id"}
-                  onClick={handlePopoverOpenSummonWarrior}
-                  sx={{ fontWeight: "bold" }}
+                <Tutorial
+                  curStep={summonWarriorTutorialStep}
+                  placement={"bottom"}
                 >
-                  <IconButton
-                    aria-label="claim"
-                    component="span"
-                    sx={{ p: 0, mr: 1, color: "black" }}
+                  <CommonBtn
+                    aria-describedby={"summon-warrior-id"}
+                    onClick={handlePopoverOpenSummonWarrior}
+                    sx={{ fontWeight: "bold" }}
+                    id="summon-warrior-quantity"
                   >
-                    <HorizontalSplitIcon />
-                  </IconButton>
-                  {getTranslation("summonQuantity")}
-                </CommonBtn>
+                    <IconButton
+                      aria-label="claim"
+                      component="span"
+                      sx={{ p: 0, mr: 1, color: "black" }}
+                    >
+                      <HorizontalSplitIcon />
+                    </IconButton>
+                    {getTranslation("summonQuantity")}
+                  </CommonBtn>
+                </Tutorial>
                 <Popover
                   id={"summon-warrior-id"}
                   open={openSummonWarrior}
@@ -653,16 +687,20 @@ const Warriors = () => {
                       flexDirection: "column",
                     }}
                   >
-                    <CommonBtn
-                      onClick={() => handleMint(1)}
-                      sx={{
-                        fontSize: 14,
-                        fontWeight: "bold",
-                        marginBottom: 1,
-                      }}
-                    >
-                      1 ({warriorBlstAmountPer.b1?.amount} $BLST)
-                    </CommonBtn>
+                    <Tutorial curStep={3} placement={"bottom"}>
+                      <CommonBtn
+                        onClick={() => handleMint(1)}
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          marginBottom: 1,
+                          width: "100%",
+                        }}
+                        id="summon-warrior-1"
+                      >
+                        1 ({warriorBlstAmountPer.b1?.amount} $BLST)
+                      </CommonBtn>
+                    </Tutorial>
                     <CommonBtn
                       onClick={() => handleMint(10)}
                       sx={{
@@ -670,6 +708,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-10"
                     >
                       10 (
                       {"-" +
@@ -686,6 +725,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-50"
                     >
                       50 (
                       {"-" +
@@ -702,6 +742,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-100"
                     >
                       100 (
                       {"-" +
@@ -718,6 +759,7 @@ const Warriors = () => {
                         fontWeight: "bold",
                         marginBottom: 1,
                       }}
+                      id="summon-warrior-150"
                     >
                       150 (
                       {"-" +
@@ -742,13 +784,15 @@ const Warriors = () => {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {getTranslation("currentWarriors")}
               </Typography>
-              <Typography
-                variant="h4"
-                color="secondary"
-                sx={{ fontWeight: "bold" }}
-              >
-                {balance}
-              </Typography>
+              <Tutorial curStep={6} placement="bottom">
+                <Typography
+                  variant="h4"
+                  color="secondary"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {balance}
+                </Typography>
+              </Tutorial>
               <CommonBtn sx={{ fontWeight: "bold", mt: 1 }}>
                 <NavLink to="/createlegions" className="non-style">
                   {getTranslation("createLegion")}
@@ -766,13 +810,15 @@ const Warriors = () => {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {getTranslation("attackPower")}
               </Typography>
-              <Typography
-                variant="h4"
-                color="primary"
-                sx={{ fontWeight: "bold" }}
-              >
-                {formatNumber(maxPower)}
-              </Typography>
+              <Tutorial curStep={4} placement={"bottom"}>
+                <Typography
+                  variant="h4"
+                  color="primary"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {formatNumber(maxPower)}
+                </Typography>
+              </Tutorial>
               <CommonBtn
                 sx={{ fontWeight: "bold", mt: 1 }}
                 onClick={() => handleSelectAll()}
