@@ -346,13 +346,12 @@ const Warriors = () => {
     } catch (error) {}
     if (amount == 0 && tempWarriors.length == 0) {
       dispatch(updateStore({ tutorialStep: [2] }));
-      // dispatch(updateStore({ tutorialStep: [6, 7] }));
     } else if (amount > 0 && amount < 2200) {
       dispatch(updateStore({ tutorialStep: [4, 5] }));
       setSummonWarriorTutorialStep(5);
     }
     if (amount >= 2200) {
-      dispatch(updateStore({ tutorialStep: [6, 7] }));
+      dispatch(updateStore({ tutorialStep: [6, 7], isSideBarOpen: true }));
     }
     setMaxPower(amount);
     setWarriors(tempWarriors);

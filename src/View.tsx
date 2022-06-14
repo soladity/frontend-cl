@@ -17,6 +17,7 @@ import {
 
 import { useSelector, useDispatch } from "react-redux";
 import { updateStore } from "./actions/contractActions";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 const useStyle = makeStyles({
   mainBox: {
@@ -37,8 +38,14 @@ const useStyle = makeStyles({
 
 const View = () => {
   const routing = useRoutes(navConfig.routes());
+
+  const theme = useTheme();
+  const isSmallerThanMD = useMediaQuery(theme.breakpoints.down("md"));
+
   const dispatch = useDispatch();
-  const { tutorialOn } = useSelector((state: any) => state.contractReducer);
+  const { tutorialOn, isSmallerThanMD: isSmallerThanMiddle } = useSelector(
+    (state: any) => state.contractReducer
+  );
   const [tutorialDialogOpen, setTutorialDialogOpen] = React.useState(true);
 
   const handleTutorialDialogClose = (reason: string) => {
@@ -49,7 +56,17 @@ const View = () => {
   };
   const setTutorialHelp = (type: any) => {
     if (type == "yes") {
-      dispatch(updateStore({ tutorialOn: true }));
+      if (isSmallerThanMD) {
+        dispatch(
+          updateStore({
+            tutorialOn: true,
+            tutorialStep: [1],
+            isSideBarOpen: true,
+          })
+        );
+      } else {
+        dispatch(updateStore({ tutorialOn: true, tutorialStep: [1] }));
+      }
     } else if (type == "no") {
       dispatch(updateStore({ tutorialOn: false }));
     }
@@ -57,7 +74,12 @@ const View = () => {
     localStorage.setItem("tutorial", "true");
   };
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    console.log(isSmallerThanMD);
+    if (isSmallerThanMD) {
+      dispatch(updateStore({ isSmallerThanMD: isSmallerThanMD }));
+    }
+  }, [isSmallerThanMD]);
 
   return (
     <Box
@@ -79,20 +101,22 @@ const View = () => {
       >
         <AppBarComponent />
       </Box>
-      <Box
-        component="nav"
-        sx={{
-          width: { md: navConfig.drawerWidth },
-          flexShrink: { md: 0 },
-          position: "relative",
-          zIndex: 99,
-        }}
-        aria-label="mailbox folders"
-        id="navbar"
-      >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Navigation />
-      </Box>
+      {!isSmallerThanMD && (
+        <Box
+          component="nav"
+          sx={{
+            width: { md: navConfig.drawerWidth },
+            flexShrink: { md: 0 },
+            position: "relative",
+            zIndex: 99,
+          }}
+          aria-label="mailbox folders"
+          id="navbar"
+        >
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Navigation />
+        </Box>
+      )}
       <Box
         component="main"
         id="main"

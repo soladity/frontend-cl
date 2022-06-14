@@ -5,7 +5,6 @@ export const getTranslation = (key, _param1, _param2) => {
     ? localStorage.getItem("lang")
     : "en";
   if (key == "gotUnclaimedReward") {
-    console.log(key, _param1, _param2);
   }
   return _param1
     ? translations[key](_param1, _param2)[lang]

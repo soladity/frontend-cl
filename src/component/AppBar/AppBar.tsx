@@ -42,9 +42,11 @@ import { formatNumber } from "../../utils/common";
 import NavList from "../Nav/NavList";
 import { useSelector, useDispatch } from "react-redux";
 import CommonBtn from "../../component/Buttons/CommonBtn";
-import { setReloadStatus } from "../../actions/contractActions";
+import { setReloadStatus, updateStore } from "../../actions/contractActions";
 
 import { MdClose } from "react-icons/md";
+import Tutorial from "../Tutorial/Tutorial";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -58,14 +60,16 @@ const Transition = React.forwardRef(function Transition(
 const AppBarComponent = () => {
   const dispatch = useDispatch();
 
+  const theme = useTheme();
+  const isSmallerThanMD = useMediaQuery(theme.breakpoints.down("md"));
   const { account } = useWeb3React();
 
-  const { reloadContractStatus } = useSelector(
+  const { reloadContractStatus, isSideBarOpen, claimInfo } = useSelector(
     (state: any) => state.contractReducer
   );
 
   const [balance, setBalance] = React.useState("0");
-  const [showMenu, setShowMenu] = React.useState<boolean>(false);
+  const [showMenu, setShowMenu] = React.useState<boolean>(true);
   const [unClaimedBLST, setUnclaimedBLST] = React.useState(0);
   const [taxLeftDays, setTaxLeftDays] = React.useState("0");
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -153,7 +157,7 @@ const AppBarComponent = () => {
     ) {
       return;
     }
-    setShowMenu(open);
+    dispatch(updateStore({ isSideBarOpen: open }));
   };
 
   const handleDialogClose = (reason: string) => {
@@ -172,6 +176,15 @@ const AppBarComponent = () => {
 
   const handleClaimReward = async () => {
     setLoading(true);
+
+    dispatch(
+      updateStore({
+        claimInfo: {
+          BUSDReward: BUSDReward,
+          BLSTReward: BLSTReward,
+        },
+      })
+    );
     try {
       await claimReward(web3, legionContract, account);
       setShareDialogOpen(true);
@@ -188,7 +201,7 @@ const AppBarComponent = () => {
   const getShareLink = (social: string) => {
     const serverLink = "https://play.cryptolegions.app";
     const shareImgUrl = `${serverLink}/winning.jpg`;
-    const text = `I just earned and got in my wallet ${BLSTReward} $BLST (= ${BUSDReward} USD). Thank you Crypto Legions! You can join the play to earn game I am playing here: https://cryptolegions.app`;
+    const text = `I just earned and got in my wallet ${claimInfo.BLSTReward} $BLST (= ${claimInfo.BUSDReward} USD). Thank you Crypto Legions! You can join the play to earn game I am playing here: https://cryptolegions.app`;
     const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
     const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
     const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
@@ -208,32 +221,36 @@ const AppBarComponent = () => {
     >
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{ flexFlow: "wrap" }}>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={toggleDrawer(true)}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <SwipeableDrawer
-              anchor="left"
-              open={showMenu}
-              onClose={toggleDrawer(false)}
-              onOpen={toggleDrawer(true)}
-            >
-              <Box
-                sx={{ width: 250 }}
-                role="presentation"
-                onKeyDown={toggleDrawer(false)}
+          {isSmallerThanMD && (
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <Tutorial curStep={0} placement={"right"}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={toggleDrawer(true)}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Tutorial>
+              <SwipeableDrawer
+                anchor="left"
+                open={isSideBarOpen}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
               >
-                <NavList />
-              </Box>
-            </SwipeableDrawer>
-          </Box>
+                <Box
+                  sx={{ width: 250 }}
+                  role="presentation"
+                  onKeyDown={toggleDrawer(false)}
+                >
+                  <NavList />
+                </Box>
+              </SwipeableDrawer>
+            </Box>
+          )}
           <Box sx={{ marginLeft: { md: 0, xs: "auto" } }}></Box>
           <NavLink
             to="/"
@@ -495,8 +512,8 @@ const AppBarComponent = () => {
           ></MdClose>
           {getTranslation(
             "gotUnclaimedReward",
-            BLSTReward.toFixed(2),
-            BUSDReward.toFixed(2)
+            claimInfo.BLSTReward.toFixed(2),
+            claimInfo.BUSDReward.toFixed(2)
           )}
           <Box sx={{ fontWeight: "bold", textAlign: "center", mt: 1 }}>
             {getTranslation("shareYourHappiness")}

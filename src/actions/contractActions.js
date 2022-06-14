@@ -24,7 +24,6 @@ export const initMassHuntResult = () => {
 };
 
 export const updateStore = (payload) => {
-  console.log(payload);
   return {
     type: UPDATE_STORE,
     payload: payload,

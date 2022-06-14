@@ -10,7 +10,7 @@ const TUTORIAL_STEPS = {
     desc: "Click here to go the warrior page!",
   },
   2: {
-    desc: "Choose the quantity what you want to summon!",
+    desc: "Click here to choose how many warriors you want to summon!",
   },
   3: {
     desc: "Summon your first warrior!",
@@ -37,6 +37,12 @@ let initalState = {
   tutorialForPopover: false,
   stepInfo: TUTORIAL_STEPS,
   tutorialOn: false,
+  isSmallerThanMD: false,
+  isSideBarOpen: false,
+  claimInfo: {
+    BLSTReward: 0,
+    BUSDReward: 0,
+  },
 };
 
 export const contractReducer = (state = initalState, action) => {

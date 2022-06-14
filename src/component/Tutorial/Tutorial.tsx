@@ -14,16 +14,16 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { updateStore } from "../../actions/contractActions";
 import "./Tutorial.css";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Tutorial({ children, ...rest }: any) {
   const { curStep, placement } = rest;
-  console.log("currentstep: ", curStep);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { tutorialStep, tutorialForPopover, stepInfo, tutorialOn } =
     useSelector((state: any) => state.contractReducer);
-  console.log(tutorialStep, tutorialForPopover);
 
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -43,7 +43,15 @@ export default function Tutorial({ children, ...rest }: any) {
     tutorialStep.filter((item: any) => item == curStep).length > 0;
 
   const handleTutorialNext = () => {
-    dispatch(updateStore({ tutorialStep: curStep + 1 }));
+    switch (curStep) {
+      case 1:
+        navigate("/warriors");
+        dispatch(updateStore({ tutorialStep: [2], isSidebarOpen: false }));
+        break;
+
+      default:
+        break;
+    }
   };
 
   const setTutorialClassName = () => {
@@ -68,7 +76,6 @@ export default function Tutorial({ children, ...rest }: any) {
   };
 
   useEffect(() => {
-    console.log(tutorialSelector.current);
     setAnchorEl(tutorialSelector.current);
     setOpen(true);
   }, []);
@@ -112,12 +119,18 @@ export default function Tutorial({ children, ...rest }: any) {
                     {stepInfo[curStep]?.desc}
                   </Typography>
                 </CardContent>
-                {/* <CardActions>
-                  <Button size="small">Skip</Button>
-                  <Button size="small" onClick={() => handleTutorialNext()}>
+                <CardActions sx={{ display: "flex" }}>
+                  <Button size="small" variant="outlined" sx={{ ml: "auto" }}>
+                    Cancel
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => handleTutorialNext()}
+                  >
                     Next
                   </Button>
-                </CardActions> */}
+                </CardActions>
                 {placement == "top" && (
                   <div className="tutorial-bottom-arrow"></div>
                 )}

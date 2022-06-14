@@ -122,7 +122,7 @@ const NavList = (props: any) => {
   };
 
   const setTutorialOn = () => {
-    dispatch(updateStore({ tutorialOn: !tutorialOn }));
+    dispatch(updateStore({ tutorialOn: !tutorialOn, tutorialStep: [1] }));
   };
 
   return (
@@ -164,13 +164,16 @@ const NavList = (props: any) => {
             )}
             {navItem.type === "navlink" && (
               <Tutorial
-                placement="right"
+                placement="bottom"
                 curStep={getTutorialStep(navItem.path ? navItem.path : "")}
               >
                 <NavLink
                   to={navItem.path || ""}
                   className={({ isActive }) =>
                     "nav-bar-item " + (isActive ? "active" : "")
+                  }
+                  onClick={() =>
+                    dispatch(updateStore({ isSideBarOpen: false }))
                   }
                 >
                   <Tooltip title={navItem.title || ""} placement="right">
