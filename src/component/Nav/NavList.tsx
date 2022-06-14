@@ -14,8 +14,9 @@ import { Card } from "@mui/material";
 
 import { navConfig } from "../../config";
 import { getTranslation } from "../../utils/translation";
-import { useDispatch } from "react-redux";
-import { setReloadStatus } from "../../actions/contractActions";
+import { useSelector, useDispatch } from "react-redux";
+import { setReloadStatus, updateStore } from "../../actions/contractActions";
+import Tutorial from "../Tutorial/Tutorial";
 
 const useStyles = makeStyles({
   root: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles({
 const NavList = (props: any) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { tutorialOn } = useSelector((state: any) => state.contractReducer);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [language, setLanguage] = React.useState<string | null>("en");
@@ -104,6 +106,25 @@ const NavList = (props: any) => {
     );
   };
 
+  const getTutorialStep = (title: string) => {
+    let step = -1;
+    switch (title) {
+      case "/warriors":
+        step = 1;
+        break;
+      case "/beasts":
+        step = 7;
+        break;
+      default:
+        break;
+    }
+    return step;
+  };
+
+  const setTutorialOn = () => {
+    dispatch(updateStore({ tutorialOn: !tutorialOn }));
+  };
+
   return (
     <div>
       <Toolbar sx={{ display: { xs: "none", md: "flex" } }} />
@@ -142,27 +163,32 @@ const NavList = (props: any) => {
               </a>
             )}
             {navItem.type === "navlink" && (
-              <NavLink
-                to={navItem.path || ""}
-                className={({ isActive }) =>
-                  "nav-bar-item " + (isActive ? "active" : "")
-                }
+              <Tutorial
+                placement="right"
+                curStep={getTutorialStep(navItem.path ? navItem.path : "")}
               >
-                <Tooltip title={navItem.title || ""} placement="right">
-                  <ListItemButton>
-                    <img
-                      src={`/assets/images/${navItem.icon}`}
-                      style={{
-                        width: "22px",
-                        height: "22px",
-                        marginRight: "34px",
-                      }}
-                      alt="icon"
-                    />
-                    <ListItemText primary={getTranslation(navItem.title)} />
-                  </ListItemButton>
-                </Tooltip>
-              </NavLink>
+                <NavLink
+                  to={navItem.path || ""}
+                  className={({ isActive }) =>
+                    "nav-bar-item " + (isActive ? "active" : "")
+                  }
+                >
+                  <Tooltip title={navItem.title || ""} placement="right">
+                    <ListItemButton>
+                      <img
+                        src={`/assets/images/${navItem.icon}`}
+                        style={{
+                          width: "22px",
+                          height: "22px",
+                          marginRight: "34px",
+                        }}
+                        alt="icon"
+                      />
+                      <ListItemText primary={getTranslation(navItem.title)} />
+                    </ListItemButton>
+                  </Tooltip>
+                </NavLink>
+              </Tutorial>
             )}
             {navItem.type === "divider" && <Divider />}
             {navItem.type === "head" && (
@@ -238,6 +264,11 @@ const NavList = (props: any) => {
               </MenuItem>
             ))}
           </Menu>
+          {localStorage.getItem("tutorial") == "true" && (
+            <Button onClick={() => setTutorialOn()}>
+              {tutorialOn ? "tutorial off" : "tutorial on"}
+            </Button>
+          )}
           {navConfig.navBar.left.map(
             (navItem, index) =>
               navItem.type === "privacy" && (

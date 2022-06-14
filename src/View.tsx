@@ -7,9 +7,16 @@ import Toolbar from "@mui/material/Toolbar";
 import { makeStyles } from "@mui/styles";
 
 import { navConfig } from "./config";
-import { useLegion, useRewardPool, useRewardPoolEvent, useWeb3 } from "./hooks/useContract";
-import { useWeb3React } from "@web3-react/core";
-import { getTaxStartDay, getUnclaimedUSD } from "./hooks/contractFunction";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+
+import { useSelector, useDispatch } from "react-redux";
+import { updateStore } from "./actions/contractActions";
 
 const useStyle = makeStyles({
   mainBox: {
@@ -30,9 +37,27 @@ const useStyle = makeStyles({
 
 const View = () => {
   const routing = useRoutes(navConfig.routes());
+  const dispatch = useDispatch();
+  const { tutorialOn } = useSelector((state: any) => state.contractReducer);
+  const [tutorialDialogOpen, setTutorialDialogOpen] = React.useState(true);
 
-  React.useEffect(() => {
-  }, [])
+  const handleTutorialDialogClose = (reason: string) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      return;
+    }
+    setTutorialDialogOpen(false);
+  };
+  const setTutorialHelp = (type: any) => {
+    if (type == "yes") {
+      dispatch(updateStore({ tutorialOn: true }));
+    } else if (type == "no") {
+      dispatch(updateStore({ tutorialOn: false }));
+    }
+    setTutorialDialogOpen(false);
+    localStorage.setItem("tutorial", "true");
+  };
+
+  React.useEffect(() => {}, []);
 
   return (
     <Box
@@ -81,6 +106,49 @@ const View = () => {
         <Toolbar />
         <React.Suspense fallback={<h3>Loading</h3>}>{routing}</React.Suspense>
       </Box>
+
+      <Dialog
+        open={tutorialDialogOpen}
+        keepMounted
+        disableEscapeKeyDown
+        onClose={(_, reason) => handleTutorialDialogClose(reason)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Welcome to your first time in Crypto Legions!</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+            Do you need some help to get started?
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            onClick={() => {
+              setTutorialHelp("no");
+              // handleTutorialDialogClose("cancel");
+            }}
+            variant="contained"
+            sx={{ color: "white", fontWeight: "bold" }}
+          >
+            No, I am an expert.
+          </Button>
+          <Button
+            onClick={() => {
+              setTutorialHelp("yes");
+              // handleTutorialDialogClose("cancel");
+            }}
+            variant="outlined"
+            sx={{ fontWeight: "bold" }}
+          >
+            Yes, help me play.
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
