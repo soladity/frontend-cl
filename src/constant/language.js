@@ -2377,7 +2377,6 @@ export const translations = {
   },
   wallet: {
     en: "Use my wallet",
-
     es: "Usar mi billetera",
     cn: "钱包",
     pt: "Usar minha carteira",
@@ -2743,7 +2742,7 @@ export const translations = {
     pt: "Aviso!",
     tr: "Uyarı!",
     ru: "Предупреждение!",
-    fr: "",
+    fr: "Avertissement!",
     de: "Avertissement!",
     pl: "Waarschuwing!",
     ph: "Babala!",
@@ -2821,5 +2820,17 @@ export const translations = {
       pl: `Właśnie masz w portfelu ${BLST} $BLST (= ${BUSD} USD).`,
       ph: `Kakakuha mo lang ng ${BLST} $BLST (= ${BUSD} USD) sa iyong wallet.`,
     };
+  },
+  tips: {
+    en: "Tips & Tricks",
+    es: "consejos y trucos",
+    cn: "提示与技巧",
+    pt: "dicas e truques",
+    tr: "İpuçları & Hileler",
+    ru: "Советы и хитрости",
+    fr: "Conseils & Astuces",
+    de: "tips & trucs",
+    pl: "Porady & Triki",
+    ph: "Mga Tip at Trick",
   },
 };

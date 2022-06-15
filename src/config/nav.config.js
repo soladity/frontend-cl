@@ -13,6 +13,7 @@ import UpdateLegions from "../containers/UpdateLegions";
 import Profile from "../containers/Profile/Profile";
 import Policy from "../containers/Policy/Policy";
 import Help from "../containers/Help/Help";
+import Tips from "../containers/Tips/Tips";
 import MassExecute from "../containers/MassExecute/MassExecute";
 
 export const navConfig = {
@@ -74,6 +75,10 @@ export const navConfig = {
     {
       path: "/help",
       element: <Help />,
+    },
+    {
+      path: "/tips",
+      element: <Tips />,
     },
     {
       path: "*",
@@ -161,6 +166,12 @@ export const navConfig = {
         title: "help",
         icon: "support.png",
         path: "/help",
+      },
+      {
+        type: "navlink",
+        title: "tips",
+        icon: "tips.png",
+        path: "/tips",
       },
       {
         type: "tutorial",
