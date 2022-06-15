@@ -267,7 +267,10 @@ const NavList = (props: any) => {
             {localStorage.getItem("tutorial") == "true" &&
               navItem.type === "tutorial" && (
                 <Tutorial curStep={0} placement="top">
-                  <Box onClick={() => setTutorialOn()}>
+                  <Box
+                    onClick={() => setTutorialOn()}
+                    className={tutorialOn && "nav-bar-item active"}
+                  >
                     <Tooltip
                       title={
                         "You can always restart the tutorial by clicking here"
