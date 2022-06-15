@@ -6,65 +6,68 @@ import {
 } from "../actions/contractActions";
 
 const TUTORIAL_STEPS = {
+  0: {
+    desc: "You can always restart the tutorial by clicking here",
+  },
   1: {
-    desc: "Click here to go the warrior page!",
+    desc: "Click here to go the Warriors page",
   },
   2: {
-    desc: "Click here to choose how many warriors you want to summon!",
+    desc: "Click here to choose how many warriors you want to summon",
   },
   3: {
-    desc: "Summon your first warrior!",
+    desc: "Summon your first warrior",
   },
   4: {
-    desc: "You will need at least 2200 Total Attack Power Summon more Warriors!",
+    desc: "You will need at least 2200 Total Attack Power Summon more Warriors",
   },
   5: {
-    desc: "Summon more warriors!",
+    desc: "Summon more warriors",
   },
   6: {
-    desc: "Remember how many warriors you have!",
+    desc: "Remember how many warriors you have",
   },
   7: {
-    desc: "Now go to the Beasts page!",
+    desc: "Now go to the Beasts page",
   },
   8: {
-    desc: "Click here to choose how many beasts you want to summon!",
+    desc: "Click here to choose how many beasts you want to summon",
   },
   9: {
-    desc: "Summon your first beast!",
+    desc: "Summon your first beast",
   },
   10: {
-    desc: "Until the Total Capacity of All Beasts reaches the amount of Warriors you have!",
+    desc: "Until the Total Capacity of All Beasts reaches the amount of Warriors you have",
   },
   11: {
-    desc: "Summon more beasts!",
+    desc: "Summon more beasts",
   },
   12: {
-    desc: "Now let's create your first legion!",
+    desc: "Now let's create your first legion",
   },
   13: {
-    desc: "Switch between Warriors and Beasts here, and Click on the Warriors and Beasts to add them to your legion!",
+    desc: "Switch between Warriors and Beasts here, and Click on the Warriors and Beasts to add them to your legion",
   },
   14: {
-    desc: "Give your legion a name, and Once you reach enough attack power, click here to create your legion!",
+    desc: "Give your legion a name, and Once you reach enough attack power, click here to create your legion",
   },
   15: {
-    desc: "Click here to add hunting supplies!",
+    desc: "Click here to add hunting supplies",
   },
   16: {
-    desc: "Buy hunting supplies!",
+    desc: "Buy hunting supplies",
   },
   17: {
-    desc: "Go to the Hunt page!",
+    desc: "Go to the Hunt page",
   },
   18: {
-    desc: "Attack the strongest monster your legion can hunt by clicking the orange Hunt button!",
+    desc: "Attack the strongest monster your legion can hunt by clicking the orange Hunt button",
   },
   19: {
-    desc: "The money you win will go to the unclaimed wallet here!",
+    desc: "The money you win will go to the unclaimed wallet here",
   },
   20: {
-    desc: "You can find detailed instructions in our Whitepaper here!",
+    desc: "You can find detailed instructions in our Whitepaper here",
   },
 };
 

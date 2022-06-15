@@ -555,9 +555,9 @@ const Monsters = () => {
           setHuntedRoll(result.roll);
           setHuntAvailablePercent(result.percent);
           setHuntedStatus(result.success ? 1 : 2);
-          if (result.success) {
-            dispatch(updateStore({ tutorialStep: [19] }));
-          }
+          // if (result.success) {
+          //   dispatch(updateStore({ tutorialStep: [19] }));
+          // }
           dispatch(
             setReloadStatus({
               reloadContractStatus: new Date(),
@@ -572,6 +572,7 @@ const Monsters = () => {
             setOpenSnackBar(true);
           }
         }
+        dispatch(updateStore({ tutorialStep: [19] }));
       } else {
         setSnackBarMessage(getTranslation("addBUSD"));
         setOpenSnackBar(true);

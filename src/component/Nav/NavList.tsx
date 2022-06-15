@@ -136,38 +136,38 @@ const NavList = (props: any) => {
     // if (isSmallerThanMD) {
 
     //// Plan A
-    if (
-      location.pathname == "/warriors" ||
-      location.pathname == "/beasts" ||
-      location.pathname == "/createlegions" ||
-      location.pathname == "/legions" ||
-      location.pathname == "/hunt"
-    ) {
-      dispatch(
-        updateStore({
-          tutorialOn: !tutorialOn,
-          isSideBarOpen: false,
-        })
-      );
-    } else {
-      dispatch(
-        updateStore({
-          tutorialOn: !tutorialOn,
-          tutorialStep: [1],
-          isSideBarOpen: true,
-        })
-      );
-    }
+    // if (
+    //   location.pathname == "/warriors" ||
+    //   location.pathname == "/beasts" ||
+    //   location.pathname == "/createlegions" ||
+    //   location.pathname == "/legions" ||
+    //   location.pathname == "/hunt"
+    // ) {
+    //   dispatch(
+    //     updateStore({
+    //       tutorialOn: !tutorialOn,
+    //       isSideBarOpen: false,
+    //     })
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateStore({
+    //       tutorialOn: !tutorialOn,
+    //       tutorialStep: [1],
+    //       isSideBarOpen: true,
+    //     })
+    //   );
+    // }
 
     //// plan B
-    // navigate("/");
-    // dispatch(
-    //   updateStore({
-    //     tutorialOn: !tutorialOn,
-    //     tutorialStep: [1],
-    //     isSideBarOpen: true,
-    //   })
-    // );
+    navigate("/");
+    dispatch(
+      updateStore({
+        tutorialOn: !tutorialOn,
+        tutorialStep: [1],
+        isSideBarOpen: true,
+      })
+    );
 
     // } else {
     //   dispatch(updateStore({ tutorialOn: !tutorialOn, tutorialStep: [1] }));
@@ -266,29 +266,31 @@ const NavList = (props: any) => {
             )}
             {localStorage.getItem("tutorial") == "true" &&
               navItem.type === "tutorial" && (
-                <Box onClick={() => setTutorialOn()}>
-                  <Tooltip
-                    title={
-                      "You can always restart the tutorial by clicking here"
-                    }
-                    placement="right"
-                  >
-                    <ListItemButton>
-                      <img
-                        src={`/assets/images/${navItem.icon}`}
-                        style={{
-                          width: "22px",
-                          height: "22px",
-                          marginRight: "34px",
-                        }}
-                        alt="icon"
-                      />
-                      <ListItemText
-                        primary={tutorialOn ? "Tutorial Off" : "Tutorial On"}
-                      />
-                    </ListItemButton>
-                  </Tooltip>
-                </Box>
+                <Tutorial curStep={0} placement="top">
+                  <Box onClick={() => setTutorialOn()}>
+                    <Tooltip
+                      title={
+                        "You can always restart the tutorial by clicking here"
+                      }
+                      placement="right"
+                    >
+                      <ListItemButton>
+                        <img
+                          src={`/assets/images/${navItem.icon}`}
+                          style={{
+                            width: "22px",
+                            height: "22px",
+                            marginRight: "34px",
+                          }}
+                          alt="icon"
+                        />
+                        <ListItemText
+                          primary={tutorialOn ? "CANCEL Tutorial" : "Tutorial"}
+                        />
+                      </ListItemButton>
+                    </Tooltip>
+                  </Box>
+                </Tutorial>
               )}
           </React.Fragment>
         ))}

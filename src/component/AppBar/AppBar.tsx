@@ -223,18 +223,16 @@ const AppBarComponent = () => {
         <Toolbar disableGutters sx={{ flexFlow: "wrap" }}>
           {isSmallerThanMD && (
             <Box sx={{ display: { xs: "flex", md: "none" } }}>
-              <Tutorial curStep={0} placement={"right"}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={toggleDrawer(true)}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Tutorial>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={toggleDrawer(true)}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
               <SwipeableDrawer
                 anchor="left"
                 open={isSideBarOpen}

@@ -52,6 +52,9 @@ export default function Tutorial({ children, ...rest }: any) {
     );
 
     switch (curStep) {
+      case 0:
+        dispatch(updateStore({ tutorialStep: [1] }));
+        break;
       case 1:
         navigate("/warriors");
         break;
@@ -218,7 +221,7 @@ export default function Tutorial({ children, ...rest }: any) {
                         /> */}
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    Step {curStep}
+                    {curStep == 0 ? "" : "Step " + curStep}
                   </Typography>
                   <Typography variant="body2">
                     {stepInfo[curStep]?.desc}
@@ -233,25 +236,30 @@ export default function Tutorial({ children, ...rest }: any) {
                   >
                     Cancel
                   </Button>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={() => handleTutorialNext()}
-                    // disabled={curStep == 18 && !isHuntable}
-                    sx={
-                      curStep == 18 && !isHuntable
-                        ? { color: "white", background: "black" }
-                        : {}
-                    }
-                  >
-                    {curStep == 18 && !isHuntable
-                      ? "Can't Hunt"
-                      : curStep == 18 && isHuntable
-                      ? "Hunt"
-                      : curStep == 20
-                      ? "End"
-                      : "Next"}
-                  </Button>
+                  {curStep == 0 &&
+                  localStorage.getItem("tutorialmode") == "expert" ? (
+                    <></>
+                  ) : (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      onClick={() => handleTutorialNext()}
+                      // disabled={curStep == 18 && !isHuntable}
+                      sx={
+                        curStep == 18 && !isHuntable
+                          ? { color: "white", background: "black" }
+                          : {}
+                      }
+                    >
+                      {curStep == 18 && !isHuntable
+                        ? "Can't Hunt"
+                        : curStep == 18 && isHuntable
+                        ? "Hunt"
+                        : curStep == 20
+                        ? "End"
+                        : "Next"}
+                    </Button>
+                  )}
                 </CardActions>
                 {placement == "top" && (
                   <div className="tutorial-bottom-arrow"></div>
