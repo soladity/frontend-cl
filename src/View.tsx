@@ -168,9 +168,15 @@ const View = () => {
         onClose={(_, reason) => handleTutorialDialogClose(reason)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Welcome to your first time in Crypto Legions!</DialogTitle>
+        <DialogTitle style={{ fontWeight: "bold", textAlign: "center" }}>
+          Welcome to your first time in Crypto Legions!
+        </DialogTitle>
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+          <Box sx={{ textAlign: "center", mt: 1 }}>
+            To be able to start playing, you will need at least 100 USD value in
+            $BLST, a little bit of BNB, and a few dollars in BUSD.
+          </Box>
+          <Box sx={{ textAlign: "center", mt: 1 }}>
             Do you need some help to get started?
           </Box>
         </DialogContent>
@@ -189,7 +195,7 @@ const View = () => {
             variant="contained"
             sx={{ color: "white", fontWeight: "bold" }}
           >
-            No, I am an expert.
+            No, I am an expert
           </Button>
           <Button
             onClick={() => {
@@ -199,7 +205,7 @@ const View = () => {
             variant="outlined"
             sx={{ fontWeight: "bold" }}
           >
-            Yes, help me play.
+            Yes, help me play
           </Button>
         </DialogActions>
       </Dialog>

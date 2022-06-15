@@ -92,7 +92,8 @@ export default function Tutorial({ children, ...rest }: any) {
         dispatch(updateStore({ tutorialStep: [11], isSideBarOpen: false }));
         break;
       case 11:
-        summonBeastQuantityBtn?.click();
+        // summonBeastQuantityBtn?.click();
+        dispatch(updateStore({ tutorialStep: [12] }));
         break;
       case 12:
         navigate("/createlegions");
@@ -129,7 +130,17 @@ export default function Tutorial({ children, ...rest }: any) {
         break;
       case 20:
         window.open("https://docs.cryptolegions.app/", "_blank");
-        dispatch(updateStore({ tutorialOn: false }));
+        dispatch(updateStore({ tutorialRestartStep: 21, tutorialStep: [21] }));
+        break;
+      case 21:
+        navigate("/");
+        dispatch(
+          updateStore({
+            tutorialOn: true,
+            tutorialStep: [1],
+            isSideBarOpen: true,
+          })
+        );
         break;
       default:
         break;
@@ -255,8 +266,8 @@ export default function Tutorial({ children, ...rest }: any) {
                         ? "Can't Hunt"
                         : curStep == 18 && isHuntable
                         ? "Hunt"
-                        : curStep == 20
-                        ? "End"
+                        : curStep == 21
+                        ? "Restart"
                         : "Next"}
                     </Button>
                   )}
