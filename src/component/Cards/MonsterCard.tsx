@@ -16,6 +16,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Box } from "@mui/system";
 
 import { FaTwitter, FaTelegram, FaTelegramPlane } from "react-icons/fa";
+import Tutorial from "../Tutorial/Tutorial";
 
 type CardProps = {
   name: string;
@@ -182,15 +183,28 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
           </Typography>
         </Grid>
         <Grid item>
-          <Button
-            variant="outlined"
-            disabled={
-              tokenID === 25 ? !isHuntable || !canHuntMonster25 : !isHuntable
-            }
-            onClick={() => handleHunt(tokenID)}
-          >
-            {getTranslation("hunt")}
-          </Button>
+          {tokenID === 1 ? (
+            <Tutorial curStep={18} placement="bottom" isHuntable={isHuntable}>
+              <Button
+                variant="outlined"
+                disabled={!isHuntable}
+                onClick={() => handleHunt(tokenID)}
+                id="hunt-monster1"
+              >
+                {getTranslation("hunt")}
+              </Button>
+            </Tutorial>
+          ) : (
+            <Button
+              variant="outlined"
+              disabled={
+                tokenID === 25 ? !isHuntable || !canHuntMonster25 : !isHuntable
+              }
+              onClick={() => handleHunt(tokenID)}
+            >
+              {getTranslation("hunt")}
+            </Button>
+          )}
         </Grid>
         {/* <Grid
           item

@@ -77,6 +77,7 @@ import {
   initMassHuntResult,
   setMassHuntResult,
   setReloadStatus,
+  updateStore,
 } from "../../actions/contractActions";
 import ScrollToButton from "../../component/Scroll/ScrollToButton";
 import ScrollSection from "../../component/Scroll/Section";
@@ -250,6 +251,7 @@ const Monsters = () => {
   useEffect(() => {
     if (account) {
       initialize();
+      dispatch(updateStore({ tutorialStep: [18] }));
     }
     setShowAnimation(
       localStorage.getItem("showAnimation")
@@ -553,6 +555,9 @@ const Monsters = () => {
           setHuntedRoll(result.roll);
           setHuntAvailablePercent(result.percent);
           setHuntedStatus(result.success ? 1 : 2);
+          if (result.success) {
+            dispatch(updateStore({ tutorialStep: [19] }));
+          }
           dispatch(
             setReloadStatus({
               reloadContractStatus: new Date(),

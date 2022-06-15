@@ -17,7 +17,7 @@ import { getTranslation } from "../../utils/translation";
 import { useSelector, useDispatch } from "react-redux";
 import { setReloadStatus, updateStore } from "../../actions/contractActions";
 import Tutorial from "../Tutorial/Tutorial";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -32,6 +32,7 @@ const NavList = (props: any) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const { tutorialOn, isSmallerThanMD } = useSelector(
     (state: any) => state.contractReducer
   );
@@ -119,6 +120,12 @@ const NavList = (props: any) => {
       case "/beasts":
         step = 7;
         break;
+      case "/hunt":
+        step = 17;
+        break;
+      case "whitepaper":
+        step = 20;
+        break;
       default:
         break;
     }
@@ -126,26 +133,45 @@ const NavList = (props: any) => {
   };
 
   const setTutorialOn = () => {
-    if (isSmallerThanMD) {
-      if (location.pathname == "/warriors" || location.pathname == "/beasts") {
-        dispatch(
-          updateStore({
-            tutorialOn: !tutorialOn,
-            isSideBarOpen: false,
-          })
-        );
-      } else {
-        dispatch(
-          updateStore({
-            tutorialOn: !tutorialOn,
-            tutorialStep: [1],
-            isSideBarOpen: true,
-          })
-        );
-      }
+    // if (isSmallerThanMD) {
+
+    //// Plan A
+    if (
+      location.pathname == "/warriors" ||
+      location.pathname == "/beasts" ||
+      location.pathname == "/createlegions" ||
+      location.pathname == "/legions" ||
+      location.pathname == "/hunt"
+    ) {
+      dispatch(
+        updateStore({
+          tutorialOn: !tutorialOn,
+          isSideBarOpen: false,
+        })
+      );
     } else {
-      dispatch(updateStore({ tutorialOn: !tutorialOn, tutorialStep: [1] }));
+      dispatch(
+        updateStore({
+          tutorialOn: !tutorialOn,
+          tutorialStep: [1],
+          isSideBarOpen: true,
+        })
+      );
     }
+
+    //// plan B
+    // navigate("/");
+    // dispatch(
+    //   updateStore({
+    //     tutorialOn: !tutorialOn,
+    //     tutorialStep: [1],
+    //     isSideBarOpen: true,
+    //   })
+    // );
+
+    // } else {
+    //   dispatch(updateStore({ tutorialOn: !tutorialOn, tutorialStep: [1] }));
+    // }
   };
 
   return (
@@ -160,30 +186,35 @@ const NavList = (props: any) => {
         {navConfig.navBar.left.map((navItem, index) => (
           <React.Fragment key={"nav_item_" + index}>
             {navItem.type === "link" && (
-              <a
-                target="_blank"
-                className="nav-bar-item"
-                href={
-                  navItem.title === "whitepaper" && language === "es"
-                    ? navItem.esPath
-                    : navItem.path || ""
-                }
+              <Tutorial
+                placement="bottom"
+                curStep={getTutorialStep(navItem.title ? navItem.title : "")}
               >
-                <Tooltip title={navItem.title || ""} placement="right">
-                  <ListItemButton>
-                    <img
-                      src={`/assets/images/${navItem.icon}`}
-                      style={{
-                        width: "22px",
-                        height: "22px",
-                        marginRight: "34px",
-                      }}
-                      alt="icon"
-                    />
-                    <ListItemText primary={getTranslation(navItem.title)} />
-                  </ListItemButton>
-                </Tooltip>
-              </a>
+                <a
+                  target="_blank"
+                  className="nav-bar-item"
+                  href={
+                    navItem.title === "whitepaper" && language === "es"
+                      ? navItem.esPath
+                      : navItem.path || ""
+                  }
+                >
+                  <Tooltip title={navItem.title || ""} placement="right">
+                    <ListItemButton>
+                      <img
+                        src={`/assets/images/${navItem.icon}`}
+                        style={{
+                          width: "22px",
+                          height: "22px",
+                          marginRight: "34px",
+                        }}
+                        alt="icon"
+                      />
+                      <ListItemText primary={getTranslation(navItem.title)} />
+                    </ListItemButton>
+                  </Tooltip>
+                </a>
+              </Tutorial>
             )}
             {navItem.type === "navlink" && (
               <Tutorial
@@ -236,7 +267,12 @@ const NavList = (props: any) => {
             {localStorage.getItem("tutorial") == "true" &&
               navItem.type === "tutorial" && (
                 <Box onClick={() => setTutorialOn()}>
-                  <Tooltip title={"Tutorial" || ""} placement="right">
+                  <Tooltip
+                    title={
+                      "You can always restart the tutorial by clicking here"
+                    }
+                    placement="right"
+                  >
                     <ListItemButton>
                       <img
                         src={`/assets/images/${navItem.icon}`}

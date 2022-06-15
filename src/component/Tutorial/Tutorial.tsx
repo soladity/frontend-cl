@@ -17,12 +17,11 @@ import "./Tutorial.css";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 export default function Tutorial({ children, ...rest }: any) {
-  const { curStep, placement } = rest;
+  const { curStep, placement, isHuntable } = rest;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let locationVal = useLocation();
-  console.log(locationVal);
 
   const { tutorialStep, tutorialForPopover, stepInfo, tutorialOn } =
     useSelector((state: any) => state.contractReducer);
@@ -48,6 +47,10 @@ export default function Tutorial({ children, ...rest }: any) {
     let summonWarriorQuantityBtn = document.getElementById(
       "summon-warrior-quantity"
     );
+    let summonBeastQuantityBtn = document.getElementById(
+      "summon-beast-quantity"
+    );
+
     switch (curStep) {
       case 1:
         navigate("/warriors");
@@ -69,6 +72,61 @@ export default function Tutorial({ children, ...rest }: any) {
         break;
       case 6:
         dispatch(updateStore({ tutorialStep: [7], isSideBarOpen: true }));
+        break;
+      case 7:
+        navigate("/beasts");
+        break;
+      case 8:
+        summonBeastQuantityBtn?.click();
+        dispatch(updateStore({ tutorialStep: [9], isSideBarOpen: false }));
+        break;
+      case 9:
+        const summonBeast1Btn = document.getElementById("summon-beast-1");
+        summonBeast1Btn?.click();
+        dispatch(updateStore({ isSideBarOpen: false }));
+        break;
+      case 10:
+        dispatch(updateStore({ tutorialStep: [11], isSideBarOpen: false }));
+        break;
+      case 11:
+        summonBeastQuantityBtn?.click();
+        break;
+      case 12:
+        navigate("/createlegions");
+        break;
+      case 13:
+        dispatch(updateStore({ tutorialStep: [14], isSideBarOpen: false }));
+        break;
+      case 14:
+        dispatch(updateStore({ tutorialStep: [13], isSideBarOpen: false }));
+        break;
+      case 15:
+        const firstLegionAddSuppliesBtn = document.getElementById(
+          "first-legion-add-supply"
+        );
+        firstLegionAddSuppliesBtn?.click();
+        break;
+      case 16:
+        const addSupplieFromWalletBtn = document.getElementById(
+          "add-supplies-from-wallet"
+        );
+        addSupplieFromWalletBtn?.click();
+        break;
+      case 17:
+        navigate("/hunt");
+        break;
+      case 18:
+        const huntMonster1Btn = document.getElementById("hunt-monster1");
+        if (isHuntable) {
+          huntMonster1Btn?.click();
+        }
+        break;
+      case 19:
+        dispatch(updateStore({ tutorialStep: [20] }));
+        break;
+      case 20:
+        window.open("https://docs.cryptolegions.app/", "_blank");
+        dispatch(updateStore({ tutorialOn: false }));
         break;
       default:
         break;
@@ -179,8 +237,20 @@ export default function Tutorial({ children, ...rest }: any) {
                     size="small"
                     variant="contained"
                     onClick={() => handleTutorialNext()}
+                    // disabled={curStep == 18 && !isHuntable}
+                    sx={
+                      curStep == 18 && !isHuntable
+                        ? { color: "white", background: "black" }
+                        : {}
+                    }
                   >
-                    Next
+                    {curStep == 18 && !isHuntable
+                      ? "Can't Hunt"
+                      : curStep == 18 && isHuntable
+                      ? "Hunt"
+                      : curStep == 20
+                      ? "End"
+                      : "Next"}
                   </Button>
                 </CardActions>
                 {placement == "top" && (
