@@ -184,7 +184,11 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
         </Grid>
         <Grid item>
           {tokenID === 1 ? (
-            <Tutorial curStep={18} placement="bottom" isHuntable={isHuntable}>
+            <Tutorial
+              curStep={18}
+              placement="bottom-end"
+              isHuntable={isHuntable}
+            >
               <Button
                 variant="outlined"
                 disabled={!isHuntable}

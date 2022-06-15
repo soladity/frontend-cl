@@ -548,22 +548,22 @@ const CreateLegions: React.FC = () => {
             sx={{ my: 2 }}
           >
             <Grid item xs={6}>
-              <Tutorial curStep={13} placement="top">
-                <Card>
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
-                  >
-                    <Grid item xs={12}>
-                      <Grid container sx={{ justifyContent: "space-between" }}>
-                        <Grid
-                          item
-                          sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
-                          xs={12}
-                          lg={6}
-                        >
-                          <FormControl component="fieldset">
+              <Card>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={isSmallThanSM ? { pt: 2, px: 2 } : { pt: 4, px: 4 }}
+                >
+                  <Grid item xs={12}>
+                    <Grid container sx={{ justifyContent: "space-between" }}>
+                      <Grid
+                        item
+                        sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                        xs={12}
+                        lg={6}
+                      >
+                        <FormControl component="fieldset">
+                          <Tutorial curStep={13} placement="top-start">
                             <ButtonGroup variant="outlined" color="primary">
                               <Button
                                 variant={
@@ -588,270 +588,265 @@ const CreateLegions: React.FC = () => {
                                 {isSmallThanSM ? "B" : getTranslation("beasts")}
                               </Button>
                             </ButtonGroup>
-                          </FormControl>
-                        </Grid>
-                        {warrior5beast &&
-                          (isSmallThanSM ? (
-                            <Grid
-                              item
-                              sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
-                              xs={12}
-                              lg={6}
-                            >
-                              <FormControl fullWidth>
-                                <InputLabel
-                                  id="demo-simple-select-label"
-                                  style={{ fontSize: isSmallThanSM ? 10 : 14 }}
-                                >
-                                  {getTranslation("filterByAp")}
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={comboWFilterValue}
-                                  label={getTranslation("filterByAp")}
-                                  onChange={handleWComboFilter}
-                                >
-                                  {comboWFilterList.map(
-                                    (comboFilterItem: IWFilterItem, index) => (
-                                      <MenuItem
-                                        value={comboFilterItem.id}
-                                        key={index}
-                                      >
-                                        {comboFilterItem.name}
-                                      </MenuItem>
-                                    )
-                                  )}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                          ) : (
-                            <Grid
-                              item
-                              sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
-                              xs={12}
-                              lg={6}
-                            >
-                              <FormControl
-                                component="fieldset"
-                                sx={{ width: "100%" }}
-                              >
-                                <FormLabel component="legend">
-                                  {getTranslation("filterByAp")}:
-                                </FormLabel>
-                                <Slider
-                                  getAriaLabel={() => "Custom marks"}
-                                  // defaultValue={20}
-                                  value={apValue}
-                                  min={500}
-                                  max={6000}
-                                  marks={[
-                                    { value: 500, label: "500" },
-                                    {
-                                      value: 6000,
-                                      label: formatNumber("6000+"),
-                                    },
-                                  ]}
-                                  step={1}
-                                  valueLabelDisplay="auto"
-                                  onChange={handleChangeAp}
-                                  disableSwap
-                                />
-                              </FormControl>
-                            </Grid>
-                          ))}
-                        {!warrior5beast &&
-                          (isSmallThanSM ? (
-                            <Grid
-                              item
-                              sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
-                              xs={12}
-                              lg={6}
-                            >
-                              <FormControl fullWidth>
-                                <InputLabel
-                                  id="demo-simple-select-label"
-                                  style={{ fontSize: isSmallThanSM ? 10 : 14 }}
-                                >
-                                  {getTranslation("filterCapacity")}
-                                </InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-label"
-                                  id="demo-simple-select"
-                                  value={comboFilterValue}
-                                  label={getTranslation("filterCapacity")}
-                                  onChange={handleComboFilter}
-                                >
-                                  {comboFilterList.map(
-                                    (comboFilterItem: IBFilterItem, index) => (
-                                      <MenuItem
-                                        value={comboFilterItem.id}
-                                        key={index}
-                                      >
-                                        {toCapitalize(comboFilterItem.name)}
-                                      </MenuItem>
-                                    )
-                                  )}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                          ) : (
-                            <Grid
-                              item
-                              sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
-                            >
-                              <FormControl component="fieldset">
-                                <ButtonGroup
-                                  variant="outlined"
-                                  color="primary"
-                                  aria-label="outlined button group"
-                                  sx={{ flexWrap: "wrap" }}
-                                  size={isSmallThanSM ? "small" : "medium"}
-                                >
-                                  <Button
-                                    variant={`${
-                                      filter === "all"
-                                        ? "contained"
-                                        : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("all")}
-                                  >
-                                    {getTranslation("all")}
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "1" ? "contained" : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("1")}
-                                  >
-                                    1
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "2" ? "contained" : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("2")}
-                                  >
-                                    2
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "3" ? "contained" : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("3")}
-                                  >
-                                    3
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "4" ? "contained" : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("4")}
-                                  >
-                                    4
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "5" ? "contained" : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("5")}
-                                  >
-                                    5
-                                  </Button>
-                                  <Button
-                                    variant={`${
-                                      filter === "20" ? "contained" : "outlined"
-                                    }`}
-                                    sx={{
-                                      borderRightColor: "#f66810 !important",
-                                    }}
-                                    onClick={() => setFilter("20")}
-                                  >
-                                    20
-                                  </Button>
-                                </ButtonGroup>
-                              </FormControl>
-                            </Grid>
-                          ))}
+                          </Tutorial>
+                        </FormControl>
                       </Grid>
+                      {warrior5beast &&
+                        (isSmallThanSM ? (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl fullWidth>
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                style={{ fontSize: isSmallThanSM ? 10 : 14 }}
+                              >
+                                {getTranslation("filterByAp")}
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={comboWFilterValue}
+                                label={getTranslation("filterByAp")}
+                                onChange={handleWComboFilter}
+                              >
+                                {comboWFilterList.map(
+                                  (comboFilterItem: IWFilterItem, index) => (
+                                    <MenuItem
+                                      value={comboFilterItem.id}
+                                      key={index}
+                                    >
+                                      {comboFilterItem.name}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        ) : (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl
+                              component="fieldset"
+                              sx={{ width: "100%" }}
+                            >
+                              <FormLabel component="legend">
+                                {getTranslation("filterByAp")}:
+                              </FormLabel>
+                              <Slider
+                                getAriaLabel={() => "Custom marks"}
+                                // defaultValue={20}
+                                value={apValue}
+                                min={500}
+                                max={6000}
+                                marks={[
+                                  { value: 500, label: "500" },
+                                  {
+                                    value: 6000,
+                                    label: formatNumber("6000+"),
+                                  },
+                                ]}
+                                step={1}
+                                valueLabelDisplay="auto"
+                                onChange={handleChangeAp}
+                                disableSwap
+                              />
+                            </FormControl>
+                          </Grid>
+                        ))}
+                      {!warrior5beast &&
+                        (isSmallThanSM ? (
+                          <Grid
+                            item
+                            sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}
+                            xs={12}
+                            lg={6}
+                          >
+                            <FormControl fullWidth>
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                style={{ fontSize: isSmallThanSM ? 10 : 14 }}
+                              >
+                                {getTranslation("filterCapacity")}
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={comboFilterValue}
+                                label={getTranslation("filterCapacity")}
+                                onChange={handleComboFilter}
+                              >
+                                {comboFilterList.map(
+                                  (comboFilterItem: IBFilterItem, index) => (
+                                    <MenuItem
+                                      value={comboFilterItem.id}
+                                      key={index}
+                                    >
+                                      {toCapitalize(comboFilterItem.name)}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        ) : (
+                          <Grid item sx={isSmallThanSM ? { mb: 2 } : { mb: 4 }}>
+                            <FormControl component="fieldset">
+                              <ButtonGroup
+                                variant="outlined"
+                                color="primary"
+                                aria-label="outlined button group"
+                                sx={{ flexWrap: "wrap" }}
+                                size={isSmallThanSM ? "small" : "medium"}
+                              >
+                                <Button
+                                  variant={`${
+                                    filter === "all" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("all")}
+                                >
+                                  {getTranslation("all")}
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "1" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("1")}
+                                >
+                                  1
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "2" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("2")}
+                                >
+                                  2
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "3" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("3")}
+                                >
+                                  3
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "4" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("4")}
+                                >
+                                  4
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "5" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("5")}
+                                >
+                                  5
+                                </Button>
+                                <Button
+                                  variant={`${
+                                    filter === "20" ? "contained" : "outlined"
+                                  }`}
+                                  sx={{
+                                    borderRightColor: "#f66810 !important",
+                                  }}
+                                  onClick={() => setFilter("20")}
+                                >
+                                  20
+                                </Button>
+                              </ButtonGroup>
+                            </FormControl>
+                          </Grid>
+                        ))}
                     </Grid>
                   </Grid>
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={isSmallThanSM ? { p: 2 } : { p: 4 }}
-                  >
-                    {warrior5beast &&
-                      warriors
-                        .filter(
-                          (item: any) =>
-                            apValue[0] <= parseInt(item.power) &&
-                            (apValue[1] === 6000
-                              ? true
-                              : apValue[1] >= parseInt(item.power))
-                        )
-                        .map((item: any, index) => (
-                          <DraggableCard
-                            w5b={true}
-                            image={
-                              showAnimation === "0"
-                                ? "/assets/images/characters/jpg/warriors/" +
-                                  item["type"] +
-                                  ".jpg"
-                                : "/assets/images/characters/gif/warriors/" +
-                                  item["gif"]
-                            }
-                            item={item}
-                            key={10000 + item.id}
-                            index={+item.id}
-                            handleClick={handleCardClick}
-                          />
-                        ))}
-                    {!warrior5beast &&
-                      beasts
-                        .filter((fitem: any) =>
-                          filter === "all"
-                            ? parseInt(fitem.capacity) >= 0
-                            : fitem.capacity === filter
-                        )
-                        .map((item: any, index) => (
-                          <DraggableCard
-                            w5b={false}
-                            image={
-                              showAnimation === "0"
-                                ? "/assets/images/characters/jpg/beasts/" +
-                                  item["type"] +
-                                  ".jpg"
-                                : "/assets/images/characters/gif/beasts/" +
-                                  item["gif"]
-                            }
-                            item={item}
-                            key={item.id}
-                            index={+item.id}
-                            handleClick={handleCardClick}
-                          />
-                        ))}
-                  </Grid>
-                </Card>
-              </Tutorial>
+                </Grid>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={isSmallThanSM ? { p: 2 } : { p: 4 }}
+                >
+                  {warrior5beast &&
+                    warriors
+                      .filter(
+                        (item: any) =>
+                          apValue[0] <= parseInt(item.power) &&
+                          (apValue[1] === 6000
+                            ? true
+                            : apValue[1] >= parseInt(item.power))
+                      )
+                      .map((item: any, index) => (
+                        <DraggableCard
+                          w5b={true}
+                          image={
+                            showAnimation === "0"
+                              ? "/assets/images/characters/jpg/warriors/" +
+                                item["type"] +
+                                ".jpg"
+                              : "/assets/images/characters/gif/warriors/" +
+                                item["gif"]
+                          }
+                          item={item}
+                          key={10000 + item.id}
+                          index={+item.id}
+                          handleClick={handleCardClick}
+                        />
+                      ))}
+                  {!warrior5beast &&
+                    beasts
+                      .filter((fitem: any) =>
+                        filter === "all"
+                          ? parseInt(fitem.capacity) >= 0
+                          : fitem.capacity === filter
+                      )
+                      .map((item: any, index) => (
+                        <DraggableCard
+                          w5b={false}
+                          image={
+                            showAnimation === "0"
+                              ? "/assets/images/characters/jpg/beasts/" +
+                                item["type"] +
+                                ".jpg"
+                              : "/assets/images/characters/gif/beasts/" +
+                                item["gif"]
+                          }
+                          item={item}
+                          key={item.id}
+                          index={+item.id}
+                          handleClick={handleCardClick}
+                        />
+                      ))}
+                </Grid>
+              </Card>
             </Grid>
 
             {/* Right Panel */}
