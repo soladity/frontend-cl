@@ -33,7 +33,7 @@ const NavList = (props: any) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const { tutorialOn, isSmallerThanMD } = useSelector(
+  const { tutorialOn, isSmallerThanMD, tutorialRestartStep } = useSelector(
     (state: any) => state.contractReducer
   );
 
@@ -266,7 +266,7 @@ const NavList = (props: any) => {
             )}
             {localStorage.getItem("tutorial") == "true" &&
               navItem.type === "tutorial" && (
-                <Tutorial curStep={0} placement="top">
+                <Tutorial curStep={tutorialRestartStep} placement="top">
                   <Box
                     onClick={() => setTutorialOn()}
                     className={tutorialOn && "nav-bar-item active"}
