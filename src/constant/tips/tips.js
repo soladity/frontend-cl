@@ -37,12 +37,18 @@ export const tipsConstant = {
       link: "https://youtu.be/jOqAfG_ahnk",
     },
     {
+      type: "space",
+    },
+    {
       type: "h6",
       text: "1.2 How to create legions quickly?",
     },
     {
       type: "youtu",
       link: "https://youtu.be/V6V1KiLMpds",
+    },
+    {
+      type: "space",
     },
     {
       type: "h6",
