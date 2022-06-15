@@ -155,6 +155,24 @@ export const navConfig = {
         path: "https://pancakeswap.finance/swap?outputCurrency=0x10cb66ce2969d8c8193707A9dCD559D2243B8b37&inputCurrency=0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
       },
       {
+        type: "navlink",
+        title: "help",
+        icon: "support.png",
+        path: "/help",
+      },
+      {
+        type: "divider",
+      },
+      {
+        type: "head",
+        title: "howToPlay",
+      },
+      {
+        type: "tutorial",
+        title: "help",
+        icon: "tutorial.png",
+      },
+      {
         type: "link",
         title: "whitepaper",
         icon: "whitepaper.png",
@@ -163,20 +181,9 @@ export const navConfig = {
       },
       {
         type: "navlink",
-        title: "help",
-        icon: "support.png",
-        path: "/help",
-      },
-      {
-        type: "navlink",
         title: "tips",
         icon: "tips.png",
         path: "/tips",
-      },
-      {
-        type: "tutorial",
-        title: "help",
-        icon: "tutorial.png",
       },
       {
         type: "social",
