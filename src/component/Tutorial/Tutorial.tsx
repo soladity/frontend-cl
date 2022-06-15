@@ -151,23 +151,7 @@ export default function Tutorial({ children, ...rest }: any) {
   };
 
   const setTutorialClassName = () => {
-    let className = "";
-    switch (placement) {
-      case "top":
-        className = "tutorial-top";
-        break;
-      case "bottom":
-        className = "tutorial-bottom";
-        break;
-      case "left":
-        className = "tutorial-left";
-        break;
-      case "right":
-        className = "tutorial-right";
-        break;
-      default:
-        break;
-    }
+    let className = "tutorial-" + placement;
     return className;
   };
 
@@ -282,6 +266,32 @@ export default function Tutorial({ children, ...rest }: any) {
                 )}
                 {placement == "right" && (
                   <div className="tutorial-left-arrow"></div>
+                )}
+
+                {placement == "top-start" && (
+                  <div className="tutorial-bottom-start-arrow"></div>
+                )}
+                {placement == "bottom-start" && (
+                  <div className="tutorial-top-start-arrow"></div>
+                )}
+                {placement == "left-start" && (
+                  <div className="tutorial-right-start-arrow"></div>
+                )}
+                {placement == "right-start" && (
+                  <div className="tutorial-left-start-arrow"></div>
+                )}
+
+                {placement == "top-end" && (
+                  <div className="tutorial-bottom-end-arrow"></div>
+                )}
+                {placement == "bottom-end" && (
+                  <div className="tutorial-top-end-arrow"></div>
+                )}
+                {placement == "left-end" && (
+                  <div className="tutorial-right-end-arrow"></div>
+                )}
+                {placement == "right-end" && (
+                  <div className="tutorial-left-end-arrow"></div>
                 )}
               </Card>
             </Fade>

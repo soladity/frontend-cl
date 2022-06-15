@@ -235,29 +235,31 @@ export default function LegionCard(props: CardProps) {
         {name}
       </Typography>
       {index == 0 ? (
-        <Tutorial curStep={15} placement="top">
-          <Box
-            sx={{
-              display: "flex",
-              position: "absolute",
-              alignItems: "center",
-              top: "15px",
-              right: "10px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              color:
-                huntStatus === "green"
-                  ? "green"
-                  : huntStatus === "orange"
-                  ? "orange"
-                  : "red",
-            }}
-            onClick={() => open(id, warriors.length)}
-            id="first-legion-add-supply"
-          >
-            {supplies} {getTranslation("hSymbol")}
-          </Box>
-        </Tutorial>
+        <Box
+          sx={{
+            display: "flex",
+            position: "absolute",
+            alignItems: "center",
+            top: "15px",
+            right: "10px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color:
+              huntStatus === "green"
+                ? "green"
+                : huntStatus === "orange"
+                ? "orange"
+                : "red",
+          }}
+          onClick={() => open(id, warriors.length)}
+          id="first-legion-add-supply"
+        >
+          <Tutorial curStep={15} placement="top-end">
+            <div>
+              {supplies} {getTranslation("hSymbol")}
+            </div>
+          </Tutorial>
+        </Box>
       ) : (
         <Box
           sx={{
