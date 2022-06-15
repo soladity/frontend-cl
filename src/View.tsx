@@ -59,31 +59,46 @@ const View = () => {
   };
   const setTutorialHelp = (type: any) => {
     if (type == "yes") {
-      if (isSmallerThanMD) {
-        if (
-          location.pathname == "/warriors" ||
-          location.pathname == "/beasts"
-        ) {
-          dispatch(
-            updateStore({
-              tutorialOn: true,
-              isSideBarOpen: false,
-            })
-          );
-        } else {
-          dispatch(
-            updateStore({
-              tutorialOn: true,
-              tutorialStep: [1],
-              isSideBarOpen: true,
-            })
-          );
-        }
-      } else {
-        dispatch(updateStore({ tutorialOn: true, tutorialStep: [1] }));
-      }
+      // if (isSmallerThanMD) {
+      //   if (
+      //     location.pathname == "/warriors" ||
+      //     location.pathname == "/beasts"
+      //   ) {
+      //     dispatch(
+      //       updateStore({
+      //         tutorialOn: true,
+      //         isSideBarOpen: false,
+      //       })
+      //     );
+      //   } else {
+      //     dispatch(
+      //       updateStore({
+      //         tutorialOn: true,
+      //         tutorialStep: [0],
+      //         isSideBarOpen: true,
+      //       })
+      //     );
+      //   }
+      // } else {
+      //   dispatch(updateStore({ tutorialOn: true, tutorialStep: [0] }));
+      // }
+      dispatch(
+        updateStore({
+          tutorialOn: true,
+          isSideBarOpen: true,
+          tutorialStep: [0],
+        })
+      );
+      localStorage.setItem("tutorialmode", "help");
     } else if (type == "no") {
-      dispatch(updateStore({ tutorialOn: false }));
+      dispatch(
+        updateStore({
+          tutorialOn: true,
+          isSideBarOpen: true,
+          tutorialStep: [0],
+        })
+      );
+      localStorage.setItem("tutorialmode", "expert");
     }
     setTutorialDialogOpen(false);
     localStorage.setItem("tutorial", "true");
