@@ -65,9 +65,10 @@ import { getTranslation } from "../../utils/translation";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import { formatNumber } from "../../utils/common";
 import { useDispatch } from "react-redux";
-import { setReloadStatus } from "../../actions/contractActions";
+import { setReloadStatus, updateStore } from "../../actions/contractActions";
 import { FaTimes } from "react-icons/fa";
 import { getMarketplaceAddress } from "../../utils/addressHelpers";
+import Tutorial from "../../component/Tutorial/Tutorial";
 
 const useStyles = makeStyles({
   root: {
@@ -143,6 +144,7 @@ const Legions = () => {
   React.useEffect(() => {
     if (account) {
       getBalance();
+      dispatch(updateStore({ tutorialStep: [15] }));
     }
   }, []);
 
@@ -285,11 +287,16 @@ const Legions = () => {
           reloadContractStatus: new Date(),
         })
       );
-    } catch (e) {}
+      dispatch(updateStore({ tutorialStep: [17] }));
+    } catch (e) {
+      dispatch(updateStore({ tutorialStep: [15] }));
+    }
+
     setSupplyLoading(false);
   };
 
   const handleOpenSupply = async (id: number, warriorCnt: any) => {
+    dispatch(updateStore({ tutorialStep: [16] }));
     setSelectedLegion(id);
     setSupplyCostLoading(true);
     try {
@@ -299,6 +306,7 @@ const Legions = () => {
       tempArr.push(await getSupplyCost(feeHandlerContract, warriorCnt, 14));
       tempArr.push(await getSupplyCost(feeHandlerContract, warriorCnt, 28));
       setSupplyValues(tempArr);
+      dispatch(updateStore({ tutorialStep: [16], isSideBarOpen: false }));
     } catch (error) {}
     setSupplyCostLoading(false);
   };
@@ -691,6 +699,7 @@ const Legions = () => {
                     handleOpenSupply={handleOpenSupply}
                     handleUpdate={handleUpdateLegoin}
                     handleOpenShopping={handleOpenShopping}
+                    index={index}
                   />
                 </Grid>
               ))}
@@ -877,16 +886,20 @@ const Legions = () => {
           >
             {getTranslation("cancel")}
           </Button> */}
-          <CommonBtn
-            onClick={() => handleSupplyClick(true)}
-            sx={{ marginRight: 1, marginLeft: 1 }}
-            disabled={
-              parseFloat(blstBalance * Math.pow(10, 18) + "") <
-                parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
-            }
-          >
-            {getTranslation("wallet")}
-          </CommonBtn>
+          <Tutorial curStep={16} placement="bottom">
+            <CommonBtn
+              onClick={() => handleSupplyClick(true)}
+              sx={{ marginRight: 1, marginLeft: 1 }}
+              disabled={
+                parseFloat(blstBalance * Math.pow(10, 18) + "") <
+                  parseFloat(supplyValues[supplyOrder] + "") ||
+                supplyCostLoading
+              }
+              id="add-supplies-from-wallet"
+            >
+              {getTranslation("wallet")}
+            </CommonBtn>
+          </Tutorial>
           <CommonBtn
             onClick={() => handleSupplyClick(false)}
             disabled={

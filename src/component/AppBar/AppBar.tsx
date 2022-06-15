@@ -276,27 +276,29 @@ const AppBarComponent = () => {
                 justifyContent: { xs: "center", md: "inherit" },
               }}
             >
-              <CommonBtn
-                sx={{
-                  fontWeight: "bold",
-                  mr: { xs: 0, md: 5 },
-                  fontSize: { xs: "0.7rem", md: "1rem" },
-                }}
-                onClick={() => setDialogOpen(true)}
-              >
-                <img
-                  src={`/assets/images/claimExit.png`}
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    marginRight: "10px",
+              <Tutorial curStep={19} placement="bottom">
+                <CommonBtn
+                  sx={{
+                    fontWeight: "bold",
+                    mr: { xs: 0, md: 5 },
+                    fontSize: { xs: "0.7rem", md: "1rem" },
                   }}
-                  alt="icon"
-                />
-                {getTranslation("claim")}{" "}
-                {formatNumber(unClaimedBLST.toFixed(2))} $
-                {getTranslation("bloodstone")}
-              </CommonBtn>
+                  onClick={() => setDialogOpen(true)}
+                >
+                  <img
+                    src={`/assets/images/claimExit.png`}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      marginRight: "10px",
+                    }}
+                    alt="icon"
+                  />
+                  {getTranslation("claim")}{" "}
+                  {formatNumber(unClaimedBLST.toFixed(2))} $
+                  {getTranslation("bloodstone")}
+                </CommonBtn>
+              </Tutorial>
               <Box
                 sx={{
                   display: "flex",

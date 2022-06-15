@@ -25,7 +25,7 @@ import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { allConstants, meta_constant } from "../../config/meta.config";
-import { setReloadStatus } from "../../actions/contractActions";
+import { setReloadStatus, updateStore } from "../../actions/contractActions";
 import {
   getBeastBloodstoneAllowance,
   setBeastBloodstoneApprove,
@@ -47,6 +47,7 @@ import {
   revealBeastsAndWarrior,
   getBeastRequestId,
   getVRFResult,
+  getWarriorBalance,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -56,6 +57,7 @@ import {
   useFeeHandler,
   useWeb3,
   useVRF,
+  useWarrior,
 } from "../../hooks/useContract";
 import BeastCard from "../../component/Cards/BeastCard";
 import CommonBtn from "../../component/Buttons/CommonBtn";
@@ -69,6 +71,7 @@ import { getMarketplaceAddress } from "../../utils/addressHelpers";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { green, yellow, red } from "@mui/material/colors";
+import Tutorial from "../../component/Tutorial/Tutorial";
 
 const useStyles = makeStyles({
   root: {
@@ -105,6 +108,7 @@ const Beasts = () => {
   const [baseUrl, setBaseUrl] = React.useState("");
   const [showMint, setShowMint] = React.useState(false);
   const [balance, setBalance] = React.useState(0);
+  const [warriorBalance, setWarriorBalance] = React.useState(0);
   const [maxWarrior, setMaxWarrior] = React.useState(0);
   const [beasts, setBeasts] = React.useState<BeastProps[]>(Array);
   const [openSupply, setOpenSupply] = React.useState(false);
@@ -148,8 +152,12 @@ const Beasts = () => {
     },
   });
 
+  const [summonBeastTutorialStep, setSummonBeastTutorialStep] =
+    React.useState(8);
+
   const classes = useStyles();
   const beastContract = useBeast();
+  const warriorContract = useWarrior();
   const legionContract = useLegion();
   const marketplaceContract = useMarketplace();
   const feeHandlerContract = useFeeHandler();
@@ -165,9 +173,15 @@ const Beasts = () => {
     event: React.MouseEvent<HTMLElement>
   ) => {
     setAnchorElSummonBeast(event.currentTarget);
+    if (beasts.length == 0) {
+      dispatch(updateStore({ tutorialStep: [9] }));
+    } else {
+      dispatch(updateStore({ tutorialStep: [] }));
+    }
   };
   const handlePopoverCloseSummonBeast = () => {
     setAnchorElSummonBeast(null);
+    handleCheckTutorialStep(maxWarrior, balance, warriorBalance);
   };
   const openSummonBeast = Boolean(anchorElSummonBeast);
 
@@ -231,6 +245,7 @@ const Beasts = () => {
 
   React.useEffect(() => {
     if (account) {
+      dispatch(updateStore({ isSideBarOpen: false }));
       getBalance();
       getBlstAmountToMintBeast();
     }
@@ -316,6 +331,8 @@ const Beasts = () => {
     var tempBeasts: any[] = [];
     var amount = 0;
     let revealStatusVal;
+    let beastBalance = 0;
+    let warriorBalance = 0;
     try {
       setLoadingText(getTranslation("loadingBeasts"));
       revealStatusVal = await getWalletMintPending(beastContract, account);
@@ -327,7 +344,15 @@ const Beasts = () => {
       setMarketplaceTax(
         ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
       );
-      setBalance(parseInt(await getBeastBalance(web3, beastContract, account)));
+      beastBalance = parseInt(
+        await getBeastBalance(web3, beastContract, account)
+      );
+      setBalance(beastBalance);
+
+      warriorBalance = parseInt(
+        await getWarriorBalance(web3, warriorContract, account)
+      );
+      setWarriorBalance(warriorBalance);
       const beastsInfo = await getAllBeasts(beastContract, account);
       let ids = beastsInfo[0];
       let capacities = beastsInfo[1];
@@ -348,6 +373,9 @@ const Beasts = () => {
     } catch (error) {
       setTextLoading(false);
     }
+
+    handleCheckTutorialStep(amount, beastBalance, warriorBalance);
+
     setMaxWarrior(amount);
     setBeasts(tempBeasts);
     if (revealStatusVal) {
@@ -552,6 +580,21 @@ const Beasts = () => {
     );
   };
 
+  const handleCheckTutorialStep = (
+    maxWarrior: any,
+    beastBalance: any,
+    warriorBalance: any
+  ) => {
+    if (maxWarrior == 0 && beastBalance == 0) {
+      dispatch(updateStore({ tutorialStep: [8] }));
+    } else if (maxWarrior > 0 && maxWarrior < warriorBalance) {
+      dispatch(updateStore({ tutorialStep: [10, 11] }));
+      setSummonBeastTutorialStep(11);
+    } else if (maxWarrior >= warriorBalance) {
+      dispatch(updateStore({ tutorialStep: [12], isSideBarOpen: false }));
+    }
+  };
+
   return (
     <Box>
       <Helmet>
@@ -594,20 +637,26 @@ const Beasts = () => {
                 onMouseLeave={handleCloseMint}
                 sx={{ pt: 1 }}
               >
-                <CommonBtn
-                  sx={{ fontWeight: "bold" }}
-                  onClick={handlePopoverOpenSummonBeast}
-                  aria-describedby={"summon-beast-id"}
+                <Tutorial
+                  curStep={summonBeastTutorialStep}
+                  placement={"bottom"}
                 >
-                  <IconButton
-                    aria-label="claim"
-                    component="span"
-                    sx={{ p: 0, mr: 1, color: "black" }}
+                  <CommonBtn
+                    sx={{ fontWeight: "bold" }}
+                    onClick={handlePopoverOpenSummonBeast}
+                    aria-describedby={"summon-beast-id"}
+                    id="summon-beast-quantity"
                   >
-                    <HorizontalSplitIcon />
-                  </IconButton>
-                  {getTranslation("summonQuantity")}
-                </CommonBtn>
+                    <IconButton
+                      aria-label="claim"
+                      component="span"
+                      sx={{ p: 0, mr: 1, color: "black" }}
+                    >
+                      <HorizontalSplitIcon />
+                    </IconButton>
+                    {getTranslation("summonQuantity")}
+                  </CommonBtn>
+                </Tutorial>
                 <Popover
                   id={"summon-beast-id"}
                   open={openSummonBeast}
@@ -644,16 +693,20 @@ const Beasts = () => {
                       flexDirection: "column",
                     }}
                   >
-                    <CommonBtn
-                      onClick={() => handleMint(1)}
-                      sx={{
-                        fontSize: 14,
-                        fontWeight: "bold",
-                        marginBottom: 1,
-                      }}
-                    >
-                      1 ({beastBlstAmountPer.b1?.amount} $BLST)
-                    </CommonBtn>
+                    <Tutorial curStep={9} placement={"bottom"}>
+                      <CommonBtn
+                        onClick={() => handleMint(1)}
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: "bold",
+                          marginBottom: 1,
+                          width: "100%",
+                        }}
+                        id="summon-beast-1"
+                      >
+                        1 ({beastBlstAmountPer.b1?.amount} $BLST)
+                      </CommonBtn>
+                    </Tutorial>
                     <CommonBtn
                       onClick={() => handleMint(10)}
                       sx={{
@@ -740,11 +793,13 @@ const Beasts = () => {
               >
                 {balance}
               </Typography>
-              <CommonBtn sx={{ fontWeight: "bold", mt: 1 }}>
-                <NavLink to="/createlegions" className="non-style">
-                  {getTranslation("createLegion")}
-                </NavLink>
-              </CommonBtn>
+              <Tutorial curStep={12} placement={"bottom"}>
+                <CommonBtn sx={{ fontWeight: "bold", mt: 1 }}>
+                  <NavLink to="/createlegions" className="non-style">
+                    {getTranslation("createLegion")}
+                  </NavLink>
+                </CommonBtn>
+              </Tutorial>
             </Box>
           </Card>
         </Grid>
@@ -757,13 +812,15 @@ const Beasts = () => {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {getTranslation("warriorCapacity")}
               </Typography>
-              <Typography
-                variant="h4"
-                color="primary"
-                sx={{ fontWeight: "bold" }}
-              >
-                {maxWarrior}
-              </Typography>
+              <Tutorial curStep={10} placement={"bottom"}>
+                <Typography
+                  variant="h4"
+                  color="primary"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {maxWarrior}
+                </Typography>
+              </Tutorial>
               <CommonBtn
                 sx={{ fontWeight: "bold", mt: 1 }}
                 onClick={() => handleSelectAll()}

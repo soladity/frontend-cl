@@ -20,6 +20,7 @@ import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
 import { getBeastToken, getWarriorToken } from "../../hooks/contractFunction";
 import { formatNumber } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
+import Tutorial from "../Tutorial/Tutorial";
 
 type CardProps = {
   id: string;
@@ -33,6 +34,7 @@ type CardProps = {
   handleOpenSupply: Function;
   handleUpdate: Function;
   handleOpenShopping: Function;
+  index: number;
 };
 
 export default function LegionCard(props: CardProps) {
@@ -48,6 +50,7 @@ export default function LegionCard(props: CardProps) {
     handleOpenSupply,
     handleUpdate,
     handleOpenShopping,
+    index,
   } = props;
   const { account } = useWeb3React();
 
@@ -231,26 +234,52 @@ export default function LegionCard(props: CardProps) {
       >
         {name}
       </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          position: "absolute",
-          alignItems: "center",
-          top: "15px",
-          right: "10px",
-          fontWeight: "bold",
-          cursor: "pointer",
-          color:
-            huntStatus === "green"
-              ? "green"
-              : huntStatus === "orange"
-              ? "orange"
-              : "red",
-        }}
-        onClick={() => open(id, warriors.length)}
-      >
-        {supplies} {getTranslation("hSymbol")}
-      </Box>
+      {index == 0 ? (
+        <Tutorial curStep={15} placement="top">
+          <Box
+            sx={{
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              top: "15px",
+              right: "10px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              color:
+                huntStatus === "green"
+                  ? "green"
+                  : huntStatus === "orange"
+                  ? "orange"
+                  : "red",
+            }}
+            onClick={() => open(id, warriors.length)}
+            id="first-legion-add-supply"
+          >
+            {supplies} {getTranslation("hSymbol")}
+          </Box>
+        </Tutorial>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            position: "absolute",
+            alignItems: "center",
+            top: "15px",
+            right: "10px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color:
+              huntStatus === "green"
+                ? "green"
+                : huntStatus === "orange"
+                ? "orange"
+                : "red",
+          }}
+          onClick={() => open(id, warriors.length)}
+        >
+          {supplies} {getTranslation("hSymbol")}
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",

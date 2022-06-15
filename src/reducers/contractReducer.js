@@ -27,6 +27,45 @@ const TUTORIAL_STEPS = {
   7: {
     desc: "Now go to the Beasts page!",
   },
+  8: {
+    desc: "Click here to choose how many beasts you want to summon!",
+  },
+  9: {
+    desc: "Summon your first beast!",
+  },
+  10: {
+    desc: "Until the Total Capacity of All Beasts reaches the amount of Warriors you have!",
+  },
+  11: {
+    desc: "Summon more beasts!",
+  },
+  12: {
+    desc: "Now let's create your first legion!",
+  },
+  13: {
+    desc: "Switch between Warriors and Beasts here, and Click on the Warriors and Beasts to add them to your legion!",
+  },
+  14: {
+    desc: "Give your legion a name, and Once you reach enough attack power, click here to create your legion!",
+  },
+  15: {
+    desc: "Click here to add hunting supplies!",
+  },
+  16: {
+    desc: "Buy hunting supplies!",
+  },
+  17: {
+    desc: "Go to the Hunt page!",
+  },
+  18: {
+    desc: "Attack the strongest monster your legion can hunt by clicking the orange Hunt button!",
+  },
+  19: {
+    desc: "The money you win will go to the unclaimed wallet here!",
+  },
+  20: {
+    desc: "You can find detailed instructions in our Whitepaper here!",
+  },
 };
 
 let initalState = {
