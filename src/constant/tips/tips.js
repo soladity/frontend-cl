@@ -37,6 +37,12 @@ export const tipsConstant = {
       link: "https://youtu.be/jOqAfG_ahnk",
     },
     {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
       type: "h6",
       text: "1.2 How to create legions quickly?",
     },
@@ -45,12 +51,21 @@ export const tipsConstant = {
       link: "https://youtu.be/V6V1KiLMpds",
     },
     {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
       type: "h6",
       text: "1.3 How to optimise your Attack Power?",
     },
     {
       type: "youtu",
       link: "https://youtu.be/2xHzC7CkKIY",
+    },
+    {
+      type: "space",
     },
     {
       type: "space",
