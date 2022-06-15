@@ -165,7 +165,7 @@ export const navConfig = {
       {
         type: "tutorial",
         title: "help",
-        icon: "whitepaper.png",
+        icon: "tutorial.png",
       },
       {
         type: "social",

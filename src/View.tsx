@@ -203,7 +203,7 @@ const View = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {tutorialOn && (
+      {/* {tutorialOn && (
         <Box sx={{ position: "fixed", bottom: 5, right: 10 }}>
           <Button
             variant="contained"
@@ -213,7 +213,7 @@ const View = () => {
             Cancel Tutorial
           </Button>
         </Box>
-      )}
+      )} */}
     </Box>
   );
 };

@@ -19,7 +19,7 @@ const TUTORIAL_STEPS = {
     desc: "Summon your first warrior",
   },
   4: {
-    desc: "You will need at least 2200 Total Attack Power Summon more Warriors",
+    desc: "You will need at least 2200 Total Attack Power. Summon more Warriors",
   },
   5: {
     desc: "Summon more warriors",
