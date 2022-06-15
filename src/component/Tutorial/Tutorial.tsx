@@ -129,7 +129,6 @@ export default function Tutorial({ children, ...rest }: any) {
         dispatch(updateStore({ tutorialStep: [20] }));
         break;
       case 20:
-        window.open("https://docs.cryptolegions.app/", "_blank");
         dispatch(updateStore({ tutorialRestartStep: 21, tutorialStep: [21] }));
         break;
       case 21:
