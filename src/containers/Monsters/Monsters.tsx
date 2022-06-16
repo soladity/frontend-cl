@@ -810,7 +810,7 @@ const Monsters = () => {
       )} USD) from Monster ${monsters[tokenId - 1].name.replace(
         /^./,
         monsters[tokenId - 1].name[0].toUpperCase()
-      )} in #Crypto Legions! Play here: https://cryptolegions.app`;
+      )} in Crypto Legions! Play #CryptoLegions here: https://cryptolegions.app`;
     const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
     const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
     const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
