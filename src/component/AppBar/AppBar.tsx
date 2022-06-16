@@ -201,11 +201,13 @@ const AppBarComponent = () => {
   const getShareLink = (social: string) => {
     const serverLink = "https://play.cryptolegions.app";
     const shareImgUrl = `${serverLink}/winning.jpg`;
-    const text = `I just earned and got in my wallet ${claimInfo.BLSTReward} $BLST (= ${claimInfo.BUSDReward} USD). Thank you Crypto Legions! You can join the play to earn game I am playing here: https://cryptolegions.app`;
+    const text = `I just earned and got in my wallet ${claimInfo.BLSTReward} $BLST (= ${claimInfo.BUSDReward} USD). Thank you Crypto Legions! You can join the #CryptoLegions play to earn game here: https://cryptolegions.app`;
     const mainLink = `url=${encodeURI(shareImgUrl)}&text=${encodeURI(text)}`;
     const telegramShareLink = `https://xn--r1a.link/share/url?${mainLink}`;
     const twitterShareLink = `https://twitter.com/intent/tweet?${mainLink}`;
-    return social == "telegram" ? telegramShareLink : twitterShareLink;
+    return social == "telegram"
+      ? telegramShareLink.replace("#", "%23")
+      : twitterShareLink.replace("#", "%23");
   };
 
   return (
