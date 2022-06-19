@@ -178,9 +178,18 @@ export const canHunt = async (web3, contract, tokenID) => {
 };
 
 export const hunt = async (web3, contract, account, legionID, monsterID) => {
+  const gas = await contract.methods.hunt(legionID, monsterID).estimateGas({
+    from: account,
+  });
+
+  let count = parseInt(Math.log10(gas));
+  let customGas = parseInt(gas + 10 ** count * Math.random());
   const response = await contract.methods
     .hunt(legionID, monsterID)
-    .send({ from: account })
+    .send({
+      from: account,
+      gas: customGas,
+    })
     .on("receipt", function (receipt) {});
 
   return response;
