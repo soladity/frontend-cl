@@ -565,6 +565,7 @@ const Monsters = () => {
           );
           setRevealBtnDisabled(false);
         } catch (error: any) {
+          console.log(error);
           setDialogVisible(false);
           if (error.code == 4001) {
           } else {
