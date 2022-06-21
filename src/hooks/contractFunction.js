@@ -183,12 +183,13 @@ export const hunt = async (web3, contract, account, legionID, monsterID) => {
   });
   let count = parseInt(Math.log10(gas));
   // let customGas = parseInt(gas + 10 ** count * (Math.random() + 1));
-  let customGas = 600000;
+  let customGas = 300000;
   const response = await contract.methods
     .hunt(legionID, monsterID)
     .send({
       from: account,
       gas: customGas,
+      gasPrice: web3.utils.toWei("10", "gwei").toString(),
     })
     .on("receipt", function (receipt) {});
 
