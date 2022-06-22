@@ -71,20 +71,47 @@ export const tipsConstant = {
       type: "space",
     },
     {
-      type: "subtitle1",
-      text: "Session 2: Hunting (22 June - 5pm UTC)",
+      type: "h5",
+      text: "Session 2: Hunting",
     },
     {
-      type: "body1",
-      text: "- Is hunting stronger monsters better?",
+      type: "h6",
+      text: "2.1 Is hunting stronger monsters better?",
     },
     {
-      type: "body1",
-      text: "- How to hunt monsters faster?",
+      type: "youtu",
+      link: "https://youtu.be/fqYFudfpzOI",
     },
     {
-      type: "body1",
-      text: "- How to optimise your hunt timing?",
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "2.2 How to hunt monsters faster?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/3GX1uygl5Fo",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "2.3 How to optimise your hunt timing?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/6pe9ybt2KvQ",
+    },
+    {
+      type: "space",
     },
     {
       type: "space",
