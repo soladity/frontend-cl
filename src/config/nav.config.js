@@ -15,6 +15,7 @@ import Policy from "../containers/Policy/Policy";
 import Help from "../containers/Help/Help";
 import Tips from "../containers/Tips/Tips";
 import MassExecute from "../containers/MassExecute/MassExecute";
+import HuntingHistory from "../containers/HuntingHistory/HuntingHistory";
 
 export const navConfig = {
   drawerWidth: 250,
@@ -81,6 +82,10 @@ export const navConfig = {
       element: <Tips />,
     },
     {
+      path: "/huntinghistory",
+      element: <HuntingHistory />,
+    },
+    {
       path: "*",
       element: <Navigate to="/" />,
     },
@@ -115,6 +120,12 @@ export const navConfig = {
         title: "hunt",
         icon: "hunt.png",
         path: "/hunt",
+      },
+      {
+        type: "navlink",
+        title: "huntinghistory",
+        icon: "hunt.png",
+        path: "/huntinghistory",
       },
       {
         type: "divider",

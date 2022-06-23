@@ -2833,4 +2833,16 @@ export const translations = {
     pl: "Porady & Triki",
     ph: "Mga Tip at Trick",
   },
+  huntinghistory: {
+    en: "Hunting History",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
 };
