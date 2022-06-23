@@ -29,6 +29,7 @@
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
     "jsdoc": "^3.6.10",
+    "moment": "^2.29.3",
     "moralis": "^1.8.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
