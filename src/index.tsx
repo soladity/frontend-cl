@@ -14,21 +14,30 @@ import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducers";
 
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
 const store = createStore(rootReducer, composeWithDevTools());
 
+const client = new ApolloClient({
+  uri: "https://api.thegraph.com/subgraphs/name/feloniousgru-super/cryptolegions",
+  cache: new InMemoryCache(),
+});
+
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ThemeProvider theme={themeConfig}>
-          <CssBaseline />
-          <Web3ReactProvider getLibrary={getLibrary}>
-            <App />
-          </Web3ReactProvider>
-        </ThemeProvider>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <React.StrictMode>
+      <Provider store={store}>
+        <BrowserRouter>
+          <ThemeProvider theme={themeConfig}>
+            <CssBaseline />
+            <Web3ReactProvider getLibrary={getLibrary}>
+              <App />
+            </Web3ReactProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      </Provider>
+    </React.StrictMode>
+  </ApolloProvider>,
   document.getElementById("root")
 );
 

@@ -131,6 +131,11 @@ const useStyles = makeStyles(() => ({
     animation: `$Flash linear 2s infinite`,
     borderRadius: 5,
   },
+  ToHuntHistoryBtn: {
+    "&:hover": {
+      color: "#f66810",
+    },
+  },
   "@keyframes Flash": {
     "0%": {
       boxShadow:
@@ -880,9 +885,9 @@ const Monsters = () => {
                 spacing={2}
                 sx={{ justifyContent: "center" }}
                 alignItems="center"
-                columns={70}
+                columns={80}
               >
-                <Grid item xs={70} sm={70} md={20}>
+                <Grid item xs={80} sm={80} md={20}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       {getTranslation("legions")}
@@ -912,7 +917,7 @@ const Monsters = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={35} sm={35} md={9}>
+                <Grid item xs={40} sm={40} md={9}>
                   <ScrollToButton
                     toId={"monster" + strongestMonsterToHunt}
                     duration={1000}
@@ -933,7 +938,7 @@ const Monsters = () => {
                     </Typography>
                   </ScrollToButton>
                 </Grid>
-                <Grid item xs={35} sm={35} md={7}>
+                <Grid item xs={40} sm={40} md={7}>
                   <Typography
                     variant="h5"
                     sx={{
@@ -943,7 +948,7 @@ const Monsters = () => {
                     W {curLegion?.warriors.length}/{warriorCapacity}
                   </Typography>
                 </Grid>
-                <Grid item xs={35} sm={35} md={7}>
+                <Grid item xs={40} sm={40} md={7}>
                   <Typography
                     variant="h5"
                     sx={{
@@ -954,7 +959,7 @@ const Monsters = () => {
                     {createlegions.main.maxAvailableDragCount}
                   </Typography>
                 </Grid>
-                <Grid item xs={35} sm={35} md={7}>
+                <Grid item xs={40} sm={40} md={7}>
                   <Typography
                     variant="h5"
                     sx={{
@@ -976,7 +981,7 @@ const Monsters = () => {
                       "(" + getTranslation("suppliesNeeded") + ")"}
                   </Typography>
                 </Grid>
-                <Grid item xs={35} sm={35} md={10}>
+                <Grid item xs={40} sm={40} md={10}>
                   <Typography
                     variant="h5"
                     sx={{
@@ -986,7 +991,7 @@ const Monsters = () => {
                     {calcHuntTime(curLegion?.lastHuntTime)}
                   </Typography>
                 </Grid>
-                <Grid item xs={35} sm={35} md={10} sx={{ marginRight: "auto" }}>
+                <Grid item xs={40} sm={40} md={10} sx={{ marginRight: "auto" }}>
                   <Typography
                     variant="h5"
                     sx={{
@@ -1013,6 +1018,21 @@ const Monsters = () => {
                       </CommonBtn>
                     )}
                   </Typography>
+                </Grid>
+                <Grid item xs={40} sm={40} md={10}>
+                  <NavLink to="/hunthistory" className="non-style">
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontSize: { xs: 14, sm: 16, md: 20 },
+                        textAlign: "center",
+                        fontWeight: "bold",
+                      }}
+                      className={classes.ToHuntHistoryBtn}
+                    >
+                      {getTranslation("hunthistory")}
+                    </Typography>
+                  </NavLink>
                 </Grid>
               </Grid>
               {supplyLoading && (

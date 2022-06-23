@@ -82,7 +82,7 @@ export const navConfig = {
       element: <Tips />,
     },
     {
-      path: "/huntinghistory",
+      path: "/hunthistory",
       element: <HuntingHistory />,
     },
     {
@@ -123,9 +123,9 @@ export const navConfig = {
       },
       {
         type: "navlink",
-        title: "huntinghistory",
+        title: "hunthistory",
         icon: "hunt.png",
-        path: "/huntinghistory",
+        path: "/hunthistory",
       },
       {
         type: "divider",
