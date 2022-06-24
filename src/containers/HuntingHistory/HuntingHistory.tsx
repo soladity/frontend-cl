@@ -19,20 +19,21 @@ import { toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import moment from "moment";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   MassHuntItemLose: {
     boxShadow:
       "rgb(0 0 0 / 37%) 0px 2px 4px 0px, rgb(14 30 37 / 85%) 0px 2px 16px 0px",
     borderRadius: 5,
-    background: "#1e1e1e",
+    background: "#630000",
   },
   MassHuntItemWin: {
     boxShadow:
       "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
     animation: `$Flash linear 2s infinite`,
     borderRadius: 5,
-    background: "#104854",
+    background: "#074900",
   },
   "@keyframes Flash": {
     "0%": {
@@ -144,10 +145,23 @@ const HuntingHistory = () => {
               // className={classes.warning}
               sx={{ p: 4, justifyContent: "start", alignItems: "center" }}
             >
-              <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  // flexDirection: "column",
+                  mx: 4,
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                   {getTranslation("hunthistory")}
                 </Typography>
+                <NavLink to="/hunt" className="non-style">
+                  <CommonBtn style={{ fontWeight: "bold" }}>
+                    {getTranslation("hunt")}
+                  </CommonBtn>
+                </NavLink>
               </Box>
             </Box>
           </Card>
@@ -167,6 +181,11 @@ const HuntingHistory = () => {
                 p: 1,
               }}
             >
+              <Box sx={{ fontSize: 12, mb: 1, mt: 1, fontWeight: "bold" }}>
+                <span>
+                  {moment(new Date(item.timestamp * 1000)).format("YYYY-MM-DD")}
+                </span>
+              </Box>
               {item.success ? (
                 <img
                   src={
@@ -209,11 +228,6 @@ const HuntingHistory = () => {
                   {getTranslation("yourRoll")}: {item.roll}
                 </span>
               </Box>
-              <Box sx={{ fontSize: 12 }}>
-                <span>
-                  {moment(new Date(item.timestamp * 1000)).format("YYYY-MM-DD")}
-                </span>
-              </Box>
               <Box sx={{ p: 1, fontSize: 12, fontWeight: "bold" }}>
                 {item.success ? (
                   <span>
@@ -245,7 +259,15 @@ const HuntingHistory = () => {
       )}
       {huntHistory.length === 0 && (
         <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h4">{getTranslation("nohistory")}</Typography>
+          <Typography variant="h4" sx={{ mb: 2 }}>
+            {getTranslation("nohistory")}
+          </Typography>
+
+          <NavLink to="/hunt" className="non-style">
+            <CommonBtn style={{ fontWeight: "bold" }}>
+              {getTranslation("gohuntmore")}
+            </CommonBtn>
+          </NavLink>
         </Box>
       )}
     </Box>

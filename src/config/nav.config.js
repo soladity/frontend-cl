@@ -122,12 +122,6 @@ export const navConfig = {
         path: "/hunt",
       },
       {
-        type: "navlink",
-        title: "hunthistory",
-        icon: "hunt.png",
-        path: "/hunthistory",
-      },
-      {
         type: "divider",
       },
       {

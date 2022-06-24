@@ -1024,13 +1024,13 @@ const Monsters = () => {
                     <Typography
                       variant="h5"
                       sx={{
-                        fontSize: { xs: 14, sm: 16, md: 20 },
+                        fontSize: { xs: 12, sm: 14, md: 16 },
                         textAlign: "center",
-                        fontWeight: "bold",
+                        color: "darkgrey",
                       }}
                       className={classes.ToHuntHistoryBtn}
                     >
-                      {getTranslation("hunthistory")}
+                      {getTranslation("hunthistory")} (Beta)
                     </Typography>
                   </NavLink>
                 </Grid>
