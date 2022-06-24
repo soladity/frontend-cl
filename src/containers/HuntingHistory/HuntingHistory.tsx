@@ -157,11 +157,13 @@ const HuntingHistory = () => {
                 <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                   {getTranslation("hunthistory")}
                 </Typography>
-                <NavLink to="/hunt" className="non-style">
-                  <CommonBtn style={{ fontWeight: "bold" }}>
-                    {getTranslation("hunt")}
-                  </CommonBtn>
-                </NavLink>
+                {huntHistory.length !== 0 && (
+                  <NavLink to="/hunt" className="non-style">
+                    <CommonBtn style={{ fontWeight: "bold" }}>
+                      {getTranslation("hunt")}
+                    </CommonBtn>
+                  </NavLink>
+                )}
               </Box>
             </Box>
           </Card>
@@ -262,10 +264,12 @@ const HuntingHistory = () => {
           <Typography variant="h4" sx={{ mb: 2 }}>
             {getTranslation("nohistory")}
           </Typography>
-
+          <Typography variant="h4" sx={{ mb: 2 }}>
+            {getTranslation("gohuntmore")}
+          </Typography>
           <NavLink to="/hunt" className="non-style">
             <CommonBtn style={{ fontWeight: "bold" }}>
-              {getTranslation("gohuntmore")}
+              {getTranslation("hunt")}
             </CommonBtn>
           </NavLink>
         </Box>
