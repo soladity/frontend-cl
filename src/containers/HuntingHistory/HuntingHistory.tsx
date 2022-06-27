@@ -20,6 +20,8 @@ import monstersInfo from "../../constant/monsters";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import moment from "moment";
 import { NavLink } from "react-router-dom";
+import { useMonster } from "../../hooks/useContract";
+import { getAllMonsters } from "../../hooks/contractFunction";
 
 const useStyles = makeStyles(() => ({
   MassHuntItemLose: {
@@ -51,6 +53,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+interface MonsterInterface {
+  id: number;
+  base: string;
+  ap: number;
+  reward: string;
+  image: string;
+  imageAlt: string;
+  name: string;
+  BUSDReward: number;
+}
+
 const HuntingHistory = () => {
   const query = gql`
     query Query($first: Int, $skip: Int, $address: String) {
@@ -75,20 +88,47 @@ const HuntingHistory = () => {
       }
     }
   `;
+
+  const getAllQuery = gql`
+    query Query($address: String) {
+      huntingHistories(
+        orderBy: timestamp
+        orderDirection: desc
+        where: { _addr: $address }
+      ) {
+        id
+        _addr
+        name
+        legionId
+        monsterId
+        roll
+        percent
+        success
+        reward
+        block
+        timestamp
+      }
+    }
+  `;
   const { account } = useWeb3React();
 
   // const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
   const classes = useStyles();
+  const monsterContract = useMonster();
 
-  const [huntHistory, setHuntHistory] = useState<any[]>([]);
+  // const [huntHistory, setHuntHistory] = useState<any[]>([]);
   const [pageSize, setPageSize] = useState<number>(12);
   const [loadMoreBtnShow, setLoadMoreBtnShow] = useState(true);
   const [showAnimation, setShowAnimation] = useState<string | null>("0");
+  const [monsters, setMonsters] = useState<MonsterInterface[]>(Array);
 
   const [loadEntries, { loading, error, data: entriesData }] =
-    useLazyQuery(query);
+    useLazyQuery(getAllQuery);
 
   console.log(entriesData);
+  const huntHistory = entriesData?.huntingHistories
+    ? entriesData.huntingHistories
+    : [];
 
   useEffect(() => {
     setShowAnimation(
@@ -98,20 +138,22 @@ const HuntingHistory = () => {
     );
     if (account) {
       getHistory(0);
+      getAllMonsterInfo();
     }
   }, []);
 
   useEffect(() => {
-    const entries = entriesData?.huntingHistories
-      ? entriesData.huntingHistories
-      : [];
-    let temp: any[] = huntHistory;
-    temp = temp.concat(entries);
-    console.log(entries);
-    if (entriesData && entries.length < pageSize) {
-      setLoadMoreBtnShow(false);
-    }
-    setHuntHistory(temp);
+    // const entries = entriesData?.huntingHistories
+    //   ? entriesData.huntingHistories
+    //   : [];
+    // let temp: any[] = huntHistory;
+    // temp = temp.concat(entries);
+    // console.log(entries);
+    // if (entriesData && huntHistory.length < pageSize) {
+    //   setLoadMoreBtnShow(false);
+    // }
+    // setHuntHistory(temp);
+    setLoadMoreBtnShow(false);
   }, [entriesData]);
 
   useEffect(() => {
@@ -121,9 +163,62 @@ const HuntingHistory = () => {
   const getHistory = (skip: number) => {
     if (loadMoreBtnShow)
       loadEntries({
-        variables: { first: pageSize, skip: skip, address: account },
+        // variables: { first: pageSize, skip: skip, address: account },
+        variables: { address: account },
       });
   };
+
+  const getAllMonsterInfo = async () => {
+    let monsterArrary = [];
+    try {
+      const monsterVal: any = await getAllMonsters(monsterContract);
+      console.log("allMonster Val: ", monsterVal);
+      const monsterArraryTemp = monsterVal[0];
+      const rewardArray = monsterVal[1];
+      monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
+        return {
+          name: item.name,
+          base: item.percent,
+          ap: item.attack_power / 100,
+          reward: (rewardArray[index] / Math.pow(10, 18)).toFixed(2),
+          BUSDReward: item.reward / Math.pow(10, 4),
+        };
+      });
+      console.log(monsterArrary);
+    } catch (error) {}
+    // console.log(monsterArrary);
+    setMonsters(monsterArrary);
+  };
+
+  const getTotalBUSD = () => {
+    let totalBUSD = 0;
+    huntHistory.forEach((history: any) => {
+      if (history.success) {
+        const BUSDReward =
+          monsters.length > 0
+            ? monsters[parseInt(history.monsterId) - 1].BUSDReward
+            : 0;
+        totalBUSD = totalBUSD + BUSDReward;
+      }
+    });
+    return totalBUSD;
+  };
+
+  const getTotalBLST = () => {
+    let totalBUSD = 0;
+    huntHistory.forEach((history: any) => {
+      if (history.success) {
+        const BLSTReward =
+          monsters.length > 0
+            ? parseFloat(monsters[parseInt(history.monsterId) - 1].reward)
+            : 0;
+        totalBUSD = totalBUSD + BLSTReward;
+      }
+    });
+    return totalBUSD;
+  };
+
+  const getEachBUSDAndBLST = (monsterID: number) => {};
 
   return (
     <Box>
@@ -152,10 +247,16 @@ const HuntingHistory = () => {
                   mx: 4,
                   justifyContent: "space-between",
                   alignItems: "center",
+                  flexWrap: "wrap",
                 }}
               >
                 <Typography variant="h3" sx={{ fontWeight: "bold" }}>
                   {getTranslation("hunthistory")}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {getTotalBLST().toFixed(0)} $BLST (={" "}
+                  {getTotalBUSD().toFixed(0)} USD) Won in Total
                 </Typography>
                 {huntHistory.length !== 0 && (
                   <NavLink to="/hunt" className="non-style">
@@ -234,7 +335,14 @@ const HuntingHistory = () => {
                 {item.success ? (
                   <span>
                     {getTranslation("won")}{" "}
-                    {(item.reward / 10 ** 18).toFixed(0)} $BLST
+                    {parseInt(
+                      monsters[parseInt(item.monsterId) - 1].reward
+                    ).toFixed(0)}{" "}
+                    $BLST (={" "}
+                    {monsters[parseInt(item.monsterId) - 1].BUSDReward.toFixed(
+                      0
+                    )}{" "}
+                    USD)
                   </span>
                 ) : (
                   <span>{getTranslation("lost")}</span>
@@ -244,7 +352,7 @@ const HuntingHistory = () => {
           </Grid>
         ))}
       </Grid>
-      {loadMoreBtnShow && !loading && (
+      {/* {loadMoreBtnShow && !loading && (
         <Box sx={{ textAlign: "center" }}>
           <CommonBtn
             style={{ fontWeight: "bold" }}
@@ -253,13 +361,13 @@ const HuntingHistory = () => {
             {getTranslation("loadmore")}
           </CommonBtn>
         </Box>
-      )}
+      )} */}
       {loading && (
         <Box sx={{ textAlign: "center" }}>
           <CircularProgress />
         </Box>
       )}
-      {huntHistory.length === 0 && (
+      {huntHistory.length === 0 && !loading && (
         <Box sx={{ textAlign: "center" }}>
           <Typography variant="h4" sx={{ mb: 2 }}>
             {getTranslation("nohistory")}
