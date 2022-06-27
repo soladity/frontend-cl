@@ -15,7 +15,7 @@ import { getTranslation } from "../../utils/translation";
 import { gql, useLazyQuery } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
 import { makeStyles } from "@mui/styles";
-import { toCapitalize } from "../../utils/common";
+import { formatNumber, toCapitalize } from "../../utils/common";
 import monstersInfo from "../../constant/monsters";
 import CommonBtn from "../../component/Buttons/CommonBtn";
 import moment from "moment";
@@ -255,8 +255,8 @@ const HuntingHistory = () => {
                 </Typography>
 
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                  {getTotalBLST().toFixed(0)} $BLST (={" "}
-                  {getTotalBUSD().toFixed(0)} USD) Won in Total
+                  {formatNumber(getTotalBLST().toFixed(0))} $BLST (={" "}
+                  {formatNumber(getTotalBUSD().toFixed(0))} USD) Won in Total
                 </Typography>
                 {huntHistory.length !== 0 && (
                   <NavLink to="/hunt" className="non-style">
@@ -287,6 +287,11 @@ const HuntingHistory = () => {
               <Box sx={{ fontSize: 12, mb: 1, mt: 1, fontWeight: "bold" }}>
                 <span>
                   {moment(new Date(item.timestamp * 1000)).format("YYYY-MM-DD")}
+                </span>
+              </Box>
+              <Box sx={{ fontSize: 12, mb: 1, mt: 1 }}>
+                <span>
+                  {moment(new Date(item.timestamp * 1000)).format("hh:mm A")}
                 </span>
               </Box>
               {item.success ? (
@@ -335,14 +340,21 @@ const HuntingHistory = () => {
                 {item.success ? (
                   <span>
                     {getTranslation("won")}{" "}
-                    {parseInt(
-                      monsters[parseInt(item.monsterId) - 1].reward
-                    ).toFixed(0)}{" "}
-                    $BLST (={" "}
-                    {monsters[parseInt(item.monsterId) - 1].BUSDReward.toFixed(
-                      0
+                    {formatNumber(
+                      parseInt(
+                        monsters[parseInt(item.monsterId) - 1]?.reward
+                      ).toFixed(0)
                     )}{" "}
-                    USD)
+                    $BLST{" "}
+                    <span style={{ fontWeight: "lighter" }}>
+                      (={" "}
+                      {formatNumber(
+                        monsters[
+                          parseInt(item.monsterId) - 1
+                        ]?.BUSDReward.toFixed(0)
+                      )}{" "}
+                      USD)
+                    </span>
                   </span>
                 ) : (
                   <span>{getTranslation("lost")}</span>
