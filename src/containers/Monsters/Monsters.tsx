@@ -124,12 +124,14 @@ const useStyles = makeStyles(() => ({
     boxShadow:
       "rgb(0 0 0 / 37%) 0px 2px 4px 0px, rgb(14 30 37 / 85%) 0px 2px 16px 0px",
     borderRadius: 5,
+    background: "#630000",
   },
   MassHuntItemWin: {
     boxShadow:
       "rgb(247 247 247 / 55%) 0px 2px 4px 0px, rgb(217 221 206 / 85%) 0px 2px 16px 0px",
     animation: `$Flash linear 2s infinite`,
     borderRadius: 5,
+    background: "#074900",
   },
   ToHuntHistoryBtn: {
     "&:hover": {
