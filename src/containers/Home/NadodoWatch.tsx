@@ -31,7 +31,7 @@ const NadodoWatch = () => {
       setHuntTax(((await getFee(feeHandlerContract, 1)) / 100).toFixed(1));
       setBuyAndSellTax();
       setDamageReduction(
-        ((await getFee(feeHandlerContract, 2)) / 100).toFixed(0)
+        ((await getFee(feeHandlerContract, 2)) / 100).toFixed(1)
       );
       setSummonFee(await getFee(feeHandlerContract, 3));
       setSuppliesFee14(await getFee(feeHandlerContract, 4));
