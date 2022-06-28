@@ -10,6 +10,7 @@ import {
   Button,
   IconButton,
   Skeleton,
+  Tooltip,
 } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -376,11 +377,16 @@ export default function LegionCard(props: CardProps) {
               alt="Shopping"
             />
           ) : (
-            <img
-              src="/assets/images/shoppingRed.png"
-              style={{ height: "20px" }}
-              alt="Shopping"
-            />
+            <Tooltip
+              title="Wait 24 hours after hunting to sell your legion"
+              placement="left"
+            >
+              <img
+                src="/assets/images/shoppingRed.png"
+                style={{ height: "20px" }}
+                alt="Shopping"
+              />
+            </Tooltip>
           )}
         </Box>
       )}
