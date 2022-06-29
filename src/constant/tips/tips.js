@@ -117,20 +117,47 @@ export const tipsConstant = {
       type: "space",
     },
     {
-      type: "subtitle1",
-      text: "Session 3: Claiming (29 June - 5pm UTC)",
+      type: "h5",
+      text: "Session 3: Claiming",
     },
     {
-      type: "body1",
-      text: "- What is the optimal claiming time?",
+      type: "h6",
+      text: "3.1 What is the optimal claiming time?",
     },
     {
-      type: "body1",
-      text: "- How to speed up tax decrease?",
+      type: "youtu",
+      link: "https://youtu.be/iacdeA5ilxM",
     },
     {
-      type: "body1",
-      text: "- How does reinvesting earnings impact ROI?",
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "3.2 How to speed up tax decrease?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/yGmn728z820",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "3.3 How does reinvesting earnings impact ROI?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/YCqFAVoha60",
+    },
+    {
+      type: "space",
     },
     {
       type: "space",
