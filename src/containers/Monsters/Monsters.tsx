@@ -572,6 +572,7 @@ const Monsters = () => {
           );
           setRevealBtnDisabled(false);
         } catch (error: any) {
+          console.log("hunt error: ", error);
           setDialogVisible(false);
           if (error.code == 4001) {
           } else {
