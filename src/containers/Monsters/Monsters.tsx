@@ -547,8 +547,8 @@ const Monsters = () => {
             busdContract,
             account
           );
-          console.log("BUSD: ", BUSD);
-          console.log("Allowance: ", allowance);
+          console.log("BUSD : ", BUSD);
+          console.log("Allowance : ", allowance);
           if (
             allowance <
             (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward *
