@@ -38,6 +38,8 @@ import {
   getCostForAddingWarrior,
   getAllWarriors,
   getAllBeasts,
+  setApprovalForAll,
+  isApprovedForAll,
 } from "../../hooks/contractFunction";
 import {
   getBeastTokenIds,
@@ -62,6 +64,7 @@ import DraggableCard from "../../component/Cards/DraggableCard";
 import Image from "../../config/image.json";
 import warriorInfo from "../../constant/warriors";
 import beastsTypeInfo from "../../constant/beasts";
+import { getLegionAddress } from "../../utils/addressHelpers";
 
 const useStyles = makeStyles({
   root: {
@@ -178,6 +181,10 @@ const UpdateLegions: React.FC = () => {
   const [comboWFilterList, setComboWFilterList] = React.useState<
     IWFilterItem[]
   >([]);
+
+  const [loadingText, setLoadingText] = React.useState(
+    getTranslation("loadingTitle")
+  );
 
   const navigate = useNavigate();
   const params = useParams();
@@ -310,9 +317,48 @@ const UpdateLegions: React.FC = () => {
 
   const getBalance = async () => {
     setLoading(true);
-    await getWarriors();
-    await getBeasts();
-    setLoading(false);
+    try {
+      await checkApprovalForAll();
+      await getWarriors();
+      await getBeasts();
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  const checkApprovalForAll = async () => {
+    if (
+      !(await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
+    }
+    if (await isApprovedForAll(beastContract, account, getLegionAddress())) {
+      setLoadingText(getTranslation("approvalAllWarriors"));
+    }
+    if (await isApprovedForAll(warriorContract, account, getLegionAddress())) {
+      setLoadingText(getTranslation("approvalAllBeasts"));
+    }
+    if (!(await isApprovedForAll(beastContract, account, getLegionAddress()))) {
+      await setApprovalForAll(account, beastContract, getLegionAddress(), true);
+      setLoadingText(getTranslation("approvalAllWarriors"));
+    }
+    if (
+      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      await setApprovalForAll(
+        account,
+        warriorContract,
+        getLegionAddress(),
+        true
+      );
+      setLoadingText(getTranslation("approvalAllBeasts"));
+    }
+    if (
+      (await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+      (await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      setLoadingText(getTranslation("loadingTitle"));
+    }
   };
 
   const getWarriors = async () => {
@@ -816,7 +862,7 @@ const UpdateLegions: React.FC = () => {
                                 item["type"] +
                                 ".jpg"
                               : "/assets/images/characters/gif/warriors/" +
-                              item["gif"]
+                                item["gif"]
                           }
                           item={item}
                           key={10000 + item.id}
@@ -839,7 +885,8 @@ const UpdateLegions: React.FC = () => {
                               ? "/assets/images/characters/jpg/beasts/" +
                                 item["type"] +
                                 ".jpg"
-                              : "/assets/images/characters/gif/beasts/" + item["gif"]
+                              : "/assets/images/characters/gif/beasts/" +
+                                item["gif"]
                           }
                           item={item}
                           key={item.id}
@@ -986,9 +1033,7 @@ const UpdateLegions: React.FC = () => {
         {loading && (
           <>
             <Grid item xs={12} sx={{ p: 4, textAlign: "center" }}>
-              <Typography variant="h4">
-                {getTranslation("loadingTitle")}
-              </Typography>
+              <Typography variant="h4">{loadingText}</Typography>
             </Grid>
             <Grid item xs={1}>
               <Card>
