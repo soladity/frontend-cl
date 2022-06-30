@@ -28,7 +28,7 @@ const mainVersion = {
   moralisAppId: "B3QZWGHlngeYCi1tNJe5l6Kl0UnAx6E3hRCfVPL2",
 };
 
-// const gameVersion = testVersion;
-const gameVersion = mainVersion;
+const gameVersion = testVersion;
+// const gameVersion = mainVersion;
 
 export default gameVersion;

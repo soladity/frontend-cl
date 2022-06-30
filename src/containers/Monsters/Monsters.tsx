@@ -547,8 +547,14 @@ const Monsters = () => {
             busdContract,
             account
           );
-          if (allowance == 0) {
-            await setLegionBUSDApprove(web3, busdContract, account);
+          console.log("BUSD : ", BUSD);
+          console.log("Allowance : ", allowance);
+          if (
+            allowance <
+            (monsters[curMonsterID - 1] as MonsterInterface).BUSDReward *
+              huntTax
+          ) {
+            await setLegionBUSDApprove(web3, busdContract, account, "1400");
           }
           let response = await hunt(
             web3,
@@ -755,8 +761,11 @@ const Monsters = () => {
           busdContract,
           account
         );
-        if (allowance == 0) {
-          await setLegionBUSDApprove(web3, busdContract, account);
+        console.log("BUSD: ", BUSD);
+        console.log("totalBUSD: ", totalBUSD);
+        console.log("Allowance: ", allowance);
+        if (allowance < totalBUSD) {
+          await setLegionBUSDApprove(web3, busdContract, account, "1400");
         }
         await massHunt(legionContract, account);
         let massHuntPending;
@@ -796,8 +805,9 @@ const Monsters = () => {
           legion.realPower
         );
 
-        totalBUSD += (monsters[parseInt(monsterId) - 1] as MonsterInterface)
-          .BUSDReward;
+        totalBUSD +=
+          (monsters[parseInt(monsterId) - 1] as MonsterInterface).BUSDReward *
+          huntTax;
       }
     }
     return totalBUSD;
