@@ -889,7 +889,7 @@ const Legions = () => {
           <Tutorial curStep={16} placement="bottom">
             <CommonBtn
               onClick={() => handleSupplyClick(true)}
-              sx={{ marginRight: 1, marginLeft: 1 }}
+              sx={{ marginRight: 1, fontWeight: "bold" }}
               disabled={
                 parseFloat(blstBalance * Math.pow(10, 18) + "") <
                   parseFloat(supplyValues[supplyOrder] + "") ||
@@ -902,6 +902,7 @@ const Legions = () => {
           </Tutorial>
           <CommonBtn
             onClick={() => handleSupplyClick(false)}
+            sx={{ fontWeight: "bold" }}
             disabled={
               parseFloat(unclaimedBlst + "") <
                 parseFloat(supplyValues[supplyOrder] + "") || supplyCostLoading
