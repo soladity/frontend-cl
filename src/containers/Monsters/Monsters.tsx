@@ -816,7 +816,9 @@ const Monsters = () => {
   const getShareLink = (tokenId: number, social: string) => {
     const serverLink = "https://play.cryptolegions.app";
     const shareImgUrl =
-      tokenId == 24
+      tokenId == 25
+        ? `${serverLink}/monster_dying_25/m25end.jpg`
+        : tokenId == 24
         ? `${serverLink}/monster_dying_end/m24end.gif`
         : `${serverLink}/assets/images/characters/gif/monsters_dying/m${tokenId}.gif`;
     const text =
@@ -1300,9 +1302,13 @@ const Monsters = () => {
                   component="img"
                   image={
                     showAnimation === "0"
-                      ? curMonsterID == 24
+                      ? curMonsterID == 25
+                        ? "/monster_dying_25/m25end.jpg"
+                        : curMonsterID == 24
                         ? `/monster_dying_end/m24end.jpg`
                         : `/assets/images/characters/jpg/monsters_dying/m${curMonsterID}.jpg`
+                      : curMonsterID == 25
+                      ? "/monster_dying_25/m25end.jpg"
                       : curMonsterID == 24
                       ? `monster_dying_end/m24end.gif`
                       : `/assets/images/characters/gif/monsters_dying/m${curMonsterID}.gif`
