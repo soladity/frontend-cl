@@ -92,7 +92,7 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
       >
         <Grid item xs={12}>
           <Typography variant="h4" sx={{ fontWeight: "bold", color: "white" }}>
-            #{tokenID} {toCapitalize(name)}
+            #{tokenID} {tokenID === 25 ? name : toCapitalize(name)}
           </Typography>
         </Grid>
         <Grid container spacing={2} sx={{ justifyContent: "space-around" }}>
@@ -166,7 +166,9 @@ export const MonsterCard: React.FC<CardProps> = function MonsterCard({
       >
         <Grid item>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {Math.round(parseInt(base) + parseInt(bonus)) > 89
+            {tokenID === 25
+              ? parseInt(base)
+              : Math.round(parseInt(base) + parseInt(bonus)) > 89
               ? 89
               : (parseInt(base) + parseInt(bonus)).toFixed(0)}
             % {getTranslation("toWin")}
