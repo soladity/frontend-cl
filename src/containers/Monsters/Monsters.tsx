@@ -1045,7 +1045,7 @@ const Monsters = () => {
                       }}
                       className={classes.ToHuntHistoryBtn}
                     >
-                      {getTranslation("hunthistory")} (Beta)
+                      {getTranslation("hunthistory")}
                     </Typography>
                   </NavLink>
                 </Grid>
@@ -1617,11 +1617,15 @@ const Monsters = () => {
                 <img
                   src={
                     showAnimation === "0"
-                      ? item["monsterId"] == 24
+                      ? item["monsterId"] == 25
+                        ? "/monster_dying_25/m25end.jpg"
+                        : item["monsterId"] == 24
                         ? `/monster_dying_end/m24end.jpg`
                         : `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                      : item["monsterId"] == 25
+                      ? "/monster_dying_25/m25end.jpg"
                       : item["monsterId"] == 24
-                      ? `/monster_dying_end/m24end.gif`
+                      ? `monster_dying_end/m24end.gif`
                       : `/assets/images/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
                   }
                   style={{ width: "100%" }}
