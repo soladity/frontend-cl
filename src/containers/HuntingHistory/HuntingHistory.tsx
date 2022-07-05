@@ -269,100 +269,104 @@ const HuntingHistory = () => {
             </Box>
           </Card>
         </Grid>
-        {huntHistory.map((item: any, index: number) => (
-          <Grid item xs={6} md={4} lg={2} key={index}>
-            <Box
-              key={index}
-              className={
-                item.success
-                  ? classes.MassHuntItemWin
-                  : classes.MassHuntItemLose
-              }
-              sx={{
-                textAlign: "center",
-                margin: 1,
-                p: 1,
-              }}
-            >
-              <Box sx={{ fontSize: 12, mb: 1, mt: 1, fontWeight: "bold" }}>
-                <span>
-                  {moment(new Date(item.timestamp * 1000)).format("YYYY-MM-DD")}
-                </span>
-              </Box>
-              <Box sx={{ fontSize: 12, mb: 1, mt: 1 }}>
-                <span>
-                  {moment(new Date(item.timestamp * 1000)).format("hh:mm A")}
-                </span>
-              </Box>
-              {item.success ? (
-                <img
-                  src={
-                    showAnimation === "0"
-                      ? item["monsterId"] == 24
-                        ? `/monster_dying_end/m24end.jpg`
-                        : `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
-                      : item["monsterId"] == 24
-                      ? `/monster_dying_end/m24end.gif`
-                      : `/assets/images/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
-                  }
-                  style={{ width: "100%" }}
-                />
-              ) : (
-                <img
-                  src={
-                    showAnimation === "0"
-                      ? `/assets/images/characters/jpg/monsters/m${item["monsterId"]}.jpg`
-                      : `/assets/images/characters/gif/monsters/m${item["monsterId"]}.gif`
-                  }
-                  style={{ width: "100%" }}
-                />
-              )}
-              <Box sx={{ p: 1, wordBreak: "break-word" }}>{item.name}</Box>
-              <Box sx={{ fontSize: 12 }}>
-                <span style={{ fontWeight: "bold" }}>
-                  #{item.monsterId}{" "}
-                  {toCapitalize(
-                    monstersInfo[parseInt(item.monsterId) - 1].name
-                  )}
-                </span>
-              </Box>
-              <Box sx={{ fontSize: 12 }}>
-                <span>
-                  {getTranslation("maxRoll")}: {item.percent}
-                </span>
-              </Box>
-              <Box sx={{ fontSize: 12 }}>
-                <span>
-                  {getTranslation("yourRoll")}: {item.roll}
-                </span>
-              </Box>
-              <Box sx={{ p: 1, fontSize: 12, fontWeight: "bold" }}>
-                {item.success ? (
+        {huntHistory
+          .filter((item: any) => item["monsterId"] != 25)
+          .map((item: any, index: number) => (
+            <Grid item xs={6} md={4} lg={2} key={index}>
+              <Box
+                key={index}
+                className={
+                  item.success
+                    ? classes.MassHuntItemWin
+                    : classes.MassHuntItemLose
+                }
+                sx={{
+                  textAlign: "center",
+                  margin: 1,
+                  p: 1,
+                }}
+              >
+                <Box sx={{ fontSize: 12, mb: 1, mt: 1, fontWeight: "bold" }}>
                   <span>
-                    {getTranslation("won")}{" "}
-                    {formatNumber(
-                      parseInt(
-                        monsters[parseInt(item.monsterId) - 1]?.reward
-                      ).toFixed(0)
-                    )}{" "}
-                    $BLST{" "}
-                    <span style={{ fontWeight: "lighter" }}>
-                      (={" "}
-                      {formatNumber(
-                        monsters[
-                          parseInt(item.monsterId) - 1
-                        ]?.BUSDReward.toFixed(0)
-                      )}{" "}
-                      USD)
-                    </span>
+                    {moment(new Date(item.timestamp * 1000)).format(
+                      "YYYY-MM-DD"
+                    )}
                   </span>
+                </Box>
+                <Box sx={{ fontSize: 12, mb: 1, mt: 1 }}>
+                  <span>
+                    {moment(new Date(item.timestamp * 1000)).format("hh:mm A")}
+                  </span>
+                </Box>
+                {item.success ? (
+                  <img
+                    src={
+                      showAnimation === "0"
+                        ? item["monsterId"] == 24
+                          ? `/monster_dying_end/m24end.jpg`
+                          : `/assets/images/characters/jpg/monsters_dying/m${item["monsterId"]}.jpg`
+                        : item["monsterId"] == 24
+                        ? `/monster_dying_end/m24end.gif`
+                        : `/assets/images/characters/gif/monsters_dying/m${item["monsterId"]}.gif`
+                    }
+                    style={{ width: "100%" }}
+                  />
                 ) : (
-                  <span>{getTranslation("lost")}</span>
+                  <img
+                    src={
+                      showAnimation === "0"
+                        ? `/assets/images/characters/jpg/monsters/m${item["monsterId"]}.jpg`
+                        : `/assets/images/characters/gif/monsters/m${item["monsterId"]}.gif`
+                    }
+                    style={{ width: "100%" }}
+                  />
                 )}
+                <Box sx={{ p: 1, wordBreak: "break-word" }}>{item.name}</Box>
+                <Box sx={{ fontSize: 12 }}>
+                  <span style={{ fontWeight: "bold" }}>
+                    #{item.monsterId}{" "}
+                    {toCapitalize(
+                      monstersInfo[parseInt(item.monsterId) - 1].name
+                    )}
+                  </span>
+                </Box>
+                <Box sx={{ fontSize: 12 }}>
+                  <span>
+                    {getTranslation("maxRoll")}: {item.percent}
+                  </span>
+                </Box>
+                <Box sx={{ fontSize: 12 }}>
+                  <span>
+                    {getTranslation("yourRoll")}: {item.roll}
+                  </span>
+                </Box>
+                <Box sx={{ p: 1, fontSize: 12, fontWeight: "bold" }}>
+                  {item.success ? (
+                    <span>
+                      {getTranslation("won")}{" "}
+                      {formatNumber(
+                        parseInt(
+                          monsters[parseInt(item.monsterId) - 1]?.reward
+                        ).toFixed(0)
+                      )}{" "}
+                      $BLST{" "}
+                      <span style={{ fontWeight: "lighter" }}>
+                        (={" "}
+                        {formatNumber(
+                          monsters[
+                            parseInt(item.monsterId) - 1
+                          ]?.BUSDReward.toFixed(0)
+                        )}{" "}
+                        USD)
+                      </span>
+                    </span>
+                  ) : (
+                    <span>{getTranslation("lost")}</span>
+                  )}
+                </Box>
               </Box>
-            </Box>
-          </Grid>
-        ))}
+            </Grid>
+          ))}
       </Grid>
       {/* {loadMoreBtnShow && !loading && (
         <Box sx={{ textAlign: "center" }}>
