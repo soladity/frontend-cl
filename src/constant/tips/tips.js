@@ -167,16 +167,43 @@ export const tipsConstant = {
       text: "Session 4: Using Unclaimed (6 July - 5pm UTC)",
     },
     {
-      type: "body1",
-      text: "- How to use tax-free money for supplies?",
+      type: "h6",
+      text: "4.1 How to use tax-free money for supplies?",
     },
     {
-      type: "body1",
-      text: "- How to use unclaimed to grow quickly?",
+      type: "youtu",
+      link: "https://youtu.be/_YnVZyFc6pQ",
     },
     {
-      type: "body1",
-      text: "- How to build your legions for optimal ROI?",
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "4.2 How to use unclaimed to grow quickly?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/8j4TBOGqk8A",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "4.3 How to build your legions for optimal ROI?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/D2Ze6idosCk",
+    },
+    {
+      type: "space",
     },
     {
       type: "space",
