@@ -817,7 +817,7 @@ const Monsters = () => {
     const serverLink = "https://play.cryptolegions.app";
     const shareImgUrl =
       tokenId == 25
-        ? `${serverLink}/monster_dying_25/m25end.jpg`
+        ? `${serverLink}/monster_dying_25/m25end.gif`
         : tokenId == 24
         ? `${serverLink}/monster_dying_end/m24end.gif`
         : `${serverLink}/assets/images/characters/gif/monsters_dying/m${tokenId}.gif`;
@@ -1308,7 +1308,7 @@ const Monsters = () => {
                         ? `/monster_dying_end/m24end.jpg`
                         : `/assets/images/characters/jpg/monsters_dying/m${curMonsterID}.jpg`
                       : curMonsterID == 25
-                      ? "/monster_dying_25/m25end.jpg"
+                      ? "/monster_dying_25/m25end.gif"
                       : curMonsterID == 24
                       ? `monster_dying_end/m24end.gif`
                       : `/assets/images/characters/gif/monsters_dying/m${curMonsterID}.gif`
