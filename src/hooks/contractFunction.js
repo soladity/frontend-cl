@@ -27,10 +27,7 @@ export const getBeastBloodstoneAllowance = async (web3, contract, account) => {
 
 export const setBeastBloodstoneApprove = async (web3, contract, account) => {
   const response = await contract.methods
-    .approve(
-      getBeastAddress(),
-      web3.utils.toWei("1000000000", "ether").toString()
-    )
+    .approve(getBeastAddress(), web3.utils.toWei("50000", "ether").toString())
     .send({ from: account });
   return response;
 };
@@ -93,10 +90,7 @@ export const getWarriorBloodstoneAllowance = async (
 
 export const setWarriorBloodstoneApprove = async (web3, contract, account) => {
   const response = await contract.methods
-    .approve(
-      getWarriorAddress(),
-      web3.utils.toWei("1000000000", "ether").toString()
-    )
+    .approve(getWarriorAddress(), web3.utils.toWei("50000", "ether").toString())
     .send({ from: account });
   return response;
 };
@@ -150,10 +144,7 @@ export const getLegionBloodstoneAllowance = async (web3, contract, account) => {
 
 export const setLegionBloodstoneApprove = async (web3, contract, account) => {
   const response = await contract.methods
-    .approve(
-      getLegionAddress(),
-      web3.utils.toWei("1000000000", "ether").toString()
-    )
+    .approve(getLegionAddress(), web3.utils.toWei("50000", "ether").toString())
     .send({ from: account });
   return response;
 };
@@ -396,7 +387,7 @@ export const setMarketplaceBloodstoneApprove = async (
   const response = await contract.methods
     .approve(
       getMarketplaceAddress(),
-      web3.utils.toWei("1000000000", "ether").toString()
+      web3.utils.toWei("50000", "ether").toString()
     )
     .send({ from: account });
   return response;

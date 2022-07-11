@@ -123,7 +123,7 @@ const Warriors = () => {
   const maxSellPrice = allConstants.maxSellPrice;
   const [executeDialogOpen, setExecuteDialogOpen] = React.useState(false);
 
-  const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
+  const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState<any>({
     b1: {
       amount: "0",
       per: "0",
@@ -270,7 +270,10 @@ const Warriors = () => {
       account
     );
     try {
-      if (allowance === "0") {
+      if (
+        parseInt(allowance) <
+        parseInt(warriorBlstAmountPer["b" + amount].amount)
+      ) {
         await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintWarrior(web3, warriorContract, account, amount);

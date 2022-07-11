@@ -391,7 +391,7 @@ const CreateLegions: React.FC = () => {
       account
     );
     try {
-      if (allowance === "0") {
+      if (parseInt(allowance) < parseInt(mintFee)) {
         await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintLegion(
