@@ -450,7 +450,7 @@ const UpdateLegions: React.FC = () => {
       bloodstoneContract,
       account
     );
-    if (allowance === "0") {
+    if (parseInt(allowance) < parseInt(mintFee)) {
       await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
     }
     try {

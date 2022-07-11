@@ -129,7 +129,7 @@ const Beasts = () => {
 
   const maxSellPrice = allConstants.maxSellPrice;
 
-  const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
+  const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState<any>({
     b1: {
       amount: "0",
       per: "0",
@@ -287,7 +287,9 @@ const Beasts = () => {
       account
     );
     try {
-      if (allowance === "0") {
+      if (
+        parseInt(allowance) < parseInt(beastBlstAmountPer["b" + amount].amount)
+      ) {
         await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintBeast(web3, beastContract, account, amount);

@@ -406,7 +406,7 @@ const Legions = () => {
       account
     );
     try {
-      if (allowance === "0") {
+      if (parseInt(allowance) < price / 10 ** 18) {
         await setMarketplaceBloodstoneApprove(
           web3,
           bloodstoneContract,
