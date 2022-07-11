@@ -156,7 +156,7 @@ const TakeAction = () => {
 
   const classes = useStyles();
 
-  const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState({
+  const [warriorBlstAmountPer, setWarriorBlstAmountPer] = React.useState<any>({
     b1: {
       amount: "0",
       per: "0",
@@ -179,7 +179,7 @@ const TakeAction = () => {
     },
   });
 
-  const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState({
+  const [beastBlstAmountPer, setBeastBlstAmountPer] = React.useState<any>({
     b1: {
       amount: "0",
       per: "0",
@@ -292,7 +292,9 @@ const TakeAction = () => {
       bloodstoneContract,
       account
     );
-    if (allowance === "0") {
+    if (
+      parseInt(allowance) < parseInt(beastBlstAmountPer["b" + amount].amount)
+    ) {
       await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
     }
     const mintBeastPending = await getWalletMintPending(beastContract, account);
@@ -359,7 +361,10 @@ const TakeAction = () => {
         bloodstoneContract,
         account
       );
-      if (allowance === "0") {
+      if (
+        parseInt(allowance) <
+        parseInt(warriorBlstAmountPer["b" + amount].amount)
+      ) {
         await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
       }
       const mintWarriorPending = await getWalletMintPending(
