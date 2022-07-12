@@ -288,7 +288,8 @@ const Beasts = () => {
     );
     try {
       if (
-        parseInt(allowance) < parseInt(beastBlstAmountPer["b" + amount].amount)
+        parseFloat(allowance) <
+        parseFloat(beastBlstAmountPer["b" + amount].amount)
       ) {
         await setBeastBloodstoneApprove(web3, bloodstoneContract, account);
       }
