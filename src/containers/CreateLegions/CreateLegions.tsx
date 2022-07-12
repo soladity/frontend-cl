@@ -267,39 +267,44 @@ const CreateLegions: React.FC = () => {
   };
 
   const checkApprovalForAll = async () => {
-    if (
-      !(await isApprovedForAll(beastContract, account, getLegionAddress())) &&
-      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
-    ) {
-      setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
-    }
-    if (await isApprovedForAll(beastContract, account, getLegionAddress())) {
-      setLoadingText(getTranslation("approvalAllWarriors"));
-    }
-    if (await isApprovedForAll(warriorContract, account, getLegionAddress())) {
-      setLoadingText(getTranslation("approvalAllBeasts"));
-    }
-    if (!(await isApprovedForAll(beastContract, account, getLegionAddress()))) {
-      await setApprovalForAll(account, beastContract, getLegionAddress(), true);
-      setLoadingText(getTranslation("approvalAllWarriors"));
-    }
-    if (
-      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
-    ) {
-      await setApprovalForAll(
-        account,
-        warriorContract,
-        getLegionAddress(),
-        true
-      );
-      setLoadingText(getTranslation("approvalAllBeasts"));
-    }
-    if (
-      (await isApprovedForAll(beastContract, account, getLegionAddress())) &&
-      (await isApprovedForAll(warriorContract, account, getLegionAddress()))
-    ) {
-      setLoadingText(getTranslation("loadingTitle"));
-    }
+    setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
+    await setApprovalForAll(account, beastContract, getLegionAddress(), true);
+    setLoadingText(getTranslation("approvalAllWarriors"));
+    await setApprovalForAll(account, warriorContract, getLegionAddress(), true);
+    setLoadingText(getTranslation("loadingTitle"));
+    // if (
+    //   !(await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+    //   !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    // ) {
+    //   setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
+    // }
+    // if (await isApprovedForAll(beastContract, account, getLegionAddress())) {
+    //   setLoadingText(getTranslation("approvalAllWarriors"));
+    // }
+    // if (await isApprovedForAll(warriorContract, account, getLegionAddress())) {
+    //   setLoadingText(getTranslation("approvalAllBeasts"));
+    // }
+    // if (!(await isApprovedForAll(beastContract, account, getLegionAddress()))) {
+    //   await setApprovalForAll(account, beastContract, getLegionAddress(), true);
+    //   setLoadingText(getTranslation("approvalAllWarriors"));
+    // }
+    // if (
+    //   !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    // ) {
+    //   await setApprovalForAll(
+    //     account,
+    //     warriorContract,
+    //     getLegionAddress(),
+    //     true
+    //   );
+    //   setLoadingText(getTranslation("approvalAllBeasts"));
+    // }
+    // if (
+    //   (await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+    //   (await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    // ) {
+    //   setLoadingText(getTranslation("loadingTitle"));
+    // }
   };
 
   const getWarriors = async () => {
