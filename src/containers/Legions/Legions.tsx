@@ -270,7 +270,7 @@ const Legions = () => {
       account
     );
     try {
-      if (allowance === "0") {
+      if (parseFloat(allowance) < 2000) {
         await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await addSupply(

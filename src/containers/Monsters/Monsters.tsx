@@ -626,7 +626,7 @@ const Monsters = () => {
       account
     );
     try {
-      if (allowance === "0") {
+      if (allowance < 2000) {
         await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await addSupply(
