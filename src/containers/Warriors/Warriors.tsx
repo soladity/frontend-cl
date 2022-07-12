@@ -271,8 +271,8 @@ const Warriors = () => {
     );
     try {
       if (
-        parseInt(allowance) <
-        parseInt(warriorBlstAmountPer["b" + amount].amount)
+        parseFloat(allowance) <
+        parseFloat(warriorBlstAmountPer["b" + amount].amount)
       ) {
         await setWarriorBloodstoneApprove(web3, bloodstoneContract, account);
       }

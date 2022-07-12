@@ -264,7 +264,7 @@ const Legions = () => {
   const handleSupplyClick = async (fromWallet: boolean) => {
     setSupplyLoading(true);
     setOpenSupply(false);
-    const allowance = await getLegionBloodstoneAllowance(
+    const allowance: any = await getLegionBloodstoneAllowance(
       web3,
       bloodstoneContract,
       account

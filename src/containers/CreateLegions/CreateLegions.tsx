@@ -267,44 +267,39 @@ const CreateLegions: React.FC = () => {
   };
 
   const checkApprovalForAll = async () => {
-    setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
-    await setApprovalForAll(account, beastContract, getLegionAddress(), true);
-    setLoadingText(getTranslation("approvalAllWarriors"));
-    await setApprovalForAll(account, warriorContract, getLegionAddress(), true);
-    setLoadingText(getTranslation("loadingTitle"));
-    // if (
-    //   !(await isApprovedForAll(beastContract, account, getLegionAddress())) &&
-    //   !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
-    // ) {
-    //   setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
-    // }
-    // if (await isApprovedForAll(beastContract, account, getLegionAddress())) {
-    //   setLoadingText(getTranslation("approvalAllWarriors"));
-    // }
-    // if (await isApprovedForAll(warriorContract, account, getLegionAddress())) {
-    //   setLoadingText(getTranslation("approvalAllBeasts"));
-    // }
-    // if (!(await isApprovedForAll(beastContract, account, getLegionAddress()))) {
-    //   await setApprovalForAll(account, beastContract, getLegionAddress(), true);
-    //   setLoadingText(getTranslation("approvalAllWarriors"));
-    // }
-    // if (
-    //   !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
-    // ) {
-    //   await setApprovalForAll(
-    //     account,
-    //     warriorContract,
-    //     getLegionAddress(),
-    //     true
-    //   );
-    //   setLoadingText(getTranslation("approvalAllBeasts"));
-    // }
-    // if (
-    //   (await isApprovedForAll(beastContract, account, getLegionAddress())) &&
-    //   (await isApprovedForAll(warriorContract, account, getLegionAddress()))
-    // ) {
-    //   setLoadingText(getTranslation("loadingTitle"));
-    // }
+    if (
+      !(await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      setLoadingText(getTranslation("approvalAllBeastsAndWarriors"));
+    }
+    if (await isApprovedForAll(beastContract, account, getLegionAddress())) {
+      setLoadingText(getTranslation("approvalAllWarriors"));
+    }
+    if (await isApprovedForAll(warriorContract, account, getLegionAddress())) {
+      setLoadingText(getTranslation("approvalAllBeasts"));
+    }
+    if (!(await isApprovedForAll(beastContract, account, getLegionAddress()))) {
+      await setApprovalForAll(account, beastContract, getLegionAddress(), true);
+      setLoadingText(getTranslation("approvalAllWarriors"));
+    }
+    if (
+      !(await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      await setApprovalForAll(
+        account,
+        warriorContract,
+        getLegionAddress(),
+        true
+      );
+      setLoadingText(getTranslation("approvalAllBeasts"));
+    }
+    if (
+      (await isApprovedForAll(beastContract, account, getLegionAddress())) &&
+      (await isApprovedForAll(warriorContract, account, getLegionAddress()))
+    ) {
+      setLoadingText(getTranslation("loadingTitle"));
+    }
   };
 
   const getWarriors = async () => {
@@ -395,8 +390,10 @@ const CreateLegions: React.FC = () => {
       bloodstoneContract,
       account
     );
+    console.log(allowance);
+
     try {
-      if (parseInt(allowance) < parseInt(mintFee)) {
+      if (parseFloat(allowance) < parseFloat(mintFee)) {
         await setLegionBloodstoneApprove(web3, bloodstoneContract, account);
       }
       await mintLegion(
