@@ -110,9 +110,18 @@ const HuntingHistory = () => {
       }
     }
   `;
-  const { account } = useWeb3React();
 
-  // const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
+  const getTotalWinsQuery = gql`
+    query Query($address: String) {
+      user(id: $address) {
+        id
+        totalWins
+      }
+    }
+  `;
+  // const { account } = useWeb3React();
+
+  const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
   const classes = useStyles();
   const monsterContract = useMonster();
 
@@ -130,6 +139,15 @@ const HuntingHistory = () => {
     ? entriesData.huntingHistories
     : [];
 
+  const [
+    loadTotalWins,
+    { loading: totalWinsLoaing, error: totalWinsError, data: totalWins },
+  ] = useLazyQuery(getTotalWinsQuery);
+
+  console.log("totalWins: ", totalWins);
+  const totalWinHistory = totalWins?.user ? totalWins?.user.totalWins : [];
+  console.log(totalWinHistory);
+
   useEffect(() => {
     setShowAnimation(
       localStorage.getItem("showAnimation")
@@ -139,6 +157,12 @@ const HuntingHistory = () => {
     if (account) {
       getHistory(0);
       getAllMonsterInfo();
+      console.log(account.toLowerCase());
+      loadTotalWins({
+        variables: {
+          address: account.toLowerCase(),
+        },
+      });
     }
   }, []);
 
@@ -192,30 +216,22 @@ const HuntingHistory = () => {
 
   const getTotalBUSD = () => {
     let totalBUSD = 0;
-    huntHistory.forEach((history: any) => {
-      if (history.success) {
-        const BUSDReward =
-          monsters.length > 0
-            ? monsters[parseInt(history.monsterId) - 1].BUSDReward
-            : 0;
-        totalBUSD = totalBUSD + BUSDReward;
-      }
+    totalWinHistory.forEach((win: any) => {
+      const BUSDReward = monsters.length > 0 ? monsters[win - 1].BUSDReward : 0;
+      totalBUSD = totalBUSD + BUSDReward;
     });
     return totalBUSD;
   };
 
   const getTotalBLST = () => {
-    let totalBUSD = 0;
-    huntHistory.forEach((history: any) => {
-      if (history.success) {
-        const BLSTReward =
-          monsters.length > 0
-            ? parseFloat(monsters[parseInt(history.monsterId) - 1].reward)
-            : 0;
-        totalBUSD = totalBUSD + BLSTReward;
-      }
+    let totalBLST = 0;
+
+    totalWinHistory.forEach((win: any) => {
+      const BLSTReward =
+        monsters.length > 0 ? parseFloat(monsters[win - 1].reward) : 0;
+      totalBLST = totalBLST + BLSTReward;
     });
-    return totalBUSD;
+    return totalBLST;
   };
 
   const getEachBUSDAndBLST = (monsterID: number) => {};
