@@ -589,8 +589,8 @@ const TakeAction = () => {
           busdContract,
           account
         );
-        if (allowance == 0) {
-          await setLegionBUSDApprove(web3, busdContract, account);
+        if (allowance < totalBUSD) {
+          await setLegionBUSDApprove(web3, busdContract, account, "1400");
         }
         await massHunt(legionContract, account);
         let massHuntPending;
