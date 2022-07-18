@@ -119,9 +119,9 @@ const HuntingHistory = () => {
       }
     }
   `;
-  // const { account } = useWeb3React();
+  const { account } = useWeb3React();
 
-  const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
+  // const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
   const classes = useStyles();
   const monsterContract = useMonster();
 
