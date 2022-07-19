@@ -119,9 +119,9 @@ const HuntingHistory = () => {
       }
     }
   `;
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
 
-  // const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
+  const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
   const classes = useStyles();
   const monsterContract = useMonster();
 
@@ -216,17 +216,20 @@ const HuntingHistory = () => {
 
   const getTotalBUSD = () => {
     let totalBUSD = 0;
-    totalWinHistory.forEach((win: any) => {
-      const BUSDReward = monsters.length > 0 ? monsters[win - 1].BUSDReward : 0;
-      totalBUSD = totalBUSD + BUSDReward;
-    });
+    totalWinHistory
+      .filter((item: any) => item != 25)
+      .forEach((win: any) => {
+        const BUSDReward =
+          monsters.length > 0 ? monsters[win - 1].BUSDReward : 0;
+        totalBUSD = totalBUSD + BUSDReward;
+      });
     return totalBUSD;
   };
 
   const getTotalBLST = () => {
     let totalBLST = 0;
 
-    totalWinHistory.forEach((win: any) => {
+    totalWinHistory.filter((item: any) => item != 25).forEach((win: any) => {
       const BLSTReward =
         monsters.length > 0 ? parseFloat(monsters[win - 1].reward) : 0;
       totalBLST = totalBLST + BLSTReward;
