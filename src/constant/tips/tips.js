@@ -231,6 +231,28 @@ export const tipsConstant = {
       type: "space",
     },
     {
+      type: "subtitle1",
+      text: "Session 6: Optimising Investments (27 July - 5pm UTC)",
+    },
+    {
+      type: "body1",
+      text: "- When are legions useless?",
+    },
+    {
+      type: "body1",
+      text: "- Why should you heal legions?",
+    },
+    {
+      type: "body1",
+      text: "- How to spot market bargains?",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
       type: "space",
     },
     {
