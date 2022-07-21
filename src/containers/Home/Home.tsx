@@ -12,6 +12,7 @@ import YourAchievements from "./YourAchievements";
 import ReactPlayer from "react-player/youtube";
 import Quotes from "../../constant/Quotes";
 import Sparkles from "../../component/UI/Sparkless/Sparkles";
+import Leaderboard from "./Leaderboard";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -48,6 +49,7 @@ const Home = () => {
           <NadodoWatch />
         </Grid>
       </Grid>
+      {/* <Leaderboard /> */}
       <ToSocial />
       <Box
         sx={{
