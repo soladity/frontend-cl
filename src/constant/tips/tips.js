@@ -213,16 +213,40 @@ export const tipsConstant = {
       text: "Session 5: Maximising ROI (13 July - 5pm UTC)",
     },
     {
-      type: "body1",
-      text: "- Which warriors/beasts is it smart to execute?",
+      type: "h6",
+      text: "5.1 Which warriors/beasts is it smart to execute?",
     },
     {
-      type: "body1",
-      text: "- What is the perfect AP for legions?",
+      type: "youtu",
+      link: "https://youtu.be/pSz4WEoMGP8",
     },
     {
-      type: "body1",
-      text: "- Which legions should you never update?",
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "5.2 What is the perfect AP for legions?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/5vKfqVKm1VQ",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "5.3 Which legions should you never update?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/p8_GI80u6VQ",
     },
     {
       type: "space",

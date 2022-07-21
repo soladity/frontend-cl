@@ -2881,4 +2881,16 @@ export const translations = {
     pl: "Idź polować więcej!",
     ph: "Manghuli pa!",
   },
+  leaderboard: {
+    en: "LeaderBoard",
+    es: "",
+    cn: "",
+    pt: "",
+    tr: "",
+    ru: "",
+    fr: "",
+    de: "",
+    pl: "",
+    ph: "",
+  },
 };
