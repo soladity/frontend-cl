@@ -99,6 +99,9 @@ type LegionProps = {
 
 const Legions = () => {
   const { account } = useWeb3React();
+  // const account = "0x54eb8b129c0BA9ffB746e9c084D5411b6E9C7A8e";
+  // const account = "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E";
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -180,47 +183,58 @@ const Legions = () => {
 
   const getBalance = async () => {
     setLoading(true);
+    try {
+      setBlstBalance(
+        await getBloodstoneBalance(web3, bloodstoneContract, account)
+      );
+      setUnclaimedBlst(
+        await getUnclaimedBLST(web3, rewardPoolContract, account)
+      );
+      setMarketplaceTax(
+        ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
+      );
+      setBaseUrl(await getBaseUrl());
+      setBeastBalance(await getBeastBalance(web3, beastContract, account));
+      setWarriorBalance(
+        await getWarriorBalance(web3, warriorContract, account)
+      );
+      const allLegions = await getAllLegions(legionContract, account);
+      console.log(allLegions);
+      let amount = 0;
+      const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
+        amount += parseInt(legion.attack_power) / 100;
+        return {
+          name: legion.name,
+          beasts: legion.beast_ids,
+          warriors: legion.warrior_ids,
+          attackPower: (parseInt(legion.attack_power) / 100).toFixed(0),
+          image: getLegionImageUrl(parseInt(legion.attack_power) / 100),
+          supplies: legion.supplies,
+          realPower: legion.attack_power,
+          id: allLegions[1][index],
+          huntStatus: allLegions[2][index]
+            ? "green"
+            : legion.supplies == "0"
+            ? "red"
+            : "orange",
+        };
+      });
+      setTotalPower(parseInt(amount.toFixed(0)));
+      let sortedArray = tempAllLegions.sort((a: any, b: any) => {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return -1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return 1;
+        }
+        return 0;
+      });
+      setLegions(sortedArray);
+      setTop3Lgions(sortedArray.slice(0, 3));
+    } catch (error) {
+      console.log(error);
+    }
 
-    setBlstBalance(
-      await getBloodstoneBalance(web3, bloodstoneContract, account)
-    );
-    setUnclaimedBlst(await getUnclaimedBLST(web3, rewardPoolContract, account));
-    setMarketplaceTax(((await getFee(feeHandlerContract, 0)) / 100).toFixed(0));
-    setBaseUrl(await getBaseUrl());
-    setBeastBalance(await getBeastBalance(web3, beastContract, account));
-    setWarriorBalance(await getWarriorBalance(web3, warriorContract, account));
-    const allLegions = await getAllLegions(legionContract, account);
-    let amount = 0;
-    const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
-      amount += parseInt(legion.attack_power) / 100;
-      return {
-        name: legion.name,
-        beasts: legion.beast_ids,
-        warriors: legion.warrior_ids,
-        attackPower: (parseInt(legion.attack_power) / 100).toFixed(0),
-        image: getLegionImageUrl(parseInt(legion.attack_power) / 100),
-        supplies: legion.supplies,
-        realPower: legion.attack_power,
-        id: allLegions[1][index],
-        huntStatus: allLegions[2][index]
-          ? "green"
-          : legion.supplies == "0"
-          ? "red"
-          : "orange",
-      };
-    });
-    setTotalPower(parseInt(amount.toFixed(0)));
-    let sortedArray = tempAllLegions.sort((a: any, b: any) => {
-      if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
-        return -1;
-      }
-      if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
-        return 1;
-      }
-      return 0;
-    });
-    setLegions(sortedArray);
-    setTop3Lgions(sortedArray.slice(0, 3));
     setLoading(false);
   };
 
