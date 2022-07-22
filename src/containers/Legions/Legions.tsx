@@ -59,6 +59,7 @@ import {
   getAllLegions,
   isApprovedForAll,
   setApprovalForAll,
+  canHunt,
 } from "../../hooks/contractFunction";
 import { allConstants, meta_constant } from "../../config/meta.config";
 import { getTranslation } from "../../utils/translation";
@@ -96,6 +97,11 @@ type LegionProps = {
   image: string;
   huntStatus: string;
 };
+
+let specificUserList: any[] = [
+  "0x54eb8b129c0BA9ffB746e9c084D5411b6E9C7A8e",
+  // "0xa4BE18916Ea055D87366413e4F4b249Cb02D945E",
+];
 
 const Legions = () => {
   const { account } = useWeb3React();
@@ -146,7 +152,11 @@ const Legions = () => {
 
   React.useEffect(() => {
     if (account) {
-      getBalance();
+      if (specificUserList.filter((item) => item === account).length > 0) {
+        getBalanceOfSpecificUser();
+      } else {
+        getBalance();
+      }
       dispatch(updateStore({ tutorialStep: [15] }));
     }
   }, []);
@@ -181,6 +191,62 @@ const Legions = () => {
         : "/assets/images/characters/gif/legions/legion250.gif";
   };
 
+  const getBalanceOfSpecificUser = async () => {
+    setLoading(true);
+    try {
+      setBlstBalance(
+        await getBloodstoneBalance(web3, bloodstoneContract, account)
+      );
+      setUnclaimedBlst(
+        await getUnclaimedBLST(web3, rewardPoolContract, account)
+      );
+      setMarketplaceTax(
+        ((await getFee(feeHandlerContract, 0)) / 100).toFixed(0)
+      );
+      setBaseUrl(await getBaseUrl());
+      setBeastBalance(await getBeastBalance(web3, beastContract, account));
+      setWarriorBalance(
+        await getWarriorBalance(web3, warriorContract, account)
+      );
+
+      const legionIDS = await getLegionTokenIds(web3, legionContract, account);
+      let legionTmp;
+      let legionArrayTmp = [];
+      let legionStatus = "";
+      let amount = 0;
+      for (let i = 0; i < legionIDS.length; i++) {
+        legionStatus = await canHunt(web3, legionContract, legionIDS[i]);
+        legionTmp = await getLegionToken(web3, legionContract, legionIDS[i]);
+        amount += legionTmp.attackPower;
+        let temp = {
+          ...legionTmp,
+          id: legionIDS[i],
+          image: getLegionImageUrl(legionTmp.attackPower),
+          huntStatus:
+            legionStatus == "1"
+              ? "green"
+              : legionStatus == "2"
+              ? "orange"
+              : "red",
+        };
+        legionArrayTmp.push(temp);
+      }
+      setTotalPower(parseInt(amount.toFixed(0)));
+      let sortedArray = legionArrayTmp.sort((a: any, b: any) => {
+        if (parseInt(a.attackPower) > parseInt(b.attackPower)) {
+          return -1;
+        }
+        if (parseInt(a.attackPower) < parseInt(b.attackPower)) {
+          return 1;
+        }
+        return 0;
+      });
+      setLegions(sortedArray);
+      setTop3Lgions(sortedArray.slice(0, 3));
+    } catch (error) {}
+    setLoading(false);
+  };
+
   const getBalance = async () => {
     setLoading(true);
     try {
@@ -199,7 +265,6 @@ const Legions = () => {
         await getWarriorBalance(web3, warriorContract, account)
       );
       const allLegions = await getAllLegions(legionContract, account);
-      console.log(allLegions);
       let amount = 0;
       const tempAllLegions = allLegions[0].map((legion: any, index: number) => {
         amount += parseInt(legion.attack_power) / 100;
@@ -295,7 +360,11 @@ const Legions = () => {
         supplyOrder == 0 ? 7 : supplyOrder == 1 ? 14 : 28,
         fromWallet
       );
-      getBalance();
+      if (specificUserList.filter((item) => item === account).length > 0) {
+        getBalanceOfSpecificUser();
+      } else {
+        getBalance();
+      }
       dispatch(
         setReloadStatus({
           reloadContractStatus: new Date(),
