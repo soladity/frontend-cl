@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertColor,
   Box,
   Button,
   Card,
@@ -9,6 +11,9 @@ import {
   DialogTitle,
   Grid,
   Input,
+  Slide,
+  SlideProps,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -19,6 +24,7 @@ import Axios from "axios";
 import { formatNumber } from "../../utils/common";
 import { useWeb3React } from "@web3-react/core";
 import { Spinner } from "../../component/Buttons/Spinner";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 const useStyles = makeStyles({
   learderBoard: {
@@ -38,6 +44,15 @@ type IUser = {
   totalWonBUSD: number;
 };
 
+let apiUrl = "https://cryptolegions-leaderboard.herokuapp.com/";
+// let apiUrl = "http://localhost:8080/";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionUp(props: TransitionProps) {
+  return <Slide {...props} direction="up" />;
+}
+
 const Leaderboard: React.FC = () => {
   const { account } = useWeb3React();
 
@@ -51,6 +66,14 @@ const Leaderboard: React.FC = () => {
   const [userList, setUserList] = useState<IUser[]>([]);
   const [telegram, setTelegram] = useState("");
 
+  const [alertType, setAlertType] = useState<AlertColor | undefined>("success");
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [duration, setDuration] = useState(10);
+
   const onChangeCheck = (e: any) => {
     if (!isChecked) {
       setIsAddDialogOpen(true);
@@ -63,9 +86,17 @@ const Leaderboard: React.FC = () => {
   const handleRemoveUser = async () => {
     setIsRemoving(true);
     try {
-      await Axios.post("http://localhost:8080/api/v1/leaderboard/remove", {
+      let res = await Axios.post(`${apiUrl}api/v1/leaderboard/remove`, {
         wallet: account?.toLowerCase(),
       });
+      const { success, message } = res.data;
+      setOpenSnackBar(true);
+      setSnackBarMessage(message);
+      if (!success) {
+        setAlertType("error");
+      } else {
+        setAlertType("success");
+      }
       await getBalance("all");
       setIsRemoveDialogOpen(false);
     } catch (error) {
@@ -77,10 +108,18 @@ const Leaderboard: React.FC = () => {
   const handleAddUser = async () => {
     setIsAdding(true);
     try {
-      await Axios.post("http://localhost:8080/api/v1/leaderboard/create", {
+      let res = await Axios.post(`${apiUrl}api/v1/leaderboard/create`, {
         wallet: account?.toLowerCase(),
         telegram: telegram,
       });
+      let { message, success } = res.data;
+      setOpenSnackBar(true);
+      setSnackBarMessage(message);
+      if (!success) {
+        setAlertType("error");
+      } else {
+        setAlertType("success");
+      }
       await getBalance("all");
       setIsAddDialogOpen(false);
     } catch (error) {
@@ -99,26 +138,18 @@ const Leaderboard: React.FC = () => {
   };
 
   const getBalance = async (type: string) => {
+    setIsLoading(true);
     try {
       if (type !== "init") {
-        await Axios.post("http://localhost:8080/api/v1/leaderboard/setLeaders");
+        await Axios.post(`${apiUrl}api/v1/leaderboard/setLeaders`);
       }
-      const res = await Axios.post(
-        "http://localhost:8080/api/v1/leaderboard/getLeaders",
-        {
-          pageSize: 3,
-          currentPage: 0,
-        }
-      );
-      const { data } = res.data;
-      if (
-        data.filter((item: any) => item.wallet === account?.toLowerCase())
-          .length > 0
-      ) {
-        setIsChecked(true);
-      } else {
-        setIsChecked(false);
-      }
+      const res = await Axios.post(`${apiUrl}api/v1/leaderboard/getLeaders`, {
+        pageSize: 20,
+        currentPage: 0,
+        wallet: account?.toLowerCase(),
+      });
+      const { data, checked } = res.data;
+      setIsChecked(checked);
       setUserList(
         data.map((item: any) => {
           return {
@@ -131,6 +162,15 @@ const Leaderboard: React.FC = () => {
     } catch (error: any) {
       console.log(error);
     }
+    setIsLoading(false);
+  };
+
+  const onCompleteCounterDown = () => {
+    getBalance("all");
+    return {
+      shouldRepeat: true,
+      delay: 0,
+    };
   };
 
   useEffect(() => {
@@ -144,7 +184,22 @@ const Leaderboard: React.FC = () => {
         <Grid spacing={2} container>
           <Grid item md={3} sm={0} xs={0}></Grid>
           <Grid item md={6} sm={12} xs={12}>
-            <Box className={classes.learderBoard}>
+            <Box className={classes.learderBoard} sx={{ position: "relative" }}>
+              <Box sx={{ position: "absolute", right: 15, top: 15 }}>
+                {isLoading ? (
+                  <Spinner color="white" size={24} />
+                ) : (
+                  <CountdownCircleTimer
+                    isPlaying
+                    duration={duration}
+                    colors={["#f66810", "#e89f38", "#f66810", "#a44916"]}
+                    colorsTime={[7, 5, 2, 0]}
+                    onComplete={() => onCompleteCounterDown()}
+                    strokeWidth={3}
+                    size={24}
+                  ></CountdownCircleTimer>
+                )}
+              </Box>
               <Typography
                 variant="h6"
                 sx={{
@@ -289,6 +344,24 @@ const Leaderboard: React.FC = () => {
           </Box>
         </DialogContent>
       </Dialog>
+
+      <Snackbar
+        open={openSnackBar}
+        TransitionComponent={TransitionUp}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackBar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        key={TransitionUp ? TransitionUp.name : ""}
+      >
+        <Alert
+          onClose={() => setOpenSnackBar(false)}
+          variant="filled"
+          severity={alertType}
+          sx={{ width: "100%" }}
+        >
+          <Box sx={{ cursor: "pointer" }}>{snackBarMessage}</Box>
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
