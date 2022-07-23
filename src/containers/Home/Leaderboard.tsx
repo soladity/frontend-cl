@@ -44,8 +44,8 @@ type IUser = {
   totalWonBUSD: number;
 };
 
-// let apiUrl = "https://cryptolegions-leaderboard.herokuapp.com/";
-let apiUrl = "http://localhost:8080/";
+let apiUrl = "https://cryptolegions-leaderboard.herokuapp.com/";
+// let apiUrl = "http://localhost:8080/";
 
 type TransitionProps = Omit<SlideProps, "direction">;
 
