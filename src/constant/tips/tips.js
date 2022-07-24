@@ -164,7 +164,7 @@ export const tipsConstant = {
     },
     {
       type: "h5",
-      text: "Session 4: Using Unclaimed (6 July - 5pm UTC)",
+      text: "Session 4: Using Unclaimed",
     },
     {
       type: "h6",
@@ -210,7 +210,7 @@ export const tipsConstant = {
     },
     {
       type: "h5",
-      text: "Session 5: Maximising ROI (13 July - 5pm UTC)",
+      text: "Session 5: Maximising ROI",
     },
     {
       type: "h6",
