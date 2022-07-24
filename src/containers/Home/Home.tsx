@@ -49,7 +49,7 @@ const Home = () => {
           <NadodoWatch />
         </Grid>
       </Grid>
-      <Leaderboard />
+      {/* <Leaderboard /> */}
       <ToSocial />
       <Box
         sx={{
