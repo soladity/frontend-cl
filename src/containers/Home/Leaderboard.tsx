@@ -25,6 +25,7 @@ import { formatNumber } from "../../utils/common";
 import { useWeb3React } from "@web3-react/core";
 import { Spinner } from "../../component/Buttons/Spinner";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { apiConfig } from "../../config";
 
 const useStyles = makeStyles({
   learderBoard: {
@@ -44,9 +45,6 @@ type IUser = {
   totalWonBUSD: number;
 };
 
-let apiUrl = "https://cryptolegions-leaderboard.herokuapp.com/";
-// let apiUrl = "http://localhost:8080/";
-
 type TransitionProps = Omit<SlideProps, "direction">;
 
 function TransitionUp(props: TransitionProps) {
@@ -58,11 +56,13 @@ const Leaderboard: React.FC = () => {
 
   const classes = useStyles();
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isUpdateTGDialogOpen, setIsUpdateTGDialogOpen] = useState(false);
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isSigning, setIsSigning] = useState(false);
+
   const [userList, setUserList] = useState<IUser[]>([]);
   const [telegram, setTelegram] = useState("");
 
@@ -76,8 +76,7 @@ const Leaderboard: React.FC = () => {
 
   const onChangeCheck = (e: any) => {
     if (!isChecked) {
-      setIsAddDialogOpen(true);
-      setIsChecked(e.target.checked);
+      handleAddUser();
     } else {
       setIsRemoveDialogOpen(true);
     }
@@ -86,9 +85,12 @@ const Leaderboard: React.FC = () => {
   const handleRemoveUser = async () => {
     setIsRemoving(true);
     try {
-      let res = await Axios.post(`${apiUrl}api/v1/leaderboard/remove`, {
-        wallet: account?.toLowerCase(),
-      });
+      let res = await Axios.post(
+        `${apiConfig.leaderboard}api/v1/leaderboard/remove`,
+        {
+          wallet: account?.toLowerCase(),
+        }
+      );
       const { success, message } = res.data;
       setOpenSnackBar(true);
       setSnackBarMessage(message);
@@ -105,13 +107,16 @@ const Leaderboard: React.FC = () => {
     setIsRemoving(false);
   };
 
-  const handleAddUser = async () => {
-    setIsAdding(true);
+  const handleUpdateTGname = async () => {
+    setIsSigning(true);
     try {
-      let res = await Axios.post(`${apiUrl}api/v1/leaderboard/create`, {
-        wallet: account?.toLowerCase(),
-        telegram: telegram,
-      });
+      let res = await Axios.post(
+        `${apiConfig.leaderboard}api/v1/leaderboard/updateTGname`,
+        {
+          wallet: account?.toLowerCase(),
+          telegram: telegram,
+        }
+      );
       let { message, success } = res.data;
       setOpenSnackBar(true);
       setSnackBarMessage(message);
@@ -121,7 +126,31 @@ const Leaderboard: React.FC = () => {
         setAlertType("success");
       }
       await getBalance("all");
-      setIsAddDialogOpen(false);
+      setIsUpdateTGDialogOpen(false);
+    } catch (error) {}
+    setIsSigning(false);
+  };
+
+  const handleAddUser = async () => {
+    setIsAdding(true);
+    try {
+      let res = await Axios.post(
+        `${apiConfig.leaderboard}api/v1/leaderboard/add`,
+        {
+          wallet: account?.toLowerCase(),
+          telegram: telegram,
+        }
+      );
+      let { message, success } = res.data;
+      if (!success) {
+        setAlertType("error");
+      } else {
+        setAlertType("success");
+      }
+      await getBalance("all");
+      setOpenSnackBar(true);
+      setSnackBarMessage(message);
+      setIsUpdateTGDialogOpen(true);
     } catch (error) {
       console.log(error);
     }
@@ -133,22 +162,25 @@ const Leaderboard: React.FC = () => {
   };
 
   const handleDialogClose = () => {
-    setIsChecked(false);
-    setIsAddDialogOpen(false);
+    setIsUpdateTGDialogOpen(false);
   };
 
   const getBalance = async (type: string) => {
     setIsLoading(true);
     try {
       if (type !== "init") {
-        await Axios.post(`${apiUrl}api/v1/leaderboard/setLeaders`);
+        await Axios.post(`${apiConfig.leaderboard}api/v1/leaderboard/set`);
       }
-      const res = await Axios.post(`${apiUrl}api/v1/leaderboard/getLeaders`, {
-        pageSize: 20,
-        currentPage: 0,
-        wallet: account?.toLowerCase(),
-      });
-      const { data, checked } = res.data;
+      const res = await Axios.post(
+        `${apiConfig.leaderboard}api/v1/leaderboard/get`,
+        {
+          pageSize: 20,
+          currentPage: 0,
+          wallet: account?.toLowerCase(),
+        }
+      );
+      const { data, checked, telegram } = res.data;
+      setTelegram(telegram);
       setIsChecked(checked);
       setUserList(
         data.map((item: any) => {
@@ -209,11 +241,17 @@ const Leaderboard: React.FC = () => {
                   marginBottom: 3,
                 }}
               >
-                {getTranslation("leaderboard")}
+                {/* {getTranslation("leaderboard")} */}
+                LeaderBoard (Beta Testing)
               </Typography>
 
               <Box>
-                <Grid spacing={2} container className="">
+                <Grid
+                  spacing={2}
+                  container
+                  className=""
+                  style={{ fontWeight: "bold" }}
+                >
                   <Grid item xs={3}>
                     Rank
                   </Grid>
@@ -238,7 +276,7 @@ const Leaderboard: React.FC = () => {
                       #{index + 1}
                     </Grid>
                     <Grid item xs={3}>
-                      {user["wallet"]?.substr(0, 3) +
+                      {user["wallet"]?.substr(0, 2) +
                         "..." +
                         user["wallet"]?.substr(user["wallet"]?.length - 1, 1)}
                     </Grid>
@@ -250,13 +288,33 @@ const Leaderboard: React.FC = () => {
                     </Grid>
                   </Grid>
                 ))}
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
                   <Checkbox
                     checked={isChecked}
                     onChange={(e) => onChangeCheck(e)}
-                  />{" "}
-                  Click here to participate in the Leaderboard and win big
-                  prizes
+                    className="mr-2"
+                  />
+                  {isChecked ? (
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      You are participating in the Leaderboard.{" "}
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{ marginLeft: 2 }}
+                        onClick={() => setIsUpdateTGDialogOpen(true)}
+                      >
+                        Update TG
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Typography sx={{ marginRight: 2 }}>
+                        Click here to participate in the Leaderboard and win big
+                        prizes.
+                      </Typography>
+                      {isAdding && <Spinner color="white" size={24} />}
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -266,7 +324,10 @@ const Leaderboard: React.FC = () => {
       </Box>
       <Dialog open={isRemoveDialogOpen}>
         <DialogContent>
-          Do you want to remove your info from LeaderBoard?
+          Are you sure you want to remove your wallet from Leaderboard?
+          <br />
+          Once your wallet is removed, you will not be eligible for the
+          Leaderboard prizes anymore.
         </DialogContent>
         <DialogActions
           sx={{
@@ -293,7 +354,7 @@ const Leaderboard: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={isAddDialogOpen}>
+      <Dialog open={isUpdateTGDialogOpen}>
         <DialogTitle>
           <MdClose
             style={{
@@ -308,10 +369,12 @@ const Leaderboard: React.FC = () => {
         </DialogTitle>
         <DialogContent>
           <Box>
-            Your wallet has been added to the Leaderboard competition.
+            <Typography sx={{ fontWeight: "bold" }}>
+              Your wallet has been added to the Leaderboard competition.
+            </Typography>
             <br />
             Every two weeks, the top 3 wallets win a 20,000 AP legion, and any
-            random wallet who accepter to be listed on the Leaderboard wins a
+            random wallet that accepter to be listed on the Leaderboard wins a
             10,000 AP legion.
             <br />
             Enter your Telegram name so we can keep you posted if you win the
@@ -327,11 +390,11 @@ const Leaderboard: React.FC = () => {
             <br />
             <Button
               variant="contained"
-              disabled={isAdding}
-              onClick={() => handleAddUser()}
+              disabled={isSigning}
+              onClick={() => handleUpdateTGname()}
             >
               I want to win, sign me up.{" "}
-              {isAdding && <Spinner color="white" size={20} />}
+              {isSigning && <Spinner color="white" size={20} />}
             </Button>
             <br />
             <br />
