@@ -70,6 +70,8 @@ import { setReloadStatus, updateStore } from "../../actions/contractActions";
 import { FaTimes } from "react-icons/fa";
 import { getMarketplaceAddress } from "../../utils/addressHelpers";
 import Tutorial from "../../component/Tutorial/Tutorial";
+import Axios from "axios";
+import { apiConfig } from "../../config";
 
 const useStyles = makeStyles({
   root: {
@@ -111,6 +113,7 @@ const Legions = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [crazyPlayers, setCrazyPlayers] = React.useState([]);
   const [beastBalance, setBeastBalance] = React.useState("0");
   const [warriorBalance, setWarriorBalance] = React.useState("0");
   const [baseUrl, setBaseUrl] = React.useState("");
@@ -152,12 +155,24 @@ const Legions = () => {
 
   React.useEffect(() => {
     if (account) {
-      if (specificUserList.filter((item) => item === account).length > 0) {
-        getBalanceOfSpecificUser();
-      } else {
-        getBalance();
-      }
-      dispatch(updateStore({ tutorialStep: [15] }));
+      Axios.get(apiConfig.leaderboard + "api/v1/leaderboard/getSpecificUsers")
+        .then((res) => {
+          let { data } = res.data;
+          setCrazyPlayers(data);
+          console.log(data);
+          if (
+            data.filter((item: any) => item.wallet === account.toLowerCase())
+              .length > 0
+          ) {
+            getBalanceOfSpecificUser();
+          } else {
+            getBalance();
+          }
+          dispatch(updateStore({ tutorialStep: [15] }));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, []);
 
@@ -360,7 +375,11 @@ const Legions = () => {
         supplyOrder == 0 ? 7 : supplyOrder == 1 ? 14 : 28,
         fromWallet
       );
-      if (specificUserList.filter((item) => item === account).length > 0) {
+      if (
+        crazyPlayers.filter(
+          (item: any) => item.wallet === account?.toLowerCase()
+        ).length > 0
+      ) {
         getBalanceOfSpecificUser();
       } else {
         getBalance();

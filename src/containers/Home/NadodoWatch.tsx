@@ -10,6 +10,8 @@ import {
   getBuyTotalFees,
   getSellTotalFees,
 } from "../../hooks/contractFunction";
+import Axios from "axios";
+import { apiConfig } from "../../config";
 
 const NadodoWatch = () => {
   const [marketplaceTax, setMarketplaceTax] = React.useState("0");
@@ -22,6 +24,31 @@ const NadodoWatch = () => {
   const [suppliesFee28, setSuppliesFee28] = React.useState(0);
   const feeHandlerContract = useFeeHandler();
   const bloodstoneContract = useBloodstone();
+
+  const [rewardStatus, setRewardStatus] = React.useState("green");
+  const [rewardDesc, setRewardDesc] = React.useState("");
+  const [reserveStatus, setReserveStatus] = React.useState("green");
+  const [reserveDesc, setReserveDesc] = React.useState("");
+  const [liquidityStatus, setLiquidityStatus] = React.useState("green");
+  const [liquidityDesc, setLiquidityDesc] = React.useState("");
+
+  const getPoolStatus = async () => {
+    try {
+      let res = await Axios.get(
+        apiConfig.leaderboard + "api/v1/leaderboard/getPoolStatus"
+      );
+      let { data } = res.data;
+      console.log(data);
+      setRewardDesc(data[0].reward.desc);
+      setRewardStatus(data[0].reward.status);
+      setReserveDesc(data[0].reserve.desc);
+      setReserveStatus(data[0].reserve.status);
+      setLiquidityDesc(data[0].liquidity.desc);
+      setLiquidityStatus(data[0].liquidity.status);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getFeeValues = async () => {
     try {
@@ -48,6 +75,7 @@ const NadodoWatch = () => {
 
   React.useEffect(() => {
     getFeeValues();
+    getPoolStatus();
   }, []);
   return (
     <Card
@@ -145,8 +173,8 @@ const NadodoWatch = () => {
           }}
         >
           {getTranslation("RewardPool")}:&nbsp;
-          <CircleIcon style={{ color: "lime", fontSize: 16 }} /> &nbsp;
-          <span className="legionOrangeColor">{getTranslation("healthy")}</span>
+          <CircleIcon style={{ color: rewardStatus, fontSize: 16 }} /> &nbsp;
+          <span className="legionOrangeColor">{rewardDesc}</span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -158,8 +186,8 @@ const NadodoWatch = () => {
           }}
         >
           {getTranslation("ReservePool")}:&nbsp;
-          <CircleIcon style={{ color: "lime", fontSize: 16 }} /> &nbsp;
-          <span className="legionOrangeColor">{getTranslation("healthy")}</span>
+          <CircleIcon style={{ color: reserveStatus, fontSize: 16 }} /> &nbsp;
+          <span className="legionOrangeColor">{reserveDesc}</span>
         </Typography>
         <Typography
           className="legionFontColor"
@@ -171,8 +199,8 @@ const NadodoWatch = () => {
           }}
         >
           {getTranslation("LiquidityPool")}:&nbsp;
-          <CircleIcon style={{ color: "lime", fontSize: 16 }} /> &nbsp;
-          <span className="legionOrangeColor">{getTranslation("healthy")}</span>
+          <CircleIcon style={{ color: liquidityStatus, fontSize: 16 }} /> &nbsp;
+          <span className="legionOrangeColor">{liquidityDesc}</span>
         </Typography>
       </Box>
     </Card>
