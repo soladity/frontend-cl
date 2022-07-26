@@ -300,12 +300,16 @@ const Leaderboard: React.FC = () => {
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       You are participating in the Leaderboard.{" "}
                       <Button
+                        className="updateTGnameBtn"
                         variant="outlined"
                         size="small"
-                        sx={{ marginLeft: 2 }}
+                        sx={{
+                          marginLeft: 2,
+                          borderColor: "gray",
+                        }}
                         onClick={() => setIsUpdateTGDialogOpen(true)}
                       >
-                        Update TG
+                        Update TG Name
                       </Button>
                     </Box>
                   ) : (
@@ -392,8 +396,10 @@ const Leaderboard: React.FC = () => {
               </li>
             </ul>
             <br />
-            Enter your Telegram name so we can keep you posted if you win one of
-            the prizes:
+            <Typography sx={{ fontWeight: "bold" }}>
+              Enter your Telegram name so we can keep you posted if you win one
+              of the prizes:
+            </Typography>
             <br />
             <br />
             <Input
