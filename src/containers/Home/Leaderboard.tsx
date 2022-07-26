@@ -177,6 +177,8 @@ const Leaderboard: React.FC = () => {
           pageSize: 20,
           currentPage: 0,
           wallet: account?.toLowerCase(),
+          retrieveType: "page",
+          deleted: false,
         }
       );
       const { data, checked, telegram } = res.data;
@@ -309,8 +311,8 @@ const Leaderboard: React.FC = () => {
                   ) : (
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Typography sx={{ marginRight: 2 }}>
-                        Click here to participate in the Leaderboard and win big
-                        prizes.
+                        Check this box to participate in the Leaderboard and win
+                        big prizes.
                       </Typography>
                       {isAdding && <Spinner color="white" size={24} />}
                     </Box>
@@ -350,7 +352,11 @@ const Leaderboard: React.FC = () => {
             sx={{ fontWeight: "bold" }}
             disabled={isRemoving}
           >
-            {isRemoving ? <Spinner color="white" size={24} /> : "Yes"}
+            {isRemoving ? (
+              <Spinner color="white" size={24} />
+            ) : (
+              "Yes, remove me"
+            )}
           </Button>
         </DialogActions>
       </Dialog>
@@ -373,12 +379,21 @@ const Leaderboard: React.FC = () => {
               Your wallet has been added to the Leaderboard competition.
             </Typography>
             <br />
-            Every two weeks, the top 3 wallets win a 20,000 AP legion, and any
-            random wallet that accepter to be listed on the Leaderboard wins a
-            10,000 AP legion.
+            Every 1st and 15th day of the month the winners are chosen.
             <br />
-            Enter your Telegram name so we can keep you posted if you win the
-            random draw or one of the top 3 prizes:
+            These are the prizes for the current round:
+            <br />
+            <ul>
+              <li>Top #1 wins a 20,000 AP legion</li>
+              <li>Top #2 wins a 15,000 AP legion</li>
+              <li>
+                A random wallet who accepted to be listed on the leaderboard
+                wins a 10,000 AP legion
+              </li>
+            </ul>
+            <br />
+            Enter your Telegram name so we can keep you posted if you win one of
+            the prizes:
             <br />
             <br />
             <Input
