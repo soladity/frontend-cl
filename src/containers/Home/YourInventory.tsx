@@ -26,6 +26,7 @@ import {
   getLegionLastHuntTime,
   getBLSTAmountFromUSD,
   getUSDAmountFromBLST,
+  getAllMonsters,
 } from "../../hooks/contractFunction";
 import {
   useBloodstone,
@@ -35,14 +36,43 @@ import {
   useRewardPool,
   useWeb3,
   useFeeHandler,
+  useMonster,
 } from "../../hooks/useContract";
 import { useSelector } from "react-redux";
 import { getTranslation } from "../../utils/translation";
+import { gql, useLazyQuery } from "@apollo/client";
+
+interface MonsterInterface {
+  id: number;
+  base: string;
+  ap: number;
+  reward: string;
+  image: string;
+  imageAlt: string;
+  name: string;
+  BUSDReward: number;
+}
 
 const YourInventory = () => {
   const { reloadContractStatus } = useSelector(
     (state: any) => state.contractReducer
   );
+
+  const getTotalWinsQuery = gql`
+    query Query($address: String) {
+      user(id: $address) {
+        id
+        totalWins
+      }
+    }
+  `;
+
+  const [
+    loadTotalWins,
+    { loading: totalWinsLoaing, error: totalWinsError, data: totalWins },
+  ] = useLazyQuery(getTotalWinsQuery);
+
+  const totalWinHistory = totalWins?.user ? totalWins?.user.totalWins : [];
 
   const [beastBalance, setBeastBalance] = React.useState(0);
   const [warriorBalance, setWarriorBalance] = React.useState(0);
@@ -55,8 +85,9 @@ const YourInventory = () => {
   const [firstHuntTime, setFirstHuntTime] = React.useState(0);
   const [currentTime, setCurrentTime] = React.useState(new Date());
   const [usdToBlst, setUsdToBlst] = React.useState(0);
-  const [BlstToUsd, setBlstToUsd] = React.useState(0)
-  const [totalBlstToUsd, setTotalBlstToUsd] = React.useState(0)
+  const [BlstToUsd, setBlstToUsd] = React.useState(0);
+  const [totalBlstToUsd, setTotalBlstToUsd] = React.useState(0);
+  const [monsters, setMonsters] = React.useState<MonsterInterface[]>(Array);
 
   //account
   const { account } = useWeb3React();
@@ -79,6 +110,8 @@ const YourInventory = () => {
 
   //FeeHandler Contract
   const feeHandlerContract = useFeeHandler();
+
+  const monsterContract = useMonster();
 
   //get all balances of your inventory
   const getBalance = async () => {
@@ -132,10 +165,19 @@ const YourInventory = () => {
       setLegionTokenIds(legionTokenIds);
       getLastHuntTimes(legionTokenIds);
       setUsdToBlst(await getBLSTAmountFromUSD(feeHandlerContract, 1));
-      setBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(1 * Math.pow(10, 18))))
-      setTotalBlstToUsd(await getUSDAmountFromBLST(feeHandlerContract, BigInt(BLSTBalance * Math.pow(10, 18))))
-    } catch (error) {
-    }
+      setBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(1 * Math.pow(10, 18))
+        )
+      );
+      setTotalBlstToUsd(
+        await getUSDAmountFromBLST(
+          feeHandlerContract,
+          BigInt(BLSTBalance * Math.pow(10, 18))
+        )
+      );
+    } catch (error) {}
   };
 
   const getLastHuntTimes = async (legionTokenIds: any) => {
@@ -146,7 +188,11 @@ const YourInventory = () => {
         legionContract,
         legionTokenIds[i]
       );
-      if (legion.attackPower >= 2000 && legion.lastHuntTime != "0" && legion.supplies > 0) {
+      if (
+        legion.attackPower >= 2000 &&
+        legion.lastHuntTime != "0" &&
+        legion.supplies > 0
+      ) {
         remainTimes.push(parseInt(legion.lastHuntTime));
       }
     }
@@ -172,10 +218,48 @@ const YourInventory = () => {
     } else if (firstHuntTime === 0) {
       return "00h 00m 00s";
     }
-    if (parseInt(diff_in_hours) == 0 && parseInt(diff_in_mins) == 0 && parseInt(diff_in_secs) == 0) {
-      getBalance()
+    if (
+      parseInt(diff_in_hours) == 0 &&
+      parseInt(diff_in_mins) == 0 &&
+      parseInt(diff_in_secs) == 0
+    ) {
+      getBalance();
     }
     return `${diff_in_hours}h ${diff_in_mins}m ${diff_in_secs}s`;
+  };
+
+  const getAllMonsterInfo = async () => {
+    let monsterArrary = [];
+    try {
+      const monsterVal: any = await getAllMonsters(monsterContract);
+      console.log("allMonster Val: ", monsterVal);
+      const monsterArraryTemp = monsterVal[0];
+      const rewardArray = monsterVal[1];
+      monsterArrary = monsterArraryTemp.map((item: any, index: number) => {
+        return {
+          name: item.name,
+          base: item.percent,
+          ap: item.attack_power / 100,
+          reward: (rewardArray[index] / Math.pow(10, 18)).toFixed(2),
+          BUSDReward: item.reward / Math.pow(10, 4),
+        };
+      });
+      console.log(monsterArrary);
+    } catch (error) {}
+    // console.log(monsterArrary);
+    setMonsters(monsterArrary);
+  };
+
+  const getTotalBUSD = () => {
+    let totalBUSD = 0;
+    totalWinHistory
+      .filter((item: any) => item != 25)
+      .forEach((win: any) => {
+        const BUSDReward =
+          monsters.length > 0 ? monsters[win - 1].BUSDReward : 0;
+        totalBUSD = totalBUSD + BUSDReward;
+      });
+    return totalBUSD;
   };
 
   React.useEffect(() => {
@@ -185,7 +269,15 @@ const YourInventory = () => {
   }, [currentTime]);
 
   React.useEffect(() => {
-    getBalance();
+    if (account) {
+      getBalance();
+      getAllMonsterInfo();
+      loadTotalWins({
+        variables: {
+          address: account.toLowerCase(),
+        },
+      });
+    }
   }, [reloadContractStatus]);
 
   return (
@@ -297,12 +389,7 @@ const YourInventory = () => {
           <span className="legionOrangeColor">
             {" "}
             {formatNumber(parseFloat(BLSTBalance).toFixed(2))} ( ={" "}
-            {formatNumber(
-              (
-                totalBlstToUsd / Math.pow(10, 18)
-              ).toFixed(2)
-            )}{" "}
-            USD )
+            {formatNumber((totalBlstToUsd / Math.pow(10, 18)).toFixed(2))} USD )
           </span>
         </Typography>
         <Typography
@@ -323,6 +410,16 @@ const YourInventory = () => {
           1 BLST ={" "}
           <span className="legionOrangeColor">
             {(BlstToUsd / Math.pow(10, 18)).toFixed(2)} USD
+          </span>
+        </Typography>
+        <Typography
+          className="legionFontColor"
+          variant="subtitle1"
+          sx={{ fontWeight: "bold" }}
+        >
+          Your Total Won:{" "}
+          <span className="legionOrangeColor">
+            {formatNumber(getTotalBUSD().toFixed(0))} BUSD
           </span>
         </Typography>
       </Box>

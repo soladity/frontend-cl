@@ -16,6 +16,12 @@
 .legionBtn {
   background: "radial-gradient(#dfd80d, #fb9300)" !important;
 }
+.updateTGnameBtn {
+  color: gray !important;
+}
+.updateTGnameBtn:hover {
+  color: #f66810 !important;
+}
 a {
   text-decoration: none;
 }
