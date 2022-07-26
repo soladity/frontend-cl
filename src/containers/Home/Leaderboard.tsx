@@ -400,8 +400,6 @@ const Leaderboard: React.FC = () => {
               Enter your Telegram name so we can keep you posted if you win one
               of the prizes:
             </Typography>
-            <br />
-            <br />
             <Input
               placeholder="TG Name"
               value={telegram}
