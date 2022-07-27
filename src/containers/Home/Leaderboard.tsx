@@ -72,7 +72,7 @@ const Leaderboard: React.FC = () => {
   const [openSnackBar, setOpenSnackBar] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [duration, setDuration] = useState(10);
+  const [duration, setDuration] = useState(60);
 
   const onChangeCheck = (e: any) => {
     if (!isChecked) {
