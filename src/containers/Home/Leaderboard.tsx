@@ -99,7 +99,7 @@ const Leaderboard: React.FC = () => {
       } else {
         setAlertType("success");
       }
-      await getBalance("all");
+      await getBalance("init");
       setIsRemoveDialogOpen(false);
     } catch (error) {
       console.log(error);
@@ -125,7 +125,7 @@ const Leaderboard: React.FC = () => {
       } else {
         setAlertType("success");
       }
-      await getBalance("all");
+      await getBalance("init");
       setIsUpdateTGDialogOpen(false);
     } catch (error) {}
     setIsSigning(false);
@@ -200,7 +200,7 @@ const Leaderboard: React.FC = () => {
   };
 
   const onCompleteCounterDown = () => {
-    getBalance("all");
+    getBalance("init");
     return {
       shouldRepeat: true,
       delay: 0,
