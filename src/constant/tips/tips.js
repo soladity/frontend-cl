@@ -255,20 +255,44 @@ export const tipsConstant = {
       type: "space",
     },
     {
-      type: "subtitle1",
-      text: "Session 6: Optimising Investments (27 July - 5pm UTC)",
+      type: "h5",
+      text: "Session 6: Optimising Investments",
     },
     {
-      type: "body1",
-      text: "- When are legions useless?",
+      type: "h6",
+      text: "6.1 When are legions useless?",
     },
     {
-      type: "body1",
-      text: "- Why should you heal legions?",
+      type: "youtu",
+      link: "https://youtu.be/_gjURA5HcsY",
     },
     {
-      type: "body1",
-      text: "- How to spot market bargains?",
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "6.2 Why should you heal legions?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/c8eo6B7VeKk",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "space",
+    },
+    {
+      type: "h6",
+      text: "6.3 How to spot market bargains?",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/cNSBZLXzEBo",
     },
     {
       type: "space",
