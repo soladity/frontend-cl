@@ -243,8 +243,7 @@ const Leaderboard: React.FC = () => {
                   marginBottom: 3,
                 }}
               >
-                {/* {getTranslation("leaderboard")} */}
-                LeaderBoard (Beta Testing)
+                LEADERBOARD
               </Typography>
 
               <Box>
