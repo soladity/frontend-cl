@@ -54,7 +54,6 @@ export default function LegionCard(props: CardProps) {
     handleBuy,
     handleUpdate,
   } = props;
-  console.log(props);
 
   const [loaded, setLoaded] = React.useState(false);
   const [show, setShow] = React.useState(false);
