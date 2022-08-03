@@ -54,6 +54,7 @@ export default function LegionCard(props: CardProps) {
     handleBuy,
     handleUpdate,
   } = props;
+  console.log(props);
 
   const [loaded, setLoaded] = React.useState(false);
   const [show, setShow] = React.useState(false);
@@ -67,7 +68,7 @@ export default function LegionCard(props: CardProps) {
 
   React.useEffect(() => {
     getBalance();
-  }, [beasts, warriors]);
+  }, [props]);
 
   const getBalance = async () => {
     let beast;
