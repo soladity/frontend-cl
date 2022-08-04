@@ -301,6 +301,18 @@ export const tipsConstant = {
       type: "space",
     },
     {
+      type: "h5",
+      text: "Session 7: Leaderboard",
+    },
+    {
+      type: "h6",
+      text: "7.1 Tips of the Top #1 Leaderboard Player",
+    },
+    {
+      type: "youtu",
+      link: "https://youtu.be/IqreRkqKb_c",
+    },
+    {
       type: "space",
     },
     {

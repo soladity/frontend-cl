@@ -114,7 +114,7 @@ export const contractReducer = (state = initalState, action) => {
     case UPDATE_STORE:
       return {
         ...state,
-        ...action.payload,
+        ...action.payload
       };
 
     default:
