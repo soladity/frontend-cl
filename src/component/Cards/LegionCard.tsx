@@ -17,8 +17,17 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useWeb3React } from "@web3-react/core";
 
-import { useBeast, useWarrior, useWeb3 } from "../../hooks/useContract";
-import { getBeastToken, getWarriorToken } from "../../hooks/contractFunction";
+import {
+  useBeast,
+  useLegion,
+  useWarrior,
+  useWeb3,
+} from "../../hooks/useContract";
+import {
+  getBeastToken,
+  getLegionLastHuntTime,
+  getWarriorToken,
+} from "../../hooks/contractFunction";
 import { formatNumber } from "../../utils/common";
 import { getTranslation } from "../../utils/translation";
 import Tutorial from "../Tutorial/Tutorial";
@@ -61,9 +70,11 @@ export default function LegionCard(props: CardProps) {
   const [beastList, setBeastList] = React.useState(Array);
   const [warriorList, setWarriorList] = React.useState(Array);
   const [totalWarrior, setTotalWarrior] = React.useState(0);
+  const [lastHuntTime, setLastHuntTime] = React.useState(0);
 
   const beastContract = useBeast();
   const warriorContract = useWarrior();
+  const legionContract = useLegion();
   const web3 = useWeb3();
 
   React.useEffect(() => {
@@ -71,35 +82,44 @@ export default function LegionCard(props: CardProps) {
   }, [beasts, warriors]);
 
   const getBalance = async () => {
-    let beast;
-    let tempBeasts = [];
-    let capacity = 0;
-    for (let i = 0; i < beasts.length; i++) {
-      beast = await getBeastToken(web3, beastContract, beasts[i]);
-      tempBeasts.push({ ...beast, id: beasts[i] });
-      capacity = capacity + parseInt(beast.capacity);
-    }
-    setTotalWarrior(capacity);
-    setBeastList(tempBeasts);
-    let warrior;
-    let tempWarriors = [];
-    let itemList = [];
-    for (let i = 0; i < warriors.length; i++) {
-      itemList = [];
-      warrior = await getWarriorToken(web3, warriorContract, warriors[i]);
-      for (let j = 0; j < warrior.strength; j++) {
-        itemList.push(
-          <img
-            key={j}
-            src="/assets/images/bloodstoneGrey.png"
-            style={{ height: "15px" }}
-            alt="icon"
-          />
-        );
+    try {
+      const lastHuntTime = await getLegionLastHuntTime(
+        web3,
+        legionContract,
+        id
+      );
+      console.log("lastHuntTime -------- ", lastHuntTime);
+      setLastHuntTime(lastHuntTime);
+      let beast;
+      let tempBeasts = [];
+      let capacity = 0;
+      for (let i = 0; i < beasts.length; i++) {
+        beast = await getBeastToken(web3, beastContract, beasts[i]);
+        tempBeasts.push({ ...beast, id: beasts[i] });
+        capacity = capacity + parseInt(beast.capacity);
       }
-      tempWarriors.push({ ...warrior, id: warriors[i], item: itemList });
-    }
-    setWarriorList(tempWarriors);
+      setTotalWarrior(capacity);
+      setBeastList(tempBeasts);
+      let warrior;
+      let tempWarriors = [];
+      let itemList = [];
+      for (let i = 0; i < warriors.length; i++) {
+        itemList = [];
+        warrior = await getWarriorToken(web3, warriorContract, warriors[i]);
+        for (let j = 0; j < warrior.strength; j++) {
+          itemList.push(
+            <img
+              key={j}
+              src="/assets/images/bloodstoneGrey.png"
+              style={{ height: "15px" }}
+              alt="icon"
+            />
+          );
+        }
+        tempWarriors.push({ ...warrior, id: warriors[i], item: itemList });
+      }
+      setWarriorList(tempWarriors);
+    } catch (error) {}
   };
 
   const handleImageLoaded = () => {
@@ -112,6 +132,13 @@ export default function LegionCard(props: CardProps) {
 
   const openShopping = (id: string) => {
     handleOpenShopping(parseInt(id));
+  };
+
+  const is24Hour = () => {
+    if (new Date().getTime() - lastHuntTime * 1000 <= 24 * 3600 * 1000) {
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -370,7 +397,7 @@ export default function LegionCard(props: CardProps) {
           }}
           onClick={() => huntStatus !== "orange" && openShopping(id)}
         >
-          {huntStatus !== "orange" ? (
+          {huntStatus !== "orange" && is24Hour() ? (
             <img
               src="/assets/images/shopping.png"
               style={{ height: "20px" }}
