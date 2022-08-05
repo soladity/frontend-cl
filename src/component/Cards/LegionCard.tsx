@@ -395,7 +395,9 @@ export default function LegionCard(props: CardProps) {
             right: "20px",
             cursor: "pointer",
           }}
-          onClick={() => huntStatus !== "orange" && openShopping(id)}
+          onClick={() =>
+            huntStatus !== "orange" && is24Hour() && openShopping(id)
+          }
         >
           {huntStatus !== "orange" && is24Hour() ? (
             <img

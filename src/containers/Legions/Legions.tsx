@@ -171,6 +171,7 @@ const Legions = () => {
           dispatch(updateStore({ tutorialStep: [15] }));
         })
         .catch((err) => {
+          getBalance();
           console.log(err);
         });
     }
