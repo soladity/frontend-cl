@@ -289,7 +289,7 @@ export default function LegionCard(props: CardProps) {
                 "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
             }}
           >
-            W/{warriors.length} B/{beasts.length}
+            W/{warriorList.length} B/{beastList.length}
           </Typography>
           <Box
             sx={{
