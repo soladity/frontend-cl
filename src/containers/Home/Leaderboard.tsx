@@ -382,9 +382,10 @@ const Leaderboard: React.FC = () => {
               Your wallet has been added to the Leaderboard competition.
             </Typography>
             <br />
-            Every two weeks, several wallets listed on the Leaderboard win
-            various legions with a value between 250 - 750 USD each. Please
-            consult our Whitepaper for the prizes for the current round.
+            Every two weeks, on the 1st and 15th day of the month, several
+            wallets listed on the Leaderboard win various legions with a value
+            between 250-750 USD each. Please consult our Whitepaper for the
+            prizes for the current round.
             <br />
             {/* These are the prizes for the current round:
             <br />
