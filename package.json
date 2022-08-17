@@ -69,7 +69,7 @@
   "scripts": {
     "start": "react-scripts start",
     "style": "node-sass --watch ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css",
-    "build": "CI=false && node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && react-scripts build",
+    "build": "CI=false && node-sass ./src/stylesheet/index.scss ./public/assets/style/stylesheet.css && rimraf ./build && react-scripts build && rimraf ./build/**/*.map",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|scss|md|ts|tsx)\"",
