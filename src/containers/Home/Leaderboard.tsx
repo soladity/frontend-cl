@@ -382,9 +382,12 @@ const Leaderboard: React.FC = () => {
               Your wallet has been added to the Leaderboard competition.
             </Typography>
             <br />
-            Every 1st and 15th day of the month the winners are chosen.
+            Every two weeks, on the 1st and 15th day of the month, several
+            wallets listed on the Leaderboard win various legions with a value
+            between 250-750 USD each. Please consult our Whitepaper for the
+            prizes for the current round.
             <br />
-            These are the prizes for the current round:
+            {/* These are the prizes for the current round:
             <br />
             <ul>
               <li>Top #1 wins a 20,000 AP legion</li>
@@ -394,7 +397,7 @@ const Leaderboard: React.FC = () => {
                 wins a 10,000 AP legion
               </li>
             </ul>
-            <br />
+            <br /> */}
             <Typography sx={{ fontWeight: "bold" }}>
               Enter your Telegram name so we can keep you posted if you win one
               of the prizes:
