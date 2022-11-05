@@ -2,6 +2,7 @@ import constants from "../constants";
 import Beasts from "../pages/App/Beasts";
 import CreateLegion from "../pages/App/CreateLegion";
 import Home from "../pages/App/Home";
+import Hunt from "../pages/App/Hunt";
 import Legions from "../pages/App/Legions";
 import UpdateLegion from "../pages/App/UpdateLegion";
 import Warriors from "../pages/App/Warriors";
@@ -32,6 +33,10 @@ export const navConfig = {
     {
       path: "/updateLegions/:id",
       element: <UpdateLegion />,
+    },
+    {
+      path: "/hunt",
+      element: <Hunt />,
     },
   ],
   navBar: {

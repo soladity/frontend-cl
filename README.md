@@ -76,3 +76,7 @@
 - start `get` to get any data
 - start `handle` to handle or set data
 - start `render` to make the small rendering part (reusable in one component)
+
+## `Important`
+
+After working, please remove the unused variables.
