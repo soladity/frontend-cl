@@ -9,4 +9,5 @@ export interface IModalState {
   reincarnationModalOpen: boolean;
   claimedBUSDAlertAmountModalOpen: boolean;
   claimedBUSDAlertModalOpen: boolean;
+  claimToWalletModalOpen: boolean;
 }

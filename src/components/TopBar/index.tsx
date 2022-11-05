@@ -40,6 +40,7 @@ import { updateModalState } from "../../reducers/modal.reducer";
 import { inventoryState } from "../../reducers/inventory.reducer";
 import InventoryService from "../../services/inventory.service";
 import ClaimAndReinvestModal from "../Modals/ClaimAndReinvest.modal";
+import ClaimToWalletModal from "../Modals/ClaimToWallet.modal";
 
 const TopBar: React.FC = () => {
   let getBalanceTimer: any = 0;
@@ -52,6 +53,7 @@ const TopBar: React.FC = () => {
   const {
     BLSTBalance,
     unclaimedBLST,
+    claimedBLST,
     reinvestedWalletBLST,
     currentSamaritanStars,
   } = AppSelector(inventoryState);
@@ -166,6 +168,10 @@ const TopBar: React.FC = () => {
     dispatch(updateModalState({ claimAndReinvestModalOpen: true }));
   };
 
+  const handleClaimToWalletModalOpen = () => {
+    dispatch(updateModalState({ claimToWalletModalOpen: true }));
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -249,6 +255,21 @@ const TopBar: React.FC = () => {
                     {renderStars()}
                     {formatNumber(Number(reinvestedWalletBLST).toFixed(2))} $
                     {getTranslation("blst")}
+                  </FireBtn>
+                  <FireBtn
+                    sx={{
+                      mr: { xs: 1, md: 1 },
+                      fontSize: { xs: "0.7rem", md: "1rem" },
+                      px: 2,
+                    }}
+                    onClick={() => handleClaimToWalletModalOpen()}
+                    size="small"
+                  >
+                    {getTranslation("claim")}{" "}
+                    {formatNumber(
+                      Number(Number(claimedBLST) / 10 ** 18).toFixed(2)
+                    )}{" "}
+                    ${getTranslation("blst")}
                   </FireBtn>
                   <FireBtn
                     sx={{
@@ -368,6 +389,21 @@ const TopBar: React.FC = () => {
                 </FireBtn>
                 <FireBtn
                   sx={{
+                    mr: { xs: 0, md: 1 },
+                    fontSize: { xs: "0.7rem", md: "1rem" },
+                    px: 2,
+                  }}
+                  onClick={() => handleClaimToWalletModalOpen()}
+                  size="small"
+                >
+                  {getTranslation("claim")}{" "}
+                  {formatNumber(
+                    Number(Number(claimedBLST) / 10 ** 18).toFixed(2)
+                  )}{" "}
+                  ${getTranslation("blst")}
+                </FireBtn>
+                <FireBtn
+                  sx={{
                     mr: { xs: 0, md: 5 },
                     fontSize: { xs: "0.7rem", md: "1rem" },
                     px: 2,
@@ -375,7 +411,7 @@ const TopBar: React.FC = () => {
                   onClick={() => handleOpenModal()}
                   size="small"
                 >
-                  {getTranslation("claim")}{" "}
+                  {getTranslation("unclaimedwallet")}{" "}
                   {formatNumber(
                     Number(Number(unclaimedBLST) / 10 ** 18).toFixed(2)
                   )}{" "}
@@ -466,6 +502,7 @@ const TopBar: React.FC = () => {
         </Toolbar>
       </Container>
       <ClaimAndReinvestModal />
+      <ClaimToWalletModal />
     </AppBar>
   );
 };
