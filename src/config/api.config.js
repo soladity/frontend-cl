@@ -1,6 +1,7 @@
 export const apiConfig = {
-  // server: "http://localhost:8000/local",
-  server: "https://api.dev.cryptolegions.app",
-  leaderboard: "https://cryptolegions-leaderboard.herokuapp.com/",
-  // leaderboard: "http://localhost:8080/",
+  devServer:
+    "https://cryptolegionsbackend.dev.cryptogames.agency/cryptolegions",
+  proServer: "https://cryptolegionsbackend.cryptogames.agency/cryptolegions",
+  subgraphServer:
+    "https://api.thegraph.com/subgraphs/name/feloniousgru-super/clv3",
 };

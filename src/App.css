@@ -1,75 +1,8 @@
-.legionFontColor {
-  color: #e89f38;
-}
-.legionOrangeColor {
-  color: #f66810;
-}
-.achievementColor {
-  color: #f66810;
-  transition: 0.4s all;
-  cursor: pointer;
-}
-.achievementColor:hover {
-  color: #a44916;
-  transition: 0.4s all;
-}
-.legionBtn {
-  background: "radial-gradient(#dfd80d, #fb9300)" !important;
-}
-.updateTGnameBtn {
-  color: gray !important;
-}
-.updateTGnameBtn:hover {
-  color: #f66810 !important;
-}
-a {
-  text-decoration: none;
-}
-.nav-bar-container {
-  display: block;
+* {
+  font-family: "Montserrat Alternates", sans-serif, cursive !important;
+  /* color: white; */
 }
 
-.nav-bar-item {
-  display: block;
-  color: white;
-  text-decoration: none;
-}
-
-.nav-bar-item.active {
-  background: #1f2a37;
-  background-image: url("./assets/images/fireMenu.png");
-}
-#main {
-  background: url("./assets/images/nicah_background.jpg");
-  background-attachment: fixed;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  height: 100%;
-  overflow-y: auto;
-}
-
-@media (min-width: 0px) {
-  #main {
-    background-position: 20%;
-    background-size: auto 100%;
-  }
-}
-@media (min-width: 1600px) {
-  #main {
-    background-position: 0%;
-    background-size: 100% 100%;
-  }
-}
-
-.nav-bar-nostyle {
-  color: inherit;
-  text-decoration: none;
-}
-
-.non-style {
-  color: inherit;
-  text-decoration: none;
-}
 /* width */
 ::-webkit-scrollbar {
   width: 6px !important;
@@ -90,18 +23,18 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #333 !important;
 }
-.MuiButton-root a {
-  color: white;
-}
 
-.hover-style:hover {
-  color: #f66810;
-  text-decoration: none;
-}
-
-.gray {
-  color: gray;
-}
-[id*="tutorial-popper"] {
-  z-index: 9000;
+:root {
+  --font-color-1: #e89f38;
+  --font-color-2: #f66810;
+  --font-color-3: #a44916;
+  --bg-color-1: #121212;
+  --bg-color-2: #161616;
+  --bg-color-3: linear-gradient(
+    0deg,
+    hsl(0deg 0% 12%) 0%,
+    hsl(0deg 0% 7%) 100%
+  );
+  --bg-color-4: #16161699;
+  --bg-color-5: #161616cc;
 }

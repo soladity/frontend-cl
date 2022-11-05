@@ -1,21 +1,10 @@
-import React from "react";
-import { Navigate } from "react-router";
-import Monsters from "../containers/Monsters/Monsters";
-import Home from "../containers/Home/Home";
-import Beasts from "../containers/Beasts/Beasts";
-import Warriors from "../containers/Warriors/Warriors";
-import Legions from "../containers/Legions/Legions";
-import WarriorsMarketplace from "../containers/Marketplace/Warriors";
-import BeastsMarketplace from "../containers/Marketplace/Beasts";
-import LegionsMarketplace from "../containers/Marketplace/Legions";
-import CreateLegions from "../containers/CreateLegions/CreateLegions";
-import UpdateLegions from "../containers/UpdateLegions";
-import Profile from "../containers/Profile/Profile";
-import Policy from "../containers/Policy/Policy";
-import Help from "../containers/Help/Help";
-import Tips from "../containers/Tips/Tips";
-import MassExecute from "../containers/MassExecute/MassExecute";
-import HuntingHistory from "../containers/HuntingHistory/HuntingHistory";
+import constants from "../constants";
+import Beasts from "../pages/App/Beasts";
+import CreateLegion from "../pages/App/CreateLegion";
+import Home from "../pages/App/Home";
+import Legions from "../pages/App/Legions";
+import UpdateLegion from "../pages/App/UpdateLegion";
+import Warriors from "../pages/App/Warriors";
 
 export const navConfig = {
   drawerWidth: 250,
@@ -23,11 +12,6 @@ export const navConfig = {
     {
       path: "/",
       element: <Home />,
-      children: [],
-    },
-    {
-      path: "/hunt",
-      element: <Monsters />,
     },
     {
       path: "/beasts",
@@ -42,55 +26,14 @@ export const navConfig = {
       element: <Legions />,
     },
     {
-      path: "/warriorsMarketplace",
-      element: <WarriorsMarketplace />,
-    },
-    {
-      path: "/beastsMarketplace",
-      element: <BeastsMarketplace />,
-    },
-    {
-      path: "/legionsMarketplace",
-      element: <LegionsMarketplace />,
-    },
-    {
       path: "/createlegions",
-      element: <CreateLegions />,
+      element: <CreateLegion />,
     },
     {
-      path: "/updatelegions/:id",
-      element: <UpdateLegions />,
-    },
-    {
-      path: "/massexecute",
-      element: <MassExecute />,
-    },
-    {
-      path: "/profile",
-      element: <Profile />,
-    },
-    {
-      path: "/policy",
-      element: <Policy />,
-    },
-    {
-      path: "/help",
-      element: <Help />,
-    },
-    {
-      path: "/tips",
-      element: <Tips />,
-    },
-    {
-      path: "/hunthistory",
-      element: <HuntingHistory />,
-    },
-    {
-      path: "*",
-      element: <Navigate to="/" />,
+      path: "/updateLegions/:id",
+      element: <UpdateLegion />,
     },
   ],
-
   navBar: {
     left: [
       {
@@ -157,7 +100,7 @@ export const navConfig = {
         type: "link",
         title: "buyBlst",
         icon: "pancake.png",
-        path: "https://pancakeswap.finance/swap?outputCurrency=0x10cb66ce2969d8c8193707A9dCD559D2243B8b37&inputCurrency=0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+        path: constants.navlink.pancake,
       },
       {
         type: "navlink",
@@ -181,8 +124,7 @@ export const navConfig = {
         type: "link",
         title: "whitepaper",
         icon: "whitepaper.png",
-        path: "https://docs.cryptolegions.app/",
-        esPath: "https://docs-es.cryptolegions.app/",
+        path: constants.navlink.whitepaper,
       },
       {
         type: "navlink",
@@ -191,34 +133,43 @@ export const navConfig = {
         path: "/tips",
       },
       {
+        type: "navlink",
+        title: "referrals",
+        icon: "support.png",
+        path: "/referrals",
+      },
+      {
+        type: "divider",
+      },
+      {
         type: "social",
         title: "discord",
         icon: "/assets/images/discord.png",
-        path: "https://cryptolegions.app/d",
+        path: constants.navlink.discord,
       },
       {
         type: "social",
         title: "telegram",
         icon: "/assets/images/telegram.png",
-        path: "https://cryptolegions.app/t",
+        path: constants.navlink.telegram,
       },
       {
         type: "social",
         title: "twitter",
         icon: "/assets/images/twitter.png",
-        path: "https://cryptolegions.app/tw",
+        path: constants.navlink.twitter,
       },
       {
         type: "social",
         title: "youtube",
         icon: "/assets/images/youtube.png",
-        path: "https://cryptolegions.app/y",
+        path: constants.navlink.youtube,
       },
       {
         type: "social",
         title: "medium",
         icon: "/assets/images/medium.png",
-        path: "https://cryptolegions.app/m",
+        path: constants.navlink.medium,
       },
       {
         type: "privacy",
@@ -232,6 +183,5 @@ export const navConfig = {
         title2: "cryptoAgency",
       },
     ],
-    top: [],
   },
 };

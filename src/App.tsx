@@ -1,24 +1,26 @@
-import * as React from "react";
-import AskMetaLogin from "./component/AskMetaLogin/AskMetaLogin";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "./wallet";
-import View from "./View";
-import "./App.css";
-import { useSelector } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
 
-function ResponsiveDrawer(props: any) {
-  const [loaded, setLoaded] = React.useState(false);
+import Login from "./pages/Auth";
+import GameView from "./pages/App";
+import ReferralPage from "./pages/Referral";
+
+import "./App.css";
+
+import { injected } from "./wallet";
+
+const App: React.FC = () => {
+  const [loaded, setLoaded] = useState(false);
   const {
     active: networkActive,
     error: networkError,
     activate: activateNetwork,
   } = useWeb3React();
 
-  const { reloadContractStatus } = useSelector(
-    (state: any) => state.contractReducer
-  );
-
-  React.useEffect(() => {
+  useEffect(() => {
     injected
       .isAuthorized()
       .then((isAuthorized) => {
@@ -27,15 +29,42 @@ function ResponsiveDrawer(props: any) {
           activateNetwork(injected);
         }
       })
-      .catch(() => {
-        setLoaded(true);
-      });
-  }, [activateNetwork, networkActive, networkError]);
+      .catch(() => setLoaded(true));
+  }, []);
 
-  if (loaded) {
-    return networkActive ? <View /> : <AskMetaLogin />;
-  }
-  return <div />;
-}
+  const renderApp = () => {
+    if (loaded) {
+      return networkActive ? <GameView /> : <Login />;
+    }
+  };
 
-export default ResponsiveDrawer;
+  const renderReferral = () => {
+    if (loaded) {
+      return networkActive ? <ReferralPage /> : <Login />;
+    }
+  };
+
+  return (
+    <div className="App">
+      <Routes>
+        <Route path="/*" element={renderApp()} />
+        <Route path="ref/:address" element={renderReferral()} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </div>
+  );
+};
+
+export default App;
