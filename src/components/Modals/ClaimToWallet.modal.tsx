@@ -20,11 +20,9 @@ import { inventoryState } from "../../reducers/inventory.reducer";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import { formatNumber, getTranslation } from "../../utils/utils";
 import {
-  useFeeHandler,
   useRewardPool,
   useWeb3,
 } from "../../web3hooks/useContract";
-import { getBLSTAmount, getUSDAmount } from "../../web3hooks/contractFunctions/feehandler.contract";
 import { claimToWallet, lastClaimedTime } from "../../web3hooks/contractFunctions/rewardpool.contract";
 
 const ClaimToWalletTextField = styled(TextField)({
@@ -53,7 +51,6 @@ const ClaimToWalletModal: React.FC = () => {
 
   const { account } = useWeb3React();
   const web3 = useWeb3();
-  const feehandlerContract = useFeeHandler();
   const rewardpoolContract = useRewardPool();
   const [claimToWalletAmount, setClaimToWalletAmount] = useState<number>(0);
   const [maxAmount, setMaxAmount] = useState<number>(0);
@@ -69,9 +66,12 @@ const ClaimToWalletModal: React.FC = () => {
   }, [isMax]);
 
   useEffect(() => {
+    getLastClaimedTime();
+  }, []);
+
+  useEffect(() => {
     if (claimToWalletModalOpen == true) {
-      getLastClaimedTime();
-      setMaxBlstAmount();
+      setMaxUSDAmount();
     }
   }, [claimToWalletModalOpen]);
 
@@ -96,25 +96,21 @@ const ClaimToWalletModal: React.FC = () => {
 
   const getLastClaimedTime = async () => {
     const lastTime = await lastClaimedTime(rewardpoolContract, account);
-    setLastClaimTime(lastTime);
+    setLastClaimTime(new Date(lastTime*1000).toISOString());
   };
 
-  const setMaxBlstAmount = async () => {
-    let blstAmount = 0;
+  const setMaxUSDAmount = async () => {
+    let busdAmount = 0;
     if (claimedUSD < 250) {
-      blstAmount = Number(claimedBLST);
+      busdAmount = Number(claimedUSD);
     } else if (claimedUSD >= 250 && claimedUSD < 1000) {
-      blstAmount = await getBLSTAmount(web3, feehandlerContract, 250);
+      busdAmount = 250;
     } else if (claimedUSD >= 1000 && claimedUSD < 20000) {
-      blstAmount = await getBLSTAmount(
-        web3,
-        feehandlerContract,
-        Number(claimedUSD) / 4
-      );
+      busdAmount = Math.floor(Number(claimedUSD)/4*100)/100;
     } else {
-      blstAmount = await getBLSTAmount(web3, feehandlerContract, 5000);
+      busdAmount = 5000;
     }
-    setMaxAmount(Number(blstAmount));
+    setMaxAmount(Number(busdAmount));
   };
 
   const handleTransferToWallet = async () => {
@@ -124,11 +120,11 @@ const ClaimToWalletModal: React.FC = () => {
     }
     try {
       setTransferLoading(true);
-      const busdAmount = await getUSDAmount(web3, feehandlerContract, claimToWalletAmount);
-      const res = await claimToWallet(web3, rewardpoolContract, account, busdAmount);
+      const res = await claimToWallet(web3, rewardpoolContract, account, String(claimToWalletAmount));
       setTransferLoading(false);
       toast.success("Successfully transfered");
       handleClose();
+      getLastClaimedTime();
     } catch (e) {
       setTransferLoading(false);
       console.log(e);
@@ -205,21 +201,21 @@ const ClaimToWalletModal: React.FC = () => {
               sx={{ padding: "0 !important" }}
             />
             <Typography sx={{ fontWeight: "bold" }}>
-              ${getTranslation("blst")}{" "}
+              BUSD{" "}
             </Typography>
             <MaxCheckBox checked={isMax} onChange={handleIsMax} />
             <Typography>
               {getTranslation("max")}{" "}
-              {formatNumber(Number(claimedBLST).toFixed(2))}{" "}
-              ${getTranslation("blst")}{" "}
+              {formatNumber(Number(claimedUSD).toFixed(2))}{" "}
+              BUSD{" "}
             </Typography>
             <Typography>
               {" "}
               (={" "}
               {formatNumber(
-                Number(claimedUSD).toFixed(2)
+                Number(claimedBLST).toFixed(2)
               )}{" "}
-              BUSD)
+              ${getTranslation("blst")})
             </Typography>
           </Stack>
           <Box sx={{ textAlign: "center" }}>
