@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -121,7 +121,6 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
           legionContract,
           account
         );
-        console.log(huntingLegionId, huntingMonsterId);
         dispatch(
           updateLegionState({
             huntPending,
@@ -289,4 +288,4 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
   );
 };
 
-export default MonsterCard;
+export default memo(MonsterCard);

@@ -84,7 +84,6 @@ const Hunt: React.FC = () => {
 
   const legionContract = useLegion();
   const monsterContract = useMonster();
-  const beastContract = useBeast();
   const vrfContract = useVRF();
 
   const [currentLegionIndex, setCurrentLegionIndex] = useState<number>(0);
