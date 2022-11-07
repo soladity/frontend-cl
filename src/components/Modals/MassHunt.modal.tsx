@@ -104,14 +104,16 @@ const MassHuntModal: React.FC = () => {
       dispatch(initMassHuntResult());
       const BUSD = await getBUSDBalance(web3, busdContract, account);
       const payBUSD = checkMassHuntBUSD();
-      if (BUSD >= payBUSD) {
+      console.log("busd amount: ", BUSD);
+      console.log("pay busd amount: ", payBUSD);
+      if (Number(BUSD) >= Number(payBUSD)) {
         const allowance = await getLegionBUSDAllowance(
           web3,
           busdContract,
           getLegionAddress(),
           account
         );
-        if (allowance < payBUSD) {
+        if (Number(allowance) < Number(payBUSD)) {
           await setBUSDApprove(web3, busdContract, getLegionAddress(), account);
         }
         let huntResult = await revealMassHunt(legionContract, account);
