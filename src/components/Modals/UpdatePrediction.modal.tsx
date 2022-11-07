@@ -21,6 +21,7 @@ import FireBtn from "../Buttons/FireBtn";
 import { updatePrediction } from "../../web3hooks/contractFunctions/duel.contract";
 import { getAllDuelsAct } from "../../services/duel.service";
 import { getTranslation } from "../../utils/utils";
+import constant from "../../constants";
 
 const PriceTextField = styled(TextField)({
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
@@ -177,7 +178,7 @@ const UpdatePredictionModal: React.FC = () => {
           <a
             href="https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae"
             target="_blank"
-            style={{ color: "#0df8f9", textDecoration: "none" }}
+            style={{ color: constant.color.color2, textDecoration: "none" }}
           >
             {getTranslation("checkblstpricenow")}
           </a>
