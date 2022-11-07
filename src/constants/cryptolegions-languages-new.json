@@ -4178,6 +4178,28 @@
     "ar": "لم يطالب به $ blst"
   },
   {
+    "key": "unclaimedwallet",
+    "en": "UnClaimed",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  {
     "key": "claimTaxWhenClaim",
     "en": "If you'd claim now, you'd pay",
     "es": "Si reclamaras ahora, pagarías",

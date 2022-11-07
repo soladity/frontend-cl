@@ -27,9 +27,9 @@ import {
   getStartupInvestment,
   getTaxLeftDays,
   getTotalClaimedUSD,
-  getUnclaimedBLST,
-  getUnclaimedUSD,
+  getUnclaimedWallet,
   getVoucherWalletUSDBalance,
+  getClaimedUSD,
 } from "../web3hooks/contractFunctions/rewardpool.contract";
 
 const getInventory = async (
@@ -87,14 +87,21 @@ const getWalletAndUnclaimedBalance = async (
       feehandlerContract,
       BLSTBalance
     );
-    const unclaimedUSD = await getUnclaimedUSD(rewardpoolContract, account);
-    const unclaimedBLST = await getUnclaimedBLST(rewardpoolContract, account);
+    const { unclaimedUSD, unclaimedBLST } = await getUnclaimedWallet(rewardpoolContract, account);
+    const claimedUSD = await getClaimedUSD(rewardpoolContract, account);
+    const claimedBLST = await getBLSTAmount(
+      web3,
+      feehandlerContract,
+      claimedUSD
+    );
     dispatch(
       updateInventoryState({
         BLSTBalance,
         BUSDForTotalBLST,
         unclaimedBLST,
         unclaimedUSD,
+        claimedUSD,
+        claimedBLST,
       })
     );
   } catch (error) {

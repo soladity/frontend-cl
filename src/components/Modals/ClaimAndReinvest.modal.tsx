@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useDispatch } from "react-redux";
 import { Box, Checkbox, Dialog, Input, Typography } from "@mui/material";
 import { MdClose } from "react-icons/md";
+import { toast } from "react-toastify";
 
 import { AppSelector } from "../../store";
 import {
@@ -14,7 +15,7 @@ import {
   getReinvestTaxPercent,
   getReinvestTimesInTaxCycle,
   getSamaritanStars,
-  getUnclaimedUSD,
+  getUnclaimedWallet,
 } from "../../web3hooks/contractFunctions/rewardpool.contract";
 import { getUSDAmount } from "../../web3hooks/contractFunctions/feehandler.contract";
 import {
@@ -43,6 +44,7 @@ const ClaimAndReinvestModal: React.FC = () => {
     futureSamaritanStarsWhenReinvest,
     futureReinvestPercentWhenReinvest,
     futureReinvestPercentWhenClaim,
+    claimedUSD,
   } = AppSelector(inventoryState);
 
   const unclaimedBLSTFromWei = Number(unclaimedBLST) / 10 ** 18;
@@ -83,7 +85,7 @@ const ClaimAndReinvestModal: React.FC = () => {
     setReinvestUSDAmount("0");
     setReinvestAll(false);
     try {
-      const unclaimedUSD = await getUnclaimedUSD(rewardpoolContract, account);
+      const { unclaimedUSD, unclaimedBLST } = await getUnclaimedWallet(rewardpoolContract, account);
       setUnclaimedUSD(unclaimedUSD);
       let amountsForClaiming = await getAmountsForClaimingAndReinvesting(
         web3,
@@ -163,6 +165,11 @@ const ClaimAndReinvestModal: React.FC = () => {
   };
 
   const handleClaimAndReinvestReward = async (reinvested: boolean) => {
+    if (Number(claimedUSD) != 0) {
+      toast.error(
+        "You need to empty your Claim Wallet first, before claiming again."
+      );
+    }
     setClaimAndReinvestLoading(true);
     try {
       await claimAndReinvest(

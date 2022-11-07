@@ -6,6 +6,8 @@ export interface IInventory {
   availableLegionsCount: Number;
   unclaimedUSD: Number;
   unclaimedBLST: Number;
+  claimedUSD: Number;
+  claimedBLST: Number;
   taxLeftDaysForClaim: Number;
   taxLeftDaysForReinvest: Number;
   maxAttackPower: Number;

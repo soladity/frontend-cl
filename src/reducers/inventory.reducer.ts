@@ -13,6 +13,8 @@ let initialState: IInventory = {
   availableLegionsCount: 0,
   unclaimedUSD: 0,
   unclaimedBLST: 0,
+  claimedUSD: 0,
+  claimedBLST: 0,
   taxLeftDaysForClaim: 0,
   taxLeftDaysForReinvest: 0,
   maxAttackPower: 0,

@@ -15,6 +15,7 @@ let initialState: IModalState = {
   reincarnationModalOpen: false,
   claimedBUSDAlertAmountModalOpen: false,
   claimedBUSDAlertModalOpen: false,
+  claimToWalletModalOpen: false,
 };
 
 export const modalSlice = createSlice({
