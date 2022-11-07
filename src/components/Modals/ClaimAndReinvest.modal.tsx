@@ -166,9 +166,7 @@ const ClaimAndReinvestModal: React.FC = () => {
 
   const handleClaimAndReinvestReward = async (reinvested: boolean) => {
     if (Number(claimedUSD) != 0) {
-      toast.error(
-        "You need to empty your Claim Wallet first, before claiming again."
-      );
+      toast.error(getTranslation("youNeedToEmptyYourClaimWalletFirstBeforeClaimingAgain"));
       return;
     }
     setClaimAndReinvestLoading(true);
