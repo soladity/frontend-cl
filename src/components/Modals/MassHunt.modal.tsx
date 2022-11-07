@@ -35,7 +35,7 @@ import {
 import { revealMassHunt } from "../../web3hooks/contractFunctions/legion.contract";
 import HuntService from "../../services/hunt.service";
 import LegionService from "../../services/legion.service";
-import constant from "../../constants";
+import constants from "../../constants";
 import { IMonsterId } from "../../types/monster.type";
 
 const useStyles = makeStyles(() => ({
@@ -312,7 +312,7 @@ const MassHuntModal: React.FC = () => {
                     <span style={{ fontWeight: "bold" }}>
                       #{item.monsterId}{" "}
                       {toCapitalize(
-                        constant.itemNames.monsters[
+                        constants.itemNames.monsters[
                           item.monsterId as IMonsterId
                         ]
                       )}
