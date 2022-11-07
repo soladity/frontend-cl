@@ -10,6 +10,7 @@ import referralReducer from "./referral.reducer";
 import filterAndPageReducer from "./filterAndPage.reducer";
 import voteReducer from "./vote.reducer";
 import modalReducer from "./modal.reducer";
+import duelReducer from "./duel.reducer";
 
 const CryptolegionsReducer = combineReducers({
   common: commonReduer,
@@ -22,6 +23,7 @@ const CryptolegionsReducer = combineReducers({
   referral: referralReducer,
   filterAndPage: filterAndPageReducer,
   vote: voteReducer,
+  duel: duelReducer,
   modal: modalReducer,
 });
 

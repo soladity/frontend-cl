@@ -24,6 +24,7 @@ export interface IFilterAndPageState {
   legionFilterMinConstSupplies: Number;
   legionFilterMaxConstSupplies: Number;
 
+  duelStatus: Number;
   duelLegionFilterMinAP: Number;
   duelLegionFilterMaxAP: Number;
   duelLegionFilterMinConstAP: Number;

@@ -50,3 +50,7 @@ export const getReferralSystemAddress = () => {
 export const getLiquidityPoolAddress = () => {
   return gameAddress[gameVersion.version].liquiditypool;
 };
+
+export const getDuelSystemAddress = () => {
+  return gameAddress[gameVersion.version].duelsystem;
+}

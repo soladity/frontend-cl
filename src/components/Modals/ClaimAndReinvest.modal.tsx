@@ -169,6 +169,7 @@ const ClaimAndReinvestModal: React.FC = () => {
       toast.error(
         "You need to empty your Claim Wallet first, before claiming again."
       );
+      return;
     }
     setClaimAndReinvestLoading(true);
     try {

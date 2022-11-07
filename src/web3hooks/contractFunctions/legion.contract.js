@@ -131,3 +131,8 @@ export const getWalletHuntPendingMonsterId = async (contract, account) => {
   const res = await contract.methods.walletHuntPendingMonsterId(account).call();
   return res;
 };
+
+export const ownerOf = async (contract, tokenId) => {
+  const res = await contract.methods.ownerOf(tokenId).call();
+  return res;
+};
