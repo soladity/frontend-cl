@@ -19,11 +19,11 @@ import FireBtn from "../Buttons/FireBtn";
 import { inventoryState } from "../../reducers/inventory.reducer";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import { formatNumber, getTranslation } from "../../utils/utils";
+import { useRewardPool, useWeb3 } from "../../web3hooks/useContract";
 import {
-  useRewardPool,
-  useWeb3,
-} from "../../web3hooks/useContract";
-import { claimToWallet, lastClaimedTime } from "../../web3hooks/contractFunctions/rewardpool.contract";
+  claimToWallet,
+  lastClaimedTime,
+} from "../../web3hooks/contractFunctions/rewardpool.contract";
 
 const ClaimToWalletTextField = styled(TextField)({
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
@@ -45,6 +45,7 @@ const MaxCheckBox = styled(Checkbox)({
 });
 
 const ClaimToWalletModal: React.FC = () => {
+  let clockTimer: any = 0;
   const dispatch: AppDispatch = useDispatch();
   const { claimedUSD, claimedBLST } = AppSelector(inventoryState);
   const { claimToWalletModalOpen } = AppSelector(modalState);
@@ -56,8 +57,19 @@ const ClaimToWalletModal: React.FC = () => {
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
   const [lastClaimTime, setLastClaimTime] = useState<string>("");
-  const [leftTime, setLeftTime] = useState<string>("");
   const [transferLoading, setTransferLoading] = useState<boolean>(false);
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+  useEffect(() => {
+    getLastClaimedTime();
+    clockTimer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    console.log("clockTimer: ", clockTimer);
+    return () => {
+      clearInterval(clockTimer);
+    };
+  }, []);
 
   useEffect(() => {
     if (isMax) {
@@ -66,37 +78,30 @@ const ClaimToWalletModal: React.FC = () => {
   }, [isMax]);
 
   useEffect(() => {
-    getLastClaimedTime();
-  }, []);
-
-  useEffect(() => {
     if (claimToWalletModalOpen == true) {
       setMaxUSDAmount();
     }
   }, [claimToWalletModalOpen]);
 
-  useEffect(() => {
-    const leftTimer = setInterval(() => {
-      const left_time =
-        new Date(lastClaimTime).getTime() +
-        24 * 60 * 60 * 1000 -
-        new Date().getTime();
-      setLeftTime(
-        "" +
-          Math.floor(left_time / (60 * 60 * 1000)) +
-          "h " +
-          Math.floor((left_time % (60 * 60 * 1000)) / (60 * 1000)) +
-          "m " +
-          Math.floor((left_time % (60 * 1000)) / 1000) +
-          "s"
-      );
-    }, 1000);
-    return () => clearInterval(leftTimer);
-  }, [leftTime, lastClaimTime]);
-
   const getLastClaimedTime = async () => {
     const lastTime = await lastClaimedTime(rewardpoolContract, account);
-    setLastClaimTime(new Date(lastTime*1000).toISOString());
+    setLastClaimTime(new Date(lastTime * 1000).toISOString());
+  };
+
+  const getLeftTime = () => {
+    const left_time =
+      new Date(lastClaimTime).getTime() +
+      24 * 60 * 60 * 1000 -
+      currentTime.getTime();
+    return (
+      "" +
+      Math.floor(left_time / (60 * 60 * 1000)) +
+      "h " +
+      Math.floor((left_time % (60 * 60 * 1000)) / (60 * 1000)) +
+      "m " +
+      Math.floor((left_time % (60 * 1000)) / 1000) +
+      "s"
+    );
   };
 
   const setMaxUSDAmount = async () => {
@@ -106,7 +111,7 @@ const ClaimToWalletModal: React.FC = () => {
     } else if (claimedUSD >= 250 && claimedUSD < 1000) {
       busdAmount = 250;
     } else if (claimedUSD >= 1000 && claimedUSD < 20000) {
-      busdAmount = Math.floor(Number(claimedUSD)/4*100)/100;
+      busdAmount = Math.floor((Number(claimedUSD) / 4) * 100) / 100;
     } else {
       busdAmount = 5000;
     }
@@ -120,7 +125,12 @@ const ClaimToWalletModal: React.FC = () => {
     }
     try {
       setTransferLoading(true);
-      const res = await claimToWallet(web3, rewardpoolContract, account, String(claimToWalletAmount));
+      const res = await claimToWallet(
+        web3,
+        rewardpoolContract,
+        account,
+        String(claimToWalletAmount)
+      );
       setTransferLoading(false);
       toast.success("Successfully transfered");
       handleClose();
@@ -129,7 +139,6 @@ const ClaimToWalletModal: React.FC = () => {
       setTransferLoading(false);
       console.log(e);
     }
-
   };
 
   const handleChangeClaimToWalletAmount = (
@@ -159,7 +168,6 @@ const ClaimToWalletModal: React.FC = () => {
     );
   };
 
-  //
   return (
     <Dialog open={claimToWalletModalOpen} onClose={handleClose}>
       <DialogTitle
@@ -185,7 +193,7 @@ const ClaimToWalletModal: React.FC = () => {
           <Typography mb={1}>
             {getTranslation("youHaveInYourClaimWallet", {
               CL1: formatNumber(Number(claimedBLST).toFixed(2)),
-              CL2: formatNumber(Number(claimedUSD).toFixed(2))
+              CL2: formatNumber(Number(claimedUSD).toFixed(2)),
             })}
           </Typography>
           <Typography mb={1}>
@@ -200,26 +208,22 @@ const ClaimToWalletModal: React.FC = () => {
               onChange={handleChangeClaimToWalletAmount}
               sx={{ padding: "0 !important" }}
             />
-            <Typography sx={{ fontWeight: "bold" }}>
-              BUSD{" "}
-            </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>BUSD </Typography>
             <MaxCheckBox checked={isMax} onChange={handleIsMax} />
             <Typography>
               {getTranslation("max")}{" "}
-              {formatNumber(Number(claimedUSD).toFixed(2))}{" "}
-              BUSD{" "}
+              {formatNumber(Number(claimedUSD).toFixed(2))} BUSD{" "}
             </Typography>
             <Typography>
               {" "}
-              (={" "}
-              {formatNumber(
-                Number(claimedBLST).toFixed(2)
-              )}{" "}
-              ${getTranslation("blst")})
+              (= {formatNumber(Number(claimedBLST).toFixed(2))} $
+              {getTranslation("blst")})
             </Typography>
           </Stack>
           <Box sx={{ textAlign: "center" }}>
-            <FireBtn onClick={handleTransferToWallet} loading={transferLoading}>{getTranslation("transfer")}</FireBtn>
+            <FireBtn onClick={handleTransferToWallet} loading={transferLoading}>
+              {getTranslation("transfer")}
+            </FireBtn>
           </Box>
         </DialogContent>
       )}
@@ -228,9 +232,12 @@ const ClaimToWalletModal: React.FC = () => {
         new Date(lastClaimTime).getTime() + 24 * 60 * 60 * 1000 && (
         <DialogContent>
           <Typography>
-            {getTranslation("youNeedToWaitToBeAbleToTranferMoreIntoYourMetaMaskWallet", {
-              CL1: leftTime,
-            })}
+            {getTranslation(
+              "youNeedToWaitToBeAbleToTranferMoreIntoYourMetaMaskWallet",
+              {
+                CL1: getLeftTime(),
+              }
+            )}
           </Typography>
         </DialogContent>
       )}

@@ -48,6 +48,7 @@ import {
   confirmUnclaimedWallet,
   getAllDuelsAct,
 } from "../../services/duel.service";
+import constant from "../../constants";
 
 const PriceTextField = styled(TextField)({
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
@@ -172,13 +173,14 @@ const CreateDuelModal: React.FC = () => {
   const handleAllInCheck = () => {
     if (!allIn) {
       Swal.fire({
-        title: "Warning",
-        text: "Are you sure you want to go All-In with your Cyber? \nIf you lose this bet, then you will lose all the Attack Power of your Cyber and your Cyber will not be able to hunt anymore.",
+        title: getTranslation("warning"),
+        text: getTranslation("allinDuelConfirmMsg"),
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#f66810",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Go All-In",
+        cancelButtonText: getTranslation("cancel"),
+        confirmButtonText: getTranslation("goAllin"),
         background: "#111",
         color: "white",
       }).then((result) => {
@@ -271,11 +273,11 @@ const CreateDuelModal: React.FC = () => {
       <DialogContent dividers>
         <Typography>
           {getTranslation(
-            "whatDoYouThinkTheCryptoPriceInBUSDWillBeInExactly24HoursFromNow"
+            "whatDoYouThinkTheBlstPriceInBUSDWillBeInExactly24HoursFromNow"
           )}
         </Typography>
         <Typography>
-          {getTranslation("currenty1cryptois", {
+          {getTranslation("currenty1blstis", {
             CL1: Math.round(BLSTToUSD.valueOf() * 10000) / 100,
           })}
         </Typography>
@@ -289,7 +291,7 @@ const CreateDuelModal: React.FC = () => {
           <a
             href="https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae"
             target="_blank"
-            style={{ color: "#0df8f9", textDecoration: "none" }}
+            style={{ color: constant.color.color2, textDecoration: "none" }}
           >
             {getTranslation("seepricechart")}
           </a>
@@ -353,7 +355,7 @@ const CreateDuelModal: React.FC = () => {
               <Typography mb={1}>
                 {getTranslation("youwillbet")} :{" "}
                 {divisions[divisionIndex].betPrice} BUSD ( ={" "}
-                {Math.round(blstAmount * 100) / 100} $BLST)
+                {Math.round(blstAmount * 100) / 100} $BLV4)
               </Typography>
             </>
           )}
@@ -387,7 +389,7 @@ const CreateDuelModal: React.FC = () => {
               <Typography mb={1}>
                 {getTranslation("youmightwin")}:{" "}
                 {2 * divisions[divisionIndex].betPrice.valueOf() * 0.8} BUSD ( ={" "}
-                {Math.round(blstAmountWin * 100) / 100} $CRYPTO)
+                {Math.round(blstAmountWin * 100) / 100} $BLV4)
               </Typography>
               <Typography mb={1}>
                 {getTranslation("toCreateThisDuelYouMustBetBUSDFromYourUnclaimedWallet", {

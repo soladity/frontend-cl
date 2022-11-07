@@ -6718,7 +6718,7 @@
     "ar": ""
   },
   "duelresult": {
-    "en": "Duel Redults",
+    "en": "Duel Results",
     "es": "",
     "cn": "",
     "pt": "",
@@ -6885,8 +6885,8 @@
     "it": "",
     "ar": ""
   },
-  "whatDoYouThinkTheCryptoPriceInBUSDWillBeInExactly24HoursFromNow": {
-    "en": "What do you think the $CRYPTO price in BUSD will be in exactly 24 hours from now?",
+  "whatDoYouThinkTheBlstPriceInBUSDWillBeInExactly24HoursFromNow": {
+    "en": "What do you think the $BLV4 price in BUSD will be in exactly 24 hours from now?",
     "es": "",
     "cn": "",
     "pt": "",
@@ -6927,8 +6927,8 @@
     "it": "",
     "ar": ""
   },
-  "currenty1cryptois": {
-    "en": "Currently 1 $CRYPTO = CL1 BUSD",
+  "currenty1blstis": {
+    "en": "Currently 1 $CLV4 = CL1 BUSD",
     "es": "",
     "cn": "",
     "pt": "",
@@ -6970,7 +6970,7 @@
     "ar": ""
   },
   "selectyourlegion": {
-    "en": "See Price Chart",
+    "en": "Select Your Legion",
     "es": "",
     "cn": "",
     "pt": "",
@@ -7685,6 +7685,69 @@
   },
   "youNeedToEmptyYourClaimWalletFirstBeforeClaimingAgain": {
     "en": "You need to empty your Claim Wallet first, before claiming again.",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  "allinDuelConfirmMsg": {
+    "en": "Are you sure you want to go All-In with your Legion? \nIf you lose this bet, then you will lose all the Attack Power of your Legion and your Legion will not be able to hunt anymore.",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  "goAllin": {
+    "en": "Go All-In",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  "cancel": {
+    "en": "Cancel",
     "es": "",
     "cn": "",
     "pt": "",

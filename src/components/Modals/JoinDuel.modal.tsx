@@ -43,6 +43,8 @@ import {
   joinDuel,
 } from "../../web3hooks/contractFunctions/duel.contract";
 import { getTranslation } from "../../utils/utils";
+import constant from "../../constants";
+
 
 const LegionSelectInput = styled(InputBase)(({ theme }) => ({
   ".MuiSelect-select": {
@@ -310,7 +312,7 @@ const JoinDuelModal: React.FC = () => {
           <a
             href="https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae"
             target="_blank"
-            style={{ color: "#0df8f9", textDecoration: "none" }}
+            style={{ color: constant.color.color2, textDecoration: "none" }}
           >
             {getTranslation("seepricechart")}
           </a>
