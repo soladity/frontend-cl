@@ -4,6 +4,9 @@ import CreateLegion from "../pages/App/CreateLegion";
 import Home from "../pages/App/Home";
 import Hunt from "../pages/App/Hunt";
 import Legions from "../pages/App/Legions";
+import BeastsMarketplace from "../pages/App/Marketplace/Beasts";
+import LegionsMarketplace from "../pages/App/Marketplace/Legions";
+import WarriorsMarketplace from "../pages/App/Marketplace/Warriors";
 import UpdateLegion from "../pages/App/UpdateLegion";
 import Warriors from "../pages/App/Warriors";
 
@@ -37,6 +40,18 @@ export const navConfig = {
     {
       path: "/hunt",
       element: <Hunt />,
+    },
+    {
+      path: "/warriorsMarketplace",
+      element: <WarriorsMarketplace />,
+    },
+    {
+      path: "/beastsMarketplace",
+      element: <BeastsMarketplace />,
+    },
+    {
+      path: "/legionsMarketplace",
+      element: <LegionsMarketplace />,
     },
   ],
   navBar: {
