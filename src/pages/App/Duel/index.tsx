@@ -30,7 +30,7 @@ import { doingDuels } from "../../../web3hooks/contractFunctions/duel.contract";
 import { ownerOf } from "../../../web3hooks/contractFunctions/legion.contract";
 import { updateModalState } from "../../../reducers/modal.reducer";
 import { getAllDuelsAct } from "../../../services/duel.service";
-import constant from "../../../constants";;
+import constant from "../../../constants";
 
 const Duel: React.FC = () => {
   const dispatch = useDispatch();
@@ -376,7 +376,9 @@ const Duel: React.FC = () => {
             <Typography
               sx={{ fontSize: "2em", textAlign: "center", lineHeight: "1em" }}
             >
-              <span style={{ fontWeight: "bold", color: constant.color.color1 }}>
+              <span
+                style={{ fontWeight: "bold", color: constant.color.color1 }}
+              >
                 {formatNumber(totalOngoingDuels)}
               </span>
             </Typography>
@@ -426,7 +428,9 @@ const Duel: React.FC = () => {
             <Typography
               sx={{ fontSize: "2em", textAlign: "center", lineHeight: "1em" }}
             >
-              <span style={{ fontWeight: "bold", color: constant.color.color1 }}>
+              <span
+                style={{ fontWeight: "bold", color: constant.color.color1 }}
+              >
                 {formatNumber(totalPastDuels)}
               </span>
             </Typography>
