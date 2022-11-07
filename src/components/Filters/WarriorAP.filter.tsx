@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Slider, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppSelector } from "../../store";

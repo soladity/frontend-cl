@@ -141,13 +141,11 @@ const getAllBeastMarketItemsAct = async (
       beastContract,
       getMarketplaceAddress()
     );
-    console.log(balanceOfBeast);
     const allBeastsRes = await getAllBeastMarketItems(
       marketplaceContract,
       0,
       balanceOfBeast
     );
-    console.log(allBeastsRes);
     const ids = allBeastsRes[0];
     const capacities: ICapacity[] = allBeastsRes[1];
     const marketItems = allBeastsRes[2];
@@ -157,8 +155,8 @@ const getAllBeastMarketItemsAct = async (
         id: id,
         type: constants.itemNames.beasts[capacities[index]],
         capacity: capacities[index],
-        jpg: getBeastJPG(capacities[index]),
-        mp4: getBeastMp4(capacities[index]),
+        jpg: getBeastJPG(Number(capacities[index])),
+        mp4: getBeastMp4(Number(capacities[index])),
         seller: marketItems[index].seller,
         price: Number(web3.utils.fromWei(marketItems[index].price, "ether")),
         listingTime: marketItems[index].listingTime,
@@ -175,6 +173,10 @@ const getAllBeastMarketItemsAct = async (
   dispatch(updateMarketplaceState({ getAllBeastsMarketItemsLoading: false }));
 };
 
-const MarketplaceService = {};
+const MarketplaceService = {
+  getAllBeastMarketItemsAct,
+  getAllWarriorMarketItemsAct,
+  getAllLegionsMarketItemsAct,
+};
 
 export default MarketplaceService;

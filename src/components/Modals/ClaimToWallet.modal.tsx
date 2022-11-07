@@ -12,8 +12,11 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FaTimes } from "react-icons/fa";
+import { useWeb3React } from "@web3-react/core";
 import { AppDispatch, AppSelector } from "../../store";
-import { getClaimedBUSDAlertAmount, inventoryState } from "../../reducers/inventory.reducer";
+import { toast } from "react-toastify";
+import FireBtn from "../Buttons/FireBtn";
+import { inventoryState } from "../../reducers/inventory.reducer";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import { formatNumber, getTranslation } from "../../utils/utils";
 import {
@@ -23,9 +26,6 @@ import {
 } from "../../web3hooks/useContract";
 import { getBLSTAmount, getUSDAmount } from "../../web3hooks/contractFunctions/feehandler.contract";
 import { claimToWallet, lastClaimedTime } from "../../web3hooks/contractFunctions/rewardpool.contract";
-import { useWeb3React } from "@web3-react/core";
-import FireBtn from "../Buttons/FireBtn";
-import { toast } from "react-toastify";
 
 const ClaimToWalletTextField = styled(TextField)({
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
@@ -58,45 +58,8 @@ const ClaimToWalletModal: React.FC = () => {
   const [claimToWalletAmount, setClaimToWalletAmount] = useState<number>(0);
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
-  const [lastClaimTime, setLastClaimTime] = useState<string>("2022-11-04");
+  const [lastClaimTime, setLastClaimTime] = useState<string>("");
   const [leftTime, setLeftTime] = useState<string>("");
-
-  const handleChangeClaimToWalletAmount = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const amount = parseFloat(e.target.value);
-    if (
-      amount > maxAmount ||
-      amount * 100 - Math.floor(amount * 100) > 0 ||
-      amount < 0
-    ) {
-      setClaimToWalletAmount(claimToWalletAmount);
-      return;
-    }
-    setClaimToWalletAmount(amount);
-  };
-
-  const handleIsMax = () => {
-    setIsMax(!isMax);
-  };
-
-  const setMaxBlstAmount = async () => {
-    let blstAmount = 0;
-    if (claimedUSD < 250) {
-      blstAmount = Number(claimedBLST);
-    } else if (claimedUSD >= 250 && claimedUSD < 1000) {
-      blstAmount = await getBLSTAmount(web3, feehandlerContract, 250);
-    } else if (claimedUSD >= 1000 && claimedUSD < 20000) {
-      blstAmount = await getBLSTAmount(
-        web3,
-        feehandlerContract,
-        Number(claimedUSD) / 4
-      );
-    } else {
-      blstAmount = await getBLSTAmount(web3, feehandlerContract, 5000);
-    }
-    setMaxAmount(Number(blstAmount));
-  };
 
   useEffect(() => {
     if (isMax) {
@@ -104,46 +67,12 @@ const ClaimToWalletModal: React.FC = () => {
     }
   }, [isMax]);
 
-  const getLastClaimedTime = async () => {
-    const lastTime = await lastClaimedTime(rewardpoolContract, account);
-    setLastClaimTime(lastTime);
-  };
-
   useEffect(() => {
     if (claimToWalletModalOpen == true) {
       getLastClaimedTime();
       setMaxBlstAmount();
     }
   }, [claimToWalletModalOpen]);
-
-  const handleClose = () => {
-    dispatch(
-      updateModalState({
-        claimToWalletModalOpen: false,
-      })
-    );
-  };
-
-  const leftHour = Math.round(
-    (new Date(lastClaimTime).getTime() +
-      24 * 60 * 60 * 1000 -
-      new Date().getTime()) /
-      (60 * 60 * 1000)
-  );
-  const leftMin = Math.round(
-    ((new Date(lastClaimTime).getTime() +
-      24 * 60 * 60 * 1000 -
-      new Date().getTime()) %
-      (60 * 60 * 1000)) /
-      (60 * 1000)
-  );
-  const leftSec = Math.round(
-    ((new Date(lastClaimTime).getTime() +
-      24 * 60 * 60 * 1000 -
-      new Date().getTime()) %
-      (60 * 1000)) /
-      1000
-  );
 
   useEffect(() => {
     const leftTimer = setInterval(() => {
@@ -164,13 +93,36 @@ const ClaimToWalletModal: React.FC = () => {
     return () => clearInterval(leftTimer);
   }, [leftTime, lastClaimTime]);
 
+  const getLastClaimedTime = async () => {
+    const lastTime = await lastClaimedTime(rewardpoolContract, account);
+    setLastClaimTime(lastTime);
+  };
+
+  const setMaxBlstAmount = async () => {
+    let blstAmount = 0;
+    if (claimedUSD < 250) {
+      blstAmount = Number(claimedBLST);
+    } else if (claimedUSD >= 250 && claimedUSD < 1000) {
+      blstAmount = await getBLSTAmount(web3, feehandlerContract, 250);
+    } else if (claimedUSD >= 1000 && claimedUSD < 20000) {
+      blstAmount = await getBLSTAmount(
+        web3,
+        feehandlerContract,
+        Number(claimedUSD) / 4
+      );
+    } else {
+      blstAmount = await getBLSTAmount(web3, feehandlerContract, 5000);
+    }
+    setMaxAmount(Number(blstAmount));
+  };
+
   const handleTransferToWallet = async () => {
     if (claimToWalletAmount == 0) {
       toast.error("Please input valid amount.");
     }
     try {
       const busdAmount = await getUSDAmount(web3, feehandlerContract, claimToWalletAmount);
-      const res = await claimToWallet(rewardpoolContract, account, busdAmount);
+      const res = await claimToWallet(web3, rewardpoolContract, account, busdAmount);
       toast.success("Successfully transfered");
       handleClose();
     } catch (e) {
@@ -178,6 +130,34 @@ const ClaimToWalletModal: React.FC = () => {
     }
 
   };
+
+  const handleChangeClaimToWalletAmount = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const amount = parseFloat(e.target.value);
+    if (
+      amount > maxAmount ||
+      amount * 100 - Math.floor(amount * 100) > 0 ||
+      amount < 0
+    ) {
+      setClaimToWalletAmount(claimToWalletAmount);
+      return;
+    }
+    setClaimToWalletAmount(amount);
+  };
+
+  const handleIsMax = () => {
+    setIsMax(!isMax);
+  };
+
+  const handleClose = () => {
+    dispatch(
+      updateModalState({
+        claimToWalletModalOpen: false,
+      })
+    );
+  };
+
   //
   return (
     <Dialog open={claimToWalletModalOpen} onClose={handleClose}>
@@ -202,14 +182,13 @@ const ClaimToWalletModal: React.FC = () => {
         new Date(lastClaimTime).getTime() + 24 * 60 * 60 * 1000 && (
         <DialogContent>
           <Typography mb={1}>
-            You have{" "}
-            {formatNumber(Number(Number(claimedBLST) / 10 ** 18).toFixed(2))} $
-            {getTranslation("blst")} (={" "}
-            {formatNumber(Number(Number(claimedUSD) / 10 ** 18).toFixed(2))}{" "}
-            BUSD) in your Claim Wallet.
+            {getTranslation("youHaveInYourClaimWallet", {
+              CL1: formatNumber(Number(claimedBLST).toFixed(2)),
+              CL2: formatNumber(Number(claimedUSD).toFixed(2))
+            })}
           </Typography>
           <Typography mb={1}>
-            How much do you want to transfer to your MetaMask wallet?
+            {getTranslation("howMuchDoYouWantToTransferToYourMetaMaskWallet")}
           </Typography>
           <Stack flexDirection="row" mb={1} sx={{ flexWrap: "wrap" }}>
             <ClaimToWalletTextField
@@ -225,21 +204,21 @@ const ClaimToWalletModal: React.FC = () => {
             </Typography>
             <MaxCheckBox checked={isMax} onChange={handleIsMax} />
             <Typography>
-              Max{" "}
-              {formatNumber(Number(Number(claimedBLST) / 10 ** 18).toFixed(2))}{" "}
+              {getTranslation("max")}{" "}
+              {formatNumber(Number(claimedBLST).toFixed(2))}{" "}
               ${getTranslation("blst")}{" "}
             </Typography>
             <Typography>
               {" "}
               (={" "}
               {formatNumber(
-                Number(Number(claimedUSD) / 10 ** 18).toFixed(2)
+                Number(claimedUSD).toFixed(2)
               )}{" "}
               BUSD)
             </Typography>
           </Stack>
           <Box sx={{ textAlign: "center" }}>
-            <FireBtn onClick={handleTransferToWallet}>Transfer</FireBtn>
+            <FireBtn onClick={handleTransferToWallet}>{getTranslation("transfer")}</FireBtn>
           </Box>
         </DialogContent>
       )}
@@ -248,8 +227,9 @@ const ClaimToWalletModal: React.FC = () => {
         new Date(lastClaimTime).getTime() + 24 * 60 * 60 * 1000 && (
         <DialogContent>
           <Typography>
-            You need to wait {leftTime} to be able to transfer more into your
-            MetaMask wallet.
+            {getTranslation("youNeedToWaitToBeAbleToTranferMoreIntoYourMetaMaskWallet", {
+              CL1: leftTime,
+            })}
           </Typography>
         </DialogContent>
       )}
