@@ -9,9 +9,7 @@ export const getClaimedUSD = async (contract, account) => {
 }
 
 export const claimToWallet = async (web3, contract, account, usdAmount) => {
-  console.log("blst balance", usdAmount);
   const res = await contract.methods
-  // .claimToWallet(web3.utils.toWei(usdAmount, "ether"))
   .claimToWallet(web3.utils.toWei(usdAmount, "ether"))
   .send({from: account});
   return res;
