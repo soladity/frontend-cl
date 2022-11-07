@@ -179,7 +179,7 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
               {monsterID === 25 ? (
                 getTranslation("unlockStatus")
               ) : (
-                <>{getTranslation("unlockStatus")} %</>
+                <>{getTranslation("bonus")} %</>
               )}
             </Typography>
             <Typography variant="h6">
