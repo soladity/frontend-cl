@@ -46,7 +46,9 @@ const UpdateSelectBox: React.FC = () => {
   const capacityFilterVal =
     beastFilterCapacity === 0
       ? allBeasts
-      : allBeasts.filter((beast) => beast.capacity === beastFilterCapacity);
+      : allBeasts.filter(
+          (beast) => Number(beast.capacity) === Number(beastFilterCapacity)
+        );
 
   const levelFilterVal =
     warriorFilterLevel === 0
