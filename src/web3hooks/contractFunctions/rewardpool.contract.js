@@ -5,13 +5,15 @@ export const getUnclaimedWallet = async (contract, account) => {
 
 export const getClaimedUSD = async (contract, account) => {
   const res = await contract.methods.claimedUSD(account).call();
-  return res;
+  return res / 10**18;
 }
 
-export const claimToWallet = async (contract, account, usdAmount) => {
+export const claimToWallet = async (web3, contract, account, usdAmount) => {
+  console.log("blst balance", usdAmount);
   const res = await contract.methods
-    .claimToWallet(usdAmount)
-    .send({from: account});
+  // .claimToWallet(web3.utils.toWei(usdAmount, "ether"))
+  .claimToWallet(web3.utils.toWei(usdAmount, "ether"))
+  .send({from: account});
   return res;
 }
 

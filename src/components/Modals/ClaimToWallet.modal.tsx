@@ -58,7 +58,7 @@ const ClaimToWalletModal: React.FC = () => {
   const [claimToWalletAmount, setClaimToWalletAmount] = useState<number>(0);
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
-  const [lastClaimTime, setLastClaimTime] = useState<string>("2022-11-07");
+  const [lastClaimTime, setLastClaimTime] = useState<string>("");
   const [leftTime, setLeftTime] = useState<string>("");
 
   useEffect(() => {
@@ -122,7 +122,7 @@ const ClaimToWalletModal: React.FC = () => {
     }
     try {
       const busdAmount = await getUSDAmount(web3, feehandlerContract, claimToWalletAmount);
-      const res = await claimToWallet(rewardpoolContract, account, busdAmount);
+      const res = await claimToWallet(web3, rewardpoolContract, account, busdAmount);
       toast.success("Successfully transfered");
       handleClose();
     } catch (e) {
@@ -183,8 +183,8 @@ const ClaimToWalletModal: React.FC = () => {
         <DialogContent>
           <Typography mb={1}>
             {getTranslation("youHaveInYourClaimWallet", {
-              CL1: formatNumber(Number(Number(claimedBLST) / 10 ** 18).toFixed(2)),
-              CL2: formatNumber(Number(Number(claimedUSD) / 10 ** 18).toFixed(2))
+              CL1: formatNumber(Number(claimedBLST).toFixed(2)),
+              CL2: formatNumber(Number(claimedUSD).toFixed(2))
             })}
           </Typography>
           <Typography mb={1}>
@@ -205,14 +205,14 @@ const ClaimToWalletModal: React.FC = () => {
             <MaxCheckBox checked={isMax} onChange={handleIsMax} />
             <Typography>
               {getTranslation("max")}{" "}
-              {formatNumber(Number(Number(claimedBLST) / 10 ** 18).toFixed(2))}{" "}
+              {formatNumber(Number(claimedBLST).toFixed(2))}{" "}
               ${getTranslation("blst")}{" "}
             </Typography>
             <Typography>
               {" "}
               (={" "}
               {formatNumber(
-                Number(Number(claimedUSD) / 10 ** 18).toFixed(2)
+                Number(claimedUSD).toFixed(2)
               )}{" "}
               BUSD)
             </Typography>

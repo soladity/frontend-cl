@@ -267,7 +267,7 @@ const TopBar: React.FC = () => {
                   >
                     {getTranslation("claim")}{" "}
                     {formatNumber(
-                      Number(Number(claimedBLST) / 10 ** 18).toFixed(2)
+                      Number(Number(claimedBLST)).toFixed(2)
                     )}{" "}
                     ${getTranslation("blst")}
                   </FireBtn>
@@ -282,8 +282,9 @@ const TopBar: React.FC = () => {
                   >
                     {getTranslation("claim")}{" "}
                     {formatNumber(
-                      Number(Number(unclaimedBLST) / 10 ** 18).toFixed(2)
+                      Number(Number(unclaimedBLST)).toFixed(2)
                     )}{" "}
+                    {unclaimedBLST}
                     ${getTranslation("blst")}
                   </FireBtn>
                 </Box>
@@ -398,7 +399,7 @@ const TopBar: React.FC = () => {
                 >
                   {getTranslation("claim")}{" "}
                   {formatNumber(
-                    Number(Number(claimedBLST) / 10 ** 18).toFixed(2)
+                    Number(Number(claimedBLST)).toFixed(2)
                   )}{" "}
                   ${getTranslation("blst")}
                 </FireBtn>
@@ -413,7 +414,7 @@ const TopBar: React.FC = () => {
                 >
                   {getTranslation("unclaimedwallet")}{" "}
                   {formatNumber(
-                    Number(Number(unclaimedBLST) / 10 ** 18).toFixed(2)
+                    Number(Number(unclaimedBLST)).toFixed(2)
                   )}{" "}
                   ${getTranslation("blst")}
                 </FireBtn>
