@@ -16,6 +16,9 @@ let initialState: IModalState = {
   claimedBUSDAlertAmountModalOpen: false,
   claimedBUSDAlertModalOpen: false,
   claimToWalletModalOpen: false,
+  createDuelModalOpen: false,
+  joinDuelModalOpen: false,
+  updatePredictionModalOpen: false,
 };
 
 export const modalSlice = createSlice({

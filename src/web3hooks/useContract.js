@@ -14,6 +14,7 @@ import {
   getBUSDAddress,
   getVRFAddress,
   getReferralSystemAddress,
+  getDuelSystemAddress
 } from "./getAddress";
 
 import {
@@ -28,6 +29,7 @@ import {
   getBUSDAbi,
   getVRFAbi,
   getReferralSystemAbi,
+  getDuelSystemAbi,
 } from "./getAbi";
 
 const gameVersion = gameConfig.version;
@@ -113,3 +115,7 @@ export const useRewardPoolEvent = () => {
 export const useReferralSystem = () => {
   return useContract(getReferralSystemAbi(), getReferralSystemAddress());
 };
+
+export const useDuelSystem = () => {
+  return useContract(getDuelSystemAbi(), getDuelSystemAddress());
+}

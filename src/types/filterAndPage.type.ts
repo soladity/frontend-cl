@@ -23,4 +23,24 @@ export interface IFilterAndPageState {
   legionFilterMaxSupplies: Number;
   legionFilterMinConstSupplies: Number;
   legionFilterMaxConstSupplies: Number;
+
+  duelStatus: Number;
+  duelLegionFilterMinAP: Number;
+  duelLegionFilterMaxAP: Number;
+  duelLegionFilterMinConstAP: Number;
+  duelLegionFilterMaxConstAP: Number;
+  duelJoinLeftMaxTime: Number;
+  duelJoinLeftMinTime: Number;
+  duelJoinLeftMaxConstTime: Number;
+  duelJoinLeftMinConstTime: Number;
+  duelLeftMaxTime: Number;
+  duelLeftMinTime: Number;
+  duelLeftMaxConstTime: Number;
+  duelLeftMinConstTime: Number;
+  duelResultFilterStart: Number;
+  duelResultFilterEnd: Number;
+  duelResultFilterStartConst: Number;
+  duelResultFilterEndConst: Number;
+  duelShowOnlyMine: Boolean;
+  duelType: Number;
 }

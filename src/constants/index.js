@@ -111,6 +111,26 @@ const filterAndPage = {
   legionFilterMaxSupplies: 14,
   legionFilterMinConstSupplies: 0,
   legionFilterMaxConstSupplies: 14,
+
+  duelStatus: 1,
+  duelLegionFilterMinConstAP: 10,
+  duelLegionFilterMaxConstAP: 70,
+  duelLegionFilterMinAP: 10,
+  duelLegionFilterMaxAP: 70,
+  duelJoinLeftMaxTime: 360,
+  duelJoinLeftMinTime: 1,
+  duelJoinLeftMaxConstTime: 360,
+  duelJoinLeftMinConstTime: 1,
+  duelLeftMaxTime: 1080,
+  duelLeftMinTime: 1,
+  duelLeftMaxConstTime: 1080,
+  duelLeftMinConstTime: 1,
+  duelResultFilterStart: 0,
+  duelResultFilterEnd: 30,
+  duelResultFilterStartConst: 1,
+  duelResultFilterEndConst: 30,
+  duelShowOnlyMine: false,
+  duelType: 0,
 };
 
 const vote = {

@@ -33,3 +33,5 @@ export { type IFilterAndPageState } from "./filterAndPage.type";
 export { type IVoteState } from "./vote.type";
 
 export { type IModalState } from "./modal.type";
+
+export { type IDuel, type IDivision, type IDuelState } from "./duel.type";

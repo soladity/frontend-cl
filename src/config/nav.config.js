@@ -9,6 +9,7 @@ import LegionsMarketplace from "../pages/App/Marketplace/Legions";
 import WarriorsMarketplace from "../pages/App/Marketplace/Warriors";
 import UpdateLegion from "../pages/App/UpdateLegion";
 import Warriors from "../pages/App/Warriors";
+import Duel from "../pages/App/Duel";
 
 export const navConfig = {
   drawerWidth: 250,
@@ -28,6 +29,10 @@ export const navConfig = {
     {
       path: "/legions",
       element: <Legions />,
+    },
+    {
+      path: "/duels",
+      element: <Duel />,
     },
     {
       path: "/createlegions",
@@ -83,6 +88,12 @@ export const navConfig = {
         title: "hunt",
         icon: "hunt.png",
         path: "/hunt",
+      },
+      {
+        type: "navlink",
+        title: "duels",
+        icon: "legion.png",
+        path: "/duels",
       },
       {
         type: "divider",

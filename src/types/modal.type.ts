@@ -10,4 +10,7 @@ export interface IModalState {
   claimedBUSDAlertAmountModalOpen: boolean;
   claimedBUSDAlertModalOpen: boolean;
   claimToWalletModalOpen: boolean;
+  createDuelModalOpen: Boolean;
+  joinDuelModalOpen: Boolean;
+  updatePredictionModalOpen: Boolean;
 }
