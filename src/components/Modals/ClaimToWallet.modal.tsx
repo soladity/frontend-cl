@@ -55,7 +55,7 @@ const ClaimToWalletModal: React.FC = () => {
   const [claimToWalletAmount, setClaimToWalletAmount] = useState<number>(0);
   const [maxAmount, setMaxAmount] = useState<number>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
-  const [lastClaimTime, setLastClaimTime] = useState<string>("2022-11-01");
+  const [lastClaimTime, setLastClaimTime] = useState<string>("");
   const [leftTime, setLeftTime] = useState<string>("");
   const [transferLoading, setTransferLoading] = useState<boolean>(false);
 
