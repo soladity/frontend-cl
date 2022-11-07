@@ -10,6 +10,10 @@ import WarriorsMarketplace from "../pages/App/Marketplace/Warriors";
 import UpdateLegion from "../pages/App/UpdateLegion";
 import Warriors from "../pages/App/Warriors";
 import Duel from "../pages/App/Duel";
+import TipsAndTricks from "../pages/App/TipsAndTricks";
+import ReferPage from "../pages/App/ReferralPage";
+import Help from "../pages/App/Help";
+import HuntHistory from "../pages/App/HuntHistory";
 
 export const navConfig = {
   drawerWidth: 250,
@@ -57,6 +61,22 @@ export const navConfig = {
     {
       path: "/legionsMarketplace",
       element: <LegionsMarketplace />,
+    },
+    {
+      path: "/help",
+      element: <Help />,
+    },
+    {
+      path: "/hunthistory",
+      element: <HuntHistory />,
+    },
+    {
+      path: "/referrals",
+      element: <ReferPage />,
+    },
+    {
+      path: "/tips",
+      element: <TipsAndTricks />,
     },
   ],
   navBar: {

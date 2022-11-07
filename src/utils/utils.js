@@ -12,7 +12,7 @@ const replaceTokenName = (text) => {
 
 export const getTranslation = (key, replace) => {
   const language = store.getState().common.language;
-  let base = translations[key][language];
+  let base = translations[key] ? translations[key][language] : "";
   if (!replace) {
     return replaceTokenName(base);
   }
