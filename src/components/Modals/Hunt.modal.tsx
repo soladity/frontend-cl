@@ -104,7 +104,7 @@ const HuntModal: React.FC = () => {
           100
       );
       if (
-        BUSD >=
+        Number(BUSD) >=
         (Number(allMonsters[Number(huntingMonsterId) - 1]?.BUSDReward) *
           Number(huntTax)) /
           100
@@ -116,7 +116,7 @@ const HuntModal: React.FC = () => {
           account
         );
         if (
-          allowance <
+          Number(allowance) <
           (Number(allMonsters[Number(huntingMonsterId) - 1]?.BUSDReward) *
             Number(huntTax)) /
             100
