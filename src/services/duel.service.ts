@@ -110,7 +110,7 @@ export const getAllDuelsAct = async (
 
 export const confirmUnclaimedWallet = (betAmount: Number) => {
   const state = store.getState();
-  if (state.inventory.unclaimedUSD >= betAmount) {
+  if (Number(state.inventory.unclaimedUSD) / 10 ** 18 >= betAmount) {
     return true;
   } else {
     return false;
