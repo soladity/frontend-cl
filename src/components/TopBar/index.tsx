@@ -41,6 +41,7 @@ import { inventoryState } from "../../reducers/inventory.reducer";
 import InventoryService from "../../services/inventory.service";
 import ClaimAndReinvestModal from "../Modals/ClaimAndReinvest.modal";
 import ClaimToWalletModal from "../Modals/ClaimToWallet.modal";
+import constants from "../../constants";
 
 const TopBar: React.FC = () => {
   let getBalanceTimer: any = 0;
@@ -239,24 +240,21 @@ const TopBar: React.FC = () => {
           <Box sx={{ flexGrow: 0, ml: { xs: "auto" } }}>
             {isSmallerThanMD ? (
               <Box>
-                <Box sx={{ mb: 1 }}>
+                <Box sx={{ mb: 1, display: "flex", justifyContent: "center" }}>
                   <FireBtn
                     sx={{
                       mr: { xs: 1, md: 1 },
                       fontSize: { xs: "0.7rem", md: "1rem" },
                       px: 2,
                       "&:hover": {
-                        background:
-                          "linear-gradient(360deg, #622500, #ffffff29),radial-gradient(#953e0a, #9ca90b)",
+                        background: constants.color.bg6,
                       },
-                      background:
-                        "linear-gradient(360deg, #622500, #ffffff29),radial-gradient(#953e0a, #9ca90b)",
+                      background: constants.color.bg6,
                     }}
                     size="small"
                   >
                     {renderStars()}
-                    {formatNumber(Number(reinvestedWalletBLST).toFixed(2))} $
-                    {getTranslation("blst")}
+                    {formatNumber(Number(reinvestedWalletBLST).toFixed(2))}
                   </FireBtn>
                   <FireBtn
                     sx={{
@@ -268,8 +266,7 @@ const TopBar: React.FC = () => {
                     size="small"
                   >
                     {getTranslation("claim")}{" "}
-                    {formatNumber(Number(Number(claimedBLST)).toFixed(2))} $
-                    {getTranslation("blst")}
+                    {formatNumber(Number(Number(claimedBLST)).toFixed(2))}
                   </FireBtn>
                   <FireBtn
                     sx={{
@@ -280,11 +277,10 @@ const TopBar: React.FC = () => {
                     onClick={() => handleOpenModal()}
                     size="small"
                   >
-                    {getTranslation("claim")}{" "}
+                    {getTranslation("unclaimedwallet")}{" "}
                     {formatNumber(
                       Number(Number(unclaimedBLSTFromWei)).toFixed(2)
-                    )}{" "}
-                    {unclaimedBLSTFromWei}${getTranslation("blst")}
+                    )}
                   </FireBtn>
                 </Box>
                 <Box
@@ -309,17 +305,6 @@ const TopBar: React.FC = () => {
                     }}
                   >
                     {formatNumber(Number(BLSTBalance).toFixed(2))}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontSize: {
-                        xs: "0.8rem",
-                        md: "1rem",
-                      },
-                    }}
-                  >
-                    ${getTranslation("blst")}
                   </Typography>
                   <Button
                     variant="contained"
@@ -372,14 +357,12 @@ const TopBar: React.FC = () => {
                 <FireBtn
                   sx={{
                     mr: { xs: 0, md: 1 },
-                    fontSize: { xs: "0.7rem", md: "1rem" },
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                     px: 2,
                     "&:hover": {
-                      background:
-                        "linear-gradient(360deg, #622500, #ffffff29),radial-gradient(#953e0a, #9ca90b)",
+                      background: constants.color.bg6,
                     },
-                    background:
-                      "linear-gradient(360deg, #622500, #ffffff29),radial-gradient(#953e0a, #9ca90b)",
+                    background: constants.color.bg6,
                   }}
                   size="small"
                 >
@@ -390,7 +373,7 @@ const TopBar: React.FC = () => {
                 <FireBtn
                   sx={{
                     mr: { xs: 0, md: 1 },
-                    fontSize: { xs: "0.7rem", md: "1rem" },
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                     px: 2,
                   }}
                   onClick={() => handleClaimToWalletModalOpen()}
@@ -403,7 +386,7 @@ const TopBar: React.FC = () => {
                 <FireBtn
                   sx={{
                     mr: { xs: 0, md: 5 },
-                    fontSize: { xs: "0.7rem", md: "1rem" },
+                    fontSize: { xs: "0.7rem", md: "0.8rem" },
                     px: 2,
                   }}
                   onClick={() => handleOpenModal()}
@@ -443,18 +426,8 @@ const TopBar: React.FC = () => {
                           },
                         }}
                       >
-                        {formatNumber(Number(BLSTBalance).toFixed(2))}
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontSize: {
-                            xs: "0.8rem",
-                            md: "1rem",
-                          },
-                        }}
-                      >
-                        ${getTranslation("blst")}
+                        {formatNumber(Number(BLSTBalance).toFixed(2))} $
+                        {getTranslation("blst")}
                       </Typography>
                     </Box>
                     <Button

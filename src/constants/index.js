@@ -146,6 +146,7 @@ const color = {
   bg3: "linear-gradient(0deg,hsl(0deg 0% 12%) 0%,hsl(0deg 0% 7%) 100%)",
   bg4: "#16161699",
   bg5: "#161616cc",
+  bg6: "linear-gradient(360deg, #622500, #ffffff29),radial-gradient(#953e0a, #9ca90b)",
 };
 
 const alarmAudio = "assets/audio/busdclaimedalarm.mp3";

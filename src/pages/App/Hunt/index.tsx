@@ -62,7 +62,7 @@ const useStyles = makeStyles(() => ({
       top: "115px",
     },
     "@media(min-width: 358px)": {
-      top: "66px",
+      top: "93px",
     },
     "@media(min-width: 813px)": {
       top: "15px",
