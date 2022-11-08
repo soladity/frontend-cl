@@ -77,7 +77,8 @@ const YourInventory: React.FC = () => {
   const claimTaxAmount =
     ((Number(claimMinTaxPercent) + 2 * Number(taxLeftDaysForClaim)) *
       Number(unclaimedBLST)) /
-    100;
+    100 /
+    10 ** 18;
 
   // UseEffect
   useEffect(() => {
