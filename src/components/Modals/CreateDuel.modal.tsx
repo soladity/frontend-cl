@@ -361,7 +361,7 @@ const CreateDuelModal: React.FC = () => {
               <Typography mb={1}>
                 {getTranslation("youwillbet")} :{" "}
                 {divisions[divisionIndex].betPrice} BUSD ( ={" "}
-                {Math.round(blstAmount * 100) / 100} $BLV4)
+                {Math.round(blstAmount * 100) / 100} ${getTranslation("blst")})
               </Typography>
             </>
           )}
