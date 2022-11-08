@@ -150,6 +150,9 @@ const color = {
 
 const alarmAudio = "assets/audio/busdclaimedalarm.mp3";
 
+const tokenPriceUrl =
+  "https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae";
+
 const all = {
   itemNames,
   navlink,
@@ -157,6 +160,7 @@ const all = {
   vote,
   color,
   alarmAudio,
+  tokenPriceUrl,
 };
 
 export default all;

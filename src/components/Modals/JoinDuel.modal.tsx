@@ -45,7 +45,6 @@ import {
 import { getTranslation } from "../../utils/utils";
 import constant from "../../constants";
 
-
 const LegionSelectInput = styled(InputBase)(({ theme }) => ({
   ".MuiSelect-select": {
     paddingBottom: "5px",
@@ -310,7 +309,7 @@ const JoinDuelModal: React.FC = () => {
           }}
         >
           <a
-            href="https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae"
+            href={constant.tokenPriceUrl}
             target="_blank"
             style={{ color: constant.color.color2, textDecoration: "none" }}
           >
@@ -360,7 +359,7 @@ const JoinDuelModal: React.FC = () => {
           allLegions.length != 0 &&
           divisionIndex == currentDuelDivisionIndex && (
             <Typography mt={1} mb={1}>
-              Your Cyber's division :{" "}
+              {getTranslation("yourlegiondivision")}:{" "}
               {divisions[currentDuelDivisionIndex].minAP.valueOf() / 1000}K -{" "}
               {divisions[divisionIndex].maxAP.valueOf() / 1000}K AP{" "}
             </Typography>
@@ -372,7 +371,7 @@ const JoinDuelModal: React.FC = () => {
               <Typography mb={1}>
                 {getTranslation("youwillbet")} :{" "}
                 {divisions[divisionIndex].betPrice} BUSD ( ={" "}
-                {Math.round(blstAmount * 100) / 100} $BLST)
+                {Math.round(blstAmount * 100) / 100} ${getTranslation("blst")})
               </Typography>
             </>
           )}
@@ -410,7 +409,8 @@ const JoinDuelModal: React.FC = () => {
                 {2 *
                   divisions[currentDuelDivisionIndex].betPrice.valueOf() *
                   0.8}{" "}
-                BUSD ( = {Math.round(blstAmountWin * 100) / 100} $BLST)
+                BUSD ( = {Math.round(blstAmountWin * 100) / 100} $
+                {getTranslation("blst")})
               </Typography>
               <Typography mb={1}>
                 {getTranslation(
@@ -427,7 +427,9 @@ const JoinDuelModal: React.FC = () => {
           divisionIndex == currentDuelDivisionIndex && (
             <>
               <Typography mb={1}>
-                You have {joinLeftTime} left to join this Duel
+                {getTranslation("youHaveLeftTimeToJoinThisDuel", {
+                  CL1: joinLeftTime,
+                })}
               </Typography>
               <Grid container mb={1} spacing={1}>
                 <Grid

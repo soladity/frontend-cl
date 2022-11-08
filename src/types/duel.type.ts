@@ -2,7 +2,7 @@ import { ILegion } from "./legion.type";
 
 export interface IDuel {
   duelId: String;
-  isMine: Boolean;
+  isMine: boolean;
   creatorLegion: ILegion;
   creatorEstmatePrice: Number;
   joinerLegion: ILegion;
@@ -23,9 +23,9 @@ export interface IDivision {
 export interface IDuelState {
   duelStatus: Number;
   allDuels: IDuel[];
-  getAllDulesLoading: Boolean;
+  getAllDulesLoading: boolean;
   currentDuelId: String;
   endDateJoinDuel: String;
   divisions: IDivision[];
-  cancelDuelLoading: Boolean;
+  cancelDuelLoading: boolean;
 }
