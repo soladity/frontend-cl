@@ -158,14 +158,14 @@ const UpdatePredictionModal: React.FC = () => {
       <DialogContent dividers>
         <Typography>{getTranslation("yourcurrentpredictionis")}:</Typography>
         <Typography>
-          {getTranslation("ithinkblstwillbebusdin",{
+          {getTranslation("ithinkblstwillbebusdin", {
             CL1: currentPrediction,
             CL2: duelLeftTime,
           })}
         </Typography>
         <Typography>
           {getTranslation("youhavelefttoupdateyourprediction", {
-            CL1: leftTime
+            CL1: leftTime,
           })}
         </Typography>
         <Box
@@ -176,7 +176,7 @@ const UpdatePredictionModal: React.FC = () => {
           }}
         >
           <a
-            href="https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae"
+            href={constant.tokenPriceUrl}
             target="_blank"
             style={{ color: constant.color.color2, textDecoration: "none" }}
           >

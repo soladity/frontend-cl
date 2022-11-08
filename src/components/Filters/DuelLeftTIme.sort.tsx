@@ -6,6 +6,7 @@ import {
   updateFilterAndPageState,
 } from "../../reducers/filterAndPage.reducer";
 import { AppSelector } from "../../store";
+import { getTranslation } from "../../utils/utils";
 
 const DuelLeftTimeSort: React.FC = () => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const DuelLeftTimeSort: React.FC = () => {
     duelResultFilterStartConst,
     duelResultFilterEndConst,
   } = AppSelector(filterAndPageState);
-  
+
   const handleChange = (event: Event, newValue: number | number[] | any) => {
     if (duelStatus == 3) {
       dispatch(
@@ -56,7 +57,9 @@ const DuelLeftTimeSort: React.FC = () => {
   return (
     <Box>
       <Typography>
-        {duelStatus == 3 ? "Filter By Days Ago" : "Filter By Time Left "}
+        {duelStatus == 3
+          ? getTranslation("filterByDaysAgo")
+          : getTranslation("filterByTimeLeft")}
       </Typography>
       {duelStatus == 1 ? (
         <Slider

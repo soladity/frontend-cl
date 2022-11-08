@@ -1,4 +1,4 @@
-import { Box, Card, CardMedia, Typography } from "@mui/material";
+import { Box, Card, CardMedia, Typography, Skeleton } from "@mui/material";
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -6,20 +6,17 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { IDuel, IDivision } from "../../types";
 import { AppSelector } from "../../store";
-import {
-  filterAndPageState,
-} from "../../reducers/filterAndPage.reducer";
+import { filterAndPageState } from "../../reducers/filterAndPage.reducer";
 import { duelState, updateDuelState } from "../../reducers/duel.reducer";
 import { legionState } from "../../reducers/legion.reducer";
 import { updateModalState } from "../../reducers/modal.reducer";
 import FireBtn from "../Buttons/FireBtn";
 import GreyBtn from "../Buttons/GreyBtn";
 import { getTranslation, formatNumber } from "../../utils/utils";
-import {
-  cancelDuel,
-} from "../../web3hooks/contractFunctions/duel.contract";
+import { cancelDuel } from "../../web3hooks/contractFunctions/duel.contract";
 import { useLegion, useDuelSystem } from "../../web3hooks/useContract";
 import { getAllDuelsAct } from "../../services/duel.service";
+import constants from "../../constants";
 
 type Props = {
   duel: IDuel;
@@ -62,7 +59,7 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
 
   React.useEffect(() => {
     setDuelFlag(false);
-    divisions.forEach((division: IDivision, index: Number) => {
+    divisions.forEach((division: IDivision) => {
       if (
         duel.creatorLegion.attackPower >= division.minAP &&
         duel.creatorLegion.attackPower < division.maxAP
@@ -94,13 +91,9 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
       );
     }, 1000);
     return () => clearInterval(leftTimer);
-  }, [leftTime, duel.endDateTime]);
+  }, []);
 
   const handleDuelBtnClick = () => {
-    if (duelFlag == false) {
-      toast.error("You can't duel using your selected legion.");
-      return;
-    }
     dispatch(
       updateModalState({
         joinDuelModalOpen: true,
@@ -131,7 +124,7 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
   const handleCancelDuel = async () => {
     try {
       dispatch(
-        updateModalState({
+        updateDuelState({
           cancelDuelLoading: true,
         })
       );
@@ -149,20 +142,20 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
           cancelDuelLoading: false,
         })
       );
-      toast.error("Network issue");
+      console.log("Cancel duel error: ", e);
     }
   };
 
   const handleDeleteBtnClick = () => {
     Swal.fire({
-      title: "Cancel Duel",
-      text: "Are you sure?",
+      title: getTranslation("cancelDuel"),
+      text: getTranslation("areYouSure"),
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#f66810",
+      confirmButtonColor: constants.color.color2,
       cancelButtonColor: "#d33",
-      confirmButtonText: "Cancel Duel",
-      cancelButtonText: "Keep Duel",
+      confirmButtonText: getTranslation("cancelDuel"),
+      cancelButtonText: getTranslation("keepDuel"),
       background: "#111",
       color: "white",
     }).then((result) => {
@@ -188,6 +181,13 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
               loading="lazy"
               onLoad={handleImageLoaded}
             />
+            {loaded === false && (
+              <React.Fragment>
+                <Skeleton variant="rectangular" width="100%" height="200px" />
+                <Skeleton />
+                <Skeleton width="60%" />
+              </React.Fragment>
+            )}
             <Typography variant="h6" className="legion-name-text">
               {duel.creatorLegion.name}
             </Typography>
@@ -277,6 +277,13 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
                 loading="lazy"
                 onLoad={handleImageLoaded}
               />
+              {loaded === false && (
+                <React.Fragment>
+                  <Skeleton variant="rectangular" width="100%" height="200px" />
+                  <Skeleton />
+                  <Skeleton width="60%" />
+                </React.Fragment>
+              )}
               <Typography variant="h6" className="legion-name-text">
                 {duel.creatorLegion.name}
               </Typography>
@@ -302,6 +309,13 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
                 loading="lazy"
                 onLoad={handleImageLoaded}
               />
+              {loaded === false && (
+                <React.Fragment>
+                  <Skeleton variant="rectangular" width="100%" height="200px" />
+                  <Skeleton />
+                  <Skeleton width="60%" />
+                </React.Fragment>
+              )}
               <Typography variant="h6" className="legion-name-text">
                 {duel.joinerLegion.name}
               </Typography>
@@ -396,6 +410,13 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
                       : "green",
                 }}
               />
+              {loaded === false && (
+                <React.Fragment>
+                  <Skeleton variant="rectangular" width="100%" height="200px" />
+                  <Skeleton />
+                  <Skeleton width="60%" />
+                </React.Fragment>
+              )}
               <Typography variant="h6" className="legion-name-text">
                 {duel.creatorLegion.name}
               </Typography>
@@ -430,6 +451,13 @@ const DuelCard: React.FC<Props> = ({ duel }) => {
                       : "red",
                 }}
               />
+              {loaded === false && (
+                <React.Fragment>
+                  <Skeleton variant="rectangular" width="100%" height="200px" />
+                  <Skeleton />
+                  <Skeleton width="60%" />
+                </React.Fragment>
+              )}
               <Typography variant="h6" className="legion-name-text">
                 {duel.joinerLegion.name}
               </Typography>

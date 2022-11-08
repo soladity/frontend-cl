@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
 import { duelState } from "../../../reducers/duel.reducer";
 import { legionState } from "../../../reducers/legion.reducer";
 import {
@@ -13,7 +12,7 @@ import {
 import { useLegion, useWeb3 } from "../../../web3hooks/useContract";
 import { AppSelector } from "../../../store";
 import { formatNumber, getTranslation } from "../../../utils/utils";
-import { IDuel, ILegion } from "../../../types";
+import { IDuel } from "../../../types";
 import DuelLegionAPFilter from "../../../components/Filters/DuelLegionAp.filter";
 import DuelLeftTimeSort from "../../../components/Filters/DuelLeftTIme.sort";
 import DuelShowOnlyMineFilter from "../../../components/Filters/DuelShowOnlyMine.filter";
@@ -27,10 +26,10 @@ import UpdatePredictionModal from "../../../components/Modals/UpdatePrediction.m
 import ItemPagination from "../../../components/Pagination/Pagination";
 import { useDuelSystem } from "../../../web3hooks/useContract";
 import { doingDuels } from "../../../web3hooks/contractFunctions/duel.contract";
-import { ownerOf } from "../../../web3hooks/contractFunctions/legion.contract";
 import { updateModalState } from "../../../reducers/modal.reducer";
 import { getAllDuelsAct } from "../../../services/duel.service";
 import constant from "../../../constants";
+import "./duel.css";
 
 const Duel: React.FC = () => {
   const dispatch = useDispatch();
@@ -56,14 +55,10 @@ const Duel: React.FC = () => {
     currentPage,
     pageSize,
   } = AppSelector(filterAndPageState);
-  // Account & Web3
-  const { account } = useWeb3React();
-  const web3 = useWeb3();
 
   const duelContract = useDuelSystem();
   const legionContract = useLegion();
 
-  const [currentLegionIndex, setCurrentLegionIndex] = useState<number>(0);
   const [legionsDuelStatus, setLegionsDuelStatus] = useState<boolean[]>([]);
   const [currentInvitations, setCurrentInvitations] = useState<number>(0);
   const [ongoingDuels, setOngoingDuels] = useState<number>(0);
@@ -174,14 +169,11 @@ const Duel: React.FC = () => {
   }, [allDuels]);
 
   const getBalance = async () => {
-    await getAllDuelsAct(dispatch, duelContract, legionContract);
-    var legionsDuelStatusTemp: boolean[] = [];
-    for (let i = 0; i < allLegions.length; i++) {
-      const legion = allLegions[i];
-      const res = await doingDuels(duelContract, legion.id);
-      legionsDuelStatusTemp.push(res);
+    try {
+      await getAllDuelsAct(dispatch, duelContract, legionContract);
+    } catch (e) {
+      console.log("loading duels error :", e);
     }
-    setLegionsDuelStatus(legionsDuelStatusTemp);
   };
 
   const getOwnDuelStatus = async () => {
@@ -356,11 +348,12 @@ const Duel: React.FC = () => {
                 {formatNumber(ongoingDuels)}
               </span>
             </Typography>
-            <Typography mb={1} sx={{ fontWeight: "bold" }}>
+            <Typography mb={1} sx={{ fontWeight: "bold", textAlign: "center" }}>
               {leftTimeForNextDuelResult == ""
-                ? "You are not waiting for any pending results."
-                : "Time Until Your Next Duel Results: " +
-                  leftTimeForNextDuelResult}
+                ? getTranslation("youAreNotWaitingForAnyPendingResults")
+                : getTranslation("timeUntilYourNextDuelResults", {
+                    CL1: leftTimeForNextDuelResult,
+                  })}
             </Typography>
             <Box mb={2}>
               <FireBtn

@@ -2,7 +2,6 @@ import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { IDuel, IDivision, IDuelState } from "../types";
-import gameConfig from "../config/game.config";
 
 let divisions: IDivision[] = [
   {
@@ -72,9 +71,7 @@ export const duelSlice = createSlice({
         state[key as keyof IDuelState] = action.payload[key];
       });
     },
-    extraReducers: (builder) => {
-
-    }
+    extraReducers: (builder) => {},
   },
 });
 

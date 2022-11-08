@@ -18,7 +18,7 @@ export const getAllDuelsAct = async (
     let allDuelsTemp: IDuel[] = [];
     for (let i = 0; i < allDuelsRes.length; i++) {
       if (allDuelsRes[i].status == 0) continue;
-      var isMine: Boolean = false;
+      var isMine: boolean = false;
       all_legions.forEach((legion: ILegion) => {
         if (allDuelsRes[i].status == 1) {
           if (legion.id == allDuelsRes[i].legion1) {

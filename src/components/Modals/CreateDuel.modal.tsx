@@ -110,6 +110,9 @@ const CreateDuelModal: React.FC = () => {
   const [blstAmountWin, setBlstAmountWin] = useState<number>(0);
 
   useEffect(() => {
+    setAllIn(false);
+  }, []);
+  useEffect(() => {
     setBlstAmountForDuel();
   }, [divisionIndex]);
 
@@ -177,7 +180,7 @@ const CreateDuelModal: React.FC = () => {
         text: getTranslation("allinDuelConfirmMsg"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#f66810",
+        confirmButtonColor: constant.color.color2,
         cancelButtonColor: "#d33",
         cancelButtonText: getTranslation("cancel"),
         confirmButtonText: getTranslation("goAllin"),
@@ -220,9 +223,12 @@ const CreateDuelModal: React.FC = () => {
         divisions[divisionIndex].betPrice
       );
       toast.error(
-        getTranslation("toCreateThisDuelYouNeedToHaveAtLeastBLSTInYourUnClaimedWallet", {
-          CL1: Math.round(blstAmount)
-        })
+        getTranslation(
+          "toCreateThisDuelYouNeedToHaveAtLeastBLSTInYourUnClaimedWallet",
+          {
+            CL1: Math.round(blstAmount),
+          }
+        )
       );
       return;
     }
@@ -289,7 +295,7 @@ const CreateDuelModal: React.FC = () => {
           }}
         >
           <a
-            href="https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae"
+            href={constant.tokenPriceUrl}
             target="_blank"
             style={{ color: constant.color.color2, textDecoration: "none" }}
           >
@@ -366,7 +372,7 @@ const CreateDuelModal: React.FC = () => {
           allIn && (
             <Typography mb={1}>
               {getTranslation("youmightloseupto", {
-                CL1 : allLegions[currentLegionIndex].attackPower
+                CL1: allLegions[currentLegionIndex].attackPower,
               })}
             </Typography>
           )}
@@ -377,7 +383,7 @@ const CreateDuelModal: React.FC = () => {
           !allIn && (
             <Typography mb={1}>
               {getTranslation("youmightloseupto", {
-                CL1: Math.round(divisions[divisionIndex].maxAP.valueOf() / 10)
+                CL1: Math.round(divisions[divisionIndex].maxAP.valueOf() / 10),
               })}
             </Typography>
           )}
@@ -392,9 +398,12 @@ const CreateDuelModal: React.FC = () => {
                 {Math.round(blstAmountWin * 100) / 100} $BLV4)
               </Typography>
               <Typography mb={1}>
-                {getTranslation("toCreateThisDuelYouMustBetBUSDFromYourUnclaimedWallet", {
-                  CL1: divisions[divisionIndex].betPrice.valueOf()
-                })}
+                {getTranslation(
+                  "toCreateThisDuelYouMustBetBUSDFromYourUnclaimedWallet",
+                  {
+                    CL1: divisions[divisionIndex].betPrice.valueOf(),
+                  }
+                )}
               </Typography>
             </>
           )}
