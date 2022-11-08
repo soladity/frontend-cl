@@ -6655,7 +6655,7 @@
     "ar": ""
   },
   "youHaveInYourClaimWallet": {
-    "en": "You have CL1 BUSD (= CL2 $BLV3) in your Claimed Wallet.",
+    "en": "You have CL1 BUSD (= CL2 $BLST) in your Claimed Wallet.",
     "es": "",
     "cn": "",
     "pt": "",
@@ -6886,7 +6886,7 @@
     "ar": ""
   },
   "whatDoYouThinkTheBlstPriceInBUSDWillBeInExactly24HoursFromNow": {
-    "en": "What do you think the $BLV4 price in BUSD will be in exactly 24 hours from now?",
+    "en": "What do you think the $BLST price in BUSD will be in exactly 24 hours from now?",
     "es": "",
     "cn": "",
     "pt": "",
