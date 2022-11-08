@@ -1,24 +1,24 @@
 export const getUnclaimedWallet = async (contract, account) => {
   const res = await contract.methods.getUnclaimedWallet(account).call();
-  return {unclaimedUSD: res[0] / 10**18, unclaimedBLST: res[1] / 10**18 };
+  return { unclaimedUSD: res[0], unclaimedBLST: res[1] };
 };
 
 export const getClaimedUSD = async (contract, account) => {
   const res = await contract.methods.claimedUSD(account).call();
-  return res / 10**18;
-}
+  return res / 10 ** 18;
+};
 
 export const claimToWallet = async (web3, contract, account, usdAmount) => {
   const res = await contract.methods
-  .claimToWallet(web3.utils.toWei(usdAmount, "ether"))
-  .send({from: account});
+    .claimToWallet(web3.utils.toWei(usdAmount, "ether"))
+    .send({ from: account });
   return res;
-}
+};
 
 export const lastClaimedTime = async (contract, account) => {
   const res = await contract.methods.lastClaimedTime(account).call();
   return res;
-}
+};
 
 export const getTaxLeftDays = async (contract, account) => {
   const res = await contract.methods.getTaxLeftDays(account).call();

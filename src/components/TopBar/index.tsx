@@ -58,6 +58,8 @@ const TopBar: React.FC = () => {
     currentSamaritanStars,
   } = AppSelector(inventoryState);
 
+  const unclaimedBLSTFromWei = Number(unclaimedBLST) / 10 ** 18;
+
   // Account & Web3
   const { account } = useWeb3React();
   const accountRef = useRef(account);
@@ -266,10 +268,8 @@ const TopBar: React.FC = () => {
                     size="small"
                   >
                     {getTranslation("claim")}{" "}
-                    {formatNumber(
-                      Number(Number(claimedBLST)).toFixed(2)
-                    )}{" "}
-                    ${getTranslation("blst")}
+                    {formatNumber(Number(Number(claimedBLST)).toFixed(2))} $
+                    {getTranslation("blst")}
                   </FireBtn>
                   <FireBtn
                     sx={{
@@ -282,10 +282,9 @@ const TopBar: React.FC = () => {
                   >
                     {getTranslation("claim")}{" "}
                     {formatNumber(
-                      Number(Number(unclaimedBLST)).toFixed(2)
+                      Number(Number(unclaimedBLSTFromWei)).toFixed(2)
                     )}{" "}
-                    {unclaimedBLST}
-                    ${getTranslation("blst")}
+                    {unclaimedBLSTFromWei}${getTranslation("blst")}
                   </FireBtn>
                 </Box>
                 <Box
@@ -398,10 +397,8 @@ const TopBar: React.FC = () => {
                   size="small"
                 >
                   {getTranslation("claim")}{" "}
-                  {formatNumber(
-                    Number(Number(claimedBLST)).toFixed(2)
-                  )}{" "}
-                  ${getTranslation("blst")}
+                  {formatNumber(Number(Number(claimedBLST)).toFixed(2))} $
+                  {getTranslation("blst")}
                 </FireBtn>
                 <FireBtn
                   sx={{
@@ -414,7 +411,7 @@ const TopBar: React.FC = () => {
                 >
                   {getTranslation("unclaimedwallet")}{" "}
                   {formatNumber(
-                    Number(Number(unclaimedBLST)).toFixed(2)
+                    Number(Number(unclaimedBLSTFromWei)).toFixed(2)
                   )}{" "}
                   ${getTranslation("blst")}
                 </FireBtn>
