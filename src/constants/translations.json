@@ -6844,7 +6844,7 @@
     "ar": ""
   },
   "cryptopricewas": {
-    "en": "$CRYPTO Price Was CL1",
+    "en": "$blst Price Was CL1",
     "es": "",
     "cn": "",
     "pt": "",
@@ -7348,7 +7348,7 @@
     "ar": ""
   },
   "yourlegionisoutsideofcurrentdueldivision": {
-    "en": "Your Cyber is outside of current duel division.",
+    "en": "Your Legion is outside of current duel division.",
     "es": "",
     "cn": "",
     "pt": "",
@@ -7369,7 +7369,7 @@
     "ar": ""
   },
   "youcannotjoinwiththislegion": {
-    "en": "You can't join with this Cyber.",
+    "en": "You can't join with this Legion.",
     "es": "",
     "cn": "",
     "pt": "",
@@ -7516,7 +7516,7 @@
     "ar": ""
   },
   "youneedtocreatealegionfirsttostartaduel": {
-    "en": "You need to create a Cyber first to start a Duel!",
+    "en": "You need to create a Legion first to start a Duel!",
     "es": "",
     "cn": "",
     "pt": "",
