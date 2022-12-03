@@ -17,7 +17,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { navConfig } from "../../config/nav.config";
+import { navConfig, navLinks } from "../../config/nav.config";
 import FireBtn from "../Buttons/FireBtn";
 import { AppDispatch, AppSelector } from "../../store";
 import { formatNumber, getTranslation, showWallet } from "../../utils/utils";
@@ -224,7 +224,7 @@ const TopBar: React.FC = () => {
           )}
           <Box sx={{ marginLeft: { md: 0, xs: "auto" } }}></Box>
           <NavLink
-            to="/"
+            to={navLinks.home}
             className="non-style"
             style={{
               color: "inherit",
@@ -233,7 +233,7 @@ const TopBar: React.FC = () => {
             }}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo_dashboard.png"
               style={{ height: "55px" }}
               alt="logo"
             />
@@ -311,8 +311,8 @@ const TopBar: React.FC = () => {
                     variant="contained"
                     sx={{
                       fontWeight: "bold",
-                      background: "#622f11",
                       ml: 1,
+                      color: "white",
                     }}
                     size="small"
                   >
@@ -325,7 +325,7 @@ const TopBar: React.FC = () => {
                       <BadgeIcon />
                     </IconButton>
                     <NavLink
-                      to="/"
+                      to={navLinks.home}
                       className="non-style"
                       style={{
                         color: "inherit",
@@ -435,8 +435,7 @@ const TopBar: React.FC = () => {
                       variant="contained"
                       sx={{
                         fontWeight: "bold",
-                        background: "#622f11",
-                        color: 'white'
+                        color: "white",
                       }}
                     >
                       <IconButton
@@ -447,7 +446,7 @@ const TopBar: React.FC = () => {
                         <BadgeIcon />
                       </IconButton>
                       <NavLink
-                        to="/"
+                        to={navLinks.home}
                         className="non-style"
                         style={{
                           color: "inherit",

@@ -3,7 +3,7 @@ import { apiConfig } from "../config/api.config";
 
 const devLink = apiConfig.devServer;
 const proLink = apiConfig.proServer;
-const serverLink = devLink;
+const serverLink = proLink;
 
 const getContactInfo = async (wallet: string | undefined) => {
   return Axios.get(`${serverLink}/contact/getContactInfo/${wallet}`);
@@ -27,10 +27,11 @@ const getPresentItem = async () => {
   return Axios.get(`${serverLink}/presentitem/getPresentItem`);
 };
 
-const vote = async (address: string, vote: boolean) => {
+const vote = async (address: string, vote: boolean, is_auto: boolean) => {
   return Axios.post(`${serverLink}/vote/addVote`, {
     address: address,
     vote: vote,
+    is_auto: is_auto,
   });
 };
 
@@ -110,6 +111,10 @@ const setClaimedBUSDAlertAmount = async (address: string, amount: number) => {
   });
 };
 
+const getAllPoolStatus = async () => {
+  return Axios.get(`${serverLink}/poolstatus/getAll`);
+};
+
 const ApiService = {
   getContactInfo,
   addContactInfo,
@@ -129,6 +134,7 @@ const ApiService = {
   getAllTips,
   getClaimedBUSDAlertAmount,
   setClaimedBUSDAlertAmount,
+  getAllPoolStatus,
 };
 
 export default ApiService;

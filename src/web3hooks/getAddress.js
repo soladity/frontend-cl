@@ -7,6 +7,18 @@ export const getBloodstoneAddress = () => {
   return gameAddress[gameVersion.version].blst;
 };
 
+export const getBUSDAddress = () => {
+  return gameAddress[gameVersion.version].busd;
+};
+
+export const getCGAAddress = () => {
+  return gameAddress[gameVersion.version].cga;
+};
+
+export const getGameGovernanceTokenAddress = () => {
+  return gameAddress[gameVersion.version].gamegovernacetoken;
+};
+
 export const getBeastAddress = () => {
   return gameAddress[gameVersion.version].beast;
 };
@@ -35,10 +47,6 @@ export const getFeeHandlerAddress = () => {
   return gameAddress[gameVersion.version].feehandler;
 };
 
-export const getBUSDAddress = () => {
-  return gameAddress[gameVersion.version].busd;
-};
-
 export const getVRFAddress = () => {
   return gameAddress[gameVersion.version].vrf;
 };
@@ -53,4 +61,8 @@ export const getLiquidityPoolAddress = () => {
 
 export const getDuelSystemAddress = () => {
   return gameAddress[gameVersion.version].duelsystem;
-}
+};
+
+export const getGameAccessAddress = () => {
+  return gameAddress[gameVersion.version].gameaccess;
+};

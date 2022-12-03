@@ -25,6 +25,7 @@ import {
 import { getWalletHuntPending } from "../../web3hooks/contractFunctions/common.contract";
 import { updateLegionState } from "../../reducers/legion.reducer";
 import HuntService from "../../services/hunt.service";
+import VideoNFT from "../UI/VideoNFT";
 
 type Props = {
   monster: IMonster;
@@ -158,7 +159,7 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
       >
         <Grid item xs={12}>
           <Typography variant="h4" sx={{ fontWeight: "bold", color: "white" }}>
-            #{monsterID} {monsterID === 25 ? name : toCapitalize(name)}
+            #{monsterID} {name}
           </Typography>
         </Grid>
         <Grid container spacing={2} sx={{ justifyContent: "space-around" }}>
@@ -195,19 +196,14 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
         </Grid>
       </Grid>
       {showAnimation ? (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: `
-              <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                <source src=${
-                  monsterID === 25
-                    ? presentItem.mp4
-                    : `/assets/images/characters/mp4/monsters/m${monsterID}.mp4`
-                } type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-          `,
-          }}
+        <VideoNFT
+          src={
+            monsterID === 25
+              ? presentItem
+                ? presentItem.mp4
+                : ""
+              : `/assets/images/characters/mp4/monsters/m${monsterID}.mp4`
+          }
         />
       ) : (
         <>
@@ -215,7 +211,9 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
             component="img"
             image={
               monsterID === 25
-                ? presentItem.jpg
+                ? presentItem
+                  ? presentItem.jpg
+                  : ""
                 : `/assets/images/characters/jpg/monsters/m${monsterID}.jpg`
             }
             alt="Monster Image"

@@ -8,6 +8,8 @@ import { AppSelector } from "../../store";
 import { getTranslation } from "../../utils/utils";
 import { useBeast } from "../../web3hooks/useContract";
 import FireBtn from "../Buttons/FireBtn";
+import constants from "../../constants";
+import VideoNFT from "../UI/VideoNFT";
 
 const RevealBeastModal: React.FC = () => {
   const dispatch = useDispatch();
@@ -24,7 +26,14 @@ const RevealBeastModal: React.FC = () => {
   };
 
   return (
-    <Dialog open={mintBeastPending && !revealBeastLoading}>
+    <Dialog
+      open={mintBeastPending && !revealBeastLoading}
+      PaperProps={{
+        style: {
+          backgroundColor: constants.color.popupBGColor,
+        },
+      }}
+    >
       <DialogContent>
         <Box sx={{ textAlign: "center", mb: 2 }}>
           <FireBtn
@@ -35,7 +44,7 @@ const RevealBeastModal: React.FC = () => {
             {getTranslation("revealBeasts")}
           </FireBtn>
         </Box>
-        <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
+        <VideoNFT src="/assets/images/reveal.mp4" />
       </DialogContent>
     </Dialog>
   );

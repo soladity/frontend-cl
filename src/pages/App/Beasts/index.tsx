@@ -30,6 +30,9 @@ import {
 } from "../../../reducers/common.reduer";
 import { formatNumber, getTranslation } from "../../../utils/utils";
 import { IBeast } from "../../../types";
+import constants from "../../../constants";
+import { navLinks } from "../../../config/nav.config";
+import RedBtn from "../../../components/Buttons/RedBtn";
 
 const Beasts: React.FC = () => {
   const dispatch = useDispatch();
@@ -93,7 +96,7 @@ const Beasts: React.FC = () => {
         text: getTranslation("executeWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#f66810",
+        confirmButtonColor: constants.color.color2,
         cancelButtonColor: "#d33",
         confirmButtonText: getTranslation("massExecute"),
         background: "#111",
@@ -179,7 +182,7 @@ const Beasts: React.FC = () => {
             >
               {beastBalance}
             </Typography>
-            <NavLink to="/createlegions" className="td-none">
+            <NavLink to={navLinks.createlegion} className="td-none">
               <FireBtn
                 sx={{
                   mb: 1,
@@ -225,7 +228,7 @@ const Beasts: React.FC = () => {
                 ? getTranslation("deSelectAll")
                 : getTranslation("selectAll")}
             </FireBtn>
-            <FireBtn
+            <RedBtn
               sx={{
                 mb: 1,
                 wordBreak: "break-word",
@@ -240,7 +243,7 @@ const Beasts: React.FC = () => {
               onClick={() => handleMassExecute()}
             >
               {getTranslation("massExecute")}
-            </FireBtn>
+            </RedBtn>
           </Card>
         </Grid>
       </Grid>

@@ -47,6 +47,7 @@ import {
   getBloodstoneAllowance,
   setBloodstoneApprove,
 } from "../../../web3hooks/contractFunctions/common.contract";
+import { navLinks } from "../../../config/nav.config";
 
 const UpdateLegionBox: React.FC = () => {
   // Hook Info
@@ -163,7 +164,7 @@ const UpdateLegionBox: React.FC = () => {
       } else if (walletNumber === 1) {
         if (Number(reinvestedWalletUSD) < Number(updateUSDFee)) {
           toast.error(
-            "You do not have enough $USD in your Reinvest Wallet to update a Legion."
+            getTranslation("notEnoughUSDInReinvestWalletToUpdateLegion")
           );
           dispatch(updateLegionState({ updateLegionLoading: false }));
           return;
@@ -171,7 +172,7 @@ const UpdateLegionBox: React.FC = () => {
       } else if (walletNumber === 2) {
         if (Number(voucherWalletUSD) < Number(updateUSDFee)) {
           toast.error(
-            "You do not have enough $USD in your Voucher Wallet to udpate a Legion."
+            getTranslation("notEnoughUSDInVoucherWalletToUpdateLegion")
           );
           dispatch(updateLegionState({ updateLegionLoading: false }));
           return;
@@ -190,7 +191,7 @@ const UpdateLegionBox: React.FC = () => {
         walletNumber
       );
       toast.success(getTranslation("updateLegionSuccessful"));
-      navigate("/legions");
+      navigate(navLinks.legions);
     } catch (error) {}
     dispatch(updateLegionState({ updateLegionLoading: false }));
   };
@@ -205,9 +206,11 @@ const UpdateLegionBox: React.FC = () => {
         {isSmallerThanSM
           ? `${getTranslation("existingAPIs")} ${formatNumber(
               Number(legionForUpdate.attackPower)
-            )} AP - ${getTranslation("ShortFeeToolTip")} ${Number(
-              updateBLSTFee
-            ).toFixed(2)} ${getTranslation("$")}${getTranslation("blst")}`
+            )} ${gameConfig.symbols.attackPower} - ${getTranslation(
+              "ShortFeeToolTip"
+            )} ${Number(updateBLSTFee).toFixed(2)} ${getTranslation(
+              "$"
+            )}${getTranslation("blst")}`
           : `
           ${getTranslation("yourOldLegionAP")} ${formatNumber(
               Number(legionForUpdate.attackPower)
@@ -244,13 +247,13 @@ const UpdateLegionBox: React.FC = () => {
               ? `${getTranslation("updateLegion")} ${formatNumber(
                   Number(legionForUpdate.attackPower) +
                     Number(totalWarriorAttackPower)
-                )} AP`
+                )} ${gameConfig.symbols.attackPower}`
               : `${getTranslation("updateLegion")} ${getTranslation(
                   "to"
                 )} ${formatNumber(
                   Number(legionForUpdate.attackPower) +
                     Number(totalWarriorAttackPower)
-                )} AP`}
+                )} ${gameConfig.symbols.attackPower}`}
           </FireBtn>
         </Grid>
       </Grid>
@@ -263,8 +266,10 @@ const UpdateLegionBox: React.FC = () => {
                 : { color: "white" }
             }
           >
-            {isSmallerThanSM ? "W" : getTranslation("warriors")}: {warriorCount}{" "}
-            / {totalBeastCapacity}
+            {isSmallerThanSM
+              ? gameConfig.symbols.warrior
+              : getTranslation("warriors")}
+            : {warriorCount} / {totalBeastCapacity}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ textAlign: "center" }}>
@@ -275,8 +280,10 @@ const UpdateLegionBox: React.FC = () => {
                 : { color: "white" }
             }
           >
-            {isSmallerThanSM ? "B" : getTranslation("beasts")}: {beastCount} /
-            10
+            {isSmallerThanSM
+              ? gameConfig.symbols.beast
+              : getTranslation("beasts")}
+            : {beastCount} / 10
           </Typography>
         </Grid>
       </Grid>

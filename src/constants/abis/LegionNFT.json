@@ -13,6 +13,11 @@
       },
       {
         "internalType": "address",
+        "name": "_gameAccess",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_blst",
         "type": "address"
       },
@@ -43,8 +48,13 @@
       },
       {
         "internalType": "address",
-        "name": "_lpPair",
+        "name": "_lpPool",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_huntCoolDownTime",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -322,19 +332,6 @@
       }
     ],
     "name": "SetMarketplace",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "max",
-        "type": "uint256"
-      }
-    ],
-    "name": "SetMaxBeasts",
     "type": "event"
   },
   {
@@ -629,6 +626,19 @@
     "outputs": [
       {
         "internalType": "contract IFeeHandler",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gameAccess",
+    "outputs": [
+      {
+        "internalType": "contract IGameAccess",
         "name": "",
         "type": "address"
       }
@@ -964,6 +974,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "liquidityPool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1015,19 +1038,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "maxBeasts",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "string",
@@ -1063,63 +1073,6 @@
         "internalType": "contract IMonster",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "monster23Hunted",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "monster24Hunted",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "monsterHuntCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1346,19 +1299,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_maxNum",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMaxBeastNumber",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bool",
         "name": "_isPaused",
         "type": "bool"
@@ -1447,19 +1387,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalHuntedCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

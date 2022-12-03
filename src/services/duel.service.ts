@@ -1,21 +1,32 @@
 import { Contract } from "web3-eth-contract";
+import Axios from "axios";
 import { updateDuelState } from "../reducers/duel.reducer";
 import { AppDispatch, store } from "../store";
 import { getAllDuels } from "../web3hooks/contractFunctions/duel.contract";
-import { getLegion } from "../web3hooks/contractFunctions/legion.contract";
+import {
+  getLegion,
+  ownerOfLegion,
+} from "../web3hooks/contractFunctions/legion.contract";
 import { IDuel, ILegion } from "../types";
+import gameConfig from "../config/game.config";
+import { apiConfig } from "../config/api.config";
 
-export const getAllDuelsAct = async (
+const getAllDuelsAct = async (
   dispatch: AppDispatch,
+  web3: any,
+  account: any,
   duelContract: Contract,
   legionContract: Contract
 ) => {
   dispatch(updateDuelState({ getAllDulesLoading: true }));
   const state = store.getState();
   const all_legions: ILegion[] = state.legion.allLegions;
+  const blockUserList: String[] = await getBlockUserList(web3, account);
   try {
     const allDuelsRes = await getAllDuels(duelContract);
     let allDuelsTemp: IDuel[] = [];
+    const { version: gameVersion } = gameConfig;
+    const { duelInvitePeriod, duelPeriod } = gameVersion;
     for (let i = 0; i < allDuelsRes.length; i++) {
       if (allDuelsRes[i].status == 0) continue;
       var isMine: boolean = false;
@@ -68,15 +79,15 @@ export const getAllDuelsAct = async (
       var endDateTime: String = "";
       if (allDuelsRes[i].status == 1) {
         endDateTime = new Date(
-          Number(allDuelsRes[i].startTime) * 1000 + 6 * 3600 * 1000
+          Number(allDuelsRes[i].startTime) * 1000 + duelInvitePeriod
         ).toISOString();
       } else if (allDuelsRes[i].status == 2) {
         endDateTime = new Date(
-          Number(allDuelsRes[i].startTime) * 1000 + 24 * 3600 * 1000
+          Number(allDuelsRes[i].startTime) * 1000 + duelPeriod
         ).toISOString();
       } else {
         const endDateTimeTemp = new Date(
-          Number(allDuelsRes[i].startTime) * 1000 + 24 * 3600 * 1000
+          Number(allDuelsRes[i].startTime) * 1000 + duelPeriod
         );
         endDateTime =
           endDateTimeTemp.toDateString() +
@@ -86,29 +97,39 @@ export const getAllDuelsAct = async (
           endDateTimeTemp.getUTCMinutes() +
           " UTC";
       }
-      var duelTemp: IDuel = {
-        duelId: i.toString(),
-        isMine: isMine,
-        creatorEstmatePrice:
-          Math.round(allDuelsRes[i].price1 / 10 ** 14) / 10 ** 4,
-        creatorLegion: creatorLegion,
-        joinerEstmatePrice:
-          Math.round(allDuelsRes[i].price2 / 10 ** 14) / 10 ** 4,
-        joinerLegion: joinerLegion,
-        betPrice: allDuelsRes[i].betAmount / 10 ** 18,
-        endDateTime: endDateTime,
-        status: allDuelsRes[i].status,
-        type: allDuelsRes[i].standard,
-        result: Math.round(allDuelsRes[i].resultPrice / 10 ** 14) / 10 ** 4,
-      };
-      allDuelsTemp.push(duelTemp);
+      const ownerAddressOfLegion = (
+        (await ownerOfLegion(legionContract, creatorLegion.id)) as String
+      ).toLowerCase();
+      console.log(ownerAddressOfLegion);
+      if (
+        allDuelsRes[i].status != 1 ||
+        blockUserList.filter((user: String) => user == ownerAddressOfLegion)
+          .length == 0
+      ) {
+        var duelTemp: IDuel = {
+          duelId: i.toString(),
+          isMine: isMine,
+          creatorEstmatePrice:
+            Math.round(allDuelsRes[i].price1 / 10 ** 14) / 10 ** 4,
+          creatorLegion: creatorLegion,
+          joinerEstmatePrice:
+            Math.round(allDuelsRes[i].price2 / 10 ** 14) / 10 ** 4,
+          joinerLegion: joinerLegion,
+          betPrice: allDuelsRes[i].betAmount / 10 ** 18,
+          endDateTime: endDateTime,
+          status: allDuelsRes[i].status,
+          type: allDuelsRes[i].standard,
+          result: Math.round(allDuelsRes[i].resultPrice / 10 ** 14) / 10 ** 4,
+        };
+        allDuelsTemp.push(duelTemp);
+      }
     }
     dispatch(updateDuelState({ allDuels: allDuelsTemp }));
   } catch (error) {}
   dispatch(updateDuelState({ getAllDulesLoading: false }));
 };
 
-export const confirmUnclaimedWallet = (betAmount: Number) => {
+const confirmUnclaimedWallet = (betAmount: Number) => {
   const state = store.getState();
   if (Number(state.inventory.unclaimedUSD) / 10 ** 18 >= betAmount) {
     return true;
@@ -116,3 +137,66 @@ export const confirmUnclaimedWallet = (betAmount: Number) => {
     return false;
   }
 };
+
+const getBlockUserList = async (web3: any, account: any) => {
+  const accountLowerCase = account.toLowerCase();
+  try {
+    const currentTimeStamp = (await web3.eth.getBlock("latest")).timestamp;
+    const comparisionTime =
+      currentTimeStamp - gameConfig.displayDuelsBlockPeriod;
+
+    const query = `
+      {
+        duels (
+          where: {
+            joinedTime_gt: ${comparisionTime}
+          }
+          orderBy: joinedTime
+          orderDirection: desc
+          first: 1000
+        ) {
+          creator
+          joiner
+          createdLegionID
+        }
+      }
+    `;
+    const graphRes = await Axios.post(apiConfig.subgraphServer, {
+      query,
+    });
+    const data = graphRes.data.data.duels;
+    let list: String[] = [];
+    let temp: String[] = [];
+    data
+      .filter(
+        (item: any) =>
+          item.creator == accountLowerCase || item.joiner == accountLowerCase
+      )
+      .forEach((item: any) => {
+        let otherAccount = "";
+        if (item.creator == accountLowerCase) {
+          otherAccount = item.joiner;
+        } else if (item.joiner == accountLowerCase) {
+          otherAccount = item.creator;
+        }
+        temp.push(otherAccount);
+        if (
+          temp.filter((user: String) => user === otherAccount).length >=
+          gameConfig.maxDuelNumWithSamePlayer
+        ) {
+          list.push(otherAccount);
+        }
+      });
+    return list;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+const DuelService = {
+  getAllDuelsAct,
+  confirmUnclaimedWallet,
+};
+
+export default DuelService;

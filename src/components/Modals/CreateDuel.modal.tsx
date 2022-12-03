@@ -44,11 +44,9 @@ import {
   doingDuels,
 } from "../../web3hooks/contractFunctions/duel.contract";
 import { getBLSTAmount } from "../../web3hooks/contractFunctions/feehandler.contract";
-import {
-  confirmUnclaimedWallet,
-  getAllDuelsAct,
-} from "../../services/duel.service";
-import constant from "../../constants";
+import DuelService from "../../services/duel.service";
+import constants from "../../constants";
+import gameConfig from "../../config/game.config";
 
 const PriceTextField = styled(TextField)({
   "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
@@ -180,7 +178,7 @@ const CreateDuelModal: React.FC = () => {
         text: getTranslation("allinDuelConfirmMsg"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: constant.color.color2,
+        confirmButtonColor: constants.color.color2,
         cancelButtonColor: "#d33",
         cancelButtonText: getTranslation("cancel"),
         confirmButtonText: getTranslation("goAllin"),
@@ -199,11 +197,12 @@ const CreateDuelModal: React.FC = () => {
   const handleChangeEstimatePrice = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const price = parseFloat(e.target.value);
-    if (price > 10000 || price * 10000 - Math.floor(price * 10000) > 0) {
-      setEstimatePrice(estimatePrice);
-      return;
-    }
+    const price =
+      Number(e.target.value) > gameConfig.maxEstimatePrice
+        ? gameConfig.maxEstimatePrice
+        : Number(Number(e.target.value).toFixed(4)) === Number(e.target.value)
+        ? Number(e.target.value)
+        : estimatePrice;
     setEstimatePrice(price);
   };
 
@@ -216,7 +215,9 @@ const CreateDuelModal: React.FC = () => {
       toast.error(getTranslation("pleaseprovidevalidvalue"));
       return;
     }
-    if (!confirmUnclaimedWallet(divisions[divisionIndex].betPrice)) {
+    if (
+      !DuelService.confirmUnclaimedWallet(divisions[divisionIndex].betPrice)
+    ) {
       const blstAmount = await getBLSTAmount(
         web3,
         feeHandlerContract,
@@ -243,15 +244,29 @@ const CreateDuelModal: React.FC = () => {
       );
       setCreateDuelLoading(false);
       dispatch(updateModalState({ createDuelModalOpen: false }));
-      toast.success("yourduelhasbeencreated");
-      getAllDuelsAct(dispatch, duelContract, legionContract);
+      toast.success(getTranslation("yourduelhasbeencreated"));
+      DuelService.getAllDuelsAct(
+        dispatch,
+        web3,
+        account,
+        duelContract,
+        legionContract
+      );
     } catch (error) {
       setCreateDuelLoading(false);
     }
   };
 
   return (
-    <Dialog open={createDuelModalOpen.valueOf()} onClose={handleClose}>
+    <Dialog
+      open={createDuelModalOpen.valueOf()}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          backgroundColor: constants.color.popupBGColor,
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           display: "flex",
@@ -295,9 +310,9 @@ const CreateDuelModal: React.FC = () => {
           }}
         >
           <a
-            href={constant.tokenPriceUrl}
+            href={constants.navlink.tokenPriceUrl}
             target="_blank"
-            style={{ color: constant.color.color2, textDecoration: "none" }}
+            style={{ color: constants.color.color2, textDecoration: "none" }}
           >
             {getTranslation("seepricechart")}
           </a>

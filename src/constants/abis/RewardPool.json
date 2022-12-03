@@ -10,6 +10,16 @@
         "internalType": "address",
         "name": "_blst",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_claimToWalletCoolDownTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_taxPeriod",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -69,6 +79,31 @@
       }
     ],
     "name": "ClaimOrReinvest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ClaimedToWallet",
     "type": "event"
   },
   {

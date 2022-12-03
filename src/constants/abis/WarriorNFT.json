@@ -13,6 +13,11 @@
       },
       {
         "internalType": "address",
+        "name": "_gameAccess",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_vrfConsumer",
         "type": "address"
       },
@@ -355,6 +360,19 @@
     "outputs": [
       {
         "internalType": "contract IFeeHandler",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gameAccess",
+    "outputs": [
+      {
+        "internalType": "contract IGameAccess",
         "name": "",
         "type": "address"
       }

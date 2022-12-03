@@ -14,7 +14,10 @@ import {
   getBUSDAddress,
   getVRFAddress,
   getReferralSystemAddress,
-  getDuelSystemAddress
+  getDuelSystemAddress,
+  getGameAccessAddress,
+  getGameGovernanceTokenAddress,
+  getCGAAddress,
 } from "./getAddress";
 
 import {
@@ -30,6 +33,9 @@ import {
   getVRFAbi,
   getReferralSystemAbi,
   getDuelSystemAbi,
+  getGameAccessAbi,
+  getCGAAbi,
+  getGameGovernanceTokenAbi,
 } from "./getAbi";
 
 const gameVersion = gameConfig.version;
@@ -64,6 +70,21 @@ export const useBloodstone = () => {
   return useContract(getBloodstoneAbi(), getBloodstoneAddress());
 };
 
+export const useBUSD = () => {
+  return useContract(getBUSDAbi(), getBUSDAddress());
+};
+
+export const useCGA = () => {
+  return useContract(getCGAAbi(), getCGAAddress());
+};
+
+export const useGameGovernanceToken = () => {
+  return useContract(
+    getGameGovernanceTokenAbi(),
+    getGameGovernanceTokenAddress()
+  );
+};
+
 export const useBeast = () => {
   return useContract(getBeastAbi(), getBeastAddress());
 };
@@ -92,10 +113,6 @@ export const useFeeHandler = () => {
   return useContract(getFeeHandlerAbi(), getFeeHandlerAddress());
 };
 
-export const useBUSD = () => {
-  return useContract(getBUSDAbi(), getBUSDAddress());
-};
-
 export const useVRF = () => {
   return useContract(getVRFAbi(), getVRFAddress());
 };
@@ -118,4 +135,8 @@ export const useReferralSystem = () => {
 
 export const useDuelSystem = () => {
   return useContract(getDuelSystemAbi(), getDuelSystemAddress());
-}
+};
+
+export const useGameAccess = () => {
+  return useContract(getGameAccessAbi(), getGameAccessAddress());
+};

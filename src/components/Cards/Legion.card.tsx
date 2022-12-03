@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
+import Swal from "sweetalert2";
 import Axios from "axios";
 
 import { AppSelector } from "../../store";
@@ -28,13 +29,7 @@ import {
   getTranslation,
   getWarriorStrength,
 } from "../../utils/utils";
-import {
-  useBeast,
-  useBloodstone,
-  useLegion,
-  useWarrior,
-  useWeb3,
-} from "../../web3hooks/useContract";
+import { useLegion } from "../../web3hooks/useContract";
 import { ILegion } from "../../types";
 import { commonState } from "../../reducers/common.reduer";
 import { updateModalState } from "../../reducers/modal.reducer";
@@ -50,6 +45,8 @@ import { IStrength } from "../../types/warrior.type";
 import { ICapacity } from "../../types/beast.type";
 import LegionService from "../../services/legion.service";
 import gameConfig from "../../config/game.config";
+import { navLinks } from "../../config/nav.config";
+import VideoNFT from "../UI/VideoNFT";
 
 type Props = {
   legion: ILegion;
@@ -59,21 +56,13 @@ type Props = {
 const oneDay = 24 * 2600 * 1000;
 
 const LegionCard: React.FC<Props> = ({ legion, index }) => {
-  // Hook info
   const dispatch = useDispatch();
   const { showAnimation } = AppSelector(commonState);
 
-  // Account & Web3
   const { account } = useWeb3React();
-  const web3 = useWeb3();
 
-  // Contracts
-  const beastContract = useBeast();
-  const warriorContract = useWarrior();
   const legionContract = useLegion();
-  const bloodstoneContract = useBloodstone();
 
-  // States
   const {
     id,
     attackPower,
@@ -197,7 +186,32 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
   };
 
   const handleExecuteLegion = () => {
-    LegionService.handleExecuteLegions(dispatch, account, legionContract, [id]);
+    if (attackPower > 2000) {
+      Swal.fire({
+        title: getTranslation("warning"),
+        text: getTranslation("executeLegionWarning"),
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: constants.color.color2,
+        cancelButtonColor: "#d33",
+        confirmButtonText: getTranslation("execute"),
+        background: "#111",
+        color: "white",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          LegionService.handleExecuteLegions(
+            dispatch,
+            account,
+            legionContract,
+            [id]
+          );
+        }
+      });
+    } else {
+      LegionService.handleExecuteLegions(dispatch, account, legionContract, [
+        id,
+      ]);
+    }
   };
 
   const handleToMarketplace = () => {
@@ -218,16 +232,7 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
     >
       {!isShowDetail &&
         (showAnimation ? (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: `
-              <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                <source src=${mp4.valueOf()} type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-          `,
-            }}
-          />
+          <VideoNFT src={mp4.valueOf()} />
         ) : (
           <>
             <CardMedia
@@ -397,8 +402,9 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
               "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          W {warriorIds.length} / {totalCapacity}
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B {beastIds.length}
+          {gameConfig.symbols.warrior} {warriorIds.length} / {totalCapacity}
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{gameConfig.symbols.beast}{" "}
+          {beastIds.length}
         </Typography>
         <Box
           sx={{
@@ -451,7 +457,7 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
               "-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000",
           }}
         >
-          {formatNumber(attackPower)} AP
+          {formatNumber(attackPower)} {gameConfig.symbols.attackPower}
         </Typography>
       </Box>
       {attackPower >= 2000 && (
@@ -473,7 +479,7 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
             />
           ) : (
             <Tooltip
-              title="Wait 24 hours after hunting to sell your legion"
+              title={getTranslation("wait24hoursAfterHuntingToSell")}
               placement="left"
             >
               <img
@@ -527,7 +533,10 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
           cursor: "pointer",
         }}
       >
-        <NavLink to={`/updateLegions/${legion.id}`} className="td-none">
+        <NavLink
+          to={`${navLinks.updatelegion}/${legion.id}`}
+          className="td-none"
+        >
           <IconButton aria-label="claim" component="span" sx={{ padding: 0 }}>
             <CachedIcon />
           </IconButton>

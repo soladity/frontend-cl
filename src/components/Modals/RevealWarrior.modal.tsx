@@ -8,6 +8,8 @@ import { useWarrior } from "../../web3hooks/useContract";
 import FireBtn from "../Buttons/FireBtn";
 import { warriorState } from "../../reducers/warrior.reducer";
 import WarriorService from "../../services/warrior.service";
+import constants from "../../constants";
+import VideoNFT from "../UI/VideoNFT";
 
 const RevealWarriorModal: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,7 +25,14 @@ const RevealWarriorModal: React.FC = () => {
   };
 
   return (
-    <Dialog open={mintWarriorPending && !revealWarriorLoading}>
+    <Dialog
+      open={mintWarriorPending && !revealWarriorLoading}
+      PaperProps={{
+        style: {
+          backgroundColor: constants.color.popupBGColor,
+        },
+      }}
+    >
       <DialogContent>
         <Box sx={{ textAlign: "center", mb: 2 }}>
           <FireBtn
@@ -34,7 +43,7 @@ const RevealWarriorModal: React.FC = () => {
             {getTranslation("revealWarriors")}
           </FireBtn>
         </Box>
-        <img style={{ width: "100%" }} src={"/assets/images/reveal.gif"} />
+        <VideoNFT src="/assets/images/reveal.mp4" />
       </DialogContent>
     </Dialog>
   );

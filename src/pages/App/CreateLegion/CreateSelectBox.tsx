@@ -45,12 +45,6 @@ const CreateSelectBox: React.FC = () => {
   const theme = useTheme();
   const isSmallerThanSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Account & Web3
-
-  // Contracts
-
-  // State
-
   const capacityFilterVal =
     beastFilterCapacity === 0
       ? allBeasts
@@ -93,13 +87,17 @@ const CreateSelectBox: React.FC = () => {
               variant={showType === 1 ? "contained" : "outlined"}
               onClick={() => setShowType(1)}
             >
-              {isSmallerThanSM ? "W" : getTranslation("warriors")}
+              {isSmallerThanSM
+                ? gameConfig.symbols.warrior
+                : getTranslation("warriors")}
             </Button>
             <Button
               variant={showType === 0 ? "contained" : "outlined"}
               onClick={() => setShowType(0)}
             >
-              {isSmallerThanSM ? "B" : getTranslation("beasts")}
+              {isSmallerThanSM
+                ? gameConfig.symbols.beast
+                : getTranslation("beasts")}
             </Button>
           </ButtonGroup>
         </Box>

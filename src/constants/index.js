@@ -38,6 +38,7 @@ const navlink = {
   tutorialVideoLink: "https://youtu.be/Ujn7WhSymXE",
   reincarnationDocLink:
     "https://docs.cryptolegions.app/new-updates-in-v3/reincarnation",
+  tokenPriceUrl: "https://coinmarketcap.com/currencies/big-crypto-game/",
 };
 
 const itemNames = {
@@ -147,12 +148,10 @@ const color = {
   bg4: "#16161699",
   bg5: "#161616cc",
   bg6: "linear-gradient(360deg, #622500, #ffffff29),radial-gradient(#953e0a, #9ca90b)",
+  popupBGColor: "#121212",
 };
 
 const alarmAudio = "assets/audio/busdclaimedalarm.mp3";
-
-const tokenPriceUrl =
-  "https://coinmarketcap.com/dexscan/bsc/0x13fade99f5d7038cd53261770d80902c8756adae";
 
 const all = {
   itemNames,
@@ -161,7 +160,6 @@ const all = {
   vote,
   color,
   alarmAudio,
-  tokenPriceUrl,
 };
 
 export default all;

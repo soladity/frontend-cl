@@ -7,6 +7,7 @@ import { warriorState } from "../../reducers/warrior.reducer";
 import { legionState } from "../../reducers/legion.reducer";
 import { marketplaceState } from "../../reducers/marketplace.reducer";
 import { monsterState } from "../../reducers/monster.reducer";
+import VideoNFT from "./VideoNFT";
 
 type Props = {
   loadingPage: string;
@@ -161,14 +162,7 @@ const LoadingBloodstone: React.FC<Props> = ({ loadingPage }) => {
       </Grid>
       <Grid container sx={{ justifyContent: "center" }}>
         <Grid item xs={1}>
-          <Card>
-            <CardMedia
-              component="img"
-              image="/assets/images/loading.gif"
-              alt="Loading"
-              loading="lazy"
-            />
-          </Card>
+          <VideoNFT src="/assets/images/loading.mp4" />
         </Grid>
       </Grid>
     </>

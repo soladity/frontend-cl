@@ -37,6 +37,8 @@ import HuntService from "../../services/hunt.service";
 import LegionService from "../../services/legion.service";
 import constants from "../../constants";
 import { IMonsterId } from "../../types/monster.type";
+import { getBLSTAmount } from "../../web3hooks/contractFunctions/feehandler.contract";
+import VideoNFT from "../UI/VideoNFT";
 
 const useStyles = makeStyles(() => ({
   MassHuntItemLose: {
@@ -74,6 +76,7 @@ const MassHuntModal: React.FC = () => {
 
   const legionContract = useLegion();
   const busdContract = useBUSD();
+  const feehandlerContract = useFeeHandler();
 
   const [massHuntFinished, setMassHuntFinished] = useState(false);
   const classes = useStyles();
@@ -119,13 +122,18 @@ const MassHuntModal: React.FC = () => {
         let huntResult = await revealMassHunt(legionContract, account);
         const events = huntResult.events["Hunted"];
         if (events.length) {
-          events.forEach((event: any) => {
+          events.forEach(async (event: any) => {
             if (
               account == event.returnValues.addr &&
               massHuntResult.filter(
                 (item: any) => item.legionId == event.returnValues.legionId
               ).length == 0
             ) {
+              const blstReward = await getBLSTAmount(
+                web3,
+                feehandlerContract,
+                web3.utils.fromWei(event.returnValues.reward, "ether")
+              );
               let huntResult = {
                 legionId: event.returnValues.legionId,
                 monsterId: event.returnValues.monsterId,
@@ -135,6 +143,7 @@ const MassHuntModal: React.FC = () => {
                 reward: (event.returnValues.reward / Math.pow(10, 18)).toFixed(
                   2
                 ),
+                blstReward: Number(blstReward).toFixed(2),
               };
               dispatch(setMassHuntResult(huntResult));
             }
@@ -146,6 +155,11 @@ const MassHuntModal: React.FC = () => {
               (item: any) => item.legionId == events.returnValues.legionId
             ).length == 0
           ) {
+            const blstReward = await getBLSTAmount(
+              web3,
+              feehandlerContract,
+              web3.utils.fromWei(events.returnValues.reward, "ether")
+            );
             let huntResult = {
               legionId: events.returnValues.legionId,
               monsterId: events.returnValues.monsterId,
@@ -155,6 +169,7 @@ const MassHuntModal: React.FC = () => {
               reward: (events.returnValues.reward / Math.pow(10, 18)).toFixed(
                 2
               ),
+              blstReward: Number(blstReward).toFixed(2),
             };
             dispatch(setMassHuntResult(huntResult));
           }
@@ -199,6 +214,12 @@ const MassHuntModal: React.FC = () => {
         massHuntPending ||
         massHuntFinished
       }
+      PaperProps={{
+        style: {
+          backgroundColor: constants.color.popupBGColor,
+          maxWidth: "80%",
+        },
+      }}
     >
       {massHuntPending ? (
         <>
@@ -214,16 +235,7 @@ const MassHuntModal: React.FC = () => {
                 {getTranslation("revealResult")}
               </FireBtn>
             </Box>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `
-                  <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                    <source src="/assets/images/waiting.mp4" type="video/mp4" />
-                    Your browser does not support HTML5 video.
-                  </video>
-                `,
-              }}
-            />
+            <VideoNFT src="/assets/images/waiting.mp4" />
           </DialogContent>
         </>
       ) : massHuntFinished ? (
@@ -250,25 +262,23 @@ const MassHuntModal: React.FC = () => {
                       ? classes.MassHuntItemWin
                       : classes.MassHuntItemLose
                   }
-                  sx={{ textAlign: "center", margin: 1, width: 170, p: 1 }}
+                  sx={{
+                    textAlign: "center",
+                    margin: 1,
+                    width: 170,
+                    p: 1,
+                  }}
                 >
                   {item.success ? (
                     showAnimation ? (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: `
-                      <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                        <source src=${
+                      <VideoNFT
+                        src={
                           item["monsterId"] === 25
                             ? presentItem.diedmp4
                             : item["monsterId"] === 24
                             ? `/monster_dying_end/m24end.mp4`
                             : `/assets/images/characters/mp4/monsters_dying/m${item["monsterId"]}.mp4`
-                        } type="video/mp4" />
-                        Your browser does not support HTML5 video.
-                      </video>
-                  `,
-                        }}
+                        }
                       />
                     ) : (
                       <img
@@ -283,19 +293,12 @@ const MassHuntModal: React.FC = () => {
                       />
                     )
                   ) : showAnimation ? (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: `
-                            <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                              <source src=${
-                                item["monsterId"] === 25
-                                  ? presentItem.mp4
-                                  : `/assets/images/characters/mp4/monsters/m${item["monsterId"]}.mp4`
-                              } type="video/mp4" />
-                              Your browser does not support HTML5 video.
-                            </video>
-                        `,
-                      }}
+                    <VideoNFT
+                      src={
+                        item["monsterId"] === 25
+                          ? presentItem.mp4
+                          : `/assets/images/characters/mp4/monsters/m${item["monsterId"]}.mp4`
+                      }
                     />
                   ) : (
                     <img
@@ -334,10 +337,14 @@ const MassHuntModal: React.FC = () => {
                   <Box sx={{ p: 1, fontSize: 12, fontWeight: "bold" }}>
                     {item.success ? (
                       <span>
-                        {getTranslation("won")} {item.reward} $BUSD
+                        {getTranslation("won")} {item.blstReward} $
+                        {getTranslation("blst")}
                       </span>
                     ) : (
-                      <span>{getTranslation("lost")}</span>
+                      <span>
+                        {getTranslation("lost")} {item.blstReward} $
+                        {getTranslation("blst")}
+                      </span>
                     )}
                   </Box>
                 </Box>
@@ -356,16 +363,7 @@ const MassHuntModal: React.FC = () => {
             {getTranslation("massHunt")}
           </DialogTitle>
           <DialogContent>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `
-                  <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                    <source src="/assets/images/waiting.mp4" type="video/mp4" />
-                    Your browser does not support HTML5 video.
-                  </video>
-                `,
-              }}
-            />
+            <VideoNFT src={"/assets/images/waiting.mp4"} />
           </DialogContent>
         </>
       )}

@@ -27,9 +27,10 @@ import ItemPagination from "../../../components/Pagination/Pagination";
 import { useDuelSystem } from "../../../web3hooks/useContract";
 import { doingDuels } from "../../../web3hooks/contractFunctions/duel.contract";
 import { updateModalState } from "../../../reducers/modal.reducer";
-import { getAllDuelsAct } from "../../../services/duel.service";
+import DuelService from "../../../services/duel.service";
 import constant from "../../../constants";
 import "./duel.css";
+import { navLinks } from "../../../config/nav.config";
 
 const Duel: React.FC = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,9 @@ const Duel: React.FC = () => {
     currentPage,
     pageSize,
   } = AppSelector(filterAndPageState);
+
+  const { account } = useWeb3React();
+  const web3 = useWeb3();
 
   const duelContract = useDuelSystem();
   const legionContract = useLegion();
@@ -170,7 +174,13 @@ const Duel: React.FC = () => {
 
   const getBalance = async () => {
     try {
-      await getAllDuelsAct(dispatch, duelContract, legionContract);
+      await DuelService.getAllDuelsAct(
+        dispatch,
+        web3,
+        account,
+        duelContract,
+        legionContract
+      );
     } catch (e) {
       console.log("loading duels error :", e);
     }
@@ -249,7 +259,7 @@ const Duel: React.FC = () => {
                 >
                   {getTranslation("youneedtocreatealegionfirsttostartaduel")}
                 </Box>
-                <NavLink to="/createlegions" className="td-none">
+                <NavLink to={navLinks.createlegion} className="td-none">
                   <FireBtn>{getTranslation("createLegion")}</FireBtn>
                 </NavLink>
               </Box>
@@ -304,8 +314,9 @@ const Duel: React.FC = () => {
               <FireBtn
                 sx={{ width: "150px" }}
                 onClick={() => showCreateDuelModal()}
+                disabled
               >
-                {getTranslation("createduel")}
+                {getTranslation("createduel")} (Coming Soon)
               </FireBtn>
             </Box>
             <Box mb={1}>
@@ -402,7 +413,7 @@ const Duel: React.FC = () => {
             }}
           >
             <Typography mb={1} sx={{ fontWeight: "bold" }}>
-              {getTranslation("totalongoingduels")}{" "}
+              {getTranslation("yourpastduels")}{" "}
               <span style={{ color: constant.color.color1 }}>
                 {formatNumber(pastDuels)}
               </span>

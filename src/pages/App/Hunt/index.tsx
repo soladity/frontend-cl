@@ -49,6 +49,8 @@ import { getWalletMassHuntPending } from "../../../web3hooks/contractFunctions/c
 import { getTranslation } from "../../../utils/utils";
 import { ILegion, IMonster } from "../../../types";
 import { apiConfig } from "../../../config/api.config";
+import gameConfig from "../../../config/game.config";
+import { navLinks } from "../../../config/nav.config";
 
 const useStyles = makeStyles(() => ({
   Card: {
@@ -268,7 +270,7 @@ const Hunt: React.FC = () => {
             >
               {getTranslation("noMintedLegion")}
             </Box>
-            <NavLink to="/createlegions" className="td-none">
+            <NavLink to={navLinks.createlegion} className="td-none">
               <FireBtn>{getTranslation("createLegion")}</FireBtn>
             </NavLink>
           </Box>
@@ -319,7 +321,8 @@ const Hunt: React.FC = () => {
                   scrollTo(allLegions[currentLegionIndex]?.attackPower)
                 }
               >
-                {allLegions[currentLegionIndex]?.attackPower.toFixed(0)} AP
+                {allLegions[currentLegionIndex]?.attackPower.toFixed(0)}{" "}
+                {gameConfig.symbols.attackPower}
               </Typography>
             </Grid>
             <Grid item xs={40} sm={40} md={7}>
@@ -329,7 +332,8 @@ const Hunt: React.FC = () => {
                   fontSize: { xs: 14, sm: 16, md: 20 },
                 }}
               >
-                W {allLegions[currentLegionIndex]?.warriorIds.length}/
+                {gameConfig.symbols.warrior}{" "}
+                {allLegions[currentLegionIndex]?.warriorIds.length}/
                 {totalBeastsCapacity}
               </Typography>
             </Grid>
@@ -340,7 +344,8 @@ const Hunt: React.FC = () => {
                   fontSize: { xs: 14, sm: 16, md: 20 },
                 }}
               >
-                B {allLegions[currentLegionIndex]?.beastIds.length}/ 10
+                {gameConfig.symbols.beast}{" "}
+                {allLegions[currentLegionIndex]?.beastIds.length}/ 10
               </Typography>
             </Grid>
             <Grid item xs={40} sm={40} md={7}>
@@ -383,7 +388,7 @@ const Hunt: React.FC = () => {
               </FireBtn>
             </Grid>
             <Grid item xs={40} sm={40} md={10}>
-              <NavLink to="/hunthistory" className="td-none">
+              <NavLink to={navLinks.hunthistory} className="td-none">
                 <Typography
                   variant="h5"
                   sx={{

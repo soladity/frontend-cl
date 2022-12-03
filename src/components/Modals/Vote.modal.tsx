@@ -23,6 +23,7 @@ import {
   voteState,
 } from "../../reducers/vote.reducer";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
+import constants from "../../constants";
 
 const VoteModal: React.FC = () => {
   let clockTimer: any = 0;
@@ -58,6 +59,7 @@ const VoteModal: React.FC = () => {
       vote({
         address: account as string,
         vote: status as boolean,
+        is_auto: false,
       })
     ).then(() => {
       dispatch(getVoteStatus());
@@ -99,7 +101,15 @@ const VoteModal: React.FC = () => {
 
   //
   return (
-    <Dialog open={voteModalOpen} onClose={handleClose}>
+    <Dialog
+      open={voteModalOpen}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          backgroundColor: constants.color.popupBGColor,
+        },
+      }}
+    >
       <DialogTitle sx={{ position: "relative" }}>
         <Box>
           <Typography
@@ -190,7 +200,8 @@ const VoteModal: React.FC = () => {
               marginBottom: 2,
             }}
           >
-            V3 will stay live as long as at least 30% players vote Good.
+            This game version will stay live as long as at least 30% players
+            vote Good.
           </Typography>
           <FireBtn
             sx={{

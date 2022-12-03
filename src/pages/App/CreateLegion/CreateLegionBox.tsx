@@ -41,6 +41,7 @@ import {
 } from "../../../web3hooks/contractFunctions/common.contract";
 import { mintLegion } from "../../../web3hooks/contractFunctions/legion.contract";
 import gameConfig from "../../../config/game.config";
+import { navLinks } from "../../../config/nav.config";
 
 const CreateLegionBox: React.FC = () => {
   const dispatch = useDispatch();
@@ -148,7 +149,7 @@ const CreateLegionBox: React.FC = () => {
         walletNumber
       );
       toast.success(getTranslation("summonLegionSuccessful"));
-      navigate("/legions");
+      navigate(navLinks.legions);
     } catch (error) {}
     dispatch(updateLegionState({ createLegionLoading: false }));
   };
@@ -214,7 +215,9 @@ const CreateLegionBox: React.FC = () => {
               <>{getTranslation("notEnoughBeasts")}</>
             ) : totalWarriorAttackPower < 2000 ? (
               <>
-                {`${getTranslation("min")} 2000 AP ${getTranslation("needed")}`}
+                {`${getTranslation("min")} 2000 ${
+                  gameConfig.symbols.attackPower
+                } ${getTranslation("needed")}`}
               </>
             ) : (
               ""
@@ -247,8 +250,10 @@ const CreateLegionBox: React.FC = () => {
                 : { color: "white" }
             }
           >
-            {isSmallerThanSM ? "W" : getTranslation("warriors")}: {warriorCount}{" "}
-            / {totalBeastCapacity}
+            {isSmallerThanSM
+              ? gameConfig.symbols.warrior
+              : getTranslation("warriors")}
+            : {warriorCount} / {totalBeastCapacity}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ textAlign: "center" }}>
@@ -259,8 +264,10 @@ const CreateLegionBox: React.FC = () => {
                 : { color: "white" }
             }
           >
-            {isSmallerThanSM ? "B" : getTranslation("beasts")}: {beastCount} /
-            10
+            {isSmallerThanSM
+              ? gameConfig.symbols.beast
+              : getTranslation("beasts")}
+            : {beastCount} / 10
           </Typography>
         </Grid>
       </Grid>

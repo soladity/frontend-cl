@@ -1,5 +1,7 @@
-import bloodstone from "../constants/abis/bloodstone.json";
-import busd from "../constants/abis/busd.json";
+import blst from "../constants/abis/BLST.json";
+import busd from "../constants/abis/BUSD.json";
+import cga from "../constants/abis/CGA.json";
+import gamegovernancetoken from "../constants/abis/GameGovernanceToken.json";
 
 import beast from "../constants/abis/BeastNFT.json";
 import feehandler from "../constants/abis/FeeHandler.json";
@@ -10,10 +12,23 @@ import vrfv2consumer from "../constants/abis/VRFv2Consumer.json";
 import warrior from "../constants/abis/WarriorNFT.json";
 import rewardpool from "../constants/abis/RewardPool.json";
 import referralsystem from "../constants/abis/ReferralSystem.json";
-import duelsystem from "../constants/abis/DuelSystem.json"
+import duelsystem from "../constants/abis/DuelSystem.json";
+import gameaccess from "../constants/abis/GameAccess.json";
 
 export const getBloodstoneAbi = () => {
-  return bloodstone;
+  return blst;
+};
+
+export const getBUSDAbi = () => {
+  return busd;
+};
+
+export const getCGAAbi = () => {
+  return cga;
+};
+
+export const getGameGovernanceTokenAbi = () => {
+  return gamegovernancetoken;
 };
 
 export const getBeastAbi = () => {
@@ -44,10 +59,6 @@ export const getFeeHandlerAbi = () => {
   return feehandler;
 };
 
-export const getBUSDAbi = () => {
-  return busd;
-};
-
 export const getVRFAbi = () => {
   return vrfv2consumer;
 };
@@ -58,4 +69,8 @@ export const getReferralSystemAbi = () => {
 
 export const getDuelSystemAbi = () => {
   return duelsystem;
-}
+};
+
+export const getGameAccessAbi = () => {
+  return gameaccess;
+};

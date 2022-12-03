@@ -24,6 +24,8 @@ import BeastService from "../../services/beast.service";
 import { updateModalState } from "../../reducers/modal.reducer";
 import { updateMarketplaceState } from "../../reducers/marketplace.reducer";
 import gameConfig from "../../config/game.config";
+import constants from "../../constants";
+import VideoNFT from "../UI/VideoNFT";
 
 type Props = {
   beast: IBeast;
@@ -58,7 +60,7 @@ const BeastCard: React.FC<Props> = ({ beast, isActionBtns }) => {
         text: getTranslation("executeWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#f66810",
+        confirmButtonColor: constants.color.color2,
         cancelButtonColor: "#d33",
         confirmButtonText: getTranslation("execute"),
         background: "#111",
@@ -100,16 +102,7 @@ const BeastCard: React.FC<Props> = ({ beast, isActionBtns }) => {
       className={classNames({ executeitem: executeStatus }, "beastCard")}
     >
       {showAnimation ? (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: `
-              <video autoPlay playsinline muted loop id="main-trailer" style="width: 100%;">
-                <source src=${mp4.valueOf()} type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-          `,
-          }}
-        />
+        <VideoNFT src={mp4.valueOf()} />
       ) : (
         <>
           <CardMedia
@@ -155,12 +148,12 @@ const BeastCard: React.FC<Props> = ({ beast, isActionBtns }) => {
           }}
         >
           <img
-            src="/assets/images/sword.png"
+            src="/assets/images/capacity.png"
             style={{
               height: `${isActionBtns ? "20px" : "15px"}`,
               marginRight: "10%",
             }}
-            alt="Sword"
+            alt="capacity"
           />
           <Typography
             sx={{

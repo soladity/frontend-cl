@@ -29,10 +29,7 @@ import {
 } from "../../web3hooks/useContract";
 import FireBtn from "../Buttons/FireBtn";
 import { getBLSTAmount } from "../../web3hooks/contractFunctions/feehandler.contract";
-import {
-  getAllDuelsAct,
-  confirmUnclaimedWallet,
-} from "../../services/duel.service";
+import DuelService from "../../services/duel.service";
 import { FaTimes } from "react-icons/fa";
 import OrgMenuItem from "../../components/UI/OrgMenuItem";
 import GreenMenuItem from "../../components/UI/GreenMenuItem";
@@ -43,7 +40,7 @@ import {
   joinDuel,
 } from "../../web3hooks/contractFunctions/duel.contract";
 import { getTranslation } from "../../utils/utils";
-import constant from "../../constants";
+import constants from "../../constants";
 
 const LegionSelectInput = styled(InputBase)(({ theme }) => ({
   ".MuiSelect-select": {
@@ -142,6 +139,7 @@ const JoinDuelModal: React.FC = () => {
 
   useEffect(() => {
     getBalance();
+    console.log(allDuels);
     allDuels.forEach((duel, index) => {
       if (duel.duelId == currentDuelId) {
         const duelTypeFlag = duel.type.valueOf() == 1 ? true : false;
@@ -157,8 +155,8 @@ const JoinDuelModal: React.FC = () => {
             setCurrentLegionIndex(0);
           }
           if (
-            allLegions[0].attackPower >= division.minAP &&
-            allLegions[0].attackPower < division.maxAP
+            allLegions[0]?.attackPower >= division.minAP &&
+            allLegions[0]?.attackPower < division.maxAP
           ) {
             setDivisionIndex(index);
           }
@@ -212,7 +210,9 @@ const JoinDuelModal: React.FC = () => {
   };
 
   const handleJoinDuel = async () => {
-    if (!confirmUnclaimedWallet(divisions[divisionIndex].betPrice)) {
+    if (
+      !DuelService.confirmUnclaimedWallet(divisions[divisionIndex].betPrice)
+    ) {
       const blstAmount = await getBLSTAmount(
         web3,
         feeHandlerContract,
@@ -240,7 +240,13 @@ const JoinDuelModal: React.FC = () => {
       setJoinDuelLoading(false);
       dispatch(updateModalState({ joinDuelModalOpen: false }));
       toast.success(getTranslation("successfullyjoined"));
-      getAllDuelsAct(dispatch, duelContract, legionContract);
+      DuelService.getAllDuelsAct(
+        dispatch,
+        web3,
+        account,
+        duelContract,
+        legionContract
+      );
     } catch (e) {
       setJoinDuelLoading(false);
       console.log(e);
@@ -262,7 +268,15 @@ const JoinDuelModal: React.FC = () => {
   };
 
   return (
-    <Dialog open={joinDuelModalOpen.valueOf()} onClose={handleClose}>
+    <Dialog
+      open={joinDuelModalOpen.valueOf()}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          backgroundColor: constants.color.popupBGColor,
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           display: "flex",
@@ -309,9 +323,9 @@ const JoinDuelModal: React.FC = () => {
           }}
         >
           <a
-            href={constant.tokenPriceUrl}
+            href={constants.navlink.tokenPriceUrl}
             target="_blank"
-            style={{ color: constant.color.color2, textDecoration: "none" }}
+            style={{ color: constants.color.color2, textDecoration: "none" }}
           >
             {getTranslation("seepricechart")}
           </a>

@@ -19,10 +19,8 @@ import { AppSelector } from "../../../store";
 import { formatNumber, getTranslation } from "../../../utils/utils";
 import {
   useBeast,
-  useBloodstone,
   useLegion,
   useWarrior,
-  useWeb3,
 } from "../../../web3hooks/useContract";
 import {
   changeAllLegionExecuteStatus,
@@ -36,6 +34,9 @@ import { ILegion } from "../../../types";
 import BeastService from "../../../services/beast.service";
 import WarriorService from "../../../services/warrior.service";
 import LegionService from "../../../services/legion.service";
+import constants from "../../../constants";
+import { navLinks } from "../../../config/nav.config";
+import RedBtn from "../../../components/Buttons/RedBtn";
 
 const Legions: React.FC = () => {
   const dispatch = useDispatch();
@@ -149,7 +150,7 @@ const Legions: React.FC = () => {
         text: getTranslation("executeLegionWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#f66810",
+        confirmButtonColor: constants.color.color2,
         cancelButtonColor: "#d33",
         confirmButtonText: getTranslation("massExecute"),
         background: "#111",
@@ -186,7 +187,7 @@ const Legions: React.FC = () => {
         </Grid>
         <Grid item xs={12} md={4}>
           <Card className="bg-c5 info-card">
-            <NavLink to="/createlegions" className="td-none">
+            <NavLink to={navLinks.createlegion} className="td-none">
               <FireBtn
                 sx={{
                   mb: 2,
@@ -242,7 +243,7 @@ const Legions: React.FC = () => {
             >
               {formatNumber(totalAP)}
             </Typography>
-            <NavLink to="/hunt" className="td-none">
+            <NavLink to={navLinks.hunt} className="td-none">
               <FireBtn
                 sx={{
                   mb: 2,
@@ -279,7 +280,7 @@ const Legions: React.FC = () => {
                         ? "red"
                         : item.huntStatus
                         ? "green"
-                        : "#e89f38",
+                        : "orange",
                   }}
                 >
                   {formatNumber(item.attackPower)} AP
@@ -298,7 +299,7 @@ const Legions: React.FC = () => {
                 ? getTranslation("deSelectAll")
                 : getTranslation("selectAll")}
             </FireBtn>
-            <FireBtn
+            <RedBtn
               sx={{
                 mb: 1,
                 wordBreak: "break-word",
@@ -312,7 +313,7 @@ const Legions: React.FC = () => {
               onClick={() => handleMassExecute()}
             >
               {getTranslation("massExecute")}
-            </FireBtn>
+            </RedBtn>
           </Card>
         </Grid>
       </Grid>
