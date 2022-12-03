@@ -1,5 +1,5 @@
 import blst from "../constants/abis/BLST.json";
-import busd from "../constants/abis/BUSD.json";
+import busd from "../constants/abis/busd.json";
 import cga from "../constants/abis/CGA.json";
 import gamegovernancetoken from "../constants/abis/GameGovernanceToken.json";
 
