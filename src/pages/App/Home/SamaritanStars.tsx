@@ -19,6 +19,7 @@ const SamaritanStars: React.FC = () => {
     reinvestedTotalUSD,
     additionalInvestment,
     claimMinTaxPercent,
+    reinvestMinTaxPercent,
     taxLeftDaysForClaim,
     taxLeftDaysForReinvest,
     currentReinvestPercent,
@@ -109,7 +110,9 @@ const SamaritanStars: React.FC = () => {
           />
           <HomeTypo
             title={`${getTranslation("reinvestTax")}:`}
-            info={`${Number(taxLeftDaysForReinvest) * 2}%`}
+            info={`${
+              Number(taxLeftDaysForReinvest) * 2 + Number(reinvestMinTaxPercent)
+            }%`}
           />
           <HomeTypo
             title={`${getTranslation("investedTotal")}:`}

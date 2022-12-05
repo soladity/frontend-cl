@@ -1,5 +1,7 @@
 import { store } from "../store";
 import translations from "../constants/translations.json";
+import Web3 from "web3";
+import { BigNumber } from "ethers";
 
 const replaceTokenName = (text) => {
   String.prototype.replaceAll = function (strReplace, strWith) {
@@ -272,4 +274,36 @@ export const getSamaritanStarsWithPercentAndFirstHuntTime = (
     stars = 3;
   }
   return stars;
+};
+
+export const convertInputNumber = (inputVal) => {
+  let input = inputVal;
+  if (input >= 1) {
+    if (input[0] == "0") {
+      input = input.slice(1);
+    }
+  } else if (input >= 0) {
+    if (input == "") {
+      input = "0";
+    }
+  } else {
+    input = "0";
+  }
+  return Number(input);
+};
+
+export const toWeiNum = (amount) => {
+  return Number(Web3.utils.toWei(Number(amount).toString(), "ether"));
+};
+
+export const fromWeiNum = (amount) => {
+  return Number(Web3.utils.fromWei(BigInt(amount).toString(), "ether"));
+};
+
+export const toWeiStr = (amount) => {
+  return Web3.utils.toWei(Number(amount).toString(), "ether");
+};
+
+export const fromWeiStr = (amount) => {
+  return Web3.utils.fromWei(BigInt(amount).toString(), "ether");
 };

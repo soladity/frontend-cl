@@ -27,11 +27,10 @@ import OrgMenuItem from "../../../components/UI/OrgMenuItem";
 import RedMenuItem from "../../../components/UI/RedMenuItem";
 import { AppSelector } from "../../../store";
 import {
-  useBeast,
+  useGameAccess,
   useLegion,
   useMonster,
   useVRF,
-  useWeb3,
 } from "../../../web3hooks/useContract";
 import {
   legionState,
@@ -40,12 +39,8 @@ import {
 import { monsterState } from "../../../reducers/monster.reducer";
 import LegionService from "../../../services/legion.service";
 import HuntService from "../../../services/hunt.service";
-import {
-  getLegionLastHuntTime,
-  initiateMassHunt,
-} from "../../../web3hooks/contractFunctions/legion.contract";
+import { getLegionLastHuntTime } from "../../../web3hooks/contractFunctions/legion.contract";
 import { updateModalState } from "../../../reducers/modal.reducer";
-import { getWalletMassHuntPending } from "../../../web3hooks/contractFunctions/common.contract";
 import { getTranslation } from "../../../utils/utils";
 import { ILegion, IMonster } from "../../../types";
 import { apiConfig } from "../../../config/api.config";
@@ -87,6 +82,7 @@ const Hunt: React.FC = () => {
   const legionContract = useLegion();
   const monsterContract = useMonster();
   const vrfContract = useVRF();
+  const gameAccessContract = useGameAccess();
 
   const [currentLegionIndex, setCurrentLegionIndex] = useState<number>(0);
   const [totalBeastsCapacity, setTotalBeastsCapacity] = useState<number>(0);
@@ -115,7 +111,12 @@ const Hunt: React.FC = () => {
   }, [currentTime]);
 
   const getBalance = async () => {
-    LegionService.getAllLegionsAct(dispatch, account, legionContract);
+    LegionService.getAllLegionsAct(
+      dispatch,
+      account,
+      legionContract,
+      gameAccessContract
+    );
     HuntService.getAllMonstersAct(dispatch, monsterContract);
     HuntService.checkHuntPending(dispatch, account, legionContract);
     HuntService.checkMassHuntPending(dispatch, account, legionContract);
@@ -188,7 +189,12 @@ const Hunt: React.FC = () => {
       var mins = Math.floor((totalSecs % 3600) / 60).toFixed(0);
       var secs = (Math.floor(totalSecs % 3600) % 60).toFixed(0);
       if (parseInt(hours) == 0 && parseInt(mins) == 0 && parseInt(secs) == 0) {
-        LegionService.getAllLegionsAct(dispatch, account, legionContract);
+        LegionService.getAllLegionsAct(
+          dispatch,
+          account,
+          legionContract,
+          gameAccessContract
+        );
       }
     }
   };
@@ -207,31 +213,13 @@ const Hunt: React.FC = () => {
   };
 
   const handleInitialMassHunt = async () => {
-    try {
-      let massHuntPending = await getWalletMassHuntPending(
-        legionContract,
-        account
-      );
-      dispatch(updateLegionState({ massHuntPending }));
-      if (!massHuntPending) {
-        dispatch(updateLegionState({ initialMassHuntLoading: true }));
-        await initiateMassHunt(legionContract, account);
-        let massHuntPending = await getWalletMassHuntPending(
-          legionContract,
-          account
-        );
-        dispatch(updateLegionState({ massHuntPending }));
-        HuntService.checkMassHuntRevealStatus(
-          dispatch,
-          account,
-          legionContract,
-          vrfContract
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    dispatch(updateLegionState({ initialMassHuntLoading: false }));
+    HuntService.handleInitialMassHunt(
+      dispatch,
+      account,
+      legionContract,
+      vrfContract,
+      gameAccessContract
+    );
   };
 
   const scrollTo = (attackPower: Number) => {

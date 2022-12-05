@@ -13,6 +13,7 @@ import {
   getClaimMaxTaxPercent,
   getClaimMinTaxPercent,
   getCurrentReinvestPercent,
+  getReinvestMinTaxPercent,
   getReinvestPercent,
   getReinvestTaxPercent,
   getReinvestTimesInTaxCycle,
@@ -42,6 +43,7 @@ import {
 } from "../../reducers/vote.reducer";
 import { apiConfig } from "../../config/api.config";
 import constants from "../../constants";
+import { ILegion } from "../../types";
 
 const ClaimAndReinvestModal: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -51,6 +53,7 @@ const ClaimAndReinvestModal: React.FC = () => {
     taxLeftDaysForClaim,
     taxLeftDaysForReinvest,
     claimMinTaxPercent,
+    reinvestMinTaxPercent,
     futureSamaritanStarsWhenClaim,
     futureSamaritanStarsWhenReinvest,
     futureReinvestPercentWhenReinvest,
@@ -78,6 +81,17 @@ const ClaimAndReinvestModal: React.FC = () => {
       Number(unclaimedBLSTFromWei)) /
     100;
 
+  const reinvestTaxAmount =
+    ((2 * Number(taxLeftDaysForReinvest) + Number(reinvestMinTaxPercent)) *
+      Number(unclaimedBLSTFromWei)) /
+    100;
+  const reinvestAmount =
+    ((100 -
+      2 * Number(taxLeftDaysForReinvest) -
+      Number(reinvestMinTaxPercent)) *
+      Number(unclaimedBLSTFromWei)) /
+    100;
+
   const [unclaimedUSD, setUnclaimedUSD] = useState(0);
   const [showOrder, setShowOrder] = useState(0);
   const [reinvestBLSTAmount, setReinvestBLSTAmount] = useState("0");
@@ -88,6 +102,8 @@ const ClaimAndReinvestModal: React.FC = () => {
   const [futureClaimMaxTaxPercent, setFutureClaimMaxTaxPercent] = useState(0);
   const [futureClaimMinTaxPercent, setFutureClaimMinTaxPercent] = useState(0);
   const [futureReinvestTaxPercent, setFutureReinvestTaxPercent] = useState(0);
+  const [futureReinvestMinTaxPercent, setFutureReinvestMinTaxPercent] =
+    useState(0);
 
   const [isCalculated, setIsCalculated] = useState(false);
 
@@ -181,7 +197,7 @@ const ClaimAndReinvestModal: React.FC = () => {
 
   const canVote = async () => {
     const totalAP = allLegions
-      .map((legion) => legion.attackPower)
+      .map((legion: ILegion) => legion.attackPower)
       .reduce((prev, curr) => Number(prev) + Number(curr), 0);
     if (totalAP < 10000) {
       return false;
@@ -317,6 +333,10 @@ const ClaimAndReinvestModal: React.FC = () => {
         rewardpoolContract,
         futureSamaritanStars
       );
+      let futureReinvestMinTaxPercent = await getReinvestMinTaxPercent(
+        rewardpoolContract,
+        futureSamaritanStars
+      );
       let amountsForReinvesting = await getAmountsForClaimingAndReinvesting(
         web3,
         rewardpoolContract,
@@ -328,6 +348,7 @@ const ClaimAndReinvestModal: React.FC = () => {
       setFutureClaimMaxTaxPercent(futureClaimMaxTaxPercent);
       setFutureClaimMinTaxPercent(futureClaimMinTaxPercent);
       setFutureReinvestTaxPercent(futureReinvestTaxPercent);
+      setFutureReinvestMinTaxPercent(futureReinvestMinTaxPercent);
       await dispatch(
         updateInventoryState({
           futureSamaritanStarsWhenReinvest: futureSamaritanStars,
@@ -480,21 +501,14 @@ const ClaimAndReinvestModal: React.FC = () => {
             </span>
             <br />-{" "}
             {getTranslation("onAllYouTransferToYourReinvestWallet", {
-              CL1: 2 * Number(taxLeftDaysForReinvest),
+              CL1:
+                2 * Number(taxLeftDaysForReinvest) +
+                Number(reinvestMinTaxPercent),
             })}
             <br />-{" "}
             {getTranslation("youWillPayReinvestTax", {
-              CL1: (
-                (2 *
-                  Number(taxLeftDaysForReinvest) *
-                  Number(unclaimedBLSTFromWei)) /
-                100
-              ).toFixed(2),
-              CL2: (
-                ((100 - 2 * Number(taxLeftDaysForReinvest)) *
-                  Number(unclaimedBLSTFromWei)) /
-                100
-              ).toFixed(2),
+              CL1: reinvestTaxAmount.toFixed(2),
+              CL2: reinvestAmount.toFixed(2),
             })}
             <br />-{" "}
             {getTranslation("youWillReachTheMinimumReinvestTax", {
@@ -715,8 +729,11 @@ const ClaimAndReinvestModal: React.FC = () => {
             {getTranslation("reinvestTaxDecreasing", {
               CL1: futureReinvestTaxPercent,
               CL2: 2,
-              CL3: Number(futureReinvestTaxPercent) / 2,
-              CL4: 0,
+              CL3:
+                (Number(futureReinvestTaxPercent) -
+                  Number(futureReinvestMinTaxPercent)) /
+                2,
+              CL4: Number(futureReinvestMinTaxPercent),
             })}
           </Typography>
           <br />

@@ -19,6 +19,9 @@ let initialState: IModalState = {
   createDuelModalOpen: false,
   joinDuelModalOpen: false,
   updatePredictionModalOpen: false,
+  swapGovernanceTokenModalOpen: false,
+  earlyAccessModalOpen: true,
+  buyGoverTokenToPlayModalOpen: false,
 };
 
 export const modalSlice = createSlice({

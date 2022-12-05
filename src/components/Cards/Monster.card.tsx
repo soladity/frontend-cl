@@ -11,19 +11,14 @@ import {
 } from "@mui/material";
 
 import { AppSelector } from "../../store";
-import { formatNumber, getTranslation, toCapitalize } from "../../utils/utils";
-import { useLegion, useVRF } from "../../web3hooks/useContract";
+import { formatNumber, getTranslation } from "../../utils/utils";
+import { useGameAccess, useLegion, useVRF } from "../../web3hooks/useContract";
 import { ILegion, IMonster } from "../../types";
 import { commonState } from "../../reducers/common.reduer";
 import {
   getCanAttackMonster25,
-  getWalletHuntPendingLegionId,
-  getWalletHuntPendingMonsterId,
   getWarriorCountForMonster25,
-  initiateHunt,
 } from "../../web3hooks/contractFunctions/legion.contract";
-import { getWalletHuntPending } from "../../web3hooks/contractFunctions/common.contract";
-import { updateLegionState } from "../../reducers/legion.reducer";
 import HuntService from "../../services/hunt.service";
 import VideoNFT from "../UI/VideoNFT";
 
@@ -41,6 +36,7 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
 
   const legionContract = useLegion();
   const vrfContract = useVRF();
+  const gameAccessContract = useGameAccess();
 
   const {
     id: monsterID,
@@ -65,11 +61,13 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
 
   let bonus = 0;
   if (monsterID < 21) {
-    const expBonus = Math.floor(
+    const { bonusChance } = legion;
+    let expBonus = Math.floor(
       (Number(legionAttackPower) - Number(attackPower)) / 2000 < 0
         ? 0
         : (Number(legionAttackPower) - Number(attackPower)) / 2000
     );
+    expBonus += Number(bonusChance);
     bonus = expBonus + Number(percent) > 89 ? 89 - Number(percent) : expBonus;
   }
 
@@ -96,55 +94,15 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
     setLoaded(true);
   };
   const handleInitialHunt = async () => {
-    try {
-      let huntPending = await getWalletHuntPending(legionContract, account);
-      dispatch(
-        updateLegionState({
-          huntPending,
-          huntingLegionId: parseInt(legionID),
-          huntingMonsterId: monsterID,
-        })
-      );
-      if (!huntPending) {
-        dispatch(
-          updateLegionState({
-            initialHuntLoading: true,
-          })
-        );
-        await initiateHunt(legionContract, account, legionID, monsterID);
-        let huntPending = await getWalletHuntPending(legionContract, account);
-
-        const huntingMonsterId = await getWalletHuntPendingMonsterId(
-          legionContract,
-          account
-        );
-        const huntingLegionId = await getWalletHuntPendingLegionId(
-          legionContract,
-          account
-        );
-        dispatch(
-          updateLegionState({
-            huntPending,
-            initialHuntLoading: false,
-            huntingLegionId,
-            huntingMonsterId,
-            huntingSuccessPercent: Number(percent) + Number(bonus),
-          })
-        );
-        HuntService.checkHuntRevealStatus(
-          dispatch,
-          account,
-          legionContract,
-          vrfContract
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    dispatch(
-      updateLegionState({
-        initialHuntLoading: false,
-      })
+    HuntService.handleInitialHunt(
+      dispatch,
+      account,
+      legionID,
+      monsterID,
+      Number(percent) + Number(bonus),
+      legionContract,
+      vrfContract,
+      gameAccessContract
     );
   };
 

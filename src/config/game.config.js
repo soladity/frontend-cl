@@ -4,7 +4,7 @@ const version = {
     chain: "testnet",
     chainID: process.env.REACT_APP_TEST_CHAIN_ID || 97,
     chainIDHex: process.env.REACT_APP_TEST_CHAIN_ID_HEX || 0x61,
-    rpcUrl: "https://data-seed-prebsc-2-s2.binance.org:8545/",
+    rpcUrl: "https://data-seed-prebsc-2-s1.binance.org:8545/",
     rpcWsUrl:
       "wss://speedy-nodes-nyc.moralis.io/e205f98725c0bea218c8fdee/bsc/testnet/ws",
     walletAddRpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
@@ -12,6 +12,7 @@ const version = {
     duelPeriod: 1200 * 1000,
     duelInvitePeriod: 600 * 1000,
     oneDay: 120 * 1000,
+    earlyAccessPeriod: 6 * 3600 * 1000,
   },
   main: {
     version: "main",
@@ -27,6 +28,7 @@ const version = {
     duelPeriod: 24 * 3600 * 1000,
     duelInvitePeriod: 6 * 3600 * 1000,
     oneDay: 24 * 3600 * 1000,
+    earlyAccessPeriod: 6 * 3600 * 1000,
   },
 };
 
@@ -38,6 +40,8 @@ const gameMonsterName = "Monster";
 
 const approveBLSTForBeast = "50000";
 const approveBUSDForLegion = "1400";
+const approveGoverToken = "50000";
+const BUSDForPlay = 100;
 const gameStartDay = "2022-09-27T00:00:00.000";
 const maxSellPrice = 5000000;
 const maxEstimatePrice = 10000;
@@ -164,6 +168,8 @@ export default {
   languages,
   approveBLSTForBeast,
   approveBUSDForLegion,
+  approveGoverToken,
+  BUSDForPlay,
   gameStartDay,
   maxSellPrice,
   maxEstimatePrice,

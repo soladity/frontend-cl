@@ -13,6 +13,7 @@ import {
   useBloodstone,
   useBUSD,
   useFeeHandler,
+  useGameAccess,
   useLegion,
   useRewardPool,
   useWarrior,
@@ -77,6 +78,7 @@ const MassHuntModal: React.FC = () => {
   const legionContract = useLegion();
   const busdContract = useBUSD();
   const feehandlerContract = useFeeHandler();
+  const gameAccessContract = useGameAccess();
 
   const [massHuntFinished, setMassHuntFinished] = useState(false);
   const classes = useStyles();
@@ -175,7 +177,12 @@ const MassHuntModal: React.FC = () => {
           }
         }
         HuntService.checkMassHuntPending(dispatch, account, legionContract);
-        LegionService.getAllLegionsAct(dispatch, account, legionContract);
+        LegionService.getAllLegionsAct(
+          dispatch,
+          account,
+          legionContract,
+          gameAccessContract
+        );
         dispatch(updateCommonState({ reloadStatusTime: new Date().getTime() }));
         setMassHuntFinished(true);
       } else {

@@ -11,6 +11,7 @@ export interface ILegion {
   jpg: String;
   mp4: String;
   executeStatus: boolean;
+  bonusChance?: Number;
 }
 
 export interface ILegionBox {

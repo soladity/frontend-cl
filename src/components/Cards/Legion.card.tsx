@@ -29,7 +29,7 @@ import {
   getTranslation,
   getWarriorStrength,
 } from "../../utils/utils";
-import { useLegion } from "../../web3hooks/useContract";
+import { useGameAccess, useLegion } from "../../web3hooks/useContract";
 import { ILegion } from "../../types";
 import { commonState } from "../../reducers/common.reduer";
 import { updateModalState } from "../../reducers/modal.reducer";
@@ -62,6 +62,7 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
   const { account } = useWeb3React();
 
   const legionContract = useLegion();
+  const gameAccessContract = useGameAccess();
 
   const {
     id,
@@ -203,14 +204,19 @@ const LegionCard: React.FC<Props> = ({ legion, index }) => {
             dispatch,
             account,
             legionContract,
-            [id]
+            [id],
+            gameAccessContract
           );
         }
       });
     } else {
-      LegionService.handleExecuteLegions(dispatch, account, legionContract, [
-        id,
-      ]);
+      LegionService.handleExecuteLegions(
+        dispatch,
+        account,
+        legionContract,
+        [id],
+        gameAccessContract
+      );
     }
   };
 

@@ -9,6 +9,7 @@ import { formatNumber, getTranslation } from "../../../utils/utils";
 import {
   useBeast,
   useFeeHandler,
+  useGameAccess,
   useLegion,
   useWarrior,
   useWeb3,
@@ -22,12 +23,19 @@ import LegionService from "../../../services/legion.service";
 import { apiConfig } from "../../../config/api.config";
 import { getLegionLastHuntTime } from "../../../web3hooks/contractFunctions/legion.contract";
 import gameConfig from "../../../config/game.config";
+import { goverTokenState } from "../../../reducers/goverToken.reducer";
 
 const YourInventory: React.FC = () => {
   // Hook Info
   const dispatch = useDispatch();
   const { reloadStatusTime } = AppSelector(commonState);
   const { allLegions } = AppSelector(legionState);
+  const {
+    CGABalance,
+    GoverTokenBalance,
+    CGABalanceInBUSD,
+    GoverTokenBalanceInBUSD,
+  } = AppSelector(goverTokenState);
   const {
     BLSTBalance,
     beastBalance,
@@ -68,11 +76,18 @@ const YourInventory: React.FC = () => {
   const warriorContract = useWarrior();
   const legionContract = useLegion();
   const feehandlerContract = useFeeHandler();
+  const gameAccessContract = useGameAccess();
 
   // State
   const [currentTime, setCurrentTime] = useState(new Date());
   const [firstHuntTime, setFirstHuntTime] = useState(0);
   const [totalWon, setTotalWon] = useState("0");
+
+  const totalAP = allLegions.reduce((a, b) => a + Number(b.attackPower), 0);
+  const totalExtraBonus = allLegions.reduce(
+    (a, b) => a + Number(b.bonusChance),
+    0
+  );
 
   const claimTaxAmount =
     ((Number(claimMinTaxPercent) + 2 * Number(taxLeftDaysForClaim)) *
@@ -108,7 +123,12 @@ const YourInventory: React.FC = () => {
         legionContract,
         feehandlerContract
       );
-      LegionService.getAllLegionsAct(dispatch, account, legionContract);
+      LegionService.getAllLegionsAct(
+        dispatch,
+        account,
+        legionContract,
+        gameAccessContract
+      );
       if (account) {
         const query = `
           {
@@ -235,6 +255,14 @@ const YourInventory: React.FC = () => {
             info={maxAttackPower}
           />
           <HomeTypo
+            title={getTranslation("totalAp") + ":"}
+            info={totalAP.toFixed(2)}
+          />
+          <HomeTypo
+            title={getTranslation("totalExtraBonus") + ":"}
+            info={totalExtraBonus + "%"}
+          />
+          <HomeTypo
             title={getTranslation("unClaimed") + ":"}
             info={formatNumber(
               Number(Number(unclaimedBLST) / 10 ** 18).toFixed(2)
@@ -258,6 +286,20 @@ const YourInventory: React.FC = () => {
               " ( = " +
               Number(BUSDForTotalBLST).toFixed(2) +
               " USD)"
+            }
+          />
+          <HomeTypo
+            title={getTranslation("CGAInYourWallet") + ":"}
+            info={
+              Number(CGABalance).toFixed(2) +
+              ` ( = ${CGABalanceInBUSD.toFixed(2)} USD)`
+            }
+          />
+          <HomeTypo
+            title={getTranslation("GoverTokenInYourWallet") + ":"}
+            info={
+              Number(GoverTokenBalance).toFixed(2) +
+              ` ( = ${GoverTokenBalanceInBUSD.toFixed(2)} USD)`
             }
           />
           <HomeTypo title={"1 USD = "} info={Number(USDToBLST).toFixed(2)} />

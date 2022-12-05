@@ -20,6 +20,7 @@ import {
   useBloodstone,
   useBUSD,
   useFeeHandler,
+  useGameAccess,
   useLegion,
   useRewardPool,
   useWeb3,
@@ -64,6 +65,7 @@ const HuntModal: React.FC = () => {
 
   const legionContract = useLegion();
   const busdContract = useBUSD();
+  const gameAccessContract = useGameAccess();
 
   const [huntFinished, setHuntFinished] = useState(false);
   const [huntResult, setHuntResult] = useState<any>({});
@@ -128,7 +130,12 @@ const HuntModal: React.FC = () => {
         const result = huntResult.events["Hunted"].returnValues;
         console.log("hunting Result", result);
         HuntService.checkHuntPending(dispatch, account, legionContract);
-        LegionService.getAllLegionsAct(dispatch, account, legionContract);
+        LegionService.getAllLegionsAct(
+          dispatch,
+          account,
+          legionContract,
+          gameAccessContract
+        );
         dispatch(updateCommonState({ reloadStatusTime: new Date().getTime() }));
         setMaxRoll(0);
         await setHuntResult(result);
@@ -179,17 +186,17 @@ const HuntModal: React.FC = () => {
       const legion = allLegions.filter((legion) => legion.id === legionId)[0];
       const monster = allMonsters[parseInt(monsterId) - 1];
       console.log(legion, monster);
-      const { attackPower: legionAttackPower } = legion;
+      const { attackPower: legionAttackPower, bonusChance } = legion;
       const { attackPower: monsterAttackPower, percent } = monster;
 
       if (parseFloat(monsterId) < 21) {
         const bonusPercent = Math.floor(
           (Number(legionAttackPower) - Number(monsterAttackPower)) / 2000
         );
-        if (Number(percent) + bonusPercent > 89) {
+        if (Number(percent) + bonusPercent + Number(bonusChance) > 89) {
           setMaxRoll(89);
         } else {
-          setMaxRoll(Number(percent) + bonusPercent);
+          setMaxRoll(Number(percent) + bonusPercent + Number(bonusChance));
         }
       } else {
         setMaxRoll(Number(percent));

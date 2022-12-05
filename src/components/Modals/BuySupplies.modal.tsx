@@ -17,6 +17,7 @@ import { getLegionAddress } from "../../web3hooks/getAddress";
 import {
   useBloodstone,
   useFeeHandler,
+  useGameAccess,
   useLegion,
   useWeb3,
 } from "../../web3hooks/useContract";
@@ -51,6 +52,7 @@ const BuySupppliesModal: React.FC = () => {
   const feehandlerContract = useFeeHandler();
   const bloodstoneContract = useBloodstone();
   const legionContract = useLegion();
+  const gameAccessContract = useGameAccess();
 
   // States
   const [supplyValues, setSupplyValues] = useState<Number[]>([0, 0, 0]);
@@ -132,7 +134,12 @@ const BuySupppliesModal: React.FC = () => {
       );
       dispatch(updateLegionState({ buySuppliesLoading: false }));
       dispatch(updateCommonState({ reloadStatusTime: new Date().getTime() }));
-      LegionService.getAllLegionsAct(dispatch, account, legionContract);
+      LegionService.getAllLegionsAct(
+        dispatch,
+        account,
+        legionContract,
+        gameAccessContract
+      );
     } catch (error) {}
     dispatch(updateLegionState({ buySuppliesLoading: false }));
   };

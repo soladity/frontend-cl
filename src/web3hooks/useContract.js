@@ -18,6 +18,7 @@ import {
   getGameAccessAddress,
   getGameGovernanceTokenAddress,
   getCGAAddress,
+  getPancakeSwapRouterAddress,
 } from "./getAddress";
 
 import {
@@ -36,6 +37,7 @@ import {
   getGameAccessAbi,
   getCGAAbi,
   getGameGovernanceTokenAbi,
+  getPancakeSwapRouterAbi,
 } from "./getAbi";
 
 const gameVersion = gameConfig.version;
@@ -83,6 +85,10 @@ export const useGameGovernanceToken = () => {
     getGameGovernanceTokenAbi(),
     getGameGovernanceTokenAddress()
   );
+};
+
+export const usePancakeSwapRouter = () => {
+  return useContract(getPancakeSwapRouterAbi(), getPancakeSwapRouterAddress());
 };
 
 export const useBeast = () => {

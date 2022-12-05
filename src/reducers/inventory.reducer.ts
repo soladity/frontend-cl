@@ -23,6 +23,7 @@ let initialState: IInventory = {
   BUSDForTotalBLST: 0,
   claimedBUSDAlertAmount: 0,
   claimMinTaxPercent: 0,
+  reinvestMinTaxPercent: 0,
   reinvestedWalletUSD: 0,
   reinvestedWalletBLST: 0,
   reinvestedTotalUSD: 0,

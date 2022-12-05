@@ -2,6 +2,7 @@ import blst from "../constants/abis/BLST.json";
 import busd from "../constants/abis/busd.json";
 import cga from "../constants/abis/CGA.json";
 import gamegovernancetoken from "../constants/abis/GameGovernanceToken.json";
+import pancakeswaprouter from "../constants/abis/PancakeSwapRouter.json";
 
 import beast from "../constants/abis/BeastNFT.json";
 import feehandler from "../constants/abis/FeeHandler.json";
@@ -29,6 +30,10 @@ export const getCGAAbi = () => {
 
 export const getGameGovernanceTokenAbi = () => {
   return gamegovernancetoken;
+};
+
+export const getPancakeSwapRouterAbi = () => {
+  return pancakeswaprouter;
 };
 
 export const getBeastAbi = () => {

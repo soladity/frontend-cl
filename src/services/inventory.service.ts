@@ -30,6 +30,7 @@ import {
   getUnclaimedWallet,
   getVoucherWalletUSDBalance,
   getClaimedUSD,
+  getReinvestMinTaxPercent,
 } from "../web3hooks/contractFunctions/rewardpool.contract";
 import gameConfig from "../config/game.config";
 
@@ -141,6 +142,10 @@ const getClaimAndReinvestInfo = async (
       rewardpoolContract,
       currentTaxCycleStars
     );
+    const reinvestMinTaxPercent = await getReinvestMinTaxPercent(
+      rewardpoolContract,
+      currentTaxCycleStars
+    );
     dispatch(
       updateInventoryState({
         taxLeftDaysForClaim,
@@ -149,6 +154,7 @@ const getClaimAndReinvestInfo = async (
         currentSamaritanStars,
         currentTaxCycleStars,
         claimMinTaxPercent,
+        reinvestMinTaxPercent,
       })
     );
   } catch (error) {}
@@ -236,6 +242,7 @@ const getReinvestedAndVoucherBalance = async (
     );
   } catch (error) {}
 };
+
 const InventoryService = {
   getInventory,
   getWalletAndUnclaimedBalance,
