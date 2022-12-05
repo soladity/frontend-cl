@@ -132,7 +132,7 @@ const handleInitialHunt = async (
     gameAccessContract
   );
   console.log("to play: ", toPlay);
-  if (!toPlay) {
+  if (toPlay) {
     try {
       let huntPending = await getWalletHuntPending(legionContract, account);
       dispatch(
@@ -235,7 +235,7 @@ const checkEntryTicketToPlay = async (
   let playStatus = false;
   try {
     playStatus = await checkEntryTicket(account, gameAccessContract);
-    if (playStatus) {
+    if (!playStatus) {
       dispatch(updateModalState({ buyGoverTokenToPlayModalOpen: true }));
     }
   } catch (error) {
