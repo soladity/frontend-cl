@@ -17,6 +17,7 @@ export interface IInventory {
   claimedBUSDAlertAmount: Number;
 
   claimMinTaxPercent: Number;
+  reinvestMinTaxPercent: Number;
   reinvestedWalletUSD: Number;
   reinvestedWalletBLST: Number;
   reinvestedTotalUSD: Number;

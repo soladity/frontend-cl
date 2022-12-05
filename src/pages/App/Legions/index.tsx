@@ -19,6 +19,7 @@ import { AppSelector } from "../../../store";
 import { formatNumber, getTranslation } from "../../../utils/utils";
 import {
   useBeast,
+  useGameAccess,
   useLegion,
   useWarrior,
 } from "../../../web3hooks/useContract";
@@ -69,6 +70,7 @@ const Legions: React.FC = () => {
   const beastContract = useBeast();
   const warriorContract = useWarrior();
   const legionContract = useLegion();
+  const gameAccessContract = useGameAccess();
 
   // State
   const totalAP = allLegions.reduce((a, b) => a + b.attackPower.valueOf(), 0);
@@ -127,7 +129,12 @@ const Legions: React.FC = () => {
   const getBalance = async () => {
     BeastService.getAllBeastsAct(dispatch, account, beastContract);
     WarriorService.getAllWarriorsAct(dispatch, account, warriorContract);
-    LegionService.getAllLegionsAct(dispatch, account, legionContract);
+    LegionService.getAllLegionsAct(
+      dispatch,
+      account,
+      legionContract,
+      gameAccessContract
+    );
   };
 
   const handleSelectExecuteStatus = (status: boolean) => {
@@ -161,7 +168,8 @@ const Legions: React.FC = () => {
             dispatch,
             account,
             legionContract,
-            ids
+            ids,
+            gameAccessContract
           );
         }
       });
@@ -170,7 +178,8 @@ const Legions: React.FC = () => {
         dispatch,
         account,
         legionContract,
-        ids
+        ids,
+        gameAccessContract
       );
     }
   };

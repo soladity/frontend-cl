@@ -69,6 +69,13 @@ export const getReinvestTaxPercent = async (contract, samaritanStars) => {
   return res;
 };
 
+export const getReinvestMinTaxPercent = async (contract, samaritanStars) => {
+  const res = await contract.methods
+    .reinvestMinTaxPercent(samaritanStars)
+    .call();
+  return res;
+};
+
 export const getReinvestTimesInTaxCycle = async (contract, account) => {
   const res = await contract.methods.reinvestTimesInTaxCycle(account).call();
   return res;

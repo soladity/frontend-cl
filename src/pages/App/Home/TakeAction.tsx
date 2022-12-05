@@ -12,10 +12,15 @@ import { AppSelector } from "../../../store";
 import { getTranslation } from "../../../utils/utils";
 import {
   useBeast,
+  useCGA,
+  useGameAccess,
+  useGameGovernanceToken,
   useLegion,
   useMonster,
+  usePancakeSwapRouter,
   useVRF,
   useWarrior,
+  useWeb3,
 } from "../../../web3hooks/useContract";
 import { beastState } from "../../../reducers/beast.reducer";
 import { warriorState } from "../../../reducers/warrior.reducer";
@@ -27,9 +32,10 @@ import HuntService from "../../../services/hunt.service";
 import WarriorService from "../../../services/warrior.service";
 import { updateCommonState } from "../../../reducers/common.reduer";
 import BeastService from "../../../services/beast.service";
-import { getWalletMassHuntPending } from "../../../web3hooks/contractFunctions/common.contract";
-import { initiateMassHunt } from "../../../web3hooks/contractFunctions/legion.contract";
 import { navLinks } from "../../../config/nav.config";
+import { updateModalState } from "../../../reducers/modal.reducer";
+import SwapGovernanceTokenModal from "../../../components/Modals/SwapGovernanceToken.modal";
+import GoverTokenService from "../../../services/goverToken.service";
 
 const TakeAction: React.FC = () => {
   const dispatch = useDispatch();
@@ -48,6 +54,7 @@ const TakeAction: React.FC = () => {
   const { allLegions, massHuntPending } = AppSelector(legionState);
 
   // Account & Web3
+  const web3 = useWeb3();
   const { account } = useWeb3React();
 
   // Contracts
@@ -56,6 +63,10 @@ const TakeAction: React.FC = () => {
   const legionContract = useLegion();
   const vrfContract = useVRF();
   const monsterContract = useMonster();
+  const CGAContract = useCGA();
+  const goverTokenContract = useGameGovernanceToken();
+  const routerContract = usePancakeSwapRouter();
+  const gameAccessContract = useGameAccess();
 
   // States
 
@@ -96,35 +107,29 @@ const TakeAction: React.FC = () => {
   };
 
   const handleInitialMassHunt = async () => {
-    try {
-      let massHuntPending = await getWalletMassHuntPending(
-        legionContract,
-        account
-      );
-      dispatch(updateLegionState({ massHuntPending }));
-      if (!massHuntPending) {
-        dispatch(updateLegionState({ initialMassHuntLoading: true }));
-        await initiateMassHunt(legionContract, account);
-        let massHuntPending = await getWalletMassHuntPending(
-          legionContract,
-          account
-        );
-        dispatch(updateLegionState({ massHuntPending }));
-        HuntService.checkMassHuntRevealStatus(
-          dispatch,
-          account,
-          legionContract,
-          vrfContract
-        );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    dispatch(updateLegionState({ initialMassHuntLoading: false }));
+    HuntService.handleInitialMassHunt(
+      dispatch,
+      account,
+      legionContract,
+      vrfContract,
+      gameAccessContract
+    );
   };
 
   const handleRevealMassHunt = () => {
     dispatch(updateLegionState({ revealMassHuntLoading: true }));
+  };
+
+  const handleOpenSwapGovernanceTokenModal = () => {
+    GoverTokenService.getCGAandGoverTokenBalance(
+      dispatch,
+      web3,
+      account,
+      CGAContract,
+      goverTokenContract,
+      routerContract
+    );
+    dispatch(updateModalState({ swapGovernanceTokenModalOpen: true }));
   };
 
   return (
@@ -404,6 +409,26 @@ const TakeAction: React.FC = () => {
                     {getTranslation("buyBLST")}
                   </FireBtn>
                 </a>
+                <FireBtn
+                  sx={{
+                    mb: 1,
+                    width: "100%",
+                    wordBreak: "break-word",
+                    fontSize: 14,
+                  }}
+                  onClick={() => handleOpenSwapGovernanceTokenModal()}
+                >
+                  {/* <img
+                    src={`/assets/images/dashboard/pancake.png`}
+                    style={{
+                      width: "18px",
+                      height: "18px",
+                      marginRight: "5px",
+                    }}
+                    alt="icon"
+                  /> */}
+                  {getTranslation("swap$GoverToken")}
+                </FireBtn>
               </Box>
             </Grid>
           </Grid>
@@ -412,6 +437,7 @@ const TakeAction: React.FC = () => {
       <SummonWarriorPopover />
       <SummonBeastPopover />
       <MassHuntModal />
+      <SwapGovernanceTokenModal />
     </Card>
   );
 };

@@ -14,11 +14,13 @@ import {
   getLegionBalance,
 } from "../web3hooks/contractFunctions/legion.contract";
 import { getLegionAddress } from "../web3hooks/getAddress";
+import { getBonusChance } from "../web3hooks/contractFunctions/gameAccess.contract";
 
 const getAllLegionsAct = async (
   dispatch: AppDispatch,
   account: any,
-  legionContract: Contract
+  legionContract: Contract,
+  gameAccessContract: Contract
 ) => {
   dispatch(updateLegionState({ getAllLegionsLoading: true }));
   try {
@@ -33,9 +35,15 @@ const getAllLegionsAct = async (
     const ids = allLegionsRes[1];
     const huntStatus = allLegionsRes[2];
     let allLegions: ILegion[] = [];
-    ids.forEach((id: string, index: number) => {
+    for (let index = 0; index < ids.length; index++) {
+      const bonusChance = await getBonusChance(
+        account,
+        legionInfos[index].attack_power,
+        gameAccessContract
+      );
+      console.log("bonus chance: ", bonusChance);
       var temp: ILegion = {
-        id: id,
+        id: ids[index],
         name: legionInfos[index].name,
         beastIds: legionInfos[index].beast_ids,
         warriorIds: legionInfos[index].warrior_ids,
@@ -45,9 +53,12 @@ const getAllLegionsAct = async (
         supplies: parseFloat(legionInfos[index].supplies),
         huntStatus: huntStatus[index],
         executeStatus: false,
+        bonusChance: bonusChance,
       };
+      console.log("legion: ", temp);
       allLegions.push(temp);
-    });
+      console.log(allLegions);
+    }
     dispatch(updateLegionState({ allLegions }));
     dispatch(updateInventoryState({ legionBalance }));
   } catch (error) {}
@@ -111,12 +122,13 @@ const handleExecuteLegions = async (
   dispatch: AppDispatch,
   account: any,
   legionContract: Contract,
-  ids: String[]
+  ids: String[],
+  gameAccessContract: Contract
 ) => {
   dispatch(updateLegionState({ executeLegionsLoading: true }));
   try {
     await execute(legionContract, account, ids);
-    getAllLegionsAct(dispatch, account, legionContract);
+    getAllLegionsAct(dispatch, account, legionContract, gameAccessContract);
   } catch (error) {}
   dispatch(updateLegionState({ executeLegionsLoading: false }));
 };

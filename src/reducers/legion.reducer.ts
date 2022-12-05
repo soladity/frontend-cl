@@ -24,6 +24,7 @@ let initialState: ILegionState = {
     jpg: "",
     mp4: "",
     executeStatus: false,
+    bonusChance: 0,
   },
   updateLegionBox: [],
   updateLegionLoading: false,
@@ -39,6 +40,7 @@ let initialState: ILegionState = {
     jpg: "",
     mp4: "",
     executeStatus: false,
+    bonusChance: 0,
   },
   buySuppliesLoading: false,
 

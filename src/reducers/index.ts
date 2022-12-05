@@ -11,6 +11,8 @@ import filterAndPageReducer from "./filterAndPage.reducer";
 import voteReducer from "./vote.reducer";
 import modalReducer from "./modal.reducer";
 import duelReducer from "./duel.reducer";
+import goverTokenReducer from "./goverToken.reducer";
+import gameAccessReducer from "./gameAccess.reducer";
 
 const CryptolegionsReducer = combineReducers({
   common: commonReduer,
@@ -25,6 +27,8 @@ const CryptolegionsReducer = combineReducers({
   vote: voteReducer,
   duel: duelReducer,
   modal: modalReducer,
+  goverToken: goverTokenReducer,
+  gameAccess: gameAccessReducer,
 });
 
 export default CryptolegionsReducer;

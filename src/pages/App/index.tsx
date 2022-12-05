@@ -18,6 +18,8 @@ import { AppDispatch } from "../../store";
 import "./index.css";
 import NavList from "../../components/Nav/NavList";
 import TopBar from "../../components/TopBar";
+import EarlyAccessModal from "../../components/Modals/EarlyAccess.modal";
+import BuyGoverTokenToPlayModal from "../../components/Modals/BuyGoverTokenToPlay.modal";
 
 const GameView: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -72,6 +74,8 @@ const GameView: React.FC = () => {
         <Toolbar />
         <Suspense fallback={<h3>Loading</h3>}>{routing}</Suspense>
       </Box>
+      <EarlyAccessModal />
+      <BuyGoverTokenToPlayModal />
     </Box>
   );
 };

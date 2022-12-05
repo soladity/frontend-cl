@@ -19,6 +19,10 @@ export const getGameGovernanceTokenAddress = () => {
   return gameAddress[gameVersion.version].gamegovernacetoken;
 };
 
+export const getPancakeSwapRouterAddress = () => {
+  return gameAddress[gameVersion.version].pancakeswaprouter;
+};
+
 export const getBeastAddress = () => {
   return gameAddress[gameVersion.version].beast;
 };
