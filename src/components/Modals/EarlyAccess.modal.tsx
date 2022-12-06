@@ -36,6 +36,11 @@ const EarlyAccessModal: React.FC = () => {
     buyEarlyAccessLoading,
   } = AppSelector(gameAccessState);
 
+  console.log("busd limit per 6 hours: ", busdLimitPer6Hours);
+  console.log("purchased amount: ", purchasedBusdInPeriod);
+  console.log("early access fee per warrior: ", earlyAccessFeePerWarrior);
+  console.log("first purchased time: ", firstPurchaseTime);
+
   const web3 = useWeb3();
   const { account } = useWeb3React();
   const gameAccessContract = useGameAccess();
@@ -78,14 +83,15 @@ const EarlyAccessModal: React.FC = () => {
   };
 
   const handleLeftTime = async () => {
-    let leftTime = GameAccessService.getLeftTime();
-    setLeftTime(leftTime);
+    let period = GameAccessService.getLeftTime();
+    setLeftTime(period.time);
+    if (period.newPeriod) {
+      // setCurrentLeftEarlyAccessCGA(totalPeriodEarlyAccessCGA);
+    }
   };
 
   const handleWarriorCnt = async (e: any) => {
     let inputVal = e.target.value;
-    console.log("converted value: ", convertInputNumberToStr(inputVal));
-    // setWarriorCnt(Math.floor(Number(convertInputNumberToStr(inputVal))));
     setWarriorCnt(Math.floor(inputVal));
   };
 

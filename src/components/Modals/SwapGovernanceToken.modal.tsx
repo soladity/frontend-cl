@@ -68,15 +68,22 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
               href="#"
               target={"_blank"}
               className="td-none"
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginRight: 16 }}
             >
               <GreyBtn sx={{ width: "100%" }}>
                 {getTranslation("$CGAChart")}
               </GreyBtn>
             </a>
-            {/* <GreyBtn sx={{ width: "100%" }}>
-              {getTranslation("$GoverTokenChart")}
-            </GreyBtn> */}
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$GoverTokenChart")}
+              </GreyBtn>
+            </a>
           </Box>
         </Box>
       ) : (
@@ -119,15 +126,22 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
               href="#"
               target={"_blank"}
               className="td-none"
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginRight: 16 }}
             >
               <GreyBtn sx={{ width: "100%" }}>
                 {getTranslation("$CGAChart")}
               </GreyBtn>
             </a>
-            {/* <GreyBtn sx={{ width: "100%" }}>
-              {getTranslation("$GoverTokenChart")}
-            </GreyBtn> */}
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$GoverTokenChart")}
+              </GreyBtn>
+            </a>
           </Box>
         </Box>
       )}
@@ -177,15 +191,22 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
               href="#"
               target={"_blank"}
               className="td-none"
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginRight: 16 }}
             >
               <GreyBtn sx={{ width: "100%" }}>
                 {getTranslation("$CGAChart")}
               </GreyBtn>
             </a>
-            {/* <GreyBtn sx={{ width: "100%" }}>
-              {getTranslation("$GoverTokenChart")}
-            </GreyBtn> */}
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$GoverTokenChart")}
+              </GreyBtn>
+            </a>
           </Box>
         </Box>
       ) : (
@@ -228,15 +249,22 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
               href="#"
               target={"_blank"}
               className="td-none"
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginRight: 16 }}
             >
               <GreyBtn sx={{ width: "100%" }}>
                 {getTranslation("$CGAChart")}
               </GreyBtn>
             </a>
-            {/* <GreyBtn sx={{ width: "100%" }}>
-              {getTranslation("$GoverTokenChart")}
-            </GreyBtn> */}
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$GoverTokenChart")}
+              </GreyBtn>
+            </a>
           </Box>
         </Box>
       )}

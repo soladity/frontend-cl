@@ -65,21 +65,23 @@ const getLeftTime = () => {
     mins: 0,
     secs: 0,
   };
-
+  // console.log("firstPurchaseTime: ", firstPurchaseTime);
+  // console.log("current time: ", new Date().getTime() / 1000);
   if (firstPurchaseTime !== 0) {
     const { earlyAccessPeriod } = gameConfig.version;
     const finishTime = Number(firstPurchaseTime) * 1000 + earlyAccessPeriod;
+    // console.log("finishTime: ", finishTime);
     const diffSecs = (finishTime - new Date().getTime()) / 1000;
-    const hours = Number(Math.floor(diffSecs / 3600).toFixed(0));
-    const mins = Number(Math.floor((diffSecs % 3600) / 60).toFixed(0));
-    const secs = Number((Math.floor(diffSecs % 3600) % 60).toFixed(0));
-    return {
-      hours,
-      mins,
-      secs,
-    };
+    // console.log("diff secs: ", diffSecs);
+    if (diffSecs <= 0) {
+      return { newPeriod: true, time };
+    }
+    time.hours = Number(Math.floor(diffSecs / 3600).toFixed(0));
+    time.mins = Number(Math.floor((diffSecs % 3600) / 60).toFixed(0));
+    time.secs = Number((Math.floor(diffSecs % 3600) % 60).toFixed(0));
+    return { newPeriod: false, time };
   }
-  return time;
+  return { newPeriod: false, time };
 };
 
 const buyEarlyAccess = async (
