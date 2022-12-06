@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Dialog, Input, Tab, TextField, Typography } from "@mui/material";
+import { Box, Dialog, Input, Tab, Typography } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useDispatch } from "react-redux";
+import { FaTimes } from "react-icons/fa";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import { AppDispatch, AppSelector } from "../../store";
 import constants from "../../constants";
-import { convertInputNumber, getTranslation } from "../../utils/utils";
+import { convertInputNumberToStr, getTranslation } from "../../utils/utils";
 import {
   useCGA,
   useGameGovernanceToken,
@@ -34,7 +35,7 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
 
   const handleSwapAmount = async (e: any) => {
     let inputVal = e.target.value;
-    setSwapAmount(convertInputNumber(inputVal));
+    setSwapAmount(Number(inputVal));
   };
 
   const handleBuyGoverTokenWithCGA = async () => {
@@ -63,12 +64,19 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
           </Box>
           <br />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <GreyBtn sx={{ width: "100%", marginRight: 2 }}>
-              {getTranslation("$CGAChart")}
-            </GreyBtn>
-            <GreyBtn sx={{ width: "100%" }}>
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$CGAChart")}
+              </GreyBtn>
+            </a>
+            {/* <GreyBtn sx={{ width: "100%" }}>
               {getTranslation("$GoverTokenChart")}
-            </GreyBtn>
+            </GreyBtn> */}
           </Box>
         </Box>
       ) : (
@@ -76,7 +84,7 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {getTranslation("swap")}
             <Input
-              value={swapAmount}
+              value={convertInputNumberToStr(swapAmount)}
               onChange={handleSwapAmount}
               type="number"
               color={swapAmount <= CGABalance ? "primary" : "error"}
@@ -107,12 +115,19 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
           </Box>
           <br />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <GreyBtn sx={{ width: "100%", marginRight: 2 }}>
-              {getTranslation("$CGAChart")}
-            </GreyBtn>
-            <GreyBtn sx={{ width: "100%" }}>
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$CGAChart")}
+              </GreyBtn>
+            </a>
+            {/* <GreyBtn sx={{ width: "100%" }}>
               {getTranslation("$GoverTokenChart")}
-            </GreyBtn>
+            </GreyBtn> */}
           </Box>
         </Box>
       )}
@@ -136,7 +151,7 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
 
   const handleSwapAmount = async (e: any) => {
     let inputVal = e.target.value;
-    setSwapAmount(convertInputNumber(inputVal));
+    setSwapAmount(inputVal);
   };
 
   const handleSellGoverTokenToCGA = async () => {
@@ -158,12 +173,19 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
           <Box>{getTranslation("youDon'tHaveAnyGoverTokenToSell")}</Box>
           <br />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <GreyBtn sx={{ width: "100%", marginRight: 2 }}>
-              {getTranslation("$CGAChart")}
-            </GreyBtn>
-            <GreyBtn sx={{ width: "100%" }}>
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$CGAChart")}
+              </GreyBtn>
+            </a>
+            {/* <GreyBtn sx={{ width: "100%" }}>
               {getTranslation("$GoverTokenChart")}
-            </GreyBtn>
+            </GreyBtn> */}
           </Box>
         </Box>
       ) : (
@@ -171,7 +193,7 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {getTranslation("swap")}
             <Input
-              value={swapAmount}
+              value={convertInputNumberToStr(swapAmount)}
               onChange={handleSwapAmount}
               type="number"
               color={swapAmount <= GoverTokenBalance ? "primary" : "error"}
@@ -202,12 +224,19 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
           </Box>
           <br />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <GreyBtn sx={{ width: "100%", marginRight: 2 }}>
-              {getTranslation("$CGAChart")}
-            </GreyBtn>
-            <GreyBtn sx={{ width: "100%" }}>
+            <a
+              href="#"
+              target={"_blank"}
+              className="td-none"
+              style={{ width: "100%" }}
+            >
+              <GreyBtn sx={{ width: "100%" }}>
+                {getTranslation("$CGAChart")}
+              </GreyBtn>
+            </a>
+            {/* <GreyBtn sx={{ width: "100%" }}>
               {getTranslation("$GoverTokenChart")}
-            </GreyBtn>
+            </GreyBtn> */}
           </Box>
         </Box>
       )}
@@ -259,7 +288,17 @@ const SwapGovernanceTokenModal: React.FC = () => {
         },
       }}
     >
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%", position: "relative" }}>
+        <FaTimes
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            cursor: "pointer",
+            zIndex: 1000,
+          }}
+          onClick={handleClose}
+        />
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList

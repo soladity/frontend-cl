@@ -276,20 +276,20 @@ export const getSamaritanStarsWithPercentAndFirstHuntTime = (
   return stars;
 };
 
-export const convertInputNumber = (inputVal) => {
+export const convertInputNumberToStr = (inputVal) => {
   let input = inputVal;
-  if (input >= 1) {
+  if (Number(input) >= 1) {
     if (input[0] == "0") {
       input = input.slice(1);
     }
-  } else if (input >= 0) {
+  } else if (Number(input) >= 0) {
     if (input == "") {
       input = "0";
     }
   } else {
     input = "0";
   }
-  return Number(input);
+  return input.toString();
 };
 
 export const toWeiNum = (amount) => {
