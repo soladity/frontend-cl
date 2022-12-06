@@ -132,6 +132,9 @@ const filterAndPage = {
   duelResultFilterEndConst: 30,
   duelShowOnlyMine: false,
   duelType: 0,
+
+  EABuyMin: 5,
+  EABuyMax: 1000,
 };
 
 const vote = {

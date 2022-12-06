@@ -286,6 +286,27 @@ const TakeAction: React.FC = () => {
                   />
                   {getTranslation("massHunt")}
                 </FireBtn>
+                <a href={"#"} target="_blank" className="td-none">
+                  <FireBtn
+                    sx={{
+                      mb: 1,
+                      width: "100%",
+                      wordBreak: "break-word",
+                      fontSize: 14,
+                    }}
+                  >
+                    {/* <img
+                      src={`/assets/images/dashboard/chart.png`}
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        marginRight: "5px",
+                      }}
+                      alt="icon"
+                    /> */}
+                    {getTranslation("buy$CGA")}
+                  </FireBtn>
+                </a>
               </Box>
             </Grid>
             <Grid

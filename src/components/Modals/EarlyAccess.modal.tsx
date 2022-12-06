@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Box, Dialog, Input, Typography } from "@mui/material";
+import { FaTimes } from "react-icons/fa";
 import { AppDispatch, AppSelector } from "../../store";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import constants from "../../constants";
 import {
-  convertInputNumber,
+  convertInputNumberToStr,
   fromWeiNum,
   getTranslation,
 } from "../../utils/utils";
@@ -42,7 +43,9 @@ const EarlyAccessModal: React.FC = () => {
   const CGAContract = useCGA();
 
   const [CGAAmount, setCGAAmount] = useState(0);
-  const [warriorCnt, setWarriorCnt] = useState(0);
+  const [warriorCnt, setWarriorCnt] = useState(
+    constants.filterAndPage.EABuyMin
+  );
   const [currentLeftEarlyAccessCGA, setCurrentLeftEarlyAccessCGA] = useState(0);
   const [totalPeriodEarlyAccessCGA, setTotalPeriodEarlyAccessCGA] = useState(0);
   const [leftTime, setLeftTime] = useState({ hours: 0, mins: 0, secs: 0 });
@@ -81,7 +84,9 @@ const EarlyAccessModal: React.FC = () => {
 
   const handleWarriorCnt = async (e: any) => {
     let inputVal = e.target.value;
-    setWarriorCnt(convertInputNumber(inputVal));
+    console.log("converted value: ", convertInputNumberToStr(inputVal));
+    // setWarriorCnt(Math.floor(Number(convertInputNumberToStr(inputVal))));
+    setWarriorCnt(Math.floor(inputVal));
   };
 
   const handleCGAAmount = async (busdAmount: Number) => {
@@ -135,7 +140,16 @@ const EarlyAccessModal: React.FC = () => {
         },
       }}
     >
-      <Box sx={{ padding: 4 }}>
+      <Box sx={{ padding: 4, position: "relative" }}>
+        <FaTimes
+          style={{
+            position: "absolute",
+            top: 12,
+            right: 12,
+            cursor: "pointer",
+          }}
+          onClick={handleClose}
+        />
         <Typography variant="h4">{getTranslation("buyEarlyAccess")}</Typography>
         <br />
         <Typography>{getTranslation("earlyAccessDescription")}</Typography>
@@ -167,17 +181,35 @@ const EarlyAccessModal: React.FC = () => {
           <Input
             type="number"
             sx={{ marginRight: 1, paddingLeft: 2, width: 100 }}
-            value={warriorCnt}
+            value={convertInputNumberToStr(warriorCnt)}
             onChange={handleWarriorCnt}
           />
           {getTranslation("warriors")} (
           {getTranslation("costIsXXX$CGA", { CL1: CGAAmount.toFixed(2) })})
         </Box>
+        {constants.filterAndPage.EABuyMin > warriorCnt && (
+          <Typography color={"error"} fontSize={12}>
+            {getTranslation("youHaveToBuyEAMoreThan", {
+              CL1: constants.filterAndPage.EABuyMin - 1,
+            })}
+          </Typography>
+        )}
+        {constants.filterAndPage.EABuyMax < warriorCnt && (
+          <Typography color={"error"} fontSize={12}>
+            {getTranslation("youHaveToBuyEALessThan", {
+              CL1: constants.filterAndPage.EABuyMax + 1,
+            })}
+          </Typography>
+        )}
         <br />
         <FireBtn
           loading={buyEarlyAccessLoading}
           onClick={() => handleBuyEarlyAccess()}
-          disabled={currentLeftEarlyAccessCGA < CGAAmount}
+          disabled={
+            currentLeftEarlyAccessCGA < CGAAmount ||
+            (constants.filterAndPage.EABuyMin > warriorCnt &&
+              warriorCnt > constants.filterAndPage.EABuyMax)
+          }
         >
           {getTranslation("buyEarlyAccess")}
         </FireBtn>
