@@ -297,6 +297,7 @@ export const toWeiNum = (amount) => {
 };
 
 export const fromWeiNum = (amount) => {
+  /* eslint-disable */
   return Number(Web3.utils.fromWei(BigInt(amount).toString(), "ether"));
 };
 
@@ -305,5 +306,6 @@ export const toWeiStr = (amount) => {
 };
 
 export const fromWeiStr = (amount) => {
+  /* eslint-disable */
   return Web3.utils.fromWei(BigInt(amount).toString(), "ether");
 };

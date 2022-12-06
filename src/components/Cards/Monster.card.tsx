@@ -61,7 +61,10 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
 
   let bonus = 0;
   if (monsterID < 21) {
-    const { bonusChance } = legion;
+    let bonusChance: Number = 0;
+    if (legion) {
+      bonusChance = legion.bonusChance as Number;
+    }
     let expBonus = Math.floor(
       (Number(legionAttackPower) - Number(attackPower)) / 2000 < 0
         ? 0
