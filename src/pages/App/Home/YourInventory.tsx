@@ -24,6 +24,9 @@ import { apiConfig } from "../../../config/api.config";
 import { getLegionLastHuntTime } from "../../../web3hooks/contractFunctions/legion.contract";
 import gameConfig from "../../../config/game.config";
 import { goverTokenState } from "../../../reducers/goverToken.reducer";
+import FireBtn from "../../../components/Buttons/FireBtn";
+import { gameAccessState } from "../../../reducers/gameAccess.reducer";
+import ModalService from "../../../services/modal.service";
 
 const YourInventory: React.FC = () => {
   // Hook Info
@@ -66,6 +69,7 @@ const YourInventory: React.FC = () => {
     claimMinTaxPercent,
     taxLeftDaysForReinvest,
   } = AppSelector(inventoryState);
+  const { accessedWarriorCnt } = AppSelector(gameAccessState);
 
   // Account & Web3
   const { account } = useWeb3React();
@@ -212,6 +216,10 @@ const YourInventory: React.FC = () => {
     }
   };
 
+  const handleEarlyAccessModalOpen = (open: boolean) => {
+    ModalService.handleEarlyAccessModalOpen(dispatch, open);
+  };
+
   return (
     <Card
       className="bg-c4"
@@ -238,6 +246,22 @@ const YourInventory: React.FC = () => {
             title={getTranslation("warriors") + ":"}
             info={warriorBalance}
           />
+          <Box>
+            <span
+              className="fc1"
+              style={{ fontWeight: "bold", marginRight: 8 }}
+            >
+              {getTranslation("earlyAccessLeftForWarriors", {
+                CL1: accessedWarriorCnt,
+              })}
+            </span>
+            <FireBtn
+              size="small"
+              onClick={() => handleEarlyAccessModalOpen(true)}
+            >
+              {getTranslation("buyEarlyAccess")}
+            </FireBtn>
+          </Box>
           <HomeTypo
             title={getTranslation("beasts") + ":"}
             info={beastBalance}
