@@ -46,10 +46,6 @@ const getCGAandGoverTokenBalance = async (
       GoverTokenBalance,
       [getCGAAddress(), getBUSDAddress()]
     );
-    console.log("CGA Balance: ", CGABalance);
-    console.log("GoverToken Balance: ", GoverTokenBalance);
-    console.log("CGA Balance In BUSD: ", CGABalanceInBUSD);
-    console.log("GoverToken Balance In BUSD: ", GoverTokenBalanceInBUSD);
     dispatch(
       updateGoverTokenState({
         CGABalance,
@@ -131,8 +127,6 @@ const sellGoverTokenToCGA = async (
       getCGAAddress(),
       account
     );
-    console.log("GoverToken allowance: ", allowance);
-    console.log("swap Amount: ", swapAmount);
     while (Number(allowance) < Number(swapAmount)) {
       await setGoverTokenApprove(
         web3,
