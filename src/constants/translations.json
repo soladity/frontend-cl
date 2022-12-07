@@ -8713,8 +8713,8 @@
     "it": "",
     "ar": ""
   },
-  "youHaveToBuyEAMoreThan": {
-    "en": "You have to buy Early Access more than CL1.",
+  "buyMinEarlyAccessError": {
+    "en": "Buy minimum CL1 Warriors.",
     "es": "",
     "cn": "",
     "pt": "",
@@ -8734,8 +8734,8 @@
     "it": "",
     "ar": ""
   },
-  "youHaveToBuyEALessThan": {
-    "en": "You have to buy Early Access less than CL1.",
+  "buyMaxEarlyAccessError": {
+    "en": "Buy maximum 1000 Warriors.",
     "es": "",
     "cn": "",
     "pt": "",
