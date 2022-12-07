@@ -213,8 +213,8 @@ const EarlyAccessModal: React.FC = () => {
           onClick={() => handleBuyEarlyAccess()}
           disabled={
             currentLeftEarlyAccessCGA < CGAAmount ||
-            (constants.filterAndPage.EABuyMin > warriorCnt &&
-              warriorCnt > constants.filterAndPage.EABuyMax)
+            constants.filterAndPage.EABuyMin > warriorCnt ||
+            warriorCnt > constants.filterAndPage.EABuyMax
           }
         >
           {getTranslation("buyEarlyAccess")}
