@@ -195,15 +195,15 @@ const EarlyAccessModal: React.FC = () => {
         </Box>
         {constants.filterAndPage.EABuyMin > warriorCnt && (
           <Typography color={"error"} fontSize={12}>
-            {getTranslation("youHaveToBuyEAMoreThan", {
-              CL1: constants.filterAndPage.EABuyMin - 1,
+            {getTranslation("buyMinEarlyAccessError", {
+              CL1: constants.filterAndPage.EABuyMin,
             })}
           </Typography>
         )}
         {constants.filterAndPage.EABuyMax < warriorCnt && (
           <Typography color={"error"} fontSize={12}>
-            {getTranslation("youHaveToBuyEALessThan", {
-              CL1: constants.filterAndPage.EABuyMax + 1,
+            {getTranslation("buyMaxEarlyAccessError", {
+              CL1: constants.filterAndPage.EABuyMax,
             })}
           </Typography>
         )}
