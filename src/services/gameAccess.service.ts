@@ -59,29 +59,25 @@ const getEarlyAccessInfo = async (
 };
 
 const getLeftTime = () => {
-  const { firstPurchaseTime } = store.getState().gameAccess;
+  const { firstPurchaseTime, busdLimitPer6Hours } = store.getState().gameAccess;
   let time = {
     hours: 6,
     mins: 0,
     secs: 0,
   };
-  // console.log("firstPurchaseTime: ", firstPurchaseTime);
-  // console.log("current time: ", new Date().getTime() / 1000);
   if (firstPurchaseTime !== 0) {
     const { earlyAccessPeriod } = gameConfig.version;
     const finishTime = Number(firstPurchaseTime) * 1000 + earlyAccessPeriod;
-    // console.log("finishTime: ", finishTime);
     const diffSecs = (finishTime - new Date().getTime()) / 1000;
-    // console.log("diff secs: ", diffSecs);
     if (diffSecs <= 0) {
-      return { newPeriod: true, time };
+      return { newPeriod: true, time, busdLimitPer6Hours };
     }
     time.hours = Number(Math.floor(diffSecs / 3600).toFixed(0));
     time.mins = Number(Math.floor((diffSecs % 3600) / 60).toFixed(0));
     time.secs = Number((Math.floor(diffSecs % 3600) % 60).toFixed(0));
-    return { newPeriod: false, time };
+    return { newPeriod: false, time, busdLimitPer6Hours };
   }
-  return { newPeriod: false, time };
+  return { newPeriod: false, time, busdLimitPer6Hours };
 };
 
 const buyEarlyAccess = async (

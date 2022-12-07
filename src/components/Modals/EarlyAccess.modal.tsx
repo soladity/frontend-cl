@@ -83,10 +83,16 @@ const EarlyAccessModal: React.FC = () => {
   };
 
   const handleLeftTime = async () => {
-    let period = GameAccessService.getLeftTime();
-    setLeftTime(period.time);
-    if (period.newPeriod) {
-      // setCurrentLeftEarlyAccessCGA(totalPeriodEarlyAccessCGA);
+    let { time, newPeriod, busdLimitPer6Hours } =
+      GameAccessService.getLeftTime();
+    setLeftTime(time);
+    if (newPeriod) {
+      let totalPeriodEarlyAccessCGA =
+        await GoverTokenService.getCGAAmountForBUSD(
+          routerContract,
+          fromWeiNum(busdLimitPer6Hours)
+        );
+      setTotalPeriodEarlyAccessCGA(totalPeriodEarlyAccessCGA);
     }
   };
 
