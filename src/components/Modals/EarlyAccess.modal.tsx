@@ -21,6 +21,7 @@ import {
 } from "../../web3hooks/useContract";
 import GameAccessService from "../../services/gameAccess.service";
 import { useWeb3React } from "@web3-react/core";
+import { goverTokenState } from "../../reducers/goverToken.reducer";
 
 const EarlyAccessModal: React.FC = () => {
   let timer: any = 0;
@@ -35,11 +36,7 @@ const EarlyAccessModal: React.FC = () => {
     purchasedBusdInPeriod,
     buyEarlyAccessLoading,
   } = AppSelector(gameAccessState);
-
-  console.log("busd limit per 6 hours: ", busdLimitPer6Hours);
-  console.log("purchased amount: ", purchasedBusdInPeriod);
-  console.log("early access fee per warrior: ", earlyAccessFeePerWarrior);
-  console.log("first purchased time: ", firstPurchaseTime);
+  const { CGABalance } = AppSelector(goverTokenState);
 
   const web3 = useWeb3();
   const { account } = useWeb3React();
@@ -220,7 +217,8 @@ const EarlyAccessModal: React.FC = () => {
           disabled={
             currentLeftEarlyAccessCGA < CGAAmount ||
             constants.filterAndPage.EABuyMin > warriorCnt ||
-            warriorCnt > constants.filterAndPage.EABuyMax
+            warriorCnt > constants.filterAndPage.EABuyMax ||
+            CGABalance < CGAAmount
           }
         >
           {getTranslation("buyEarlyAccess")}

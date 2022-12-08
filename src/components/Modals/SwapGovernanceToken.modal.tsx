@@ -106,7 +106,9 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
           </Box>
           {swapAmount > CGABalance && (
             <Typography color={"error"} fontSize={12} textAlign="center">
-              {getTranslation("uDoNotHaveEnoughCGAToSwap")}
+              {getTranslation("uDoNotHaveEnoughCGAToSwap", {
+                CL1: CGABalance.toFixed(2),
+              })}
             </Typography>
           )}
           <br />
@@ -169,7 +171,7 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
   };
 
   const handleSellGoverTokenToCGA = async () => {
-    GoverTokenService.sellGoverTokenToCGA(
+    await GoverTokenService.sellGoverTokenToCGA(
       dispatch,
       web3,
       account,
@@ -178,6 +180,7 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
       routerContract,
       swapAmount
     );
+    setSwapAmount(0);
   };
 
   return (
@@ -229,7 +232,9 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
           </Box>
           {swapAmount > GoverTokenBalance && (
             <Typography color={"error"} fontSize={12} textAlign="center">
-              {getTranslation("uDoNotHaveEnoughGoverTokenToSell")}
+              {getTranslation("uDoNotHaveEnoughGoverTokenToSell", {
+                CL1: GoverTokenBalance.toFixed(2),
+              })}
             </Typography>
           )}
           <br />

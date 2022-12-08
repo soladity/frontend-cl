@@ -10,6 +10,7 @@ import { AppSelector } from "../../store";
 import { getWarriorAddress } from "../../web3hooks/getAddress";
 import {
   useBloodstone,
+  useGameAccess,
   useReferralSystem,
   useVRF,
   useWarrior,
@@ -35,6 +36,7 @@ import WarriorService from "../../services/warrior.service";
 import { initializeFreeMint } from "../../web3hooks/contractFunctions/referral.contract";
 import ReferralService from "../../services/referral.service";
 import WalletSelectModal from "../Modals/WalletSelect.modal";
+import GameAccessService from "../../services/gameAccess.service";
 
 const SummonWarriorPopover: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const SummonWarriorPopover: React.FC = () => {
   const warriorContract = useWarrior();
   const vrfContract = useVRF();
   const referralSystemContract = useReferralSystem();
+  const gameAccessContract = useGameAccess();
 
   const open = Boolean(summonWarriorAnchorEl);
   const [quantity, setQuantity] = useState<Number>(0);
@@ -166,6 +169,11 @@ const SummonWarriorPopover: React.FC = () => {
           account,
           warriorContract,
           vrfContract
+        );
+        GameAccessService.getEarlyAccessInfo(
+          dispatch,
+          account,
+          gameAccessContract
         );
         toast.success(getTranslation("plzRevealWarrior"));
       }
