@@ -85,15 +85,17 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
         {buyCGAAmount > 0 && (
           <Typography>
             {getTranslation("toObtainGoverTokenYouNeedToBuyCGA", {
-              Cl1: buyCGAAmount.toFixed(2),
+              CL1: buyCGAAmount.toFixed(2),
             })}
           </Typography>
         )}
         <br />
         {buyCGAAmount > 0 ? (
-          <Box sx={{ textAlign: "center" }}>
-            <FireBtn>{getTranslation("buy$CGA")}</FireBtn>
-          </Box>
+          <a href="#" target={"_blank"} className="td-none">
+            <Box sx={{ textAlign: "center" }}>
+              <FireBtn>{getTranslation("buy$CGA")}</FireBtn>
+            </Box>
+          </a>
         ) : (
           <Box sx={{ textAlign: "center" }}>
             <FireBtn

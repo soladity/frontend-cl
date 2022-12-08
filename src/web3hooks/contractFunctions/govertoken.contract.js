@@ -42,7 +42,8 @@ export const depositGoverToken = async (web3, account, contract, amount) => {
 };
 
 export const withdrawGoverToken = async (web3, account, contract, amount) => {
-  await contract
+  console.log("Amount: ", amount);
+  await contract.methods
     .withdraw(web3.utils.toWei(amount.toString(), "ether").toString())
     .send({ from: account });
   return true;

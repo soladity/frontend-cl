@@ -8525,7 +8525,7 @@
     "ar": ""
   },
   "buyEarlyAccessSuccessfully": {
-    "en": "Buy Early Access Successfully",
+    "en": "Early Access purchase completed",
     "es": "",
     "cn": "",
     "pt": "",
@@ -8672,7 +8672,7 @@
     "ar": ""
   },
   "uDoNotHaveEnoughGoverTokenToSell": {
-    "en": "You don't have enough $LEGIONS to Sell.",
+    "en": "You only have CL1 $LEGIONS.",
     "es": "",
     "cn": "",
     "pt": "",
@@ -8693,7 +8693,7 @@
     "ar": ""
   },
   "uDoNotHaveEnoughCGAToSwap": {
-    "en": "You don't have enough $CGA to Swap.",
+    "en": "You only have CL1 $CGA.",
     "es": "",
     "cn": "",
     "pt": "",

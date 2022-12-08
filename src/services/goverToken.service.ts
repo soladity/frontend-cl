@@ -119,6 +119,7 @@ const sellGoverTokenToCGA = async (
   routerContract: Contract,
   swapAmount: Number
 ) => {
+  console.log("gover token contract: ", goverTokenContract);
   dispatch(updateGoverTokenState({ sellGoverTokenLoading: true }));
   try {
     let allowance = await getGoverTokenAllowance(
@@ -127,6 +128,7 @@ const sellGoverTokenToCGA = async (
       getCGAAddress(),
       account
     );
+    console.log("gover token allowance: ", allowance, swapAmount);
     while (Number(allowance) < Number(swapAmount)) {
       await setGoverTokenApprove(
         web3,

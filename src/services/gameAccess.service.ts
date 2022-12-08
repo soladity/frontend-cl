@@ -102,8 +102,6 @@ const buyEarlyAccess = async (
       routerContract,
       busdAmount
     );
-    console.log("allowance: ", allowance);
-    console.log("cga amount: ", CGAAmount);
     while (Number(allowance) < Number(CGAAmount)) {
       await setCGAApprove(web3, CGAContract, getGameAccessAddress(), account);
       allowance = await getCGAAllowance(
