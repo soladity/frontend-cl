@@ -64,7 +64,7 @@ const EarlyAccessModal: React.FC = () => {
 
   useEffect(() => {
     handleCGAAmount(warriorCnt * fromWeiNum(earlyAccessFeePerWarrior));
-  }, [warriorCnt]);
+  }, [warriorCnt, earlyAccessFeePerWarrior]);
 
   useEffect(() => {
     handleLeftAndPeriodCGAAmount();
