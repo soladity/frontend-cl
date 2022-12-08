@@ -122,27 +122,27 @@ const sellGoverTokenToCGA = async (
   console.log("gover token contract: ", goverTokenContract);
   dispatch(updateGoverTokenState({ sellGoverTokenLoading: true }));
   try {
-    let allowance = await getGoverTokenAllowance(
-      web3,
-      goverTokenContract,
-      getCGAAddress(),
-      account
-    );
-    console.log("gover token allowance: ", allowance, swapAmount);
-    while (Number(allowance) < Number(swapAmount)) {
-      await setGoverTokenApprove(
-        web3,
-        goverTokenContract,
-        getCGAAddress(),
-        account
-      );
-      allowance = await getGoverTokenAllowance(
-        web3,
-        goverTokenContract,
-        getCGAAddress(),
-        account
-      );
-    }
+    // let allowance = await getGoverTokenAllowance(
+    //   web3,
+    //   goverTokenContract,
+    //   getCGAAddress(),
+    //   account
+    // );
+    // console.log("gover token allowance: ", allowance, swapAmount);
+    // while (Number(allowance) < Number(swapAmount)) {
+    //   await setGoverTokenApprove(
+    //     web3,
+    //     goverTokenContract,
+    //     getCGAAddress(),
+    //     account
+    //   );
+    //   allowance = await getGoverTokenAllowance(
+    //     web3,
+    //     goverTokenContract,
+    //     getCGAAddress(),
+    //     account
+    //   );
+    // }
     await withdrawGoverToken(web3, account, goverTokenContract, swapAmount);
     await getCGAandGoverTokenBalance(
       dispatch,
