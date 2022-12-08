@@ -35,7 +35,7 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
 
   const handleSwapAmount = async (e: any) => {
     let inputVal = e.target.value;
-    setSwapAmount(Number(inputVal));
+    setSwapAmount(inputVal);
   };
 
   const handleBuyGoverTokenWithCGA = async () => {
