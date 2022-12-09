@@ -69,7 +69,8 @@ const YourInventory: React.FC = () => {
     claimMinTaxPercent,
     taxLeftDaysForReinvest,
   } = AppSelector(inventoryState);
-  const { accessedWarriorCnt } = AppSelector(gameAccessState);
+  const { accessedWarriorCnt, earlyAccessTurnOff } =
+    AppSelector(gameAccessState);
 
   // Account & Web3
   const { account } = useWeb3React();
@@ -246,22 +247,24 @@ const YourInventory: React.FC = () => {
             title={getTranslation("warriors") + ":"}
             info={warriorBalance}
           />
-          <Box>
-            <span
-              className="fc1"
-              style={{ fontWeight: "bold", marginRight: 8 }}
-            >
-              {getTranslation("earlyAccessLeftForWarriors", {
-                CL1: accessedWarriorCnt,
-              })}
-            </span>
-            <FireBtn
-              size="small"
-              onClick={() => handleEarlyAccessModalOpen(true)}
-            >
-              {getTranslation("buyEarlyAccess")}
-            </FireBtn>
-          </Box>
+          {!earlyAccessTurnOff && (
+            <Box>
+              <span
+                className="fc1"
+                style={{ fontWeight: "bold", marginRight: 8 }}
+              >
+                {getTranslation("earlyAccessLeftForWarriors", {
+                  CL1: accessedWarriorCnt,
+                })}
+              </span>
+              <FireBtn
+                size="small"
+                onClick={() => handleEarlyAccessModalOpen(true)}
+              >
+                {getTranslation("buyEarlyAccess")}
+              </FireBtn>
+            </Box>
+          )}
           <HomeTypo
             title={getTranslation("beasts") + ":"}
             info={beastBalance}

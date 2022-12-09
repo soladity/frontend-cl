@@ -146,6 +146,7 @@ const HuntModal: React.FC = () => {
       }
     } catch (error) {
       toast.error(getTranslation("huntTransactionFailed"));
+      console.log(error);
     }
     dispatch(updateLegionState({ revealHuntLoading: false }));
   };
@@ -180,14 +181,21 @@ const HuntModal: React.FC = () => {
   };
 
   const getMaxRoll = (legionId: string, monsterId: string) => {
-    console.log(legionId, monsterId);
-    console.log(allLegions, allMonsters);
-    if (legionId !== "0" && monsterId !== "0") {
+    console.log({ legionId, monsterId });
+    console.log({ allLegions, allMonsters });
+    if (monsterId !== "0") {
       const legion = allLegions.filter((legion) => legion.id === legionId)[0];
       const monster = allMonsters[parseInt(monsterId) - 1];
-      console.log(legion, monster);
+      console.log({ legion, monster });
       const { attackPower: legionAttackPower, bonusChance } = legion;
       const { attackPower: monsterAttackPower, percent } = monster;
+
+      console.log({
+        legionAttackPower,
+        monsterAttackPower,
+        bonusChance,
+        percent,
+      });
 
       if (parseFloat(monsterId) < 21) {
         const bonusPercent = Math.floor(

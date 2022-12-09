@@ -77,11 +77,17 @@ const EarlyAccessModal: React.FC = () => {
 
   const getBalance = async () => {
     GameAccessService.getEarlyAccessInfo(dispatch, account, gameAccessContract);
+    GameAccessService.checkEarlyAccessModal(
+      dispatch,
+      account,
+      gameAccessContract
+    );
   };
 
   const handleLeftTime = async () => {
     let { time, newPeriod, busdLimitPer6Hours } =
       GameAccessService.getLeftTime();
+    // console.log({ time, newPeriod, busdLimitPer6Hours });
     setLeftTime(time);
     if (newPeriod) {
       let totalPeriodEarlyAccessCGA =

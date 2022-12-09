@@ -20,7 +20,7 @@ let initialState: IModalState = {
   joinDuelModalOpen: false,
   updatePredictionModalOpen: false,
   swapGovernanceTokenModalOpen: false,
-  earlyAccessModalOpen: true,
+  earlyAccessModalOpen: false,
   buyGoverTokenToPlayModalOpen: false,
 };
 
