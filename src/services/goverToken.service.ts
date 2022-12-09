@@ -66,7 +66,8 @@ const buyGoverTokenWithCGA = async (
   CGAContract: Contract,
   goverTokenContract: Contract,
   routerContract: Contract,
-  swapAmount: Number
+  swapAmount: Number,
+  toPlay: boolean
 ) => {
   dispatch(updateGoverTokenState({ buyGoverTokenLoading: true }));
   try {
@@ -101,7 +102,11 @@ const buyGoverTokenWithCGA = async (
       goverTokenContract,
       routerContract
     );
-    toast.success(getTranslation("swapSuccessfully"));
+    if (toPlay) {
+      toast.success(getTranslation("canPlayGame"));
+    } else {
+      toast.success(getTranslation("swapSuccessfully"));
+    }
     dispatch(updateModalState({ buyGoverTokenToPlayModalOpen: false }));
   } catch (error: any) {
     toast.error(error);

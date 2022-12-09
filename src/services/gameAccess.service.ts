@@ -5,9 +5,11 @@ import {
   buyEA,
   getBusdLimitPer6Hours,
   getEarlyAccessFeePerWarrior,
+  getEATurnOff,
   getEaWarriorCnt,
   getFirstPurchaseTime,
   getPurchasedBusdInPeriod,
+  getWalletToEAPurchased,
 } from "../web3hooks/contractFunctions/gameAccess.contract";
 import { AppDispatch, store } from "../store";
 import { updateGameAccessState } from "../reducers/gameAccess.reducer";
@@ -19,6 +21,7 @@ import {
 } from "../web3hooks/contractFunctions/cga.contract";
 import { getGameAccessAddress } from "../web3hooks/getAddress";
 import GoverTokenService from "./goverToken.service";
+import { updateModalState } from "../reducers/modal.reducer";
 
 const getEarlyAccessInfo = async (
   dispatch: AppDispatch,
@@ -44,6 +47,12 @@ const getEarlyAccessInfo = async (
       purchasedBusdInPeriod,
       firstPurchaseTime,
     });
+    let EATurnOffAndPurchased = await getWalletToEAPurchased(
+      gameAccessContract,
+      account
+    );
+    let earlyAccessTurnOff = EATurnOffAndPurchased[0];
+    let EAPurchasedStatus = EATurnOffAndPurchased[1];
     dispatch(
       updateGameAccessState({
         accessedWarriorCnt,
@@ -51,11 +60,30 @@ const getEarlyAccessInfo = async (
         earlyAccessFeePerWarrior,
         purchasedBusdInPeriod,
         firstPurchaseTime,
+        earlyAccessTurnOff,
+        EAPurchasedStatus,
       })
     );
   } catch (error) {
     console.log(error);
   }
+};
+
+const checkEarlyAccessModal = async (
+  dispatch: AppDispatch,
+  account: any,
+  gameAccessContract: Contract
+) => {
+  try {
+    let EATurnOffAndPurchased = await getWalletToEAPurchased(
+      gameAccessContract,
+      account
+    );
+    let earlyAccessTurnOff = EATurnOffAndPurchased[0];
+    if (!earlyAccessTurnOff) {
+      dispatch(updateModalState({ earlyAccessModalOpen: true }));
+    }
+  } catch (error) {}
 };
 
 const getLeftTime = () => {
@@ -125,6 +153,7 @@ const GameAccessService = {
   getEarlyAccessInfo,
   buyEarlyAccess,
   getLeftTime,
+  checkEarlyAccessModal,
 };
 
 export default GameAccessService;

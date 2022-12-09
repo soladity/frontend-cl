@@ -38,3 +38,13 @@ export const getFirstPurchaseTime = async (contract) => {
   let response = await contract.methods.firstPurchaseTime().call();
   return Number(response);
 };
+
+export const getEATurnOff = async (contract) => {
+  let response = await contract.methods.eaTurnOff().call();
+  return response;
+};
+
+export const getWalletToEAPurchased = async (contract, account) => {
+  let response = await contract.methods.getWalletToEAPurchased(account).call();
+  return response;
+};

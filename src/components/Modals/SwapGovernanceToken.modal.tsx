@@ -46,7 +46,8 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
       CGAContract,
       goverTokenContract,
       routerContract,
-      swapAmount
+      swapAmount,
+      false
     );
     setSwapAmount(0);
   };

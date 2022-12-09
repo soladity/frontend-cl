@@ -10,6 +10,8 @@ let initialState: IGameAccess = {
   purchasedBusdInPeriod: 0,
   firstPurchaseTime: 0,
   buyEarlyAccessLoading: false,
+  earlyAccessTurnOff: false,
+  EAPurchasedStatus: false,
 };
 
 export const gameAccessSlice = createSlice({

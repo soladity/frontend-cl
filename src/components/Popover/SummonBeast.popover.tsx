@@ -27,14 +27,15 @@ import {
 import BeastService from "../../services/beast.service";
 import { updateModalState } from "../../reducers/modal.reducer";
 import { updateBeastState } from "../../reducers/beast.reducer";
+import { gameAccessState } from "../../reducers/gameAccess.reducer";
 
 const SummonBeastPopover: React.FC = () => {
   const dispatch = useDispatch();
   const { summonBeastAnchorEl, summonPrice, summonReductionPer } =
     AppSelector(commonState);
-  const { reinvestedWalletUSD, reinvestedTotalUSD, voucherWalletUSD } =
-    AppSelector(inventoryState);
-
+  const { reinvestedWalletUSD, voucherWalletUSD } = AppSelector(inventoryState);
+  const { EAPurchasedStatus, earlyAccessTurnOff } =
+    AppSelector(gameAccessState);
   const { account } = useWeb3React();
   const web3 = useWeb3();
 
@@ -194,26 +195,46 @@ const SummonBeastPopover: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(1)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(1)}
+          disabled={!earlyAccessTurnOff && !EAPurchasedStatus}
+        >
           1 ({Number(summonPrice["p1"].blst).toFixed(2)} $
           {getTranslation("blst")})
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(10)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(10)}
+          disabled={!earlyAccessTurnOff && !EAPurchasedStatus}
+        >
           10 ({summonReductionPer["p10"]}% |{" "}
           {Number(summonPrice["p10"].blst).toFixed(2)} ${getTranslation("blst")}
           )
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(50)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(50)}
+          disabled={!earlyAccessTurnOff && !EAPurchasedStatus}
+        >
           50 ({summonReductionPer["p50"]}% |{" "}
           {Number(summonPrice["p50"].blst).toFixed(2)} ${getTranslation("blst")}
           )
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(100)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(100)}
+          disabled={!earlyAccessTurnOff && !EAPurchasedStatus}
+        >
           100 ({summonReductionPer["p100"]}% |{" "}
           {Number(summonPrice["p100"].blst).toFixed(2)} $
           {getTranslation("blst")})
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(150)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(150)}
+          disabled={!earlyAccessTurnOff && !EAPurchasedStatus}
+        >
           150 ({summonReductionPer["p150"]}% |{" "}
           {Number(summonPrice["p150"].blst).toFixed(2)} $
           {getTranslation("blst")})

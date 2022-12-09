@@ -37,6 +37,7 @@ import { initializeFreeMint } from "../../web3hooks/contractFunctions/referral.c
 import ReferralService from "../../services/referral.service";
 import WalletSelectModal from "../Modals/WalletSelect.modal";
 import GameAccessService from "../../services/gameAccess.service";
+import { gameAccessState } from "../../reducers/gameAccess.reducer";
 
 const SummonWarriorPopover: React.FC = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,8 @@ const SummonWarriorPopover: React.FC = () => {
   const { voucherWalletUSD, reinvestedWalletUSD } = AppSelector(inventoryState);
   const { hasFreeMint } = AppSelector(referralState);
   const { mintWarriorPending } = AppSelector(warriorState);
+  const { accessedWarriorCnt, earlyAccessTurnOff } =
+    AppSelector(gameAccessState);
 
   const { account } = useWeb3React();
   const web3 = useWeb3();
@@ -273,26 +276,46 @@ const SummonWarriorPopover: React.FC = () => {
             Free Mint Available
           </FireBtn>
         )}
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(1)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(1)}
+          disabled={!earlyAccessTurnOff && accessedWarriorCnt < 1}
+        >
           1 ({Number(summonPrice["p1"].blst).toFixed(2)} $
           {getTranslation("blst")})
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(10)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(10)}
+          disabled={!earlyAccessTurnOff && accessedWarriorCnt < 10}
+        >
           10 ({summonReductionPer["p10"]}% |{" "}
           {Number(summonPrice["p10"].blst).toFixed(2)} ${getTranslation("blst")}
           )
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(50)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(50)}
+          disabled={!earlyAccessTurnOff && accessedWarriorCnt < 50}
+        >
           50 ({summonReductionPer["p50"]}% |{" "}
           {Number(summonPrice["p50"].blst).toFixed(2)} ${getTranslation("blst")}
           )
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(100)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(100)}
+          disabled={!earlyAccessTurnOff && accessedWarriorCnt < 100}
+        >
           100 ({summonReductionPer["p100"]}% |{" "}
           {Number(summonPrice["p100"].blst).toFixed(2)} $
           {getTranslation("blst")})
         </FireBtn>
-        <FireBtn sx={{ fontSize: 14, mb: 1 }} onClick={() => handleMint(150)}>
+        <FireBtn
+          sx={{ fontSize: 14, mb: 1 }}
+          onClick={() => handleMint(150)}
+          disabled={!earlyAccessTurnOff && accessedWarriorCnt < 150}
+        >
           150 ({summonReductionPer["p150"]}% |{" "}
           {Number(summonPrice["p150"].blst).toFixed(2)} $
           {getTranslation("blst")})

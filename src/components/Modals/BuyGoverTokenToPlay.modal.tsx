@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Dialog, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { FaTimes } from "react-icons/fa";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import { AppDispatch, AppSelector } from "../../store";
 import { goverTokenState } from "../../reducers/goverToken.reducer";
@@ -16,6 +17,7 @@ import {
 import { getTranslation } from "../../utils/utils";
 import FireBtn from "../Buttons/FireBtn";
 import { useWeb3React } from "@web3-react/core";
+import { toast } from "react-toastify";
 
 const BuyGoverTokenToPlayModal: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -32,7 +34,7 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
   const [goverTokenToPlay, setGoverTokenToPlay] = useState(0);
 
   const needGoverTokenAmount =
-    Number(goverTokenToPlay) - Number(GoverTokenBalance);
+    Number(goverTokenToPlay) - Number(GoverTokenBalance) + 1;
   let buyCGAAmount = 0;
   if (CGABalance < needGoverTokenAmount) {
     buyCGAAmount = needGoverTokenAmount - Number(CGABalance);
@@ -47,18 +49,20 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
       routerContract,
       gameConfig.BUSDForPlay
     );
+    console.log("goverTokenToPlay: ", goverTokenToPlay);
     setGoverTokenToPlay(goverTokenToPlay);
   };
 
   const handleSwap = async () => {
-    GoverTokenService.buyGoverTokenWithCGA(
+    await GoverTokenService.buyGoverTokenWithCGA(
       dispatch,
       web3,
       account,
       CGAContract,
       goverTokenContract,
       routerContract,
-      needGoverTokenAmount
+      needGoverTokenAmount,
+      true
     );
   };
 
@@ -77,9 +81,19 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
       }}
     >
       <Box sx={{ padding: 4 }}>
+        <FaTimes
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            cursor: "pointer",
+            zIndex: 1000,
+          }}
+          onClick={handleClose}
+        />
         <Typography>
           {getTranslation("youNeedAtLeastGoverTokenToPlayGame", {
-            CL1: needGoverTokenAmount.toFixed(2),
+            CL1: goverTokenToPlay.toFixed(2),
           })}
         </Typography>
         {buyCGAAmount > 0 && (
