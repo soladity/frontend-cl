@@ -116,10 +116,11 @@ const getLeftTime = () => {
   const diffMilliSecs = finishTime - new Date().getTime();
   if (diffMilliSecs <= 0) {
     newPeriod = true;
+    console.log("new period: ", newPeriod);
   }
   let diffMilliSec = getDiffSecsInPeriod();
   time = getDiffTime(diffMilliSec);
-  return { newPeriod: false, time, busdLimitPer6Hours };
+  return { newPeriod, time, busdLimitPer6Hours };
 };
 
 const buyEarlyAccess = async (

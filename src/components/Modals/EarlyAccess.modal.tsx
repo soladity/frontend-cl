@@ -53,6 +53,7 @@ const EarlyAccessModal: React.FC = () => {
   const [currentLeftEarlyAccessCGA, setCurrentLeftEarlyAccessCGA] = useState(0);
   const [totalPeriodEarlyAccessCGA, setTotalPeriodEarlyAccessCGA] = useState(0);
   const [leftTime, setLeftTime] = useState({ hours: 0, mins: 0, secs: 0 });
+  const [newPeriod, setNewPeriod] = useState(false);
 
   useEffect(() => {
     GameAccessService.checkEarlyAccessModal(
@@ -97,15 +98,9 @@ const EarlyAccessModal: React.FC = () => {
   const handleLeftTime = async () => {
     let { time, newPeriod, busdLimitPer6Hours } =
       GameAccessService.getLeftTime();
+    console.log({ time, newPeriod, busdLimitPer6Hours });
     setLeftTime(time);
-    if (newPeriod) {
-      let totalPeriodEarlyAccessCGA =
-        await GoverTokenService.getCGAOutAmountForBUSD(
-          routerContract,
-          fromWeiNum(busdLimitPer6Hours)
-        );
-      setCurrentLeftEarlyAccessCGA(totalPeriodEarlyAccessCGA);
-    }
+    setNewPeriod(newPeriod);
   };
 
   const handleWarriorCnt = async (e: any) => {
@@ -187,7 +182,9 @@ const EarlyAccessModal: React.FC = () => {
         </Typography>
         <Typography>
           {getTranslation("currentTotalAmountLeftToBuyEarlyAccess", {
-            CL1: currentLeftEarlyAccessCGA.toFixed(2),
+            CL1: newPeriod
+              ? totalPeriodEarlyAccessCGA.toFixed(2)
+              : currentLeftEarlyAccessCGA.toFixed(2),
           })}
         </Typography>
         <Typography>
