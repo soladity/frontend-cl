@@ -100,7 +100,7 @@ const EarlyAccessModal: React.FC = () => {
     setLeftTime(time);
     if (newPeriod) {
       let totalPeriodEarlyAccessCGA =
-        await GoverTokenService.getCGAAmountForBUSD(
+        await GoverTokenService.getCGAOutAmountForBUSD(
           routerContract,
           fromWeiNum(busdLimitPer6Hours)
         );
@@ -114,7 +114,7 @@ const EarlyAccessModal: React.FC = () => {
   };
 
   const handleCGAAmount = async (busdAmount: Number) => {
-    let CGAAmount = await GoverTokenService.getCGAAmountForBUSD(
+    let CGAAmount = await GoverTokenService.getCGAOutAmountForBUSD(
       routerContract,
       busdAmount
     );
@@ -125,15 +125,16 @@ const EarlyAccessModal: React.FC = () => {
     const leftBUSD = fromWeiNum(
       Number(busdLimitPer6Hours) - Number(purchasedBusdInPeriod)
     );
-    let leftCGA = await GoverTokenService.getCGAAmountForBUSD(
+    let leftCGA = await GoverTokenService.getCGAOutAmountForBUSD(
       routerContract,
       leftBUSD
     );
     setCurrentLeftEarlyAccessCGA(leftCGA);
-    let totalPeriodEarlyAccessCGA = await GoverTokenService.getCGAAmountForBUSD(
-      routerContract,
-      fromWeiNum(busdLimitPer6Hours)
-    );
+    let totalPeriodEarlyAccessCGA =
+      await GoverTokenService.getCGAOutAmountForBUSD(
+        routerContract,
+        fromWeiNum(busdLimitPer6Hours)
+      );
     setTotalPeriodEarlyAccessCGA(totalPeriodEarlyAccessCGA);
   };
 

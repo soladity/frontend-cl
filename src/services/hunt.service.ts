@@ -14,7 +14,10 @@ import {
   getWalletHuntPending,
   getWalletMassHuntPending,
 } from "../web3hooks/contractFunctions/common.contract";
-import { checkEntryTicket } from "../web3hooks/contractFunctions/gameAccess.contract";
+import {
+  checkEntryTicket,
+  getEntryTicketUsdAmount,
+} from "../web3hooks/contractFunctions/gameAccess.contract";
 import {
   getWalletHuntPendingLegionId,
   getWalletHuntPendingMonsterId,
@@ -23,6 +26,7 @@ import {
 } from "../web3hooks/contractFunctions/legion.contract";
 import { getAllMonsters } from "../web3hooks/contractFunctions/monster.contract";
 import { getVRFResult } from "../web3hooks/contractFunctions/vrf.contract";
+import { updateGameAccessState } from "../reducers/gameAccess.reducer";
 
 const getAllMonstersAct = async (
   dispatch: AppDispatch,
@@ -237,6 +241,10 @@ const checkEntryTicketToPlay = async (
   let playStatus = false;
   try {
     playStatus = await checkEntryTicket(account, gameAccessContract);
+    let entryTicketUsdAmount = await getEntryTicketUsdAmount(
+      gameAccessContract
+    );
+    dispatch(updateGameAccessState({ entryTicketUsdAmount }));
     if (!playStatus) {
       dispatch(updateModalState({ buyGoverTokenToPlayModalOpen: true }));
     }

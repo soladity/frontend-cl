@@ -18,12 +18,14 @@ import { getTranslation } from "../../utils/utils";
 import FireBtn from "../Buttons/FireBtn";
 import { useWeb3React } from "@web3-react/core";
 import { toast } from "react-toastify";
+import { gameAccessState } from "../../reducers/gameAccess.reducer";
 
 const BuyGoverTokenToPlayModal: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { buyGoverTokenToPlayModalOpen } = AppSelector(modalState);
   const { CGABalance, GoverTokenBalance, buyGoverTokenLoading } =
     AppSelector(goverTokenState);
+  const { entryTicketUsdAmount } = AppSelector(gameAccessState);
 
   const web3 = useWeb3();
   const { account } = useWeb3React();
@@ -45,9 +47,9 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
   }, []);
 
   const getBalance = async () => {
-    const goverTokenToPlay = await GoverTokenService.getCGAAmountForBUSD(
+    const goverTokenToPlay = await GoverTokenService.getCGAInAmountForBUSD(
       routerContract,
-      gameConfig.BUSDForPlay
+      entryTicketUsdAmount
     );
     console.log("goverTokenToPlay: ", goverTokenToPlay);
     setGoverTokenToPlay(goverTokenToPlay);

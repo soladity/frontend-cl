@@ -10,10 +10,8 @@ import {
 } from "../web3hooks/contractFunctions/cga.contract";
 import {
   depositGoverToken,
-  getGoverTokenAllowance,
   getGoverTokenBalance,
   getNextWithdrawTime,
-  setGoverTokenApprove,
   withdrawGoverToken,
 } from "../web3hooks/contractFunctions/govertoken.contract";
 import {
@@ -22,7 +20,10 @@ import {
   getGameGovernanceTokenAddress,
 } from "../web3hooks/getAddress";
 import { getTranslation } from "../utils/utils";
-import { getAmountsOut } from "../web3hooks/contractFunctions/pancakeSwapRouter.contract";
+import {
+  getAmountsIn,
+  getAmountsOut,
+} from "../web3hooks/contractFunctions/pancakeSwapRouter.contract";
 import { updateModalState } from "../reducers/modal.reducer";
 
 const getCGAandGoverTokenBalance = async (
@@ -145,7 +146,7 @@ const sellGoverTokenToCGA = async (
   dispatch(updateGoverTokenState({ sellGoverTokenLoading: false }));
 };
 
-const getCGAAmountForBUSD = async (
+const getCGAOutAmountForBUSD = async (
   routerContract: Contract,
   amount: Number
 ) => {
@@ -161,6 +162,21 @@ const getCGAAmountForBUSD = async (
   return CGAAmount;
 };
 
+const getCGAInAmountForBUSD = async (
+  routerContract: Contract,
+  amount: Number
+) => {
+  let CGAAmount = 0;
+  try {
+    CGAAmount = await getAmountsIn(routerContract, amount, [
+      getCGAAddress(),
+      getBUSDAddress(),
+    ]);
+  } catch (error) {
+    console.log(error);
+  }
+  return CGAAmount;
+};
 const checNextkWithdrawTime = async (
   account: any,
   goverTokenContract: Contract
@@ -189,7 +205,8 @@ const GoverTokenService = {
   getCGAandGoverTokenBalance,
   buyGoverTokenWithCGA,
   sellGoverTokenToCGA,
-  getCGAAmountForBUSD,
+  getCGAOutAmountForBUSD,
+  getCGAInAmountForBUSD,
   checNextkWithdrawTime,
 };
 

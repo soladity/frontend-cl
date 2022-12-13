@@ -5,6 +5,7 @@ export interface IGameAccess {
   purchasedBusdInPeriod: Number;
   firstPurchaseTime: Number;
   bonusChance: Number;
+  entryTicketUsdAmount: Number;
   buyEarlyAccessLoading: boolean;
 
   earlyAccessTurnOff: boolean;

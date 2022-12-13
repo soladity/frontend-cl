@@ -48,3 +48,8 @@ export const getWalletToEAPurchased = async (contract, account) => {
   let response = await contract.methods.getWalletToEAPurchased(account).call();
   return response;
 };
+
+export const getEntryTicketUsdAmount = async (contract) => {
+  let response = await contract.methods.entryTicketUsdAmount().call();
+  return response;
+};

@@ -141,7 +141,7 @@ const buyEarlyAccess = async (
       getGameAccessAddress(),
       account
     );
-    const CGAAmount = await GoverTokenService.getCGAAmountForBUSD(
+    const CGAAmount = await GoverTokenService.getCGAOutAmountForBUSD(
       routerContract,
       busdAmount
     );
