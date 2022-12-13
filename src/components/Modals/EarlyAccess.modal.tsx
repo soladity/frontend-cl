@@ -16,6 +16,7 @@ import GoverTokenService from "../../services/goverToken.service";
 import {
   useCGA,
   useGameAccess,
+  useLegion,
   usePancakeSwapRouter,
   useWeb3,
 } from "../../web3hooks/useContract";
@@ -43,6 +44,7 @@ const EarlyAccessModal: React.FC = () => {
   const gameAccessContract = useGameAccess();
   const routerContract = usePancakeSwapRouter();
   const CGAContract = useCGA();
+  const legionContract = useLegion();
 
   const [CGAAmount, setCGAAmount] = useState(0);
   const [warriorCnt, setWarriorCnt] = useState(
@@ -53,7 +55,11 @@ const EarlyAccessModal: React.FC = () => {
   const [leftTime, setLeftTime] = useState({ hours: 0, mins: 0, secs: 0 });
 
   useEffect(() => {
-    getBalance();
+    GameAccessService.checkEarlyAccessModal(
+      dispatch,
+      account,
+      gameAccessContract
+    );
     timer = setInterval(() => {
       handleLeftTime();
     }, 1000);
@@ -61,6 +67,10 @@ const EarlyAccessModal: React.FC = () => {
       clearInterval(timer);
     };
   }, []);
+
+  useEffect(() => {
+    getBalance();
+  }, [earlyAccessModalOpen]);
 
   useEffect(() => {
     handleCGAAmount(warriorCnt * fromWeiNum(earlyAccessFeePerWarrior));
@@ -76,18 +86,17 @@ const EarlyAccessModal: React.FC = () => {
   ]);
 
   const getBalance = async () => {
-    GameAccessService.getEarlyAccessInfo(dispatch, account, gameAccessContract);
-    GameAccessService.checkEarlyAccessModal(
+    GameAccessService.getEarlyAccessInfo(
       dispatch,
       account,
-      gameAccessContract
+      gameAccessContract,
+      legionContract
     );
   };
 
   const handleLeftTime = async () => {
     let { time, newPeriod, busdLimitPer6Hours } =
       GameAccessService.getLeftTime();
-    // console.log({ time, newPeriod, busdLimitPer6Hours });
     setLeftTime(time);
     if (newPeriod) {
       let totalPeriodEarlyAccessCGA =
@@ -95,7 +104,7 @@ const EarlyAccessModal: React.FC = () => {
           routerContract,
           fromWeiNum(busdLimitPer6Hours)
         );
-      setTotalPeriodEarlyAccessCGA(totalPeriodEarlyAccessCGA);
+      setCurrentLeftEarlyAccessCGA(totalPeriodEarlyAccessCGA);
     }
   };
 
@@ -137,7 +146,8 @@ const EarlyAccessModal: React.FC = () => {
       warriorCnt * fromWeiNum(earlyAccessFeePerWarrior),
       CGAContract,
       gameAccessContract,
-      routerContract
+      routerContract,
+      legionContract
     );
   };
 

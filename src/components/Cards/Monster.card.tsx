@@ -21,6 +21,7 @@ import {
 } from "../../web3hooks/contractFunctions/legion.contract";
 import HuntService from "../../services/hunt.service";
 import VideoNFT from "../UI/VideoNFT";
+import { gameAccessState } from "../../reducers/gameAccess.reducer";
 
 type Props = {
   monster: IMonster;
@@ -31,6 +32,7 @@ type Props = {
 const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
   const dispatch = useDispatch();
   const { showAnimation, presentItem } = AppSelector(commonState);
+  const { bonusChance } = AppSelector(gameAccessState);
 
   const { account } = useWeb3React();
 
@@ -61,10 +63,6 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
 
   let bonus = 0;
   if (monsterID < 21) {
-    let bonusChance: Number = 0;
-    if (legion) {
-      bonusChance = legion.bonusChance as Number;
-    }
     let expBonus = Math.floor(
       (Number(legionAttackPower) - Number(attackPower)) / 2000 < 0
         ? 0

@@ -28,6 +28,7 @@ import BeastService from "../../services/beast.service";
 import { updateModalState } from "../../reducers/modal.reducer";
 import { updateBeastState } from "../../reducers/beast.reducer";
 import { gameAccessState } from "../../reducers/gameAccess.reducer";
+import ModalService from "../../services/modal.service";
 
 const SummonBeastPopover: React.FC = () => {
   const dispatch = useDispatch();
@@ -160,6 +161,10 @@ const SummonBeastPopover: React.FC = () => {
     dispatch(updateModalState({ walletSelectModalOpen: true }));
   };
 
+  const handleEarlyAccessModalOpen = (open: boolean) => {
+    ModalService.handleEarlyAccessModalOpen(dispatch, open);
+  };
+
   return (
     <Popover
       id={"summon-beast-btn"}
@@ -195,6 +200,14 @@ const SummonBeastPopover: React.FC = () => {
           flexDirection: "column",
         }}
       >
+        {!earlyAccessTurnOff && !EAPurchasedStatus && (
+          <FireBtn
+            sx={{ fontSize: 14, mb: 1 }}
+            onClick={() => handleEarlyAccessModalOpen(true)}
+          >
+            {getTranslation("buyEarlyAccess")}
+          </FireBtn>
+        )}
         <FireBtn
           sx={{ fontSize: 14, mb: 1 }}
           onClick={() => handleMint(1)}

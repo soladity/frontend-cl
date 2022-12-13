@@ -4,6 +4,7 @@ export interface IGameAccess {
   earlyAccessFeePerWarrior: Number;
   purchasedBusdInPeriod: Number;
   firstPurchaseTime: Number;
+  bonusChance: Number;
   buyEarlyAccessLoading: boolean;
 
   earlyAccessTurnOff: boolean;

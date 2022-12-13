@@ -51,9 +51,13 @@ const getInventory = async (
       legionContract,
       account
     );
-    const maxAttackPower = await getMaxAttackPower(legionContract, account);
+    const maxAttackPower = (
+      await getMaxAttackPower(legionContract, account)
+    )[0];
     const USDToBLST = await getBLSTAmount(web3, feehandlerContract, 1);
     const BLSTToUSD = await getUSDAmount(web3, feehandlerContract, 1);
+    console.log("USD to BLST: ", USDToBLST);
+    console.log("BLST to USD: ", BLSTToUSD);
     dispatch(
       updateInventoryState({
         beastBalance,
@@ -66,7 +70,7 @@ const getInventory = async (
       })
     );
   } catch (error) {
-    console.log(error);
+    console.log("Get Inventory Error: ", error);
   }
 };
 

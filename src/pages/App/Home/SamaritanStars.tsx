@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Box, Card, Typography } from "@mui/material";
@@ -8,6 +8,7 @@ import { AppDispatch, AppSelector } from "../../../store";
 import { getTranslation } from "../../../utils/utils";
 import InventoryService from "../../../services/inventory.service";
 import { useRewardPool, useWeb3 } from "../../../web3hooks/useContract";
+import HuntService from "../../../services/hunt.service";
 
 const SamaritanStars: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -29,6 +30,8 @@ const SamaritanStars: React.FC = () => {
   const { account } = useWeb3React();
   const rewardpoolContract = useRewardPool();
 
+  const [totalWon, setTotalWon] = useState<Number>(0);
+
   useEffect(() => {
     InventoryService.getSamaritanInfo(
       dispatch,
@@ -36,6 +39,11 @@ const SamaritanStars: React.FC = () => {
       account,
       rewardpoolContract
     );
+    const getTotalWon = async () => {
+      let totalWon = await HuntService.getTotalWon(account);
+      setTotalWon(totalWon);
+    };
+    getTotalWon();
   }, [account]);
 
   const renderStars = () => {
@@ -133,6 +141,10 @@ const SamaritanStars: React.FC = () => {
           <HomeTypo
             title={`${getTranslation("totalClaimed")}:`}
             info={Number(totalClaimedUSD).toFixed(2) + " USD"}
+          />
+          <HomeTypo
+            title={getTranslation("yourTotalWon") + ":"}
+            info={`${totalWon.toFixed(2)} BUSD`}
           />
         </Box>
       </Box>

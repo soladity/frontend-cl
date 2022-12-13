@@ -12,6 +12,7 @@ import {
   depositGoverToken,
   getGoverTokenAllowance,
   getGoverTokenBalance,
+  getNextWithdrawTime,
   setGoverTokenApprove,
   withdrawGoverToken,
 } from "../web3hooks/contractFunctions/govertoken.contract";
@@ -127,27 +128,6 @@ const sellGoverTokenToCGA = async (
   console.log("gover token contract: ", goverTokenContract);
   dispatch(updateGoverTokenState({ sellGoverTokenLoading: true }));
   try {
-    // let allowance = await getGoverTokenAllowance(
-    //   web3,
-    //   goverTokenContract,
-    //   getCGAAddress(),
-    //   account
-    // );
-    // console.log("gover token allowance: ", allowance, swapAmount);
-    // while (Number(allowance) < Number(swapAmount)) {
-    //   await setGoverTokenApprove(
-    //     web3,
-    //     goverTokenContract,
-    //     getCGAAddress(),
-    //     account
-    //   );
-    //   allowance = await getGoverTokenAllowance(
-    //     web3,
-    //     goverTokenContract,
-    //     getCGAAddress(),
-    //     account
-    //   );
-    // }
     await withdrawGoverToken(web3, account, goverTokenContract, swapAmount);
     await getCGAandGoverTokenBalance(
       dispatch,
@@ -181,11 +161,36 @@ const getCGAAmountForBUSD = async (
   return CGAAmount;
 };
 
+const checNextkWithdrawTime = async (
+  account: any,
+  goverTokenContract: Contract
+) => {
+  let canWithdraw = true;
+  let nextWithdrawTime = 0;
+  try {
+    let time = await getNextWithdrawTime(account, goverTokenContract);
+    if (time == 0) {
+      canWithdraw = true;
+    } else {
+      nextWithdrawTime = time;
+      console.log("nextWithTime: ", time);
+      console.log("now: ", Date.now());
+      if (nextWithdrawTime * 1000 >= Date.now()) {
+        canWithdraw = false;
+      }
+    }
+  } catch (error) {
+    console.log("error in check next withdrawtime: ", error);
+  }
+  return { canWithdraw, nextWithdrawTime };
+};
+
 const GoverTokenService = {
   getCGAandGoverTokenBalance,
   buyGoverTokenWithCGA,
   sellGoverTokenToCGA,
   getCGAAmountForBUSD,
+  checNextkWithdrawTime,
 };
 
 export default GoverTokenService;

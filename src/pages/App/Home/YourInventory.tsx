@@ -69,7 +69,7 @@ const YourInventory: React.FC = () => {
     claimMinTaxPercent,
     taxLeftDaysForReinvest,
   } = AppSelector(inventoryState);
-  const { accessedWarriorCnt, earlyAccessTurnOff } =
+  const { accessedWarriorCnt, earlyAccessTurnOff, bonusChance } =
     AppSelector(gameAccessState);
 
   // Account & Web3
@@ -86,13 +86,8 @@ const YourInventory: React.FC = () => {
   // State
   const [currentTime, setCurrentTime] = useState(new Date());
   const [firstHuntTime, setFirstHuntTime] = useState(0);
-  const [totalWon, setTotalWon] = useState("0");
 
   const totalAP = allLegions.reduce((a, b) => a + Number(b.attackPower), 0);
-  const totalExtraBonus = allLegions.reduce(
-    (a, b) => a + Number(b.bonusChance),
-    0
-  );
 
   const claimTaxAmount =
     ((Number(claimMinTaxPercent) + 2 * Number(taxLeftDaysForClaim)) *
@@ -134,20 +129,6 @@ const YourInventory: React.FC = () => {
         legionContract,
         gameAccessContract
       );
-      if (account) {
-        const query = `
-          {
-            user(id: ${`"` + account?.toLowerCase() + `"`}) {
-              totalWon
-            }
-          }
-        `;
-        const res = await Axios.post(apiConfig.subgraphServer, {
-          query: query,
-        });
-        const totalWon = res.data.data.user.totalWon;
-        setTotalWon((Number(totalWon) / 10 ** 18).toFixed(2));
-      }
     } catch (error) {
       console.log(error);
     }
@@ -217,10 +198,6 @@ const YourInventory: React.FC = () => {
     }
   };
 
-  const handleEarlyAccessModalOpen = (open: boolean) => {
-    ModalService.handleEarlyAccessModalOpen(dispatch, open);
-  };
-
   return (
     <Card
       className="bg-c4"
@@ -247,24 +224,6 @@ const YourInventory: React.FC = () => {
             title={getTranslation("warriors") + ":"}
             info={warriorBalance}
           />
-          {!earlyAccessTurnOff && (
-            <Box>
-              <span
-                className="fc1"
-                style={{ fontWeight: "bold", marginRight: 8 }}
-              >
-                {getTranslation("earlyAccessLeftForWarriors", {
-                  CL1: accessedWarriorCnt,
-                })}
-              </span>
-              <FireBtn
-                size="small"
-                onClick={() => handleEarlyAccessModalOpen(true)}
-              >
-                {getTranslation("buyEarlyAccess")}
-              </FireBtn>
-            </Box>
-          )}
           <HomeTypo
             title={getTranslation("beasts") + ":"}
             info={beastBalance}
@@ -277,19 +236,46 @@ const YourInventory: React.FC = () => {
             title={getTranslation("waitingTimeToHunt") + ":"}
             info={calcHuntTime(firstHuntTime)}
           />
-          <HomeTypo
+          {/* <HomeTypo
             title={getTranslation("yourMaxAp") + ":"}
             info={maxAttackPower}
-          />
+          /> */}
           <HomeTypo
             title={getTranslation("totalAp") + ":"}
             info={totalAP.toFixed(2)}
           />
           <HomeTypo
             title={getTranslation("totalExtraBonus") + ":"}
-            info={totalExtraBonus + "%"}
+            info={bonusChance + "%"}
           />
-          <HomeTypo
+          <br />
+          <Typography variant="subtitle1" className="fc1" fontWeight={"bold"}>
+            <span className="fc2">{Number(BLSTBalance).toFixed(2)}</span>{" "}
+            {getTranslation("BLSTInYourWallet")} ( ={" "}
+            <span className="fc2">{Number(BUSDForTotalBLST).toFixed(2)}</span>{" "}
+            USD)
+          </Typography>
+          <Typography variant="subtitle1" className="fc1" fontWeight={"bold"}>
+            <span className="fc2">{Number(CGABalance).toFixed(2)}</span>{" "}
+            {getTranslation("CGAInYourWallet")} ( ={" "}
+            <span className="fc2">{Number(CGABalanceInBUSD).toFixed(2)}</span>{" "}
+            USD)
+          </Typography>
+          <Typography variant="subtitle1" className="fc1" fontWeight={"bold"}>
+            <span className="fc2">{Number(GoverTokenBalance).toFixed(2)}</span>{" "}
+            {getTranslation("GoverTokenInYourWallet")} ( ={" "}
+            <span className="fc2">
+              {Number(GoverTokenBalanceInBUSD).toFixed(2)}
+            </span>{" "}
+            USD)
+          </Typography>
+          <Typography variant="subtitle1" className="fc1" fontWeight={"bold"}>
+            1 USD = {Number(USDToBLST).toFixed(2)}{" "}
+            <span style={{ color: "red" }}>${getTranslation("blst")} ||</span> 1{" "}
+            <span style={{ color: "red" }}>${getTranslation("blst")}</span> ={" "}
+            {Number(BLSTToUSD).toFixed(2)} USD
+          </Typography>
+          {/* <HomeTypo
             title={getTranslation("unClaimed") + ":"}
             info={formatNumber(
               Number(Number(unclaimedBLST) / 10 ** 18).toFixed(2)
@@ -333,10 +319,6 @@ const YourInventory: React.FC = () => {
           <HomeTypo
             title={`1 ${getTranslation("blst")} = `}
             info={Number(BLSTToUSD).toFixed(2)}
-          />
-          <HomeTypo
-            title={getTranslation("yourTotalWon") + ":"}
-            info={`${totalWon} BUSD`}
           />
           {/* -------------------------------------
           <HomeTypo

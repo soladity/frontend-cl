@@ -1,4 +1,6 @@
 import { Contract } from "web3-eth-contract";
+import Axios from "axios";
+import { apiConfig } from "../config/api.config";
 import constants from "../constants";
 import { updateLegionState } from "../reducers/legion.reducer";
 import { updateModalState } from "../reducers/modal.reducer";
@@ -244,6 +246,26 @@ const checkEntryTicketToPlay = async (
   return playStatus;
 };
 
+const getTotalWon = async (account: any) => {
+  let totalWon = 0;
+  try {
+    const query = `
+    {
+      user(id: ${`"` + account?.toLowerCase() + `"`}) {
+        totalWon
+      }
+    }
+  `;
+    const res = await Axios.post(apiConfig.subgraphServer, {
+      query: query,
+    });
+    totalWon = res.data.data.user.totalWon;
+  } catch (error) {
+    console.log("Error in getTotalWon: ", error);
+  }
+  return Number(totalWon) / 10 ** 18;
+};
+
 const HuntService = {
   getAllMonstersAct,
   checkHuntRevealStatus,
@@ -253,6 +275,7 @@ const HuntService = {
   checkEntryTicketToPlay,
   handleInitialHunt,
   handleInitialMassHunt,
+  getTotalWon,
 };
 
 export default HuntService;
