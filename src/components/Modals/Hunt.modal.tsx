@@ -45,6 +45,7 @@ import gameConfig from "../../config/game.config";
 import constants from "../../constants";
 import { IMonsterId } from "../../types/monster.type";
 import VideoNFT from "../UI/VideoNFT";
+import { gameAccessState } from "../../reducers/gameAccess.reducer";
 
 const HuntModal: React.FC = () => {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const HuntModal: React.FC = () => {
   } = AppSelector(legionState);
   const { allMonsters } = AppSelector(monsterState);
   const { huntTax, presentItem, showAnimation } = AppSelector(commonState);
+  const { bonusChance } = AppSelector(gameAccessState);
 
   const { account } = useWeb3React();
   const web3 = useWeb3();
@@ -187,7 +189,7 @@ const HuntModal: React.FC = () => {
       const legion = allLegions.filter((legion) => legion.id === legionId)[0];
       const monster = allMonsters[parseInt(monsterId) - 1];
       console.log({ legion, monster });
-      const { attackPower: legionAttackPower, bonusChance } = legion;
+      const { attackPower: legionAttackPower } = legion;
       const { attackPower: monsterAttackPower, percent } = monster;
 
       console.log({

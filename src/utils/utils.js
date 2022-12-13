@@ -309,3 +309,16 @@ export const fromWeiStr = (amount) => {
   /* eslint-disable */
   return Web3.utils.fromWei(BigInt(amount).toString(), "ether");
 };
+
+export const getDiffTime = (time) => {
+  let diffSecs = time / 1000;
+  let leftTime = {
+    hours: 0,
+    mins: 0,
+    secs: 0,
+  };
+  leftTime.hours = Number(Math.floor(diffSecs / 3600).toFixed(0));
+  leftTime.mins = Number(Math.floor((diffSecs % 3600) / 60).toFixed(0));
+  leftTime.secs = Number((Math.floor(diffSecs % 3600) % 60).toFixed(0));
+  return leftTime;
+};

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { Contract } from "web3-eth-contract";
 import {
   buyEA,
+  getBonusChance,
   getBusdLimitPer6Hours,
   getEarlyAccessFeePerWarrior,
   getEATurnOff,
@@ -14,7 +15,7 @@ import {
 import { AppDispatch, store } from "../store";
 import { updateGameAccessState } from "../reducers/gameAccess.reducer";
 import gameConfig from "../config/game.config";
-import { getTranslation } from "../utils/utils";
+import { getDiffTime, getTranslation } from "../utils/utils";
 import {
   getCGAAllowance,
   setCGAApprove,
@@ -22,11 +23,13 @@ import {
 import { getGameAccessAddress } from "../web3hooks/getAddress";
 import GoverTokenService from "./goverToken.service";
 import { updateModalState } from "../reducers/modal.reducer";
+import { getMaxAttackPower } from "../web3hooks/contractFunctions/legion.contract";
 
 const getEarlyAccessInfo = async (
   dispatch: AppDispatch,
   account: any,
-  gameAccessContract: Contract
+  gameAccessContract: Contract,
+  legionContract: Contract
 ) => {
   try {
     let accessedWarriorCnt = Number(
@@ -53,6 +56,16 @@ const getEarlyAccessInfo = async (
     );
     let earlyAccessTurnOff = EATurnOffAndPurchased[0];
     let EAPurchasedStatus = EATurnOffAndPurchased[1];
+    let totalAttackPower = (
+      await getMaxAttackPower(legionContract, account)
+    )[1];
+    console.log("totalAttackPower: ", totalAttackPower);
+    let bonusChance = await getBonusChance(
+      account,
+      totalAttackPower,
+      gameAccessContract
+    );
+    console.log("first purchase time: ", firstPurchaseTime);
     dispatch(
       updateGameAccessState({
         accessedWarriorCnt,
@@ -62,6 +75,7 @@ const getEarlyAccessInfo = async (
         firstPurchaseTime,
         earlyAccessTurnOff,
         EAPurchasedStatus,
+        bonusChance,
       })
     );
   } catch (error) {
@@ -88,23 +102,23 @@ const checkEarlyAccessModal = async (
 
 const getLeftTime = () => {
   const { firstPurchaseTime, busdLimitPer6Hours } = store.getState().gameAccess;
+  const { earlyAccessPeriod } = gameConfig.version;
+  const getDiffSecsInPeriod = () => {
+    return earlyAccessPeriod - (Date.now() % earlyAccessPeriod);
+  };
   let time = {
     hours: 6,
     mins: 0,
     secs: 0,
   };
-  if (firstPurchaseTime !== 0) {
-    const { earlyAccessPeriod } = gameConfig.version;
-    const finishTime = Number(firstPurchaseTime) * 1000 + earlyAccessPeriod;
-    const diffSecs = (finishTime - new Date().getTime()) / 1000;
-    if (diffSecs <= 0) {
-      return { newPeriod: true, time, busdLimitPer6Hours };
-    }
-    time.hours = Number(Math.floor(diffSecs / 3600).toFixed(0));
-    time.mins = Number(Math.floor((diffSecs % 3600) / 60).toFixed(0));
-    time.secs = Number((Math.floor(diffSecs % 3600) % 60).toFixed(0));
-    return { newPeriod: false, time, busdLimitPer6Hours };
+  let newPeriod = false;
+  const finishTime = Number(firstPurchaseTime) * 1000 + earlyAccessPeriod;
+  const diffMilliSecs = finishTime - new Date().getTime();
+  if (diffMilliSecs <= 0) {
+    newPeriod = true;
   }
+  let diffMilliSec = getDiffSecsInPeriod();
+  time = getDiffTime(diffMilliSec);
   return { newPeriod: false, time, busdLimitPer6Hours };
 };
 
@@ -116,7 +130,8 @@ const buyEarlyAccess = async (
   busdAmount: Number,
   CGAContract: Contract,
   gameAccessContract: Contract,
-  routerContract: Contract
+  routerContract: Contract,
+  legionContract: Contract
 ) => {
   dispatch(updateGameAccessState({ buyEarlyAccessLoading: true }));
   try {
@@ -126,7 +141,7 @@ const buyEarlyAccess = async (
       getGameAccessAddress(),
       account
     );
-    const CGAAmount = await GoverTokenService.getCGAAmountForBUSD(
+    const CGAAmount = await GoverTokenService.getCGAOutAmountForBUSD(
       routerContract,
       busdAmount
     );
@@ -145,7 +160,7 @@ const buyEarlyAccess = async (
     console.log(error);
     toast.error(error);
   }
-  getEarlyAccessInfo(dispatch, account, gameAccessContract);
+  getEarlyAccessInfo(dispatch, account, gameAccessContract, legionContract);
   dispatch(updateGameAccessState({ buyEarlyAccessLoading: false }));
 };
 

@@ -10,9 +10,8 @@ import {
 } from "../web3hooks/contractFunctions/cga.contract";
 import {
   depositGoverToken,
-  getGoverTokenAllowance,
   getGoverTokenBalance,
-  setGoverTokenApprove,
+  getNextWithdrawTime,
   withdrawGoverToken,
 } from "../web3hooks/contractFunctions/govertoken.contract";
 import {
@@ -21,7 +20,10 @@ import {
   getGameGovernanceTokenAddress,
 } from "../web3hooks/getAddress";
 import { getTranslation } from "../utils/utils";
-import { getAmountsOut } from "../web3hooks/contractFunctions/pancakeSwapRouter.contract";
+import {
+  getAmountsIn,
+  getAmountsOut,
+} from "../web3hooks/contractFunctions/pancakeSwapRouter.contract";
 import { updateModalState } from "../reducers/modal.reducer";
 
 const getCGAandGoverTokenBalance = async (
@@ -127,27 +129,6 @@ const sellGoverTokenToCGA = async (
   console.log("gover token contract: ", goverTokenContract);
   dispatch(updateGoverTokenState({ sellGoverTokenLoading: true }));
   try {
-    // let allowance = await getGoverTokenAllowance(
-    //   web3,
-    //   goverTokenContract,
-    //   getCGAAddress(),
-    //   account
-    // );
-    // console.log("gover token allowance: ", allowance, swapAmount);
-    // while (Number(allowance) < Number(swapAmount)) {
-    //   await setGoverTokenApprove(
-    //     web3,
-    //     goverTokenContract,
-    //     getCGAAddress(),
-    //     account
-    //   );
-    //   allowance = await getGoverTokenAllowance(
-    //     web3,
-    //     goverTokenContract,
-    //     getCGAAddress(),
-    //     account
-    //   );
-    // }
     await withdrawGoverToken(web3, account, goverTokenContract, swapAmount);
     await getCGAandGoverTokenBalance(
       dispatch,
@@ -165,7 +146,7 @@ const sellGoverTokenToCGA = async (
   dispatch(updateGoverTokenState({ sellGoverTokenLoading: false }));
 };
 
-const getCGAAmountForBUSD = async (
+const getCGAOutAmountForBUSD = async (
   routerContract: Contract,
   amount: Number
 ) => {
@@ -181,11 +162,52 @@ const getCGAAmountForBUSD = async (
   return CGAAmount;
 };
 
+const getCGAInAmountForBUSD = async (
+  routerContract: Contract,
+  amount: Number
+) => {
+  let CGAAmount = 0;
+  try {
+    CGAAmount = await getAmountsIn(routerContract, amount, [
+      getCGAAddress(),
+      getBUSDAddress(),
+    ]);
+  } catch (error) {
+    console.log(error);
+  }
+  return CGAAmount;
+};
+const checNextkWithdrawTime = async (
+  account: any,
+  goverTokenContract: Contract
+) => {
+  let canWithdraw = true;
+  let nextWithdrawTime = 0;
+  try {
+    let time = await getNextWithdrawTime(account, goverTokenContract);
+    if (time == 0) {
+      canWithdraw = true;
+    } else {
+      nextWithdrawTime = time;
+      console.log("nextWithTime: ", time);
+      console.log("now: ", Date.now());
+      if (nextWithdrawTime * 1000 >= Date.now()) {
+        canWithdraw = false;
+      }
+    }
+  } catch (error) {
+    console.log("error in check next withdrawtime: ", error);
+  }
+  return { canWithdraw, nextWithdrawTime };
+};
+
 const GoverTokenService = {
   getCGAandGoverTokenBalance,
   buyGoverTokenWithCGA,
   sellGoverTokenToCGA,
-  getCGAAmountForBUSD,
+  getCGAOutAmountForBUSD,
+  getCGAInAmountForBUSD,
+  checNextkWithdrawTime,
 };
 
 export default GoverTokenService;

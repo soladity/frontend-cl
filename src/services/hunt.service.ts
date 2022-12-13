@@ -1,4 +1,6 @@
 import { Contract } from "web3-eth-contract";
+import Axios from "axios";
+import { apiConfig } from "../config/api.config";
 import constants from "../constants";
 import { updateLegionState } from "../reducers/legion.reducer";
 import { updateModalState } from "../reducers/modal.reducer";
@@ -12,7 +14,10 @@ import {
   getWalletHuntPending,
   getWalletMassHuntPending,
 } from "../web3hooks/contractFunctions/common.contract";
-import { checkEntryTicket } from "../web3hooks/contractFunctions/gameAccess.contract";
+import {
+  checkEntryTicket,
+  getEntryTicketUsdAmount,
+} from "../web3hooks/contractFunctions/gameAccess.contract";
 import {
   getWalletHuntPendingLegionId,
   getWalletHuntPendingMonsterId,
@@ -21,6 +26,7 @@ import {
 } from "../web3hooks/contractFunctions/legion.contract";
 import { getAllMonsters } from "../web3hooks/contractFunctions/monster.contract";
 import { getVRFResult } from "../web3hooks/contractFunctions/vrf.contract";
+import { updateGameAccessState } from "../reducers/gameAccess.reducer";
 
 const getAllMonstersAct = async (
   dispatch: AppDispatch,
@@ -235,6 +241,10 @@ const checkEntryTicketToPlay = async (
   let playStatus = false;
   try {
     playStatus = await checkEntryTicket(account, gameAccessContract);
+    let entryTicketUsdAmount = await getEntryTicketUsdAmount(
+      gameAccessContract
+    );
+    dispatch(updateGameAccessState({ entryTicketUsdAmount }));
     if (!playStatus) {
       dispatch(updateModalState({ buyGoverTokenToPlayModalOpen: true }));
     }
@@ -242,6 +252,26 @@ const checkEntryTicketToPlay = async (
     console.log(error);
   }
   return playStatus;
+};
+
+const getTotalWon = async (account: any) => {
+  let totalWon = 0;
+  try {
+    const query = `
+    {
+      user(id: ${`"` + account?.toLowerCase() + `"`}) {
+        totalWon
+      }
+    }
+  `;
+    const res = await Axios.post(apiConfig.subgraphServer, {
+      query: query,
+    });
+    totalWon = res.data.data.user.totalWon;
+  } catch (error) {
+    console.log("Error in getTotalWon: ", error);
+  }
+  return Number(totalWon) / 10 ** 18;
 };
 
 const HuntService = {
@@ -253,6 +283,7 @@ const HuntService = {
   checkEntryTicketToPlay,
   handleInitialHunt,
   handleInitialMassHunt,
+  getTotalWon,
 };
 
 export default HuntService;

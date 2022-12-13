@@ -9,6 +9,8 @@ let initialState: IGameAccess = {
   earlyAccessFeePerWarrior: 0,
   purchasedBusdInPeriod: 0,
   firstPurchaseTime: 0,
+  bonusChance: 0,
+  entryTicketUsdAmount: 100,
   buyEarlyAccessLoading: false,
   earlyAccessTurnOff: false,
   EAPurchasedStatus: false,

@@ -37,17 +37,6 @@ const getAllLegionsAct = async (
     console.log({ legionInfos, ids, huntStatus });
     let allLegions: ILegion[] = [];
     for (let index = 0; index < ids.length; index++) {
-      console.log("ID: ", ids[index]);
-      let bonusChance = 0;
-      try {
-        bonusChance = await getBonusChance(
-          account,
-          legionInfos[index].attack_power,
-          gameAccessContract
-        );
-      } catch (error) {
-        console.log("get bonus chance error: ", error);
-      }
       var temp: ILegion = {
         id: ids[index],
         name: legionInfos[index].name,
@@ -59,7 +48,6 @@ const getAllLegionsAct = async (
         supplies: parseFloat(legionInfos[index].supplies),
         huntStatus: huntStatus[index],
         executeStatus: false,
-        bonusChance: bonusChance,
       };
       console.log("legion: ", temp);
       allLegions.push(temp);

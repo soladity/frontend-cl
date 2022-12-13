@@ -32,7 +32,12 @@ export const getAvailableLegionsCount = async (contract, account) => {
 };
 
 export const getMaxAttackPower = async (contract, account) => {
-  const res = await contract.methods.getMaxAttackPower(account).call();
+  try {
+    const res = await contract.methods.getMaxAttackPower(account).call();
+    console.log("getMaxAttackPower: ", res);
+  } catch (error) {
+    console.log("getMaxAttackPower error: ", error);
+  }
   return res;
 };
 

@@ -42,9 +42,13 @@ export const depositGoverToken = async (web3, account, contract, amount) => {
 };
 
 export const withdrawGoverToken = async (web3, account, contract, amount) => {
-  console.log("Amount: ", amount);
   await contract.methods
     .withdraw(web3.utils.toWei(amount.toString(), "ether").toString())
     .send({ from: account });
   return true;
+};
+
+export const getNextWithdrawTime = async (account, contract) => {
+  let response = await contract.methods.nextWithdrawTime(account).call();
+  return response;
 };

@@ -6,7 +6,11 @@ import { FaTimes } from "react-icons/fa";
 import { modalState, updateModalState } from "../../reducers/modal.reducer";
 import { AppDispatch, AppSelector } from "../../store";
 import constants from "../../constants";
-import { convertInputNumberToStr, getTranslation } from "../../utils/utils";
+import {
+  convertInputNumberToStr,
+  getDiffTime,
+  getTranslation,
+} from "../../utils/utils";
 import {
   useCGA,
   useGameGovernanceToken,
@@ -112,6 +116,9 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
               })}
             </Typography>
           )}
+          <Typography color={"error"} fontSize={12}>
+            {getTranslation("buyGoverTokenWarning")}
+          </Typography>
           <br />
           <Box sx={{ textAlign: "center" }}>
             <FireBtn
@@ -155,6 +162,7 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
 const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
   GoverTokenBalance,
 }) => {
+  let clockTimer: any = 0;
   const dispatch: AppDispatch = useDispatch();
   const web3 = useWeb3();
   const { account } = useWeb3React();
@@ -165,6 +173,48 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
   const { sellGoverTokenLoading } = AppSelector(goverTokenState);
 
   const [swapAmount, setSwapAmount] = useState(0);
+  const [nextWithdrawTime, setNextWithdrawTime] = useState(0);
+  const [canWithdraw, setCanWithdraw] = useState(false);
+  const [currentTime, setCurrentTime] = useState(Date.now());
+
+  useEffect(() => {
+    clockTimer = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => {
+      clearInterval(clockTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("current Time: ", currentTime);
+  }, [currentTime]);
+
+  useEffect(() => {
+    checkNextkWithdrawTime();
+  }, [GoverTokenBalance]);
+
+  const checkNextkWithdrawTime = async () => {
+    const { canWithdraw, nextWithdrawTime } =
+      await GoverTokenService.checNextkWithdrawTime(
+        account,
+        goverTokenContract
+      );
+    console.log(canWithdraw, nextWithdrawTime);
+    setCanWithdraw(canWithdraw);
+    setNextWithdrawTime(nextWithdrawTime);
+  };
+
+  const getLeftTime = () => {
+    const { hours, mins, secs } = getDiffTime(
+      nextWithdrawTime * 1000 - currentTime
+    );
+    return {
+      hours,
+      mins,
+      secs,
+    };
+  };
 
   const handleSwapAmount = async (e: any) => {
     let inputVal = e.target.value;
@@ -215,40 +265,52 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
         </Box>
       ) : (
         <Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {getTranslation("swap")}
-            <Input
-              value={convertInputNumberToStr(swapAmount)}
-              onChange={handleSwapAmount}
-              type="number"
-              color={swapAmount <= GoverTokenBalance ? "primary" : "error"}
-              sx={{
-                color: swapAmount <= GoverTokenBalance ? "white" : "red",
-                paddingLeft: 2,
-                width: 100,
-                marginX: 1,
-              }}
-            />
-            {getTranslation("GoverToCGA")}
-          </Box>
-          {swapAmount > GoverTokenBalance && (
-            <Typography color={"error"} fontSize={12} textAlign="center">
-              {getTranslation("uDoNotHaveEnoughGoverTokenToSell", {
-                CL1: GoverTokenBalance.toFixed(2),
+          {canWithdraw ? (
+            <Box>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {getTranslation("swap")}
+                <Input
+                  value={convertInputNumberToStr(swapAmount)}
+                  onChange={handleSwapAmount}
+                  type="number"
+                  color={swapAmount <= GoverTokenBalance ? "primary" : "error"}
+                  sx={{
+                    color: swapAmount <= GoverTokenBalance ? "white" : "red",
+                    paddingLeft: 2,
+                    width: 100,
+                    marginX: 1,
+                  }}
+                />
+                {getTranslation("GoverToCGA")}
+              </Box>
+              {swapAmount > GoverTokenBalance && (
+                <Typography color={"error"} fontSize={12} textAlign="center">
+                  {getTranslation("uDoNotHaveEnoughGoverTokenToSell", {
+                    CL1: GoverTokenBalance.toFixed(2),
+                  })}
+                </Typography>
+              )}
+              <br />
+              <Box sx={{ textAlign: "center" }}>
+                <FireBtn
+                  sx={{ width: "100%" }}
+                  onClick={() => handleSellGoverTokenToCGA()}
+                  loading={sellGoverTokenLoading}
+                  disabled={swapAmount > GoverTokenBalance}
+                >
+                  {getTranslation("sell$GoverToken")}
+                </FireBtn>
+              </Box>
+            </Box>
+          ) : (
+            <Box className="fc2">
+              {getTranslation("leftTimeToSwapBackFromGoverTokenToCGA", {
+                CL1: getLeftTime().hours,
+                CL2: getLeftTime().mins,
+                CL3: getLeftTime().secs,
               })}
-            </Typography>
+            </Box>
           )}
-          <br />
-          <Box sx={{ textAlign: "center" }}>
-            <FireBtn
-              sx={{ width: "100%" }}
-              onClick={() => handleSellGoverTokenToCGA()}
-              loading={sellGoverTokenLoading}
-              disabled={swapAmount > GoverTokenBalance}
-            >
-              {getTranslation("sell$GoverToken")}
-            </FireBtn>
-          </Box>
           <br />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <a

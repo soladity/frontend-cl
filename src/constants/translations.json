@@ -4073,7 +4073,7 @@
     "ar": "ضريبة blst $"
   },
   "taxDaysLeft": {
-    "en": "Tax Days Left",
+    "en": "Claim Tax Days Left",
     "es": "Días de Impuestos Restantes",
     "cn": "剩余纳税天数",
     "pt": "Dias de Taxas Restantes",
@@ -8504,7 +8504,7 @@
     "ar": ""
   },
   "swapSuccessfully": {
-    "en": "Swap Successfully",
+    "en": "Swap completed",
     "es": "",
     "cn": "",
     "pt": "",
@@ -8609,7 +8609,7 @@
     "ar": ""
   },
   "youNeedAtLeastGoverTokenToPlayGame": {
-    "en": "You need at least CL1 $LEGIONS tokens to hunt on Nicah.",
+    "en": "You need to hold at least CL1 $LEGIONS tokens to hunt on Nicah.",
     "es": "",
     "cn": "",
     "pt": "",
@@ -8778,6 +8778,48 @@
   },
   "canPlayGame": {
     "en": "You can hunt monsters now.",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  "buyGoverTokenWarning": {
+    "en": "Once you swap, you will need to wait 48 hours to be able to swap back from $LEGIONS to $CGA.",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  "leftTimeToSwapBackFromGoverTokenToCGA": {
+    "en": "CL1h CL2m CL3s left to be able to swap back from $LEGIONS to $CGA.",
     "es": "",
     "cn": "",
     "pt": "",

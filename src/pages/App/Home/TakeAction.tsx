@@ -36,6 +36,8 @@ import { navLinks } from "../../../config/nav.config";
 import { updateModalState } from "../../../reducers/modal.reducer";
 import SwapGovernanceTokenModal from "../../../components/Modals/SwapGovernanceToken.modal";
 import GoverTokenService from "../../../services/goverToken.service";
+import { gameAccessState } from "../../../reducers/gameAccess.reducer";
+import ModalService from "../../../services/modal.service";
 
 const TakeAction: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const TakeAction: React.FC = () => {
     revealWarriorLoading,
   } = AppSelector(warriorState);
   const { allLegions, massHuntPending } = AppSelector(legionState);
+  const { earlyAccessTurnOff } = AppSelector(gameAccessState);
 
   // Account & Web3
   const web3 = useWeb3();
@@ -130,6 +133,10 @@ const TakeAction: React.FC = () => {
       routerContract
     );
     dispatch(updateModalState({ swapGovernanceTokenModalOpen: true }));
+  };
+
+  const handleEarlyAccessModalOpen = (open: boolean) => {
+    ModalService.handleEarlyAccessModalOpen(dispatch, open);
   };
 
   return (
@@ -307,6 +314,28 @@ const TakeAction: React.FC = () => {
                     {getTranslation("buy$CGA")}
                   </FireBtn>
                 </a>
+                {!earlyAccessTurnOff && (
+                  <FireBtn
+                    sx={{
+                      mb: 1,
+                      width: "100%",
+                      wordBreak: "break-word",
+                      fontSize: 14,
+                    }}
+                    onClick={() => handleEarlyAccessModalOpen(true)}
+                  >
+                    {/* <img
+                      src={`/assets/images/dashboard/chart.png`}
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        marginRight: "5px",
+                      }}
+                      alt="icon"
+                    /> */}
+                    {getTranslation("buyEarlyAccess")}
+                  </FireBtn>
+                )}
               </Box>
             </Grid>
             <Grid

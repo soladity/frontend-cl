@@ -11,6 +11,7 @@ import { getWarriorAddress } from "../../web3hooks/getAddress";
 import {
   useBloodstone,
   useGameAccess,
+  useLegion,
   useReferralSystem,
   useVRF,
   useWarrior,
@@ -38,6 +39,7 @@ import ReferralService from "../../services/referral.service";
 import WalletSelectModal from "../Modals/WalletSelect.modal";
 import GameAccessService from "../../services/gameAccess.service";
 import { gameAccessState } from "../../reducers/gameAccess.reducer";
+import ModalService from "../../services/modal.service";
 
 const SummonWarriorPopover: React.FC = () => {
   const dispatch = useDispatch();
@@ -58,6 +60,7 @@ const SummonWarriorPopover: React.FC = () => {
   const vrfContract = useVRF();
   const referralSystemContract = useReferralSystem();
   const gameAccessContract = useGameAccess();
+  const legionContract = useLegion();
 
   const open = Boolean(summonWarriorAnchorEl);
   const [quantity, setQuantity] = useState<Number>(0);
@@ -176,7 +179,8 @@ const SummonWarriorPopover: React.FC = () => {
         GameAccessService.getEarlyAccessInfo(
           dispatch,
           account,
-          gameAccessContract
+          gameAccessContract,
+          legionContract
         );
         toast.success(getTranslation("plzRevealWarrior"));
       }
@@ -233,6 +237,10 @@ const SummonWarriorPopover: React.FC = () => {
     dispatch(updateWarriorState({ initialMintWarriorLoading: false }));
   };
 
+  const handleEarlyAccessModalOpen = (open: boolean) => {
+    ModalService.handleEarlyAccessModalOpen(dispatch, open);
+  };
+
   return (
     <Popover
       id={"summon-warrior-btn"}
@@ -274,6 +282,14 @@ const SummonWarriorPopover: React.FC = () => {
             onClick={() => handleFreeMint()}
           >
             Free Mint Available
+          </FireBtn>
+        )}
+        {!earlyAccessTurnOff && accessedWarriorCnt < 150 && (
+          <FireBtn
+            sx={{ fontSize: 14, mb: 1 }}
+            onClick={() => handleEarlyAccessModalOpen(true)}
+          >
+            {getTranslation("buyEarlyAccess")}
           </FireBtn>
         )}
         <FireBtn
