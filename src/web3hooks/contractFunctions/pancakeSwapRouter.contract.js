@@ -11,7 +11,7 @@ export const getAmountsIn = async (contract, amount, path) => {
 export const getAmountsOut = async (contract, amount, path) => {
   if (amount == 0 || amount == "0") return 0;
   let response = await contract.methods
-    .getAmountsOut(toWeiStr(amount), path)
+    .getAmountsIn(toWeiStr(amount), path)
     .call();
   return fromWeiNum(response[1]);
 };
