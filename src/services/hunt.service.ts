@@ -241,9 +241,11 @@ const checkEntryTicketToPlay = async (
   let playStatus = false;
   try {
     playStatus = await checkEntryTicket(account, gameAccessContract);
+    console.log("Play Status: ", playStatus);
     let entryTicketUsdAmount = await getEntryTicketUsdAmount(
       gameAccessContract
     );
+    console.log("entryTicketUsdAmount: ", entryTicketUsdAmount);
     dispatch(updateGameAccessState({ entryTicketUsdAmount }));
     if (!playStatus) {
       dispatch(updateModalState({ buyGoverTokenToPlayModalOpen: true }));
