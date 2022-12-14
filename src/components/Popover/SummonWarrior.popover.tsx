@@ -40,6 +40,7 @@ import WalletSelectModal from "../Modals/WalletSelect.modal";
 import GameAccessService from "../../services/gameAccess.service";
 import { gameAccessState } from "../../reducers/gameAccess.reducer";
 import ModalService from "../../services/modal.service";
+import constants from "../../constants";
 
 const SummonWarriorPopover: React.FC = () => {
   const dispatch = useDispatch();
@@ -286,7 +287,14 @@ const SummonWarriorPopover: React.FC = () => {
         )}
         {!earlyAccessTurnOff && accessedWarriorCnt < 150 && (
           <FireBtn
-            sx={{ fontSize: 14, mb: 1 }}
+            sx={{
+              fontSize: 14,
+              mb: 1,
+              "&:hover": {
+                background: constants.color.bg6,
+              },
+              background: constants.color.bg6,
+            }}
             onClick={() => handleEarlyAccessModalOpen(true)}
           >
             {getTranslation("buyEarlyAccess")}
