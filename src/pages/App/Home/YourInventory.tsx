@@ -27,6 +27,8 @@ import { goverTokenState } from "../../../reducers/goverToken.reducer";
 import FireBtn from "../../../components/Buttons/FireBtn";
 import { gameAccessState } from "../../../reducers/gameAccess.reducer";
 import ModalService from "../../../services/modal.service";
+import GameAccessService from "../../../services/gameAccess.service";
+import { updateModalState } from "../../../reducers/modal.reducer";
 
 const YourInventory: React.FC = () => {
   // Hook Info
@@ -129,6 +131,12 @@ const YourInventory: React.FC = () => {
         legionContract,
         gameAccessContract
       );
+      GameAccessService.getHuntBonusChance(
+        dispatch,
+        account,
+        legionContract,
+        gameAccessContract
+      );
     } catch (error) {
       console.log(error);
     }
@@ -198,6 +206,10 @@ const YourInventory: React.FC = () => {
     }
   };
 
+  const handleOpenSwapGovernanceTokenModal = () => {
+    dispatch(updateModalState({ swapGovernanceTokenModalOpen: true }));
+  };
+
   return (
     <Card
       className="bg-c4"
@@ -244,10 +256,21 @@ const YourInventory: React.FC = () => {
             title={getTranslation("totalAp") + ":"}
             info={totalAP.toFixed(2)}
           />
-          <HomeTypo
-            title={getTranslation("totalExtraBonus") + ":"}
-            info={bonusChance + "%"}
-          />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <HomeTypo
+              title={getTranslation("totalExtraBonus") + ":"}
+              info={bonusChance + "%"}
+            />
+            {totalAP / 4000 > GoverTokenBalance && (
+              <FireBtn
+                sx={{ ml: 1, px: 2 }}
+                size="small"
+                onClick={() => handleOpenSwapGovernanceTokenModal()}
+              >
+                {getTranslation("increase")}
+              </FireBtn>
+            )}
+          </Box>
           <br />
           <Typography variant="subtitle1" className="fc1" fontWeight={"bold"}>
             <span className="fc2">{Number(BLSTBalance).toFixed(2)}</span>{" "}
@@ -270,10 +293,8 @@ const YourInventory: React.FC = () => {
             USD)
           </Typography>
           <Typography variant="subtitle1" className="fc1" fontWeight={"bold"}>
-            1 USD = {Number(USDToBLST).toFixed(2)}{" "}
-            <span style={{ color: "red" }}>${getTranslation("blst")} ||</span> 1{" "}
-            <span style={{ color: "red" }}>${getTranslation("blst")}</span> ={" "}
-            {Number(BLSTToUSD).toFixed(2)} USD
+            1 USD = {Number(USDToBLST).toFixed(2)} ${getTranslation("blst")} ||
+            1 ${getTranslation("blst")} = {Number(BLSTToUSD).toFixed(2)} USD
           </Typography>
           {/* <HomeTypo
             title={getTranslation("unClaimed") + ":"}

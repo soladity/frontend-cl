@@ -29,6 +29,7 @@ import { updateModalState } from "../../reducers/modal.reducer";
 import { updateBeastState } from "../../reducers/beast.reducer";
 import { gameAccessState } from "../../reducers/gameAccess.reducer";
 import ModalService from "../../services/modal.service";
+import constants from "../../constants";
 
 const SummonBeastPopover: React.FC = () => {
   const dispatch = useDispatch();
@@ -202,7 +203,14 @@ const SummonBeastPopover: React.FC = () => {
       >
         {!earlyAccessTurnOff && !EAPurchasedStatus && (
           <FireBtn
-            sx={{ fontSize: 14, mb: 1 }}
+            sx={{
+              fontSize: 14,
+              mb: 1,
+              "&:hover": {
+                background: constants.color.bg6,
+              },
+              background: constants.color.bg6,
+            }}
             onClick={() => handleEarlyAccessModalOpen(true)}
           >
             {getTranslation("buyEarlyAccess")}

@@ -31,6 +31,7 @@ const getEarlyAccessInfo = async (
   gameAccessContract: Contract,
   legionContract: Contract
 ) => {
+  getHuntBonusChance(dispatch, account, legionContract, gameAccessContract);
   try {
     let accessedWarriorCnt = Number(
       (await getEaWarriorCnt(account, gameAccessContract))[1]
@@ -56,16 +57,6 @@ const getEarlyAccessInfo = async (
     );
     let earlyAccessTurnOff = EATurnOffAndPurchased[0];
     let EAPurchasedStatus = EATurnOffAndPurchased[1];
-    let totalAttackPower = (
-      await getMaxAttackPower(legionContract, account)
-    )[1];
-    console.log("totalAttackPower: ", totalAttackPower);
-    let bonusChance = await getBonusChance(
-      account,
-      totalAttackPower,
-      gameAccessContract
-    );
-    console.log("first purchase time: ", firstPurchaseTime);
     dispatch(
       updateGameAccessState({
         accessedWarriorCnt,
@@ -75,12 +66,36 @@ const getEarlyAccessInfo = async (
         firstPurchaseTime,
         earlyAccessTurnOff,
         EAPurchasedStatus,
-        bonusChance,
       })
     );
   } catch (error) {
     console.log(error);
   }
+};
+
+const getHuntBonusChance = async (
+  dispatch: AppDispatch,
+  account: any,
+  legionContract: Contract,
+  gameAccessContract: Contract
+) => {
+  try {
+    let totalAttackPower = (
+      await getMaxAttackPower(legionContract, account)
+    )[1];
+    console.log("totalAttackPower: ", totalAttackPower);
+    let bonusChance = await getBonusChance(
+      account,
+      totalAttackPower,
+      gameAccessContract
+    );
+    console.log("bonus chance: ", bonusChance);
+    dispatch(
+      updateGameAccessState({
+        bonusChance,
+      })
+    );
+  } catch (error) {}
 };
 
 const checkEarlyAccessModal = async (
@@ -170,6 +185,7 @@ const GameAccessService = {
   buyEarlyAccess,
   getLeftTime,
   checkEarlyAccessModal,
+  getHuntBonusChance,
 };
 
 export default GameAccessService;
