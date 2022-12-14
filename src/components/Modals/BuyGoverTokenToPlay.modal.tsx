@@ -36,7 +36,7 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
   const [goverTokenToPlay, setGoverTokenToPlay] = useState(0);
 
   const needGoverTokenAmount =
-    Number(goverTokenToPlay) - Number(GoverTokenBalance) + 1;
+    Number(goverTokenToPlay) - Number(GoverTokenBalance);
   let buyCGAAmount = 0;
   if (CGABalance < needGoverTokenAmount) {
     buyCGAAmount = needGoverTokenAmount - Number(CGABalance);
@@ -44,12 +44,12 @@ const BuyGoverTokenToPlayModal: React.FC = () => {
 
   useEffect(() => {
     getBalance();
-  }, []);
+  }, [entryTicketUsdAmount]);
 
   const getBalance = async () => {
     const goverTokenToPlay = await GoverTokenService.getCGAInAmountForBUSD(
       routerContract,
-      entryTicketUsdAmount
+      Number(entryTicketUsdAmount)
     );
     console.log("goverTokenToPlay: ", goverTokenToPlay);
     setGoverTokenToPlay(goverTokenToPlay);

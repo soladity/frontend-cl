@@ -23,6 +23,9 @@ import GreyBtn from "../Buttons/GreyBtn";
 import { goverTokenState } from "../../reducers/goverToken.reducer";
 import GoverTokenService from "../../services/goverToken.service";
 
+const { filterAndPage } = constants;
+const { MinSwapAmount } = filterAndPage;
+
 const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
   CGABalance,
 }) => {
@@ -35,11 +38,15 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
 
   const { buyGoverTokenLoading } = AppSelector(goverTokenState);
 
-  const [swapAmount, setSwapAmount] = useState(0);
+  const [swapAmount, setSwapAmount] = useState(MinSwapAmount);
 
   const handleSwapAmount = async (e: any) => {
     let inputVal = e.target.value;
-    setSwapAmount(inputVal);
+    if (Number(inputVal) >= MinSwapAmount) {
+      setSwapAmount(inputVal);
+    } else {
+      setSwapAmount(swapAmount);
+    }
   };
 
   const handleBuyGoverTokenWithCGA = async () => {
@@ -116,7 +123,7 @@ const Buy$GovernanceToken: React.FC<{ CGABalance: Number }> = ({
               })}
             </Typography>
           )}
-          <Typography color={"error"} fontSize={12}>
+          <Typography color={"darkGrey"} fontSize={12}>
             {getTranslation("buyGoverTokenWarning")}
           </Typography>
           <br />
@@ -172,7 +179,7 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
 
   const { sellGoverTokenLoading } = AppSelector(goverTokenState);
 
-  const [swapAmount, setSwapAmount] = useState(0);
+  const [swapAmount, setSwapAmount] = useState(MinSwapAmount);
   const [nextWithdrawTime, setNextWithdrawTime] = useState(0);
   const [canWithdraw, setCanWithdraw] = useState(false);
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -200,7 +207,6 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
         account,
         goverTokenContract
       );
-    console.log(canWithdraw, nextWithdrawTime);
     setCanWithdraw(canWithdraw);
     setNextWithdrawTime(nextWithdrawTime);
   };
@@ -218,7 +224,11 @@ const Sell$GovernanceToken: React.FC<{ GoverTokenBalance: Number }> = ({
 
   const handleSwapAmount = async (e: any) => {
     let inputVal = e.target.value;
-    setSwapAmount(inputVal);
+    if (Number(inputVal) >= MinSwapAmount) {
+      setSwapAmount(inputVal);
+    } else {
+      setSwapAmount(swapAmount);
+    }
   };
 
   const handleSellGoverTokenToCGA = async () => {

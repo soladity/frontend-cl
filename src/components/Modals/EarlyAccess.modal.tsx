@@ -23,6 +23,7 @@ import {
 import GameAccessService from "../../services/gameAccess.service";
 import { useWeb3React } from "@web3-react/core";
 import { goverTokenState } from "../../reducers/goverToken.reducer";
+import GreyBtn from "../Buttons/GreyBtn";
 
 const EarlyAccessModal: React.FC = () => {
   let timer: any = 0;
@@ -98,7 +99,6 @@ const EarlyAccessModal: React.FC = () => {
   const handleLeftTime = async () => {
     let { time, newPeriod, busdLimitPer6Hours } =
       GameAccessService.getLeftTime();
-    console.log({ time, newPeriod, busdLimitPer6Hours });
     setLeftTime(time);
     setNewPeriod(newPeriod);
   };
@@ -225,18 +225,31 @@ const EarlyAccessModal: React.FC = () => {
           </Typography>
         )}
         <br />
-        <FireBtn
-          loading={buyEarlyAccessLoading}
-          onClick={() => handleBuyEarlyAccess()}
-          disabled={
-            currentLeftEarlyAccessCGA < CGAAmount ||
-            constants.filterAndPage.EABuyMin > warriorCnt ||
-            warriorCnt > constants.filterAndPage.EABuyMax ||
-            CGABalance < CGAAmount
-          }
-        >
-          {getTranslation("buyEarlyAccess")}
-        </FireBtn>
+        <Box>
+          <FireBtn
+            loading={buyEarlyAccessLoading}
+            onClick={() => handleBuyEarlyAccess()}
+            disabled={
+              currentLeftEarlyAccessCGA < CGAAmount ||
+              constants.filterAndPage.EABuyMin > warriorCnt ||
+              warriorCnt > constants.filterAndPage.EABuyMax ||
+              CGABalance < CGAAmount
+            }
+          >
+            {getTranslation("buyEarlyAccess")}
+          </FireBtn>
+          <a href={"#"} target="_blank" className="td-none">
+            <GreyBtn
+              sx={{
+                wordBreak: "break-word",
+                fontSize: 14,
+                ml: 1,
+              }}
+            >
+              {getTranslation("buy$CGA")}
+            </GreyBtn>
+          </a>
+        </Box>
       </Box>
     </Dialog>
   );

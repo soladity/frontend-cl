@@ -11,7 +11,11 @@ import {
 } from "@mui/material";
 
 import { AppSelector } from "../../store";
-import { formatNumber, getTranslation } from "../../utils/utils";
+import {
+  formatNumber,
+  getTranslation,
+  toCapitalizeAllWords,
+} from "../../utils/utils";
 import { useGameAccess, useLegion, useVRF } from "../../web3hooks/useContract";
 import { ILegion, IMonster } from "../../types";
 import { commonState } from "../../reducers/common.reduer";
@@ -118,7 +122,7 @@ const MonsterCard: React.FC<Props> = ({ monster, isHuntable, legion }) => {
       >
         <Grid item xs={12}>
           <Typography variant="h4" sx={{ fontWeight: "bold", color: "white" }}>
-            #{monsterID} {name}
+            #{monsterID} {toCapitalizeAllWords(name)}
           </Typography>
         </Grid>
         <Grid container spacing={2} sx={{ justifyContent: "space-around" }}>

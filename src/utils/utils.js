@@ -322,3 +322,15 @@ export const getDiffTime = (time) => {
   leftTime.secs = Number((Math.floor(diffSecs % 3600) % 60).toFixed(0));
   return leftTime;
 };
+
+export const toCapitalizeAllWords = (text) => {
+  let words = text.split(" ");
+  let returnText = "";
+  words.forEach((word, index) => {
+    returnText +=
+      (index == 0 ? "" : " ") +
+      word[0].toUpperCase() +
+      word.substr(1).toLowerCase();
+  });
+  return returnText;
+};

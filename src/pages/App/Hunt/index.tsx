@@ -46,6 +46,7 @@ import { ILegion, IMonster } from "../../../types";
 import { apiConfig } from "../../../config/api.config";
 import gameConfig from "../../../config/game.config";
 import { navLinks } from "../../../config/nav.config";
+import GameAccessService from "../../../services/gameAccess.service";
 
 const useStyles = makeStyles(() => ({
   Card: {
@@ -120,6 +121,12 @@ const Hunt: React.FC = () => {
     HuntService.getAllMonstersAct(dispatch, monsterContract);
     HuntService.checkHuntPending(dispatch, account, legionContract);
     HuntService.checkMassHuntPending(dispatch, account, legionContract);
+    GameAccessService.getHuntBonusChance(
+      dispatch,
+      account,
+      legionContract,
+      gameAccessContract
+    );
   };
 
   const handleSelectLegion = (e: SelectChangeEvent) => {

@@ -54,7 +54,8 @@ const TakeAction: React.FC = () => {
     revealWarriorLoading,
   } = AppSelector(warriorState);
   const { allLegions, massHuntPending } = AppSelector(legionState);
-  const { earlyAccessTurnOff } = AppSelector(gameAccessState);
+  const { earlyAccessTurnOff, accessedWarriorCnt } =
+    AppSelector(gameAccessState);
 
   // Account & Web3
   const web3 = useWeb3();
@@ -314,28 +315,6 @@ const TakeAction: React.FC = () => {
                     {getTranslation("buy$CGA")}
                   </FireBtn>
                 </a>
-                {!earlyAccessTurnOff && (
-                  <FireBtn
-                    sx={{
-                      mb: 1,
-                      width: "100%",
-                      wordBreak: "break-word",
-                      fontSize: 14,
-                    }}
-                    onClick={() => handleEarlyAccessModalOpen(true)}
-                  >
-                    {/* <img
-                      src={`/assets/images/dashboard/chart.png`}
-                      style={{
-                        width: "18px",
-                        height: "18px",
-                        marginRight: "5px",
-                      }}
-                      alt="icon"
-                    /> */}
-                    {getTranslation("buyEarlyAccess")}
-                  </FireBtn>
-                )}
               </Box>
             </Grid>
             <Grid
@@ -481,6 +460,37 @@ const TakeAction: React.FC = () => {
                 </FireBtn>
               </Box>
             </Grid>
+            {!earlyAccessTurnOff && (
+              <Grid
+                item
+                xs={12}
+                md={12}
+                lg={12}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                }}
+              >
+                <Box className="fc1" sx={{ fontWeight: "bold" }}>
+                  {getTranslation("earlyAccessLeftForWarriors")}
+                  <span className="fc2">
+                    {accessedWarriorCnt} {getTranslation("warriors")}
+                  </span>
+                </Box>
+                <FireBtn
+                  sx={{
+                    wordBreak: "break-word",
+                    // fontSize: 14,
+                    px: 2,
+                  }}
+                  size="small"
+                  onClick={() => handleEarlyAccessModalOpen(true)}
+                >
+                  {getTranslation("buyEarlyAccess")}
+                </FireBtn>
+              </Grid>
+            )}
           </Grid>
         </Box>
       </Box>

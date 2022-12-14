@@ -8756,7 +8756,7 @@
     "ar": ""
   },
   "earlyAccessLeftForWarriors": {
-    "en": "Early Access left for CL1 Warriors",
+    "en": "Early Access left for ",
     "es": "",
     "cn": "",
     "pt": "",
@@ -8820,6 +8820,27 @@
   },
   "leftTimeToSwapBackFromGoverTokenToCGA": {
     "en": "CL1h CL2m CL3s left to be able to swap back from $LEGIONS to $CGA.",
+    "es": "",
+    "cn": "",
+    "pt": "",
+    "tr": "",
+    "ru": "",
+    "fr": "",
+    "nl": "",
+    "pl": "",
+    "ph": "",
+    "vn": "",
+    "de": "",
+    "ro": "",
+    "ua": "",
+    "jp": "",
+    "hi": "",
+    "th": "",
+    "it": "",
+    "ar": ""
+  },
+  "increase": {
+    "en": "increase",
     "es": "",
     "cn": "",
     "pt": "",

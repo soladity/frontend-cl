@@ -135,6 +135,8 @@ const filterAndPage = {
 
   EABuyMin: 5,
   EABuyMax: 1000,
+
+  MinSwapAmount: 0.01,
 };
 
 const vote = {
