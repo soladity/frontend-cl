@@ -48,6 +48,10 @@ const EarlyAccessModal: React.FC = () => {
   const legionContract = useLegion();
 
   const [CGAAmount, setCGAAmount] = useState(0);
+  useEffect(()=> {
+    console.log(currentLeftEarlyAccessCGA, "CGABalance");
+    console.log(CGAAmount, "CGABalance");
+  }, [])
   const [warriorCnt, setWarriorCnt] = useState(
     constants.filterAndPage.EABuyMin
   );
