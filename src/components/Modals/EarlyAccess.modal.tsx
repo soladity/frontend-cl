@@ -234,7 +234,6 @@ const EarlyAccessModal: React.FC = () => {
             loading={buyEarlyAccessLoading}
             onClick={() => handleBuyEarlyAccess()}
             disabled={
-              currentLeftEarlyAccessCGA < CGAAmount ||
               constants.filterAndPage.EABuyMin > warriorCnt ||
               warriorCnt > constants.filterAndPage.EABuyMax ||
               CGABalance < CGAAmount
