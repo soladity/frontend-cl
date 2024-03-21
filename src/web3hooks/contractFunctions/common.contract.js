@@ -34,6 +34,7 @@ export const initialMintBeastAndWarrior = async (
   const response = await contract.methods
     .initializeMint(amount, fromWhichWallet)
     .send({ from: account });
+    console.log(contract)
   return response;
 };
 
